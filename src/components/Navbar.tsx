@@ -292,7 +292,7 @@ export default function Navbar() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <div className={`overflow-hidden transition-all duration-300 ${mobileAccordion === 'services' ? 'max-h-[600px] pb-4' : 'max-h-0'}`}>
+              <div className={`overflow-hidden transition-all duration-300 ${mobileAccordion === 'services' ? 'max-h-[800px] pb-4' : 'max-h-0'}`}>
                 <div className="pl-4 space-y-4">
                   <Link href="/services/web-development" onClick={toggleMobileMenu} className="block text-white/70 text-sm hover:text-[#00B4FF] transition-colors">Web Development</Link>
                   <Link href="/services/mobile-app-development" onClick={toggleMobileMenu} className="block text-white/70 text-sm hover:text-[#00B4FF] transition-colors">Mobile App Development</Link>
@@ -304,6 +304,25 @@ export default function Navbar() {
                   <Link href="/services/custom-software-development" onClick={toggleMobileMenu} className="block text-white/70 text-sm hover:text-[#00B4FF] transition-colors">Custom Software Development</Link>
                   <Link href="/services/seo-digital-marketing" onClick={toggleMobileMenu} className="block text-white/70 text-sm hover:text-[#00B4FF] transition-colors">SEO/Digital Marketing</Link>
                   <Link href="/services/maintenance-support" onClick={toggleMobileMenu} className="block text-white/70 text-sm hover:text-[#00B4FF] transition-colors">Maintenance & Support</Link>
+                  
+                  {/* Tax & Accounting CTA */}
+                  <div className="mt-4 pt-4 border-t border-white/20">
+                    <p className="text-emerald-400 text-xs font-semibold mb-3">TAX & ACCOUNTING</p>
+                    <Link href="/services/tax-accounting" onClick={toggleMobileMenu} className="block text-white/70 text-sm hover:text-emerald-400 transition-colors mb-2">Comprehensive Tax & Accounting</Link>
+                    <Link href="/services/tax-accounting" onClick={toggleMobileMenu} className="block text-white/70 text-sm hover:text-emerald-400 transition-colors mb-2">Business Incorporation & CFO</Link>
+                    <Link href="/services/tax-accounting" onClick={toggleMobileMenu} className="block text-white/70 text-sm hover:text-emerald-400 transition-colors mb-2">Financial Planning & Forecasting</Link>
+                    <Link href="/services/tax-accounting" onClick={toggleMobileMenu} className="block text-white/70 text-sm hover:text-emerald-400 transition-colors mb-3">Government Grants Assistance</Link>
+                    <Link 
+                      href="/services/tax-accounting" 
+                      onClick={toggleMobileMenu}
+                      className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white text-sm font-medium px-4 py-2 rounded-lg hover:from-emerald-500 hover:to-emerald-400 transition-all"
+                    >
+                      View All Tax Services
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
@@ -437,9 +456,9 @@ export default function Navbar() {
           onMouseLeave={handleMouseLeave}
         >
           <div className="max-w-[1400px] mx-auto px-6 py-8">
-            <div className="grid grid-cols-12 gap-8">
+            <div className="grid grid-cols-12 gap-6">
               {/* Left Column - Featured */}
-              <div className="col-span-3 border-r border-gray-200 pr-8">
+              <div className="col-span-3 border-r border-gray-200 pr-6">
                 <h3 className="text-xl font-semibold text-gray-900 mb-4">WHAT WE DO</h3>
                 <div className="mb-4">
                   <Image
@@ -456,87 +475,115 @@ export default function Navbar() {
               </div>
 
               {/* Services Columns */}
-              <div className="col-span-9 grid grid-cols-2 gap-y-5 gap-x-8">
-                <Link href="/services/web-development" className="flex items-center gap-3 text-gray-700 hover:text-[#00B4FF] transition-colors">
-                  <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+              <div className="col-span-5 grid grid-cols-2 gap-y-4 gap-x-4 border-r border-gray-200 pr-6">
+                <Link href="/services/web-development" className="flex items-center gap-2 text-gray-700 hover:text-[#00B4FF] transition-colors">
+                  <svg className="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
                   </svg>
                   <span className="text-sm">Web Development</span>
-                  <span className="text-[#00B4FF]">→</span>
                 </Link>
 
-                <Link href="/services/mobile-app-development" className="flex items-center gap-3 text-gray-700 hover:text-[#00B4FF] transition-colors">
-                  <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+                <Link href="/services/mobile-app-development" className="flex items-center gap-2 text-gray-700 hover:text-[#00B4FF] transition-colors">
+                  <svg className="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
                   </svg>
-                  <span className="text-sm">Mobile App Development</span>
-                  <span className="text-[#00B4FF]">→</span>
+                  <span className="text-sm">Mobile Apps</span>
                 </Link>
 
-                <Link href="/services/cloud-solutions" className="flex items-center gap-3 text-gray-700 hover:text-[#00B4FF] transition-colors">
-                  <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+                <Link href="/services/cloud-solutions" className="flex items-center gap-2 text-gray-700 hover:text-[#00B4FF] transition-colors">
+                  <svg className="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z" />
                   </svg>
                   <span className="text-sm">Cloud Solutions</span>
-                  <span className="text-[#00B4FF]">→</span>
                 </Link>
 
-                <Link href="/services/ai-ml-solutions" className="flex items-center gap-3 text-gray-700 hover:text-[#00B4FF] transition-colors">
-                  <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+                <Link href="/services/ai-ml-solutions" className="flex items-center gap-2 text-gray-700 hover:text-[#00B4FF] transition-colors">
+                  <svg className="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
                   </svg>
                   <span className="text-sm">AI/ML Solutions</span>
-                  <span className="text-[#00B4FF]">→</span>
                 </Link>
 
-                <Link href="/services/devops-cicd" className="flex items-center gap-3 text-gray-700 hover:text-[#00B4FF] transition-colors">
-                  <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+                <Link href="/services/devops-cicd" className="flex items-center gap-2 text-gray-700 hover:text-[#00B4FF] transition-colors">
+                  <svg className="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                   <span className="text-sm">DevOps & CI/CD</span>
-                  <span className="text-[#00B4FF]">→</span>
                 </Link>
 
-                <Link href="/services/ui-ux-design" className="flex items-center gap-3 text-gray-700 hover:text-[#00B4FF] transition-colors">
-                  <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+                <Link href="/services/ui-ux-design" className="flex items-center gap-2 text-gray-700 hover:text-[#00B4FF] transition-colors">
+                  <svg className="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128z" />
                   </svg>
                   <span className="text-sm">UI/UX Design</span>
-                  <span className="text-[#00B4FF]">→</span>
                 </Link>
 
-                <Link href="/services/ecommerce-solutions" className="flex items-center gap-3 text-gray-700 hover:text-[#00B4FF] transition-colors">
-                  <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+                <Link href="/services/ecommerce-solutions" className="flex items-center gap-2 text-gray-700 hover:text-[#00B4FF] transition-colors">
+                  <svg className="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
                   </svg>
-                  <span className="text-sm">E-commerce Solutions</span>
-                  <span className="text-[#00B4FF]">→</span>
+                  <span className="text-sm">E-commerce</span>
                 </Link>
 
-                <Link href="/services/custom-software-development" className="flex items-center gap-3 text-gray-700 hover:text-[#00B4FF] transition-colors">
-                  <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+                <Link href="/services/custom-software-development" className="flex items-center gap-2 text-gray-700 hover:text-[#00B4FF] transition-colors">
+                  <svg className="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 9.75L16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
                   </svg>
-                  <span className="text-sm">Custom Software Development</span>
-                  <span className="text-[#00B4FF]">→</span>
+                  <span className="text-sm">Custom Software</span>
                 </Link>
 
-                <Link href="/services/seo-digital-marketing" className="flex items-center gap-3 text-gray-700 hover:text-[#00B4FF] transition-colors">
-                  <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+                <Link href="/services/seo-digital-marketing" className="flex items-center gap-2 text-gray-700 hover:text-[#00B4FF] transition-colors">
+                  <svg className="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6" />
                   </svg>
-                  <span className="text-sm">SEO/Digital Marketing</span>
-                  <span className="text-[#00B4FF]">→</span>
+                  <span className="text-sm">SEO & Marketing</span>
                 </Link>
 
-                <Link href="/services/maintenance-support" className="flex items-center gap-3 text-gray-700 hover:text-[#00B4FF] transition-colors">
-                  <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+                <Link href="/services/maintenance-support" className="flex items-center gap-2 text-gray-700 hover:text-[#00B4FF] transition-colors">
+                  <svg className="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" />
                   </svg>
-                  <span className="text-sm">Maintenance & Support</span>
-                  <span className="text-[#00B4FF]">→</span>
+                  <span className="text-sm">Support</span>
                 </Link>
+              </div>
+
+              {/* Right Column - Tax & Accounting CTA */}
+              <div className="col-span-4 bg-gradient-to-br from-[#0d9488] via-[#059669] to-[#047857] rounded-2xl p-5 relative overflow-hidden">
+                {/* Background decoration */}
+                <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                <div className="absolute bottom-0 left-0 w-20 h-20 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+                
+                <div className="relative z-10">
+                  <h4 className="text-white font-bold text-base mb-3">Tax & Accounting Services</h4>
+                  
+                  {/* Tax Service Pills */}
+                  <div className="space-y-2 mb-4">
+                    <Link href="/services/tax-accounting" className="block border border-white/40 text-white text-xs px-3 py-2 rounded-full hover:bg-white hover:text-[#059669] transition-all duration-300 truncate">
+                      Comprehensive Tax & Accounting
+                    </Link>
+                    <Link href="/services/tax-accounting" className="block border border-white/40 text-white text-xs px-3 py-2 rounded-full hover:bg-white hover:text-[#059669] transition-all duration-300 truncate">
+                      Business Incorporation & CFO
+                    </Link>
+                    <Link href="/services/tax-accounting" className="block border border-white/40 text-white text-xs px-3 py-2 rounded-full hover:bg-white hover:text-[#059669] transition-all duration-300 truncate">
+                      Financial Planning & Forecasting
+                    </Link>
+                    <Link href="/services/tax-accounting" className="block border border-white/40 text-white text-xs px-3 py-2 rounded-full hover:bg-white hover:text-[#059669] transition-all duration-300 truncate">
+                      Government Grants Assistance
+                    </Link>
+                  </div>
+
+                  {/* CTA Button */}
+                  <Link
+                    href="/services/tax-accounting"
+                    className="w-full bg-white text-[#059669] font-semibold py-2.5 px-4 rounded-lg hover:bg-white/90 transition-all duration-300 flex items-center justify-center gap-2 group text-sm"
+                  >
+                    <span>View All Services</span>
+                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

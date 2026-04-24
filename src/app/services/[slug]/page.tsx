@@ -498,6 +498,70 @@ const servicesData: { [key: string]: ServiceData } = {
       { title: "Company Website", industry: "Professional Services", result: "WordPress maintenance and content updates" },
       { title: "Web App Takeover", industry: "SaaS", result: "Took over codebase from previous agency, ongoing development" }
     ]
+  },
+  "tax-accounting": {
+    title: "Tax & Accounting Services",
+    subtitle: "Financial & Tax Solutions",
+    description: "Comprehensive tax planning, accounting, and financial services for businesses and individuals. From tax filing to CFO services — we handle your numbers.",
+    heroImage: "/services/tax.jpg",
+    overview: "We provide end-to-end financial services including tax preparation, bookkeeping, financial planning, and CFO advisory. Whether you're a startup needing incorporation help, a growing business requiring financial forecasting, or an established company looking for tax optimization — our team of certified professionals delivers accurate, compliant, and strategic financial guidance.",
+    features: [
+      {
+        title: "Comprehensive Tax & Accounting",
+        description: "Corporate and personal tax filing, GST/HST, payroll taxes, and year-round tax planning to minimize your liability.",
+        icon: "analytics"
+      },
+      {
+        title: "Business Incorporation & CFO Services",
+        description: "Company formation, corporate structure advice, and part-time CFO services for strategic financial leadership.",
+        icon: "enterprise"
+      },
+      {
+        title: "Financial Planning & Forecasting",
+        description: "Cash flow projections, budgeting, financial modeling, and scenario planning to guide business decisions.",
+        icon: "speed"
+      },
+      {
+        title: "Strategic Investment Planning",
+        description: "Investment strategy, portfolio review, retirement planning, and wealth building guidance for business owners.",
+        icon: "integration"
+      },
+      {
+        title: "Generational Wealth & Estate Planning",
+        description: "Succession planning, estate tax strategies, trusts, and wealth transfer to protect your family's future.",
+        icon: "security"
+      },
+      {
+        title: "Government Grants Assistance",
+        description: "SR&ED claims, CEWS, CEBA, and other government programs. We help you claim what you're entitled to.",
+        icon: "support"
+      },
+      {
+        title: "Financial Audits & Compliance",
+        description: "Audit preparation, internal controls review, and compliance with regulatory requirements.",
+        icon: "monitoring"
+      }
+    ],
+    technologies: ["QuickBooks", "Xero", "Sage", "FreshBooks", "Excel", "CRA Portal", "TaxCycle", "CaseWare"],
+    process: [
+      { step: "Consultation", description: "We review your current financial situation and understand your goals." },
+      { step: "Assessment", description: "Analyze your books, identify issues, and find optimization opportunities." },
+      { step: "Strategy", description: "Develop a tailored tax and financial strategy for your situation." },
+      { step: "Implementation", description: "Set up systems, file returns, and execute the financial plan." },
+      { step: "Monitoring", description: "Ongoing review and adjustments as regulations and your business change." },
+      { step: "Reporting", description: "Regular financial reports and tax summaries so you always know where you stand." }
+    ],
+    stats: [
+      { value: "500+", label: "Clients Served" },
+      { value: "$2M+", label: "Tax Savings" },
+      { value: "15+", label: "Years Experience" },
+      { value: "CPA", label: "Certified Team" }
+    ],
+    caseStudies: [
+      { title: "Tech Startup", industry: "Technology", result: "Saved $120K in taxes through SR&ED claims and proper structure" },
+      { title: "Restaurant Group", industry: "Hospitality", result: "Streamlined accounting for 5 locations, reduced overhead 30%" },
+      { title: "Real Estate Investor", industry: "Property", result: "Estate planning saved $500K in potential inheritance taxes" }
+    ]
   }
 };
 
@@ -539,6 +603,7 @@ const allServices = [
   { slug: "custom-software-development", name: "Custom Software Development" },
   { slug: "seo-digital-marketing", name: "SEO/Digital Marketing" },
   { slug: "maintenance-support", name: "Maintenance & Support" },
+  { slug: "tax-accounting", name: "Tax & Accounting Services" },
 ];
 
 // Icon component
@@ -671,6 +736,222 @@ export default function ServicePage() {
         </div>
       </section>
 
+{/* SEO Packages Section - Only for SEO/Digital Marketing */}
+      {slug === "seo-digital-marketing" && (
+        <section className="py-20 bg-white">
+          <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
+            <div className="text-center mb-16">
+              <span className="inline-block bg-[#262b3f]/10 text-[#262b3f] text-sm font-semibold px-4 py-2 rounded-full mb-4">
+                SEO Packages
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-bold text-[#1a1a2e] mb-4">
+                Choose Your Growth Plan
+              </h2>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                Transparent pricing with real deliverables. No hidden fees, no long-term contracts.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+              {/* Starter Package */}
+              <div className="relative bg-white border-2 border-gray-200 rounded-2xl p-8 hover:border-[#262b3f]/30 hover:shadow-xl transition-all duration-300">
+                <div className="mb-6">
+                  <h3 className="text-xl font-bold text-[#1a1a2e] mb-2">Starter</h3>
+                  <p className="text-gray-500 text-sm">For small businesses getting started with SEO</p>
+                </div>
+                <div className="mb-6">
+                  <span className="text-4xl font-bold text-[#1a1a2e]">$799</span>
+                  <span className="text-gray-500">/month</span>
+                </div>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-gray-600 text-sm">Up to 10 keywords optimized</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-gray-600 text-sm">Technical SEO audit & fixes</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-gray-600 text-sm">On-page optimization</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-gray-600 text-sm">2 blog posts/month</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-gray-600 text-sm">Google Business Profile setup</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-gray-600 text-sm">Monthly ranking report</span>
+                  </li>
+                </ul>
+                <button
+                  onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
+                  className="w-full py-3 px-6 border-2 border-[#262b3f] text-[#262b3f] font-semibold rounded-lg hover:bg-[#262b3f] hover:text-white transition-all duration-300"
+                >
+                  Get Started
+                </button>
+              </div>
+
+              {/* Growth Package - Popular */}
+              <div className="relative bg-[#1a1a2e] border-2 border-[#262b3f] rounded-2xl p-8 shadow-2xl transform md:-translate-y-4">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                  <span className="bg-gradient-to-r from-[#0055FF] to-[#00AAFF] text-white text-xs font-bold px-4 py-1.5 rounded-full">
+                    MOST POPULAR
+                  </span>
+                </div>
+                <div className="mb-6">
+                  <h3 className="text-xl font-bold text-white mb-2">Growth</h3>
+                  <p className="text-white/60 text-sm">For businesses ready to scale their online presence</p>
+                </div>
+                <div className="mb-6">
+                  <span className="text-4xl font-bold text-white">$1,499</span>
+                  <span className="text-white/60">/month</span>
+                </div>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-white/80 text-sm">Up to 25 keywords optimized</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-white/80 text-sm">Everything in Starter</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-white/80 text-sm">4 blog posts/month</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-white/80 text-sm">Link building (10 backlinks/month)</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-white/80 text-sm">Competitor analysis</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-white/80 text-sm">Local SEO optimization</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-white/80 text-sm">Bi-weekly strategy calls</span>
+                  </li>
+                </ul>
+                <button
+                  onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
+                  className="w-full py-3 px-6 bg-gradient-to-r from-[#0055FF] to-[#00AAFF] text-white font-semibold rounded-lg hover:opacity-90 transition-all duration-300"
+                >
+                  Get Started
+                </button>
+              </div>
+
+              {/* Enterprise Package */}
+              <div className="relative bg-white border-2 border-gray-200 rounded-2xl p-8 hover:border-[#262b3f]/30 hover:shadow-xl transition-all duration-300">
+                <div className="mb-6">
+                  <h3 className="text-xl font-bold text-[#1a1a2e] mb-2">Enterprise</h3>
+                  <p className="text-gray-500 text-sm">For large businesses with aggressive growth goals</p>
+                </div>
+                <div className="mb-6">
+                  <span className="text-4xl font-bold text-[#1a1a2e]">$2,999</span>
+                  <span className="text-gray-500">/month</span>
+                </div>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-gray-600 text-sm">Unlimited keywords</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-gray-600 text-sm">Everything in Growth</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-gray-600 text-sm">8 blog posts/month</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-gray-600 text-sm">Link building (25 backlinks/month)</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-gray-600 text-sm">Google Ads management included</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-gray-600 text-sm">Dedicated SEO manager</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-gray-600 text-sm">Weekly strategy calls</span>
+                  </li>
+                </ul>
+                <button
+                  onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
+                  className="w-full py-3 px-6 border-2 border-[#262b3f] text-[#262b3f] font-semibold rounded-lg hover:bg-[#262b3f] hover:text-white transition-all duration-300"
+                >
+                  Get Started
+                </button>
+              </div>
+            </div>
+
+            {/* Additional Info */}
+            <div className="mt-12 text-center">
+              <p className="text-gray-500 text-sm mb-4">
+                All packages include: Google Analytics setup, Search Console integration, and monthly performance reports.
+              </p>
+              <p className="text-gray-600 font-medium">
+                Need a custom package? <button onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))} className="text-[#0055FF] hover:underline">Contact us</button> for a tailored solution.
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Process Section - Timeline Style */}
       <section className="py-20 bg-white">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
@@ -717,7 +998,8 @@ export default function ServicePage() {
         </div>
       </section>
 
-      {/* Tech Stack - Devsinc Style */}
+      {/* Tech Stack - Devsinc Style - Hidden for Tax & Accounting */}
+      {slug !== "tax-accounting" && (
       <section className="py-20 bg-[#1a1a2e]">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8 mb-12">
@@ -769,8 +1051,10 @@ export default function ServicePage() {
           </div>
         </div>
       </section>
+      )}
 
-      {/* Why Choose Us Section - Premium Style */}
+      {/* Why Choose Us Section - Premium Style - Hidden for Tax & Accounting */}
+      {slug !== "tax-accounting" && (
       <section className="py-24 bg-gradient-to-b from-white to-gray-50 relative overflow-hidden">
         {/* Background Decoration */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-[#262b3f]/5 rounded-full blur-3xl -translate-y-1/2"></div>
@@ -862,6 +1146,7 @@ export default function ServicePage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* CTA Section - Slim */}
       <section id="contact" className="py-10 bg-[#1a1a2e]">
