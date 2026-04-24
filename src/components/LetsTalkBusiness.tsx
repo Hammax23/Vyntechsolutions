@@ -25,6 +25,7 @@ const services = [
   "E-commerce Solutions",
   "SEO/Digital Marketing",
   "Maintenance & Support",
+  "Tax & Accounting",
 ];
 
 const jobOptions = [
