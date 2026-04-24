@@ -3,6 +3,7 @@ import { Inter, Oswald } from "next/font/google";
 import "./globals.css";
 import LetsTalkBusiness from "@/components/LetsTalkBusiness";
 import TimedCTAPopup from "@/components/TimedCTAPopup";
+import FloatingSEOButton from "@/components/FloatingSEOButton";
 import { defaultSEO, organizationSchema, localBusinessSchema, websiteSchema, servicesSchema, faqSchema, reviewSchema, howToSchema } from "@/lib/seo.config";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -77,6 +78,7 @@ export default function RootLayout({
         {children}
         <LetsTalkBusiness />
         <TimedCTAPopup />
+        <FloatingSEOButton />
       </body>
     </html>
   );
