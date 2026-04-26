@@ -76,7 +76,7 @@ export default function TimedCTAPopup() {
       {/* Modal */}
       <div className="fixed inset-0 z-[101] flex items-center justify-center p-4">
         <div 
-          className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300"
+          className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-300"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Close Button */}
@@ -91,10 +91,10 @@ export default function TimedCTAPopup() {
           </button>
 
           {/* Content */}
-          <div className="p-8 md:p-10">
+          <div className="p-5 sm:p-8 md:p-10">
             {/* Header */}
-            <div className="mb-8">
-              <h2 className="text-xl md:text-2xl font-semibold text-gray-900 leading-relaxed">
+            <div className="mb-5 sm:mb-8 pr-6">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 leading-relaxed">
                 <span className="text-gray-900">Share Your Requirements</span>{" "}
                 <span className="text-gray-500 font-normal">
                   to help our experts understand your business objectives and create your customized plan.
@@ -103,9 +103,9 @@ export default function TimedCTAPopup() {
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
               {/* Row 1: Name & Company Email */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   <input
                     type="text"
@@ -131,7 +131,7 @@ export default function TimedCTAPopup() {
               </div>
 
               {/* Row 2: Contact Number & Work Email */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div className="flex gap-2">
                   <select
                     name="phoneCode"
@@ -177,19 +177,19 @@ export default function TimedCTAPopup() {
                   value={formData.projectDescription}
                   onChange={handleChange}
                   placeholder="Describe your project (Help us come back better prepared)"
-                  rows={4}
-                  className="w-full px-0 py-3 text-gray-900 placeholder-gray-400 border-0 border-b-2 border-gray-200 focus:border-[#1a1a2e] focus:ring-0 transition-colors duration-200 bg-transparent text-base resize-none"
+                  rows={3}
+                  className="w-full px-0 py-3 text-gray-900 placeholder-gray-400 border-0 border-b-2 border-gray-200 focus:border-[#1a1a2e] focus:ring-0 transition-colors duration-200 bg-transparent text-sm sm:text-base resize-none"
                 />
               </div>
 
               {/* Trust Badge */}
-              <div className="flex items-center gap-3 bg-amber-50 rounded-lg px-4 py-3 mt-6">
+              <div className="flex items-center gap-3 bg-amber-50 rounded-lg px-3 sm:px-4 py-2.5 sm:py-3 mt-4 sm:mt-6">
                 <div className="w-6 h-6 rounded-full bg-amber-400 flex items-center justify-center flex-shrink-0">
                   <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <p className="text-gray-700 text-sm">
+                <p className="text-gray-700 text-xs sm:text-sm">
                   Fast 2-minute response, fully <span className="font-semibold">NDA-protected</span>.
                 </p>
               </div>
@@ -197,7 +197,7 @@ export default function TimedCTAPopup() {
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full bg-[#1a1a2e] hover:bg-[#262b3f] text-white py-4 rounded-lg font-medium transition-all duration-300 text-base mt-4"
+                className="w-full bg-[#1a1a2e] hover:bg-[#262b3f] text-white py-3 sm:py-4 rounded-lg font-medium transition-all duration-300 text-sm sm:text-base mt-3 sm:mt-4"
               >
                 Submit Requirements
               </button>
