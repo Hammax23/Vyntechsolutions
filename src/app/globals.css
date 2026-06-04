@@ -25,3 +25,67 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+/* Google Ranking promo — CSS-only animations (SSR-safe) */
+@keyframes seo-ranking-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes seo-ranking-fade-in {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes seo-ranking-pulse-ring {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(66, 133, 244, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(66, 133, 244, 0.12);
+  }
+}
+
+@keyframes seo-ranking-shimmer-sweep {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(220%);
+  }
+}
+
+.seo-ranking-float {
+  animation: seo-ranking-float 5s ease-in-out infinite;
+}
+
+.seo-ranking-fade-in {
+  animation: seo-ranking-fade-in 0.35s ease-out;
+}
+
+.seo-ranking-pulse {
+  animation: seo-ranking-pulse-ring 2.2s ease-in-out infinite;
+}
+
+.seo-ranking-shimmer {
+  background: linear-gradient(
+    100deg,
+    transparent 42%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 58%
+  );
+  animation: seo-ranking-shimmer-sweep 2.8s ease-in-out infinite;
+  animation-delay: 1s;
+}

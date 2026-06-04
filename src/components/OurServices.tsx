@@ -1,8 +1,16 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import Image from "next/image";
+
+const GoogleRankingPromo = dynamic(() => import("@/components/GoogleRankingPromo"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-[248px] xl:w-[268px] h-[168px] rounded-xl bg-white/80 border border-white/90 animate-pulse" aria-hidden />
+  ),
+});
 
 // Tech stack logos
 const techStacks = [
@@ -164,70 +172,96 @@ export default function OurServices() {
       }`}
     >
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-12 lg:px-20">
-        {/* Our Services Heading */}
-        <div className="text-center mb-6 sm:mb-8">
-          <h2 
-            className={`text-3xl sm:text-4xl md:text-5xl lg:text-[4rem] font-bold leading-tight tracking-tight transition-opacity duration-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
-          >
-            <span className="bg-gradient-to-tr from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] text-transparent bg-clip-text drop-shadow-[0_0_8px_rgba(0,180,255,0.2)]">
-              O
-            </span>
-            <span className="text-[#1a1a2e]">ur</span>
-            <span className="text-[#1a1a2e]">&nbsp;</span>
-            <span className="bg-gradient-to-tr from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] text-transparent bg-clip-text drop-shadow-[0_0_8px_rgba(0,180,255,0.2)]">
-              S
-            </span>
-            <span className="text-[#1a1a2e]">ervic</span>
-            <span className="bg-gradient-to-tr from-[#0055FF] via-[#FF6B6B] to-[#FF4757] text-transparent bg-clip-text drop-shadow-[0_0_8px_rgba(255,107,107,0.2)]">
-              e
-            </span>
-            <span className="text-[#1a1a2e]">s</span>
-          </h2>
-        </div>
+        {/* Header: title + subheading stacked tight; SEO card in right column */}
+        <div
+          className={`text-center mb-12 sm:mb-14 md:mb-16 transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+        >
+          {/* Desktop XL */}
+          <div className="hidden xl:grid xl:grid-cols-[1fr_auto_1fr] xl:gap-x-6 xl:items-start">
+            <div aria-hidden />
+            <div className="px-2">
+              <h2
+                className={`text-3xl sm:text-4xl md:text-5xl lg:text-[4rem] font-bold leading-tight tracking-tight transition-opacity duration-700 ${isVisible ? "opacity-100" : "opacity-0"}`}
+              >
+                <span className="bg-gradient-to-tr from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] text-transparent bg-clip-text drop-shadow-[0_0_8px_rgba(0,180,255,0.2)]">O</span>
+                <span className="text-[#1a1a2e]">ur</span>
+                <span className="text-[#1a1a2e]">&nbsp;</span>
+                <span className="bg-gradient-to-tr from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] text-transparent bg-clip-text drop-shadow-[0_0_8px_rgba(0,180,255,0.2)]">S</span>
+                <span className="text-[#1a1a2e]">ervic</span>
+                <span className="bg-gradient-to-tr from-[#0055FF] via-[#FF6B6B] to-[#FF4757] text-transparent bg-clip-text drop-shadow-[0_0_8px_rgba(255,107,107,0.2)]">e</span>
+                <span className="text-[#1a1a2e]">s</span>
+              </h2>
+              <h3 className="mt-1.5 sm:mt-2 text-xl sm:text-2xl md:text-3xl font-bold text-[#1a1a2e]">
+                Transforming Modern Businesses
+              </h3>
+              <p className="mt-2 sm:mt-2.5 text-base sm:text-lg md:text-xl text-gray-600">
+                Through{" "}
+                <span className="font-semibold" style={{ background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Innovation</span>
+                ,{" "}
+                <span className="font-semibold" style={{ background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Technology</span>
+                , and{" "}
+                <span className="font-semibold" style={{ background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Scalable Digital Solutions</span>
+              </p>
+            </div>
+            <div className={`flex justify-end items-start transition-all duration-700 delay-150 ${isVisible ? "opacity-100" : "opacity-0"}`}>
+              <GoogleRankingPromo />
+            </div>
+          </div>
 
-        {/* Subheading Text */}
-        <div className={`text-center mb-12 sm:mb-14 md:mb-16 transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#1a1a2e] mb-3">
-            Transforming Modern Businesses
-          </h3>
-          <p className="text-base sm:text-lg md:text-xl text-gray-600">
-            Through{" "}
-            <span 
-              className="font-semibold"
-              style={{
-                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              Innovation
-            </span>
-            ,{" "}
-            <span 
-              className="font-semibold"
-              style={{
-                background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              Technology
-            </span>
-            , and{" "}
-            <span 
-              className="font-semibold"
-              style={{
-                background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              Scalable Digital Solutions
-            </span>
-          </p>
+          {/* Desktop LG */}
+          <div className="hidden lg:block xl:hidden">
+            <div className="grid grid-cols-[1fr_auto_1fr] gap-x-4 items-start">
+              <div aria-hidden />
+              <div>
+                <h2 className={`text-3xl md:text-5xl lg:text-[3.5rem] font-bold leading-tight tracking-tight ${isVisible ? "opacity-100" : "opacity-0"}`}>
+                  <span className="bg-gradient-to-tr from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] text-transparent bg-clip-text">O</span>
+                  <span className="text-[#1a1a2e]">ur</span>
+                  <span className="text-[#1a1a2e]">&nbsp;</span>
+                  <span className="bg-gradient-to-tr from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] text-transparent bg-clip-text">S</span>
+                  <span className="text-[#1a1a2e]">ervic</span>
+                  <span className="bg-gradient-to-tr from-[#0055FF] via-[#FF6B6B] to-[#FF4757] text-transparent bg-clip-text">e</span>
+                  <span className="text-[#1a1a2e]">s</span>
+                </h2>
+                <h3 className="mt-1.5 text-2xl md:text-3xl font-bold text-[#1a1a2e]">Transforming Modern Businesses</h3>
+                <p className="mt-2 text-base sm:text-lg text-gray-600">
+                  Through{" "}
+                  <span className="font-semibold" style={{ background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Innovation</span>
+                  ,{" "}
+                  <span className="font-semibold" style={{ background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Technology</span>
+                  , and{" "}
+                  <span className="font-semibold" style={{ background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Scalable Digital Solutions</span>
+                </p>
+              </div>
+              <div className={`flex justify-end ${isVisible ? "opacity-100" : "opacity-0"}`}>
+                <GoogleRankingPromo />
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile & tablet */}
+          <div className="lg:hidden">
+            <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold leading-tight tracking-tight ${isVisible ? "opacity-100" : "opacity-0"}`}>
+              <span className="bg-gradient-to-tr from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] text-transparent bg-clip-text">O</span>
+              <span className="text-[#1a1a2e]">ur</span>
+              <span className="text-[#1a1a2e]">&nbsp;</span>
+              <span className="bg-gradient-to-tr from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] text-transparent bg-clip-text">S</span>
+              <span className="text-[#1a1a2e]">ervic</span>
+              <span className="bg-gradient-to-tr from-[#0055FF] via-[#FF6B6B] to-[#FF4757] text-transparent bg-clip-text">e</span>
+              <span className="text-[#1a1a2e]">s</span>
+            </h2>
+            <h3 className="mt-1.5 sm:mt-2 text-xl sm:text-2xl font-bold text-[#1a1a2e]">Transforming Modern Businesses</h3>
+            <p className="mt-2 text-base sm:text-lg text-gray-600">
+              Through{" "}
+              <span className="font-semibold" style={{ background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Innovation</span>
+              ,{" "}
+              <span className="font-semibold" style={{ background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Technology</span>
+              , and{" "}
+              <span className="font-semibold" style={{ background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Scalable Digital Solutions</span>
+            </p>
+            <div className={`flex justify-center mt-5 ${isVisible ? "opacity-100" : "opacity-0"}`}>
+              <GoogleRankingPromo compact />
+            </div>
+          </div>
         </div>
 
         {/* All Service Cards - 2 rows x 5 columns */}
