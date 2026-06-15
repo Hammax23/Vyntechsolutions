@@ -51,7 +51,7 @@ export default function LetsTalkBusiness() {
     hearAbout: "",
   });
 
-  const isAdminPage = pathname?.startsWith('/admin');
+  const isAdminPage = pathname?.startsWith('/admin') || pathname?.startsWith('/seopanel');
 
   // Listen for custom event to open the panel
   useEffect(() => {

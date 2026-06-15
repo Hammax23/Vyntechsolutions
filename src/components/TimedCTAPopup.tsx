@@ -16,7 +16,7 @@ export default function TimedCTAPopup() {
     projectDescription: "",
   });
 
-  const isAdminPage = pathname?.startsWith('/admin');
+  const isAdminPage = pathname?.startsWith('/admin') || pathname?.startsWith('/seopanel');
 
   useEffect(() => {
     // Don't show on admin pages

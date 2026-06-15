@@ -4,6 +4,7 @@
 User-agent: *
 Allow: /
 Disallow: /admin
+Disallow: /seopanel
 Disallow: /api/
 Disallow: /_next/
 Disallow: /private/
@@ -15,12 +16,14 @@ Crawl-delay: 1
 User-agent: Googlebot
 Allow: /
 Disallow: /admin
+Disallow: /seopanel
 Disallow: /api/
 
 # Bing Bot
 User-agent: Bingbot
 Allow: /
 Disallow: /admin
+Disallow: /seopanel
 Disallow: /api/
 
 # Host

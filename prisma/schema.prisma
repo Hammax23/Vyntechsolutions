@@ -140,3 +140,192 @@ model JobPosition {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
+
+// ─── SEO Panel ───────────────────────────────────────────────
+
+model SeoSession {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  email     String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([email])
+}
+
+model SeoKeyword {
+  id           String   @id @default(cuid())
+  keyword      String
+  targetUrl    String?
+  currentRank  Int?
+  previousRank Int?
+  bestRank     Int?
+  searchVolume Int?
+  difficulty   Int?
+  priority     String   @default("medium")
+  status       String   @default("tracking")
+  country      String   @default("CA")
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  rankHistory SeoRankHistory[]
+}
+
+model SeoRankHistory {
+  id         String     @id @default(cuid())
+  keywordId  String
+  keyword    SeoKeyword @relation(fields: [keywordId], references: [id], onDelete: Cascade)
+  rank       Int
+  recordedAt DateTime   @default(now())
+
+  @@index([keywordId])
+}
+
+model SeoPage {
+  id              String    @id @default(cuid())
+  path            String    @unique
+  title           String?
+  metaDescription String?
+  h1              String?
+  canonicalUrl    String?
+  ogTitle         String?
+  ogDescription   String?
+  ogImage         String?
+  focusKeyword    String?
+  seoScore        Int       @default(0)
+  indexStatus     String    @default("index")
+  status          String    @default("needs_review")
+  lastAuditedAt   DateTime?
+  notes           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model SeoBacklink {
+  id         String    @id @default(cuid())
+  sourceUrl  String
+  targetUrl  String
+  anchorText String?
+  domainAuth Int?
+  linkType   String    @default("dofollow")
+  status     String    @default("active")
+  acquiredAt DateTime?
+  notes      String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model SeoTask {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  category    String    @default("general")
+  priority    String    @default("medium")
+  status      String    @default("pending")
+  dueDate     DateTime?
+  assignee    String    @default("SEO Expert")
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model SeoAudit {
+  id              String   @id @default(cuid())
+  title           String
+  auditType       String   @default("full")
+  score           Int      @default(0)
+  findings        String?
+  recommendations String?
+  status          String   @default("completed")
+  auditedAt       DateTime @default(now())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model SeoCompetitor {
+  id          String   @id @default(cuid())
+  domain      String
+  name        String?
+  domainAuth  Int?
+  topKeywords String[]
+  strengths   String?
+  weaknesses  String?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SeoTechnicalIssue {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  severity    String    @default("medium")
+  category    String
+  status      String    @default("open")
+  affectedUrl String?
+  resolvedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model SeoContentBrief {
+  id            String    @id @default(cuid())
+  title         String
+  targetUrl     String?
+  targetKeyword String?
+  wordCount     Int?
+  status        String    @default("draft")
+  brief         String?
+  outline       String?
+  notes         String?
+  publishedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model SeoReport {
+  id         String   @id @default(cuid())
+  title      String
+  period     String
+  reportType String   @default("monthly")
+  summary    String?
+  metrics    String?
+  highlights String?
+  challenges String?
+  nextSteps  String?
+  status     String   @default("draft")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model SeoSettings {
+  id                   String    @id @default("default")
+  siteUrl              String    @default("https://weborbitztech.ca")
+  gscProperty          String?
+  gaPropertyId         String?
+  googleVerification   String?
+  bingVerification     String?
+  defaultTitle         String?
+  defaultDescription   String?
+  robotsTxtNotes       String?
+  sitemapLastSubmitted DateTime?
+  targetCountry        String    @default("CA")
+  targetCities         String[]
+  monthlyTrafficGoal   Int?
+  monthlyLeadsGoal     Int?
+  notes                String?
+  updatedAt            DateTime  @updatedAt
+}
+
+model SeoActivityLog {
+  id        String   @id @default(cuid())
+  action    String
+  module    String
+  details   String?
+  user      String   @default("SEO Expert")
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
