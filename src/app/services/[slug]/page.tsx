@@ -1063,7 +1063,7 @@ export default function ServicePage() {
           <div className="text-center mb-20">
             <span className="text-[#262b3f] text-sm font-medium tracking-wider uppercase mb-4 block">Our Approach</span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#1a1a2e]">
-              Why Choose WebOrbitz?
+              Why Choose VynTech Solutions?
             </h2>
           </div>
 

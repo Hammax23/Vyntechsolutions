@@ -1,13 +1,13 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Terms & Conditions | WebOrbitz - Service Agreement & Legal Terms',
-  description: 'Read WebOrbitz Technologies Terms and Conditions. Understand our service agreements, payment terms, intellectual property rights, warranties, and legal obligations for web development services in Canada.',
+  title: 'Terms & Conditions | VynTech Solutions - Service Agreement & Legal Terms',
+  description: 'Read VynTech Solutions Terms and Conditions. Understand our service agreements, payment terms, intellectual property rights, warranties, and legal obligations for web development services in Canada.',
   keywords: [
     'terms and conditions',
     'service agreement',
     'legal terms',
-    'WebOrbitz terms',
+    'VynTech Solutions terms',
     'web development contract',
     'client agreement',
     'intellectual property',
@@ -15,20 +15,20 @@ export const metadata: Metadata = {
     'Canadian business terms'
   ],
   openGraph: {
-    title: 'Terms & Conditions | WebOrbitz Technologies',
-    description: 'Our Terms and Conditions outline the legal agreement for WebOrbitz services.',
-    url: 'https://weborbitztech.ca/terms-and-conditions',
-    siteName: 'WebOrbitz',
+    title: 'Terms & Conditions | VynTech Solutions',
+    description: 'Our Terms and Conditions outline the legal agreement for VynTech Solutions services.',
+    url: 'https://vyntechsolutions.ca/terms-and-conditions',
+    siteName: 'VynTech Solutions',
     locale: 'en_CA',
     type: 'website',
   },
   twitter: {
     card: 'summary',
-    title: 'Terms & Conditions | WebOrbitz',
-    description: 'Service agreement and legal terms for WebOrbitz Technologies.',
+    title: 'Terms & Conditions | VynTech Solutions',
+    description: 'Service agreement and legal terms for VynTech Solutions.',
   },
   alternates: {
-    canonical: 'https://weborbitztech.ca/terms-and-conditions',
+    canonical: 'https://vyntechsolutions.ca/terms-and-conditions',
   },
 };
 

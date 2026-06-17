@@ -3,8 +3,8 @@ import nodemailer from "nodemailer";
 import prisma from "@/lib/prisma";
 
 // Get credentials from environment variables
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "info@weborbitztech.ca";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "WebOrbitz@2024";
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "info@vyntechsolutions.ca";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "VynTech@2024";
 
 // Rate limiting settings
 const MAX_FAILED_ATTEMPTS = 5;
@@ -117,19 +117,19 @@ export async function POST(request: NextRequest) {
         port: parseInt(process.env.SMTP_PORT || "465"),
         secure: true,
         auth: {
-          user: process.env.SMTP_USER || "info@weborbitztech.ca",
+          user: process.env.SMTP_USER || "info@vyntechsolutions.ca",
           pass: process.env.SMTP_PASS || "",
         },
       });
 
       await transporter.sendMail({
-        from: `"WebOrbitz Admin" <${process.env.SMTP_USER || "info@weborbitztech.ca"}>`,
+        from: `"VynTech Solutions Admin" <${process.env.SMTP_USER || "info@vyntechsolutions.ca"}>`,
         to: ADMIN_EMAIL,
         subject: "Admin Panel - 2FA Verification Code",
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <div style="background: linear-gradient(135deg, #0055FF 0%, #00B4FF 100%); padding: 30px; border-radius: 10px; text-align: center;">
-              <h1 style="color: white; margin: 0; font-size: 24px;">WebOrbitz Admin</h1>
+              <h1 style="color: white; margin: 0; font-size: 24px;">VynTech Solutions Admin</h1>
               <p style="color: rgba(255,255,255,0.8); margin: 10px 0 0;">Security Verification</p>
             </div>
             <div style="background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px;">

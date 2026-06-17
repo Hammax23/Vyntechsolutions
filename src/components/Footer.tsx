@@ -294,7 +294,7 @@ export default function Footer() {
 
           {/* Copyright */}
           <p className="text-xs text-gray-500">
-            © {new Date().getFullYear()} WebOrbitz Ltd. All Rights Reserved.
+            © {new Date().getFullYear()} VynTech Solutions All Rights Reserved.
           </p>
         </div>
       </div>

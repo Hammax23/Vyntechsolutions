@@ -1,15 +1,15 @@
 import { Metadata } from "next";
 
-const siteUrl = "https://weborbitztech.ca";
+const siteUrl = "https://vyntechsolutions.ca";
 
 export const defaultSEO: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "WebOrbitz | Building Digital Excellence for Canadian Businesses",
-    template: "%s | WebOrbitz - Canadian Digital Agency",
+    default: "VynTech Solutions | Building Digital Excellence for Canadian Businesses",
+    template: "%s | VynTech Solutions - Canadian Digital Agency",
   },
   description:
-    "WebOrbitz is Canada's leading digital agency specializing in custom web development, mobile apps, UI/UX design, and enterprise software solutions. Serving businesses across Toronto, Vancouver, Montreal & nationwide.",
+    "VynTech Solutions is Canada's leading digital agency specializing in custom web development, mobile apps, UI/UX design, and enterprise software solutions. Serving businesses across Toronto, Vancouver, Montreal & nationwide.",
   keywords: [
     // Primary Keywords - Canada Focus
     "web development Canada",
@@ -53,9 +53,9 @@ export const defaultSEO: Metadata = {
     "progressive web app development",
     "cross platform mobile app development",
   ],
-  authors: [{ name: "WebOrbitz Tech", url: siteUrl }],
-  creator: "WebOrbitz Tech",
-  publisher: "WebOrbitz Tech",
+  authors: [{ name: "VynTech Solutions", url: siteUrl }],
+  creator: "VynTech Solutions",
+  publisher: "VynTech Solutions",
   formatDetection: {
     email: false,
     address: false,
@@ -72,8 +72,8 @@ export const defaultSEO: Metadata = {
     type: "website",
     locale: "en_CA",
     url: siteUrl,
-    siteName: "WebOrbitz",
-    title: "WebOrbitz | Building Digital Excellence for Canadian Businesses",
+    siteName: "VynTech Solutions",
+    title: "VynTech Solutions | Building Digital Excellence for Canadian Businesses",
     description:
       "Transform your business with Canada's leading digital agency. Custom web development, mobile apps, and enterprise solutions tailored for Canadian businesses.",
     images: [
@@ -81,19 +81,19 @@ export const defaultSEO: Metadata = {
         url: `${siteUrl}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: "WebOrbitz - Canadian Digital Agency",
+        alt: "VynTech Solutions - Canadian Digital Agency",
         type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "WebOrbitz | Canada's Leading Digital Agency",
+    title: "VynTech Solutions | Canada's Leading Digital Agency",
     description:
       "Custom web development, mobile apps & enterprise solutions for Canadian businesses. Toronto, Vancouver, Montreal & nationwide.",
     images: [`${siteUrl}/og-image.png`],
-    creator: "@weborbitz",
-    site: "@weborbitz",
+    creator: "@vyntechsolutions",
+    site: "@vyntechsolutions",
   },
   robots: {
     index: true,
@@ -129,8 +129,8 @@ export const defaultSEO: Metadata = {
 export const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "WebOrbitz Tech",
-  alternateName: "WebOrbitz",
+  name: "VynTech Solutions",
+  alternateName: "VynTech Solutions",
   url: siteUrl,
   logo: `${siteUrl}/favicon/android-chrome-512x512.png`,
   description:
@@ -139,7 +139,7 @@ export const organizationSchema = {
   founders: [
     {
       "@type": "Person",
-      name: "WebOrbitz Team",
+      name: "VynTech Solutions Team",
     },
   ],
   address: {
@@ -152,16 +152,16 @@ export const organizationSchema = {
       "@type": "ContactPoint",
       telephone: "+1-XXX-XXX-XXXX",
       contactType: "customer service",
-      email: "info@weborbitztech.ca",
+      email: "info@vyntechsolutions.ca",
       areaServed: "CA",
       availableLanguage: ["English", "French"],
     },
   ],
   sameAs: [
-    "https://www.linkedin.com/company/weborbitz",
-    "https://twitter.com/weborbitz",
-    "https://www.instagram.com/weborbitz",
-    "https://github.com/weborbitz",
+    "https://www.linkedin.com/company/vyntechsolutions",
+    "https://twitter.com/vyntechsolutions",
+    "https://www.instagram.com/vyntechsolutions",
+    "https://github.com/vyntechsolutions",
   ],
   areaServed: {
     "@type": "Country",
@@ -182,11 +182,11 @@ export const organizationSchema = {
 export const localBusinessSchema = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
-  name: "WebOrbitz Tech",
+  name: "VynTech Solutions",
   image: `${siteUrl}/favicon/android-chrome-512x512.png`,
   url: siteUrl,
   telephone: "+1-XXX-XXX-XXXX",
-  email: "info@weborbitztech.ca",
+  email: "info@vyntechsolutions.ca",
   priceRange: "$$",
   address: {
     "@type": "PostalAddress",
@@ -216,7 +216,7 @@ export const localBusinessSchema = {
 export const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "WebOrbitz",
+  name: "VynTech Solutions",
   url: siteUrl,
   potentialAction: {
     "@type": "SearchAction",
@@ -239,7 +239,7 @@ export const servicesSchema = {
       name: "Custom Web Development",
       description:
         "Enterprise-grade web applications built with React, Next.js, and modern technologies for Canadian businesses.",
-      provider: { "@type": "Organization", name: "WebOrbitz Tech" },
+      provider: { "@type": "Organization", name: "VynTech Solutions" },
       areaServed: "Canada",
     },
     {
@@ -248,7 +248,7 @@ export const servicesSchema = {
       name: "Mobile App Development",
       description:
         "Native and cross-platform mobile applications for iOS and Android, designed for the Canadian market.",
-      provider: { "@type": "Organization", name: "WebOrbitz Tech" },
+      provider: { "@type": "Organization", name: "VynTech Solutions" },
       areaServed: "Canada",
     },
     {
@@ -257,7 +257,7 @@ export const servicesSchema = {
       name: "UI/UX Design",
       description:
         "User-centered design solutions that enhance engagement and conversion for Canadian enterprises.",
-      provider: { "@type": "Organization", name: "WebOrbitz Tech" },
+      provider: { "@type": "Organization", name: "VynTech Solutions" },
       areaServed: "Canada",
     },
     {
@@ -266,7 +266,7 @@ export const servicesSchema = {
       name: "Enterprise Software Solutions",
       description:
         "Scalable enterprise applications and digital transformation services for businesses across Canada.",
-      provider: { "@type": "Organization", name: "WebOrbitz Tech" },
+      provider: { "@type": "Organization", name: "VynTech Solutions" },
       areaServed: "Canada",
     },
     {
@@ -275,7 +275,7 @@ export const servicesSchema = {
       name: "E-commerce Development",
       description:
         "Custom e-commerce platforms and Shopify solutions optimized for the Canadian retail market.",
-      provider: { "@type": "Organization", name: "WebOrbitz Tech" },
+      provider: { "@type": "Organization", name: "VynTech Solutions" },
       areaServed: "Canada",
     },
   ],
@@ -288,10 +288,10 @@ export const faqSchema = {
   mainEntity: [
     {
       "@type": "Question",
-      name: "What services does WebOrbitz offer?",
+      name: "What services does VynTech Solutions offer?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "WebOrbitz offers comprehensive digital services including custom web development, mobile app development (iOS & Android), UI/UX design, cloud solutions, AI/ML development, e-commerce solutions, and enterprise software development. We serve businesses across Canada including Toronto, Vancouver, and Montreal.",
+        text: "VynTech Solutions offers comprehensive digital services including custom web development, mobile app development (iOS & Android), UI/UX design, cloud solutions, AI/ML development, e-commerce solutions, and enterprise software development. We serve businesses across Canada including Toronto, Vancouver, and Montreal.",
       },
     },
     {
@@ -299,7 +299,7 @@ export const faqSchema = {
       name: "How much does web development cost in Canada?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Web development costs vary based on project complexity. Simple websites start from $5,000 CAD, while custom web applications range from $15,000 to $100,000+ CAD. Contact WebOrbitz for a free consultation and accurate quote for your specific requirements.",
+        text: "Web development costs vary based on project complexity. Simple websites start from $5,000 CAD, while custom web applications range from $15,000 to $100,000+ CAD. Contact VynTech Solutions for a free consultation and accurate quote for your specific requirements.",
       },
     },
     {
@@ -315,7 +315,7 @@ export const faqSchema = {
       name: "Do you work with startups and enterprises?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes! WebOrbitz works with businesses of all sizes - from early-stage startups launching their first MVP to established enterprises modernizing their digital infrastructure. We tailor our approach to match your business needs and budget.",
+        text: "Yes! VynTech Solutions works with businesses of all sizes - from early-stage startups launching their first MVP to established enterprises modernizing their digital infrastructure. We tailor our approach to match your business needs and budget.",
       },
     },
     {
@@ -345,7 +345,7 @@ export const generateBreadcrumbSchema = (items: { name: string; url: string }[])
 export const softwareAppSchema = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  name: "WebOrbitz Custom Solutions",
+  name: "VynTech Solutions",
   applicationCategory: "BusinessApplication",
   operatingSystem: "Web, iOS, Android",
   offers: {
@@ -363,7 +363,7 @@ export const softwareAppSchema = {
   },
   provider: {
     "@type": "Organization",
-    name: "WebOrbitz Tech",
+    name: "VynTech Solutions",
     url: siteUrl,
   },
 };
@@ -372,7 +372,7 @@ export const softwareAppSchema = {
 export const reviewSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "WebOrbitz Tech",
+  name: "VynTech Solutions",
   url: siteUrl,
   aggregateRating: {
     "@type": "AggregateRating",
@@ -387,7 +387,7 @@ export const reviewSchema = {
       author: { "@type": "Person", name: "Canadian Startup Founder" },
       datePublished: "2024-01-15",
       reviewRating: { "@type": "Rating", ratingValue: "5", bestRating: "5" },
-      reviewBody: "WebOrbitz delivered our MVP on time and within budget. Excellent team to work with!",
+      reviewBody: "VynTech Solutions delivered our MVP on time and within budget. Excellent team to work with!",
     },
     {
       "@type": "Review",
@@ -403,7 +403,7 @@ export const reviewSchema = {
 export const howToSchema = {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  name: "How to Start Your Web Development Project with WebOrbitz",
+  name: "How to Start Your Web Development Project with VynTech Solutions",
   description: "Simple steps to begin your digital transformation journey with Canada's leading web agency.",
   step: [
     {
@@ -433,14 +433,14 @@ export const howToSchema = {
 // Page-specific SEO configurations
 export const pageSEO = {
   home: {
-    title: "WebOrbitz | Building Digital Excellence for Canadian Businesses",
+    title: "VynTech Solutions | Building Digital Excellence for Canadian Businesses",
     description:
       "Transform your business with Canada's leading digital agency. Custom web development, mobile apps, UI/UX design & enterprise solutions. Serving Toronto, Vancouver, Montreal & nationwide.",
   },
   about: {
     title: "About Us - Our Story & Mission",
     description:
-      "Discover WebOrbitz - Canada's trusted digital partner since 2020. Learn about our team, values, and commitment to delivering exceptional web solutions for Canadian businesses.",
+      "Discover VynTech Solutions - Canada's trusted digital partner since 2020. Learn about our team, values, and commitment to delivering exceptional web solutions for Canadian businesses.",
   },
   services: {
     title: "Our Services - Web Development, Mobile Apps & More",
@@ -450,12 +450,12 @@ export const pageSEO = {
   careers: {
     title: "Careers - Join Our Team",
     description:
-      "Join Canada's fastest-growing digital agency. Explore exciting career opportunities in web development, design, and technology at WebOrbitz.",
+      "Join Canada's fastest-growing digital agency. Explore exciting career opportunities in web development, design, and technology at VynTech Solutions.",
   },
   blog: {
     title: "Blog - Insights & Industry Trends",
     description:
-      "Stay updated with the latest in web development, digital trends, and technology insights from WebOrbitz's expert team in Canada.",
+      "Stay updated with the latest in web development, digital trends, and technology insights from VynTech Solutions' expert team in Canada.",
   },
   industries: {
     title: "Industries We Serve",
@@ -465,6 +465,6 @@ export const pageSEO = {
   contact: {
     title: "Contact Us - Let's Build Together",
     description:
-      "Ready to transform your digital presence? Contact WebOrbitz for a free consultation. Serving businesses across Canada with tailored web solutions.",
+      "Ready to transform your digital presence? Contact VynTech Solutions for a free consultation. Serving businesses across Canada with tailored web solutions.",
   },
 };

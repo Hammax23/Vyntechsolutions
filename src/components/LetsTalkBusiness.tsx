@@ -143,9 +143,9 @@ export default function LetsTalkBusiness() {
 
       {/* Floating Email Button */}
       <a
-        href="mailto:info@weborbitztech.ca"
+        href="mailto:info@vyntechsolutions.ca"
         className="fixed right-8 bottom-32 z-50 bg-gradient-to-r from-[#0055FF] to-[#00E1FF] hover:from-[#0044DD] hover:to-[#00C8E8] text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110"
-        title="Email us at info@weborbitztech.ca"
+        title="Email us at info@vyntechsolutions.ca"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />

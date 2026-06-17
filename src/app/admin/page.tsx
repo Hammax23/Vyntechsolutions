@@ -668,7 +668,7 @@ export default function AdminPage() {
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="info@weborbitztech.ca"
+                        placeholder="info@vyntechsolutions.ca"
                         className="w-full pl-12 pr-4 py-3.5 bg-white/[0.03] border border-white/10 rounded-lg text-white placeholder-white/25 focus:border-[#00B4FF]/50 focus:bg-white/[0.05] transition-all outline-none text-sm"
                         required
                       />

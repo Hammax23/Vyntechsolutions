@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import AnimatedLogo from "./AnimatedLogo";
+import VynTechLogo from "./VynTechLogo";
 
 // Search data - all searchable pages and services
 const searchData = [
@@ -154,7 +154,7 @@ export default function Navbar() {
             <div className="flex items-center z-50">
               <div className="flex flex-col">
                 <Link href="/">
-                  <AnimatedLogo onClick={() => setIsMobileMenuOpen(false)} />
+                  <VynTechLogo onClick={() => setIsMobileMenuOpen(false)} />
                 </Link>
               </div>
             </div>

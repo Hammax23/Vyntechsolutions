@@ -1,7 +1,7 @@
-export const SITE_URL = "https://weborbitztech.ca";
+export const SITE_URL = "https://vyntechsolutions.ca";
 
 export const DEFAULT_SITE_PAGES = [
-  { path: "/", title: "WebOrbitz | Building Digital Excellence for Canadian Businesses", focusKeyword: "web development Canada" },
+  { path: "/", title: "VynTech Solutions | Building Digital Excellence for Canadian Businesses", focusKeyword: "web development Canada" },
   { path: "/about", title: "About Us - Our Story & Mission", focusKeyword: "digital agency Canada" },
   { path: "/services", title: "Our Services - Web Development, Mobile Apps & More", focusKeyword: "web development services Canada" },
   { path: "/services/web-development", title: "Web Development Services", focusKeyword: "custom web development Canada" },

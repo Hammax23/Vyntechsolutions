@@ -3,9 +3,9 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "About Us - Our Story & Mission",
   description:
-    "Discover WebOrbitz - Canada's trusted digital partner since 2020. Learn about our team, values, and commitment to delivering exceptional web solutions for Canadian businesses across Toronto, Vancouver, Montreal & nationwide.",
+    "Discover VynTech Solutions - Canada's trusted digital partner since 2020. Learn about our team, values, and commitment to delivering exceptional web solutions for Canadian businesses across Toronto, Vancouver, Montreal & nationwide.",
   keywords: [
-    "about WebOrbitz",
+    "about VynTech Solutions",
     "Canadian web development company",
     "digital agency Canada",
     "software development team Toronto",
@@ -13,14 +13,14 @@ export const metadata: Metadata = {
     "IT solutions Montreal",
   ],
   openGraph: {
-    title: "About WebOrbitz - Canada's Premier Digital Agency",
+    title: "About VynTech Solutions - Canada's Premier Digital Agency",
     description:
       "Learn about our mission to transform Canadian businesses through innovative web development and digital solutions.",
-    url: "https://weborbitztech.ca/about",
+    url: "https://vyntechsolutions.ca/about",
     type: "website",
   },
   alternates: {
-    canonical: "https://weborbitztech.ca/about",
+    canonical: "https://vyntechsolutions.ca/about",
   },
 };
 

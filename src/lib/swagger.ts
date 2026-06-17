@@ -6,9 +6,9 @@ export const getApiDocs = async () => {
     definition: {
       openapi: "3.0.0",
       info: {
-        title: "WebOrbitz API Documentation",
+        title: "VynTech Solutions API Documentation",
         version: "1.0.0",
-        description: "API documentation for WebOrbitz Tech application",
+        description: "API documentation for VynTech Solutions application",
       },
       servers: [
         {

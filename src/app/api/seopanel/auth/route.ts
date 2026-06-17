@@ -49,19 +49,19 @@ export async function POST(request: NextRequest) {
         port: parseInt(process.env.SMTP_PORT || "465"),
         secure: true,
         auth: {
-          user: process.env.SMTP_USER || "info@weborbitztech.ca",
+          user: process.env.SMTP_USER || "info@vyntechsolutions.ca",
           pass: process.env.SMTP_PASS || "",
         },
       });
 
       await transporter.sendMail({
-        from: `"WebOrbitz SEO Panel" <${process.env.SMTP_USER || "info@weborbitztech.ca"}>`,
+        from: `"VynTech Solutions SEO Panel" <${process.env.SMTP_USER || "info@vyntechsolutions.ca"}>`,
         to: SEO_EXPERT_EMAIL,
         subject: "SEO Panel - 2FA Verification Code",
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <div style="background: linear-gradient(135deg, #0d9488 0%, #0055FF 100%); padding: 30px; border-radius: 10px; text-align: center;">
-              <h1 style="color: white; margin: 0; font-size: 24px;">WebOrbitz SEO Panel</h1>
+              <h1 style="color: white; margin: 0; font-size: 24px;">VynTech Solutions SEO Panel</h1>
               <p style="color: rgba(255,255,255,0.8); margin: 10px 0 0;">Expert Access Verification</p>
             </div>
             <div style="background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px;">

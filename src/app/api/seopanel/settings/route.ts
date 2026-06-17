@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     settings = await prisma.seoSettings.create({
       data: {
         id: "default",
-        siteUrl: "https://weborbitztech.ca",
+        siteUrl: "https://vyntechsolutions.ca",
         targetCountry: "CA",
         targetCities: ["Toronto", "Vancouver", "Montreal"],
         gaPropertyId: "G-KJSSQXW965",

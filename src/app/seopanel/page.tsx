@@ -92,7 +92,7 @@ export default function SeoPanelPage() {
         <div className="p-5 border-b border-[#1e2a45]">
           <AnimatedLogo className="mb-3 cursor-default scale-75 origin-left" />
           <p className="text-[#0d9488] text-xs font-bold uppercase tracking-widest">SEO Command Center</p>
-          <p className="text-slate-500 text-xs mt-0.5">weborbitztech.ca</p>
+          <p className="text-slate-500 text-xs mt-0.5">vyntechsolutions.ca</p>
         </div>
         <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
           {SEO_PANEL_SECTIONS.map((s) => (
@@ -129,7 +129,7 @@ export default function SeoPanelPage() {
               <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span className="text-slate-400 text-xs">SEO Expert Session Active</span>
             </div>
-            <a href="https://weborbitztech.ca" target="_blank" rel="noopener noreferrer" className="text-[#0d9488] text-xs font-semibold hover:underline">
+            <a href="https://vyntechsolutions.ca" target="_blank" rel="noopener noreferrer" className="text-[#0d9488] text-xs font-semibold hover:underline">
               View Site →
             </a>
           </div>

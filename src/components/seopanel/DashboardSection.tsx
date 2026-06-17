@@ -24,7 +24,7 @@ export default function DashboardSection() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-white">Dashboard</h2>
-        <p className="text-slate-400 text-sm mt-1">weborbitztech.ca — SEO performance overview</p>
+        <p className="text-slate-400 text-sm mt-1">vyntechsolutions.ca — SEO performance overview</p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

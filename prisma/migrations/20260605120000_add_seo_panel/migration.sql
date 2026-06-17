@@ -183,7 +183,7 @@ CREATE TABLE "SeoReport" (
 -- CreateTable
 CREATE TABLE "SeoSettings" (
     "id" TEXT NOT NULL DEFAULT 'default',
-    "siteUrl" TEXT NOT NULL DEFAULT 'https://weborbitztech.ca',
+    "siteUrl" TEXT NOT NULL DEFAULT 'https://vyntechsolutions.ca',
     "gscProperty" TEXT,
     "gaPropertyId" TEXT,
     "googleVerification" TEXT,

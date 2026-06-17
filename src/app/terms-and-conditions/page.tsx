@@ -41,7 +41,7 @@ export default function TermsAndConditionsPage() {
             {/* Introduction */}
             <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
               <p className="text-white/70 leading-relaxed">
-                By using <span className="text-[#00B4FF]">weborbitztech.ca</span> or hiring WebOrbitz Technologies for any project, you agree to these terms. These terms are governed by the laws of <strong className="text-white">Ontario, Canada</strong>.
+                By using <span className="text-[#00B4FF]">vyntechsolutions.ca</span> or hiring VynTech Solutions for any project, you agree to these terms. These terms are governed by the laws of <strong className="text-white">Ontario, Canada</strong>.
               </p>
             </div>
 
@@ -123,8 +123,8 @@ export default function TermsAndConditionsPage() {
             <div className="bg-gradient-to-r from-[#00B4FF]/10 to-[#00FF94]/10 border border-[#00B4FF]/30 rounded-2xl p-6">
               <h2 className="text-xl font-bold text-white mb-4">Questions?</h2>
               <div className="text-white/70 space-y-1">
-                <p><strong className="text-white">WebOrbitz Technologies</strong></p>
-                <p>Email: <span className="text-[#00B4FF]">info@weborbitztech.ca</span></p>
+                <p><strong className="text-white">VynTech Solutions</strong></p>
+                <p>Email: <span className="text-[#00B4FF]">info@vyntechsolutions.ca</span></p>
                 <p>Phone: <span className="text-[#00B4FF]">+1 (437) 388-7721</span></p>
                 <p>Location: Toronto, Ontario, Canada</p>
               </div>

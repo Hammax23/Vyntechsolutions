@@ -414,7 +414,7 @@ export default function LetsTalkBusinessPage() {
                 <div className={`bg-white rounded-3xl border border-gray-100 shadow-lg p-8 transition-all duration-700 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
                   <h3 className="text-xl font-semibold text-[#1a1a2e] mb-6">Prefer to Talk?</h3>
                   <div className="space-y-4">
-                    <a href="mailto:hello@weborbitz.com" className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-[#262b3f]/5 transition-colors group">
+                    <a href="mailto:hello@vyntechsolutions.ca" className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-[#262b3f]/5 transition-colors group">
                       <div className="w-10 h-10 bg-[#262b3f]/10 rounded-lg flex items-center justify-center text-[#262b3f] group-hover:bg-[#262b3f] group-hover:text-white transition-all">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -422,7 +422,7 @@ export default function LetsTalkBusinessPage() {
                       </div>
                       <div>
                         <div className="text-sm text-gray-500">Email Us</div>
-                        <div className="font-medium text-[#1a1a2e]">info@weborbitztech.ca</div>
+                        <div className="font-medium text-[#1a1a2e]">info@vyntechsolutions.ca</div>
                       </div>
                     </a>
                     <a href="tel:+1234567890" className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-[#262b3f]/5 transition-colors group">

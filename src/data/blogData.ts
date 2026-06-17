@@ -20,7 +20,7 @@ export const blogPosts: BlogPost[] = [
     excerpt: "Off-the-shelf software seems cheaper upfront, but custom solutions often deliver better ROI. Here's when to build vs buy.",
     category: "Business",
     tags: ["custom software", "software development", "business solutions", "ROI"],
-    author: "WebOrbitz Team",
+    author: "VynTech Solutions Team",
     readTime: "5 min",
     image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
     content: `
@@ -77,7 +77,7 @@ Most successful companies use both—they just know which is which.
     excerpt: "Startups often debate web vs mobile. The answer is usually simpler than you think—and it's not always mobile first.",
     category: "Development",
     tags: ["web development", "mobile app development", "startup", "product strategy"],
-    author: "WebOrbitz Team",
+    author: "VynTech Solutions Team",
     readTime: "6 min",
     image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80",
     content: `
@@ -140,7 +140,7 @@ Building web first lets you validate before tripling your investment.
     excerpt: "Your tech stack affects development speed, hiring, and scalability. Here's how to choose without overengineering.",
     category: "Technology",
     tags: ["tech stack", "startup development", "React", "Node.js", "software architecture"],
-    author: "WebOrbitz Team",
+    author: "VynTech Solutions Team",
     readTime: "7 min",
     image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80",
     content: `
@@ -216,7 +216,7 @@ Otherwise, go with proven tools and focus on building your product.
     excerpt: "How long does an MVP take? What does it cost? Here are real numbers based on hundreds of projects.",
     category: "Business",
     tags: ["MVP development", "startup costs", "software budgeting", "product development"],
-    author: "WebOrbitz Team",
+    author: "VynTech Solutions Team",
     readTime: "6 min",
     image: "https://images.unsplash.com/photo-1553484771-371a605b060b?w=800&q=80",
     content: `
@@ -302,7 +302,7 @@ Building too much before validating. Spend 60% of your budget on version 1, save
     excerpt: "APIs connect your business tools. Here's what that means for your operations and how to think about integration projects.",
     category: "Technology",
     tags: ["API integration", "business automation", "software integration", "workflow automation"],
-    author: "WebOrbitz Team",
+    author: "VynTech Solutions Team",
     readTime: "5 min",
     image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80",
     content: `
@@ -379,7 +379,7 @@ Integration projects pay for themselves quickly—usually within 6-12 months thr
     excerpt: "Website redesigns often hurt performance. Follow this checklist to make sure yours actually improves things.",
     category: "Design",
     tags: ["website redesign", "web design", "UX design", "SEO", "conversion optimization"],
-    author: "WebOrbitz Team",
+    author: "VynTech Solutions Team",
     readTime: "8 min",
     image: "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=800&q=80",
     content: `

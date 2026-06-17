@@ -41,7 +41,7 @@ export default function PrivacyPolicyPage() {
             {/* Introduction */}
             <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
               <p className="text-white/70 leading-relaxed">
-                WebOrbitz Technologies (&quot;we&quot;, &quot;us&quot;, &quot;our&quot;) respects your privacy. This policy explains how we collect and use your information when you use <span className="text-[#00B4FF]">weborbitztech.ca</span> or our services. We comply with <strong className="text-white">PIPEDA</strong> (Personal Information Protection and Electronic Documents Act) and Canadian privacy laws.
+                VynTech Solutions (&quot;we&quot;, &quot;us&quot;, &quot;our&quot;) respects your privacy. This policy explains how we collect and use your information when you use <span className="text-[#00B4FF]">vyntechsolutions.ca</span> or our services. We comply with <strong className="text-white">PIPEDA</strong> (Personal Information Protection and Electronic Documents Act) and Canadian privacy laws.
               </p>
             </div>
 
@@ -86,7 +86,7 @@ export default function PrivacyPolicyPage() {
                 <li><strong className="text-white">Delete</strong> - Request deletion of your data</li>
                 <li><strong className="text-white">Unsubscribe</strong> - Opt out of marketing emails</li>
               </ul>
-              <p className="text-white/70 mt-3">Email us at <span className="text-[#00B4FF]">info@weborbitztech.ca</span> to exercise these rights.</p>
+              <p className="text-white/70 mt-3">Email us at <span className="text-[#00B4FF]">info@vyntechsolutions.ca</span> to exercise these rights.</p>
             </div>
 
             {/* Cookies */}
@@ -109,8 +109,8 @@ export default function PrivacyPolicyPage() {
             <div className="bg-gradient-to-r from-[#00B4FF]/10 to-[#00FF94]/10 border border-[#00B4FF]/30 rounded-2xl p-6">
               <h2 className="text-xl font-bold text-white mb-4">Contact Us</h2>
               <div className="text-white/70 space-y-1">
-                <p><strong className="text-white">WebOrbitz Technologies</strong></p>
-                <p>Email: <span className="text-[#00B4FF]">info@weborbitztech.ca</span></p>
+                <p><strong className="text-white">VynTech Solutions</strong></p>
+                <p>Email: <span className="text-[#00B4FF]">info@vyntechsolutions.ca</span></p>
                 <p>Phone: <span className="text-[#00B4FF]">+1 (437) 388-7721</span></p>
                 <p>Location: Toronto, Ontario, Canada</p>
               </div>

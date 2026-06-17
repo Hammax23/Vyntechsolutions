@@ -68,7 +68,7 @@ export default function SeoLogin({ onAuthenticated }: SeoLoginProps) {
         <div className="text-center mb-8">
           <AnimatedLogo className="mx-auto mb-4 cursor-default" />
           <h1 className="text-2xl font-bold text-white">SEO Command Center</h1>
-          <p className="text-slate-400 text-sm mt-2">WebOrbitz Enterprise SEO Panel</p>
+          <p className="text-slate-400 text-sm mt-2">VynTech Solutions Enterprise SEO Panel</p>
         </div>
         <div className="bg-[#12182b] border border-[#1e2a45] rounded-2xl p-8 shadow-2xl">
           <div className="flex items-center gap-2 mb-6">
@@ -83,7 +83,7 @@ export default function SeoLogin({ onAuthenticated }: SeoLoginProps) {
               <div>
                 <label className="block text-xs font-medium text-slate-400 mb-1.5">Email</label>
                 <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
-                  className="w-full bg-[#0a0f1a] border border-[#1e2a45] rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[#0d9488]" placeholder="seo@weborbitztech.ca" />
+                  className="w-full bg-[#0a0f1a] border border-[#1e2a45] rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-[#0d9488]" placeholder="seo@vyntechsolutions.ca" />
               </div>
               <div>
                 <label className="block text-xs font-medium text-slate-400 mb-1.5">Password</label>

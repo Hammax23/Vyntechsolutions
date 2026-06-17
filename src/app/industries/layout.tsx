@@ -15,14 +15,14 @@ export const metadata: Metadata = {
     "Canadian industry solutions",
   ],
   openGraph: {
-    title: "Industries We Serve - WebOrbitz | Specialized Digital Solutions",
+    title: "Industries We Serve - VynTech Solutions | Specialized Digital Solutions",
     description:
       "Industry-specific digital solutions for healthcare, fintech, retail, and more. Tailored expertise for Canadian businesses.",
-    url: "https://weborbitztech.ca/industries",
+    url: "https://vyntechsolutions.ca/industries",
     type: "website",
   },
   alternates: {
-    canonical: "https://weborbitztech.ca/industries",
+    canonical: "https://vyntechsolutions.ca/industries",
   },
 };
 

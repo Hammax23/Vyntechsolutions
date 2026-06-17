@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { randomBytes } from "crypto";
 import prisma from "@/lib/prisma";
 
-export const SEO_EXPERT_EMAIL = process.env.SEO_EXPERT_EMAIL || "seo@weborbitztech.ca";
+export const SEO_EXPERT_EMAIL = process.env.SEO_EXPERT_EMAIL || "seo@vyntechsolutions.ca";
 export const SEO_EXPERT_PASSWORD = process.env.SEO_EXPERT_PASSWORD || "SeoExpert@2024";
 
 const SESSION_DURATION_MS = 12 * 60 * 60 * 1000; // 12 hours

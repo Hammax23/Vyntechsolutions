@@ -18,10 +18,10 @@ import { NextResponse } from "next/server";
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Hello from WebOrbitz API!
+ *                   example: Hello from VynTech Solutions API!
  */
 export async function GET() {
-  return NextResponse.json({ message: "Hello from WebOrbitz API!" });
+  return NextResponse.json({ message: "Hello from VynTech Solutions API!" });
 }
 
 /**

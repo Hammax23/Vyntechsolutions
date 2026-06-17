@@ -1,4 +1,4 @@
-# WebOrbitz
+# VynTech Solutions
 
 Next.js application with Swagger API documentation.
 
@@ -51,4 +51,4 @@ src/
 
 ## GitHub Repository
 
-This project is connected to: https://github.com/Hammax23/weborbitztech.git
+This project is connected to: https://github.com/Hammax23/Vyntechsolutions.git

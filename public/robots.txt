@@ -1,5 +1,5 @@
-# WebOrbitz - Canada's Premier Digital Agency
-# https://weborbitztech.ca
+# VynTech Solutions - Canada's Premier Digital Agency
+# https://vyntechsolutions.ca
 
 User-agent: *
 Allow: /
@@ -27,7 +27,7 @@ Disallow: /seopanel
 Disallow: /api/
 
 # Host
-Host: https://weborbitztech.ca
+Host: https://vyntechsolutions.ca
 
 # Sitemaps
-Sitemap: https://weborbitztech.ca/sitemap.xml
+Sitemap: https://vyntechsolutions.ca/sitemap.xml

@@ -46,7 +46,7 @@ function getAdminEmailTemplate(data: {
                 <tr>
                   <td>
                     <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 600;">
-                      WEB<span style="color: #00B4FF;">ORBITZ</span>
+                      VYN<span style="color: #00B4FF;">TECH</span>
                     </h1>
                     <p style="color: rgba(255,255,255,0.6); margin: 5px 0 0; font-size: 12px; letter-spacing: 2px;">TECHNOLOGIES</p>
                   </td>
@@ -178,8 +178,8 @@ function getAdminEmailTemplate(data: {
           <tr>
             <td style="background-color: #f8fafc; padding: 24px 40px; border-top: 1px solid #e5e7eb;">
               <p style="color: #9ca3af; font-size: 12px; margin: 0; text-align: center;">
-                This is an automated notification from WebOrbitz Technologies.<br>
-                © ${new Date().getFullYear()} WebOrbitz Technologies. All rights reserved.
+                This is an automated notification from VynTech Solutions.<br>
+                © ${new Date().getFullYear()} VynTech Solutions. All rights reserved.
               </p>
             </td>
           </tr>
@@ -213,7 +213,7 @@ function getUserConfirmationTemplate(data: { fullName: string; services: string[
           <tr>
             <td style="background: linear-gradient(135deg, #1a1a2e 0%, #262b3f 100%); padding: 50px 40px; text-align: center;">
               <h1 style="color: #ffffff; margin: 0; font-size: 32px; font-weight: 600;">
-                WEB<span style="color: #00B4FF;">ORBITZ</span>
+                VYN<span style="color: #00B4FF;">TECH</span>
               </h1>
               <p style="color: rgba(255,255,255,0.6); margin: 8px 0 0; font-size: 12px; letter-spacing: 3px;">TECHNOLOGIES</p>
             </td>
@@ -316,7 +316,7 @@ function getUserConfirmationTemplate(data: { fullName: string; services: string[
                 <tr>
                   <td style="padding: 24px; text-align: center;">
                     <p style="color: rgba(255,255,255,0.8); font-size: 14px; margin: 0 0 8px;">Have questions? Reach out to us directly:</p>
-                    <a href="mailto:info@weborbitztech.ca" style="color: #00B4FF; font-size: 16px; font-weight: 600; text-decoration: none;">info@weborbitztech.ca</a>
+                    <a href="mailto:info@vyntechsolutions.ca" style="color: #00B4FF; font-size: 16px; font-weight: 600; text-decoration: none;">info@vyntechsolutions.ca</a>
                   </td>
                 </tr>
               </table>
@@ -335,7 +335,7 @@ function getUserConfirmationTemplate(data: { fullName: string; services: string[
                 <a href="#" style="color: #0055FF; text-decoration: none; margin: 0 8px;">Instagram</a>
               </p>
               <p style="color: #9ca3af; font-size: 11px; margin: 16px 0 0;">
-                © ${new Date().getFullYear()} WebOrbitz Technologies. All rights reserved.<br>
+                © ${new Date().getFullYear()} VynTech Solutions. All rights reserved.<br>
                 Canada (Head Office)
               </p>
             </td>
@@ -394,8 +394,8 @@ export async function POST(request: NextRequest) {
 
     // Send email to admin
     await transporter.sendMail({
-      from: `"WebOrbitz Website" <${process.env.SMTP_USER}>`,
-      to: 'info@weborbitztech.ca',
+      from: `"VynTech Solutions Website" <${process.env.SMTP_USER}>`,
+      to: 'info@vyntechsolutions.ca',
       subject: `🚀 New Quote Request from ${fullName}`,
       html: getAdminEmailTemplate({
         fullName,
@@ -411,9 +411,9 @@ export async function POST(request: NextRequest) {
 
     // Send confirmation email to user
     await transporter.sendMail({
-      from: `"WebOrbitz Technologies" <${process.env.SMTP_USER}>`,
+      from: `"VynTech Solutions" <${process.env.SMTP_USER}>`,
       to: email,
-      subject: `Thank You for Your Quote Request - WebOrbitz Technologies`,
+      subject: `Thank You for Your Quote Request - VynTech Solutions`,
       html: getUserConfirmationTemplate({
         fullName,
         services,

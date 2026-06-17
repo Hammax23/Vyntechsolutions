@@ -1,34 +1,34 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | WebOrbitz - Data Protection & Privacy Practices',
-  description: 'Learn how WebOrbitz Technologies protects your personal information. Our Privacy Policy outlines data collection, usage, security measures, and your rights under PIPEDA and Canadian privacy laws.',
+  title: 'Privacy Policy | VynTech Solutions - Data Protection & Privacy Practices',
+  description: 'Learn how VynTech Solutions protects your personal information. Our Privacy Policy outlines data collection, usage, security measures, and your rights under PIPEDA and Canadian privacy laws.',
   keywords: [
     'privacy policy',
     'data protection',
     'PIPEDA compliance',
     'personal information protection',
-    'WebOrbitz privacy',
+    'VynTech Solutions privacy',
     'Canadian privacy law',
     'data security',
     'cookie policy',
     'privacy rights Canada'
   ],
   openGraph: {
-    title: 'Privacy Policy | WebOrbitz Technologies',
+    title: 'Privacy Policy | VynTech Solutions',
     description: 'Our commitment to protecting your privacy and personal information under Canadian law.',
-    url: 'https://weborbitztech.ca/privacy-policy',
-    siteName: 'WebOrbitz',
+    url: 'https://vyntechsolutions.ca/privacy-policy',
+    siteName: 'VynTech Solutions',
     locale: 'en_CA',
     type: 'website',
   },
   twitter: {
     card: 'summary',
-    title: 'Privacy Policy | WebOrbitz',
-    description: 'Learn how WebOrbitz protects your personal information.',
+    title: 'Privacy Policy | VynTech Solutions',
+    description: 'Learn how VynTech Solutions protects your personal information.',
   },
   alternates: {
-    canonical: 'https://weborbitztech.ca/privacy-policy',
+    canonical: 'https://vyntechsolutions.ca/privacy-policy',
   },
 };
 

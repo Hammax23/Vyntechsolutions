@@ -93,7 +93,7 @@ export function SettingsSection() {
         <div className="grid sm:grid-cols-2 gap-4">
           <Input label="Site URL" value={form.siteUrl || ""} onChange={(e) => setForm({ ...form, siteUrl: e.target.value })} />
           <Input label="Target Country" value={form.targetCountry || "CA"} onChange={(e) => setForm({ ...form, targetCountry: e.target.value })} />
-          <Input label="Google Search Console Property" value={form.gscProperty || ""} onChange={(e) => setForm({ ...form, gscProperty: e.target.value })} placeholder="sc-domain:weborbitztech.ca" />
+          <Input label="Google Search Console Property" value={form.gscProperty || ""} onChange={(e) => setForm({ ...form, gscProperty: e.target.value })} placeholder="sc-domain:vyntechsolutions.ca" />
           <Input label="Google Analytics Property ID" value={form.gaPropertyId || ""} onChange={(e) => setForm({ ...form, gaPropertyId: e.target.value })} placeholder="G-XXXXXXXXXX" />
           <Input label="Google Site Verification Code" value={form.googleVerification || ""} onChange={(e) => setForm({ ...form, googleVerification: e.target.value })} />
           <Input label="Bing Site Verification Code" value={form.bingVerification || ""} onChange={(e) => setForm({ ...form, bingVerification: e.target.value })} />

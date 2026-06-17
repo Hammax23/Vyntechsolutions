@@ -3,12 +3,12 @@ version: '3.8'
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: weborbitz_db
+    container_name: vyntech_db
     restart: always
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: WebOrbitz2024
-      POSTGRES_DB: weborbitz
+      POSTGRES_PASSWORD: VynTech2024
+      POSTGRES_DB: vyntech
     ports:
       - "5434:5432"
     volumes:

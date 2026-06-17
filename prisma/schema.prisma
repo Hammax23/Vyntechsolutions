@@ -302,7 +302,7 @@ model SeoReport {
 
 model SeoSettings {
   id                   String    @id @default("default")
-  siteUrl              String    @default("https://weborbitztech.ca")
+  siteUrl              String    @default("https://vyntechsolutions.ca")
   gscProperty          String?
   gaPropertyId         String?
   googleVerification   String?

@@ -127,18 +127,18 @@ export default function AnimatedLogo({ className = "", onClick }: AnimatedLogoPr
       {/* Text Container */}
       <div className="flex flex-col justify-center">
         <div className="flex items-center text-[1.2rem] lg:text-[1.6rem] tracking-[0.05em] leading-none text-white font-semibold" style={{ fontFamily: 'var(--font-oswald), "Oswald", sans-serif' }}>
-          <span>WEB</span>
+          <span>VYN</span>
           <span>
-            {/* Gradient ORBITZ */}
-            <span className="bg-gradient-to-r from-[#00E1FF] via-[#0088FF] to-[#0055FF] text-transparent bg-clip-text drop-shadow-[0_0_8px_rgba(0,180,255,0.4)]">ORBITZ</span>
+            {/* Gradient TECH */}
+            <span className="bg-gradient-to-r from-[#00E1FF] via-[#0088FF] to-[#0055FF] text-transparent bg-clip-text drop-shadow-[0_0_8px_rgba(0,180,255,0.4)]">TECH</span>
           </span>
         </div>
         
         <div className="flex items-center justify-center w-full mt-0.5">
           <div className="h-[1px] flex-grow bg-gradient-to-r from-transparent to-[#00B4FF] opacity-70"></div>
-          {/* TECHNOLOGIES in White */}
+          {/* SOLUTIONS in White */}
           <span className="text-[0.45rem] lg:text-[0.6rem] tracking-[0.3em] leading-none uppercase text-white drop-shadow-sm font-medium px-2" style={{ fontFamily: 'Inter, system-ui, -apple-system, sans-serif' }}>
-            TECHNOLOGIES
+            SOLUTIONS
           </span>
           <div className="h-[1px] flex-grow bg-gradient-to-l from-transparent to-[#00B4FF] opacity-70"></div>
         </div>

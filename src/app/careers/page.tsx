@@ -92,7 +92,7 @@ export default function CareersPage() {
                     We don&apos;t have any roles open at the moment, but we&apos;re always interested in meeting talented people. Drop us your resume and we&apos;ll reach out when something comes up.
                   </p>
                   <a
-                    href="mailto:careers@weborbitztech.ca"
+                    href="mailto:careers@vyntechsolutions.ca"
                     className="inline-flex items-center gap-2 bg-[#262b3f] hover:bg-[#0055FF] text-white px-5 py-2.5 rounded-lg font-medium transition-all duration-300"
                   >
                     Send Resume
@@ -193,7 +193,7 @@ export default function CareersPage() {
                 </p>
               </div>
               <a
-                href="mailto:careers@weborbitztech.ca"
+                href="mailto:careers@vyntechsolutions.ca"
                 className="inline-flex items-center justify-center gap-2 bg-[#262b3f] hover:bg-[#0055FF] text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 whitespace-nowrap"
               >
                 Get in Touch
@@ -247,7 +247,7 @@ export default function CareersPage() {
             </div>
             <div className="p-6 border-t border-gray-100 bg-gray-50">
               <a
-                href={`mailto:careers@weborbitztech.ca?subject=Application for ${selectedPosition.title}`}
+                href={`mailto:careers@vyntechsolutions.ca?subject=Application for ${selectedPosition.title}`}
                 className="w-full flex items-center justify-center gap-2 bg-[#0055FF] hover:bg-[#0044CC] text-white px-6 py-3 rounded-lg font-medium transition-all duration-300"
               >
                 Apply Now
