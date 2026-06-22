@@ -17,7 +17,7 @@ import {
 import AnalyticsSection, { SettingsSection } from "@/components/seopanel/AnalyticsSection";
 import { SEO_PANEL_SECTIONS, type SeoSectionId } from "@/lib/seopanel/constants";
 import { seoFetch } from "@/lib/seopanel/client";
-import AnimatedLogo from "@/components/AnimatedLogo";
+import VynTechLogo from "@/components/VynTechLogo";
 
 export default function SeoPanelPage() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -90,7 +90,7 @@ export default function SeoPanelPage() {
       {/* Sidebar */}
       <aside className={`${sidebarOpen ? "w-64" : "w-0"} flex-shrink-0 bg-[#0a0f1a] border-r border-[#1e2a45] transition-all duration-300 overflow-hidden flex flex-col`}>
         <div className="p-5 border-b border-[#1e2a45]">
-          <AnimatedLogo className="mb-3 cursor-default scale-75 origin-left" />
+          <VynTechLogo className="mb-3 cursor-default scale-90 origin-left" />
           <p className="text-[#0d9488] text-xs font-bold uppercase tracking-widest">SEO Command Center</p>
           <p className="text-slate-500 text-xs mt-0.5">vyntechsolutions.ca</p>
         </div>

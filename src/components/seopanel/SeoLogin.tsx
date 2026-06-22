@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import AnimatedLogo from "@/components/AnimatedLogo";
+import VynTechLogo from "@/components/VynTechLogo";
 
 interface SeoLoginProps {
   onAuthenticated: (token: string) => void;
@@ -66,7 +66,7 @@ export default function SeoLogin({ onAuthenticated }: SeoLoginProps) {
       </div>
       <div className="relative w-full max-w-md">
         <div className="text-center mb-8">
-          <AnimatedLogo className="mx-auto mb-4 cursor-default" />
+          <VynTechLogo className="mx-auto mb-4 cursor-default" />
           <h1 className="text-2xl font-bold text-white">SEO Command Center</h1>
           <p className="text-slate-400 text-sm mt-2">VynTech Solutions Enterprise SEO Panel</p>
         </div>

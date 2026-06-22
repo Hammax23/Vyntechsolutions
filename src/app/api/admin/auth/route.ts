@@ -122,11 +122,12 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      await transporter.sendMail({
-        from: `"VynTech Solutions Admin" <${process.env.SMTP_USER || "info@vyntechsolutions.ca"}>`,
-        to: ADMIN_EMAIL,
-        subject: "Admin Panel - 2FA Verification Code",
-        html: `
+      try {
+        await transporter.sendMail({
+          from: `"VynTech Solutions Admin" <${process.env.SMTP_USER || "info@vyntechsolutions.ca"}>`,
+          to: ADMIN_EMAIL,
+          subject: "Admin Panel - 2FA Verification Code",
+          html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <div style="background: linear-gradient(135deg, #0055FF 0%, #00B4FF 100%); padding: 30px; border-radius: 10px; text-align: center;">
               <h1 style="color: white; margin: 0; font-size: 24px;">VynTech Solutions Admin</h1>
@@ -142,7 +143,19 @@ export async function POST(request: NextRequest) {
             </div>
           </div>
         `,
-      });
+        });
+      } catch (smtpError) {
+        console.error("SMTP error:", smtpError);
+        if (process.env.NODE_ENV !== "production") {
+          console.log(`[DEV] Admin 2FA code for ${email}: ${twoFACode}`);
+          return NextResponse.json({
+            success: true,
+            message: "2FA code generated (check server console in development)",
+            devCode: twoFACode,
+          });
+        }
+        throw smtpError;
+      }
 
       return NextResponse.json({ success: true, message: "2FA code sent to email" });
     }

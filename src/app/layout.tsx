@@ -4,6 +4,7 @@ import Script from "next/script";
 import "./globals.css";
 import LetsTalkBusiness from "@/components/LetsTalkBusiness";
 import TimedCTAPopup from "@/components/TimedCTAPopup";
+import CookieConsent from "@/components/CookieConsent";
 // import FloatingSEOButton from "@/components/FloatingSEOButton";
 import { defaultSEO, organizationSchema, localBusinessSchema, websiteSchema, servicesSchema, faqSchema, reviewSchema, howToSchema } from "@/lib/seo.config";
 
@@ -79,6 +80,7 @@ export default function RootLayout({
         {children}
         <LetsTalkBusiness />
         <TimedCTAPopup />
+        <CookieConsent />
         {/* <FloatingSEOButton /> */}
         
         {/* Google Analytics */}

@@ -48,7 +48,7 @@ function getAdminEmailTemplate(data: {
                     <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 600;">
                       VYN<span style="color: #00B4FF;">TECH</span>
                     </h1>
-                    <p style="color: rgba(255,255,255,0.6); margin: 5px 0 0; font-size: 12px; letter-spacing: 2px;">TECHNOLOGIES</p>
+                    <p style="color: rgba(255,255,255,0.6); margin: 5px 0 0; font-size: 12px; letter-spacing: 2px;">SOLUTIONS</p>
                   </td>
                   <td align="right">
                     <span style="background: linear-gradient(135deg, #00E1FF 0%, #0055FF 100%); color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 600;">NEW LEAD</span>
@@ -215,7 +215,7 @@ function getUserConfirmationTemplate(data: { fullName: string; services: string[
               <h1 style="color: #ffffff; margin: 0; font-size: 32px; font-weight: 600;">
                 VYN<span style="color: #00B4FF;">TECH</span>
               </h1>
-              <p style="color: rgba(255,255,255,0.6); margin: 8px 0 0; font-size: 12px; letter-spacing: 3px;">TECHNOLOGIES</p>
+              <p style="color: rgba(255,255,255,0.6); margin: 8px 0 0; font-size: 12px; letter-spacing: 3px;">SOLUTIONS</p>
             </td>
           </tr>
 

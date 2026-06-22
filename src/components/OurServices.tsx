@@ -181,7 +181,8 @@ export default function OurServices() {
             <div aria-hidden />
             <div className="px-2">
               <h2
-                className={`text-3xl sm:text-4xl md:text-5xl lg:text-[4rem] font-bold leading-tight tracking-tight transition-opacity duration-700 ${isVisible ? "opacity-100" : "opacity-0"}`}
+                className={`text-3xl sm:text-4xl md:text-5xl lg:text-[4rem] font-light leading-tight tracking-tight transition-opacity duration-700 ${isVisible ? "opacity-100" : "opacity-0"}`}
+                style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}
               >
                 <span className="bg-gradient-to-tr from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] text-transparent bg-clip-text drop-shadow-[0_0_8px_rgba(0,180,255,0.2)]">O</span>
                 <span className="text-[#1a1a2e]">ur</span>
@@ -191,16 +192,16 @@ export default function OurServices() {
                 <span className="bg-gradient-to-tr from-[#0055FF] via-[#FF6B6B] to-[#FF4757] text-transparent bg-clip-text drop-shadow-[0_0_8px_rgba(255,107,107,0.2)]">e</span>
                 <span className="text-[#1a1a2e]">s</span>
               </h2>
-              <h3 className="mt-1.5 sm:mt-2 text-xl sm:text-2xl md:text-3xl font-bold text-[#1a1a2e]">
+              <h3 className="mt-1.5 sm:mt-2 text-xl sm:text-2xl md:text-3xl font-light text-[#1a1a2e]" style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>
                 Transforming Modern Businesses
               </h3>
-              <p className="mt-2 sm:mt-2.5 text-base sm:text-lg md:text-xl text-gray-600">
+              <p className="mt-2 sm:mt-2.5 text-base sm:text-lg md:text-xl text-gray-600" style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>
                 Through{" "}
-                <span className="font-semibold" style={{ background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Innovation</span>
+                <span className="font-medium" style={{ background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Innovation</span>
                 ,{" "}
-                <span className="font-semibold" style={{ background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Technology</span>
+                <span className="font-medium" style={{ background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Technology</span>
                 , and{" "}
-                <span className="font-semibold" style={{ background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Scalable Digital Solutions</span>
+                <span className="font-medium" style={{ background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Scalable Digital Solutions</span>
               </p>
             </div>
             <div className={`flex justify-end items-start transition-all duration-700 delay-150 ${isVisible ? "opacity-100" : "opacity-0"}`}>
@@ -213,7 +214,7 @@ export default function OurServices() {
             <div className="grid grid-cols-[1fr_auto_1fr] gap-x-4 items-start">
               <div aria-hidden />
               <div>
-                <h2 className={`text-3xl md:text-5xl lg:text-[3.5rem] font-bold leading-tight tracking-tight ${isVisible ? "opacity-100" : "opacity-0"}`}>
+                <h2 className={`text-3xl md:text-5xl lg:text-[3.5rem] font-light leading-tight tracking-tight ${isVisible ? "opacity-100" : "opacity-0"}`} style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>
                   <span className="bg-gradient-to-tr from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] text-transparent bg-clip-text">O</span>
                   <span className="text-[#1a1a2e]">ur</span>
                   <span className="text-[#1a1a2e]">&nbsp;</span>
@@ -222,14 +223,14 @@ export default function OurServices() {
                   <span className="bg-gradient-to-tr from-[#0055FF] via-[#FF6B6B] to-[#FF4757] text-transparent bg-clip-text">e</span>
                   <span className="text-[#1a1a2e]">s</span>
                 </h2>
-                <h3 className="mt-1.5 text-2xl md:text-3xl font-bold text-[#1a1a2e]">Transforming Modern Businesses</h3>
-                <p className="mt-2 text-base sm:text-lg text-gray-600">
+                <h3 className="mt-1.5 text-2xl md:text-3xl font-light text-[#1a1a2e]" style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>Transforming Modern Businesses</h3>
+                <p className="mt-2 text-base sm:text-lg text-gray-600" style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>
                   Through{" "}
-                  <span className="font-semibold" style={{ background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Innovation</span>
+                  <span className="font-medium" style={{ background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Innovation</span>
                   ,{" "}
-                  <span className="font-semibold" style={{ background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Technology</span>
+                  <span className="font-medium" style={{ background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Technology</span>
                   , and{" "}
-                  <span className="font-semibold" style={{ background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Scalable Digital Solutions</span>
+                  <span className="font-medium" style={{ background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Scalable Digital Solutions</span>
                 </p>
               </div>
               <div className={`flex justify-end ${isVisible ? "opacity-100" : "opacity-0"}`}>
@@ -240,7 +241,7 @@ export default function OurServices() {
 
           {/* Mobile & tablet */}
           <div className="lg:hidden">
-            <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold leading-tight tracking-tight ${isVisible ? "opacity-100" : "opacity-0"}`}>
+            <h2 className={`text-3xl sm:text-4xl md:text-5xl font-light leading-tight tracking-tight ${isVisible ? "opacity-100" : "opacity-0"}`} style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>
               <span className="bg-gradient-to-tr from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] text-transparent bg-clip-text">O</span>
               <span className="text-[#1a1a2e]">ur</span>
               <span className="text-[#1a1a2e]">&nbsp;</span>
@@ -249,14 +250,14 @@ export default function OurServices() {
               <span className="bg-gradient-to-tr from-[#0055FF] via-[#FF6B6B] to-[#FF4757] text-transparent bg-clip-text">e</span>
               <span className="text-[#1a1a2e]">s</span>
             </h2>
-            <h3 className="mt-1.5 sm:mt-2 text-xl sm:text-2xl font-bold text-[#1a1a2e]">Transforming Modern Businesses</h3>
-            <p className="mt-2 text-base sm:text-lg text-gray-600">
+            <h3 className="mt-1.5 sm:mt-2 text-xl sm:text-2xl font-light text-[#1a1a2e]" style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>Transforming Modern Businesses</h3>
+            <p className="mt-2 text-base sm:text-lg text-gray-600" style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>
               Through{" "}
-              <span className="font-semibold" style={{ background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Innovation</span>
+              <span className="font-medium" style={{ background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Innovation</span>
               ,{" "}
-              <span className="font-semibold" style={{ background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Technology</span>
+              <span className="font-medium" style={{ background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Technology</span>
               , and{" "}
-              <span className="font-semibold" style={{ background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Scalable Digital Solutions</span>
+              <span className="font-medium" style={{ background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Scalable Digital Solutions</span>
             </p>
             <div className={`flex justify-center mt-5 ${isVisible ? "opacity-100" : "opacity-0"}`}>
               <GoogleRankingPromo compact />

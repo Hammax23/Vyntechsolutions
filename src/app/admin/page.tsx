@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import AnimatedLogo from "@/components/AnimatedLogo";
+import VynTechLogo from "@/components/VynTechLogo";
 
 interface QuoteSubmission {
   id: string;
@@ -509,6 +509,10 @@ export default function AdminPage() {
           setIsLoggingIn(false);
           return;
         }
+
+        if (data.devCode) {
+          setError(`Dev mode: your 2FA code is ${data.devCode}`);
+        }
         
         setLoginStep("2fa");
         setIsLoggingIn(false);
@@ -638,7 +642,7 @@ export default function AdminPage() {
 
         <div className="w-full max-w-md relative z-10">
           <div className="flex flex-col items-center mb-6">
-            <AnimatedLogo className="scale-110" />
+            <VynTechLogo className="scale-110 cursor-default" />
           </div>
 
           <div className="bg-[#0a0a1a]/80 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl p-8">
@@ -788,7 +792,7 @@ export default function AdminPage() {
       <aside className={`${sidebarOpen ? "w-64" : "w-20"} bg-[#0a0a1a]/80 backdrop-blur-xl border-r border-white/5 flex flex-col transition-all duration-300 fixed h-full z-40`}>
         <div className="p-4 border-b border-white/5">
           <div className="flex items-center">
-            <AnimatedLogo className={sidebarOpen ? "scale-75 -ml-2" : "scale-50 -ml-4"} />
+            <VynTechLogo className={`cursor-default ${sidebarOpen ? "scale-90 -ml-2" : "scale-75 -ml-4"}`} />
           </div>
         </div>
 
