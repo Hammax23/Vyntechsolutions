@@ -141,16 +141,6 @@ export default function LetsTalkBusiness() {
         </span>
       </button>
 
-      {/* Floating Email Button */}
-      <a
-        href="mailto:info@vyntechsolutions.ca"
-        className="fixed right-8 bottom-32 z-50 bg-gradient-to-r from-[#0055FF] to-[#00E1FF] hover:from-[#0044DD] hover:to-[#00C8E8] text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110"
-        title="Email us at info@vyntechsolutions.ca"
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      </a>
 
       {/* Overlay */}
       <div
@@ -167,16 +157,41 @@ export default function LetsTalkBusiness() {
         }`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">Let&apos;s Talk Business</h2>
-          <button
-            onClick={() => setIsOpen(false)}
-            className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
-          >
-            <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+        <div className="p-6 border-b border-gray-200">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-gray-900">Let&apos;s Talk Business</h2>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+            >
+              <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          
+          {/* Contact Info - Simple inline */}
+          <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+            <a 
+              href="mailto:info@vyntechsolutions.ca"
+              className="inline-flex items-center gap-2 text-gray-600 hover:text-[#0055FF] transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+              </svg>
+              info@vyntechsolutions.ca
+            </a>
+            <span className="text-gray-300">|</span>
+            <a 
+              href="tel:+14168935779"
+              className="inline-flex items-center gap-2 text-gray-600 hover:text-[#0055FF] transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+              </svg>
+              +1 (416) 893-5779
+            </a>
+          </div>
         </div>
 
         {/* Form */}

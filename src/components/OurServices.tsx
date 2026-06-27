@@ -36,66 +36,140 @@ const techStacks = [
   { id: 20, name: "Flutter", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg" },
 ];
 
+// SVG Icons for services
+const ServiceIcons = {
+  web: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-full h-full">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+    </svg>
+  ),
+  mobile: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-full h-full">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+    </svg>
+  ),
+  cloud: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-full h-full">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z" />
+    </svg>
+  ),
+  ai: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-full h-full">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+    </svg>
+  ),
+  devops: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-full h-full">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12a7.5 7.5 0 0015 0m-15 0a7.5 7.5 0 1115 0m-15 0H3m16.5 0H21m-1.5 0H12m-8.457 3.077l1.41-.513m14.095-5.13l1.41-.513M5.106 17.785l1.15-.964m11.49-9.642l1.149-.964M7.501 19.795l.75-1.3m7.5-12.99l.75-1.3m-6.063 16.658l.26-1.477m2.605-14.772l.26-1.477m0 17.726l-.26-1.477M10.698 4.614l-.26-1.477M16.5 19.794l-.75-1.299M7.5 4.205L6.75 2.906m9.944 18.08l-1.15-.964M5.106 6.214l-1.15-.964m17.99 5.13l-1.41-.513M5.954 15.436l-1.41-.514" />
+    </svg>
+  ),
+  uiux: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-full h-full">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" />
+    </svg>
+  ),
+  ecommerce: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-full h-full">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+    </svg>
+  ),
+  custom: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-full h-full">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+    </svg>
+  ),
+  seo: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-full h-full">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+    </svg>
+  ),
+  support: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-full h-full">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" />
+    </svg>
+  ),
+};
+
 const serviceCards = [
   {
     title: "Web Development",
+    description: "Modern, responsive websites built with cutting-edge technologies for optimal performance.",
     href: "/services/web-development",
-    image: "https://images.unsplash.com/photo-1547658719-da2b51169166?w=600&h=400&fit=crop",
-    gradient: "from-blue-500/30 to-indigo-600/30",
+    icon: "web",
+    gradient: "from-blue-500 to-indigo-600",
+    lightGradient: "from-blue-50 to-indigo-50",
   },
   {
     title: "Mobile App Development",
+    description: "Native & cross-platform mobile applications for iOS and Android platforms.",
     href: "/services/mobile-app-development",
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&h=400&fit=crop",
-    gradient: "from-purple-500/30 to-indigo-600/30",
+    icon: "mobile",
+    gradient: "from-purple-500 to-pink-600",
+    lightGradient: "from-purple-50 to-pink-50",
   },
   {
     title: "Cloud Solutions",
+    description: "Scalable cloud infrastructure on AWS, Azure & GCP for enterprise workloads.",
     href: "/services/cloud-solutions",
-    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&h=400&fit=crop",
-    gradient: "from-cyan-500/30 to-blue-600/30",
+    icon: "cloud",
+    gradient: "from-cyan-500 to-blue-600",
+    lightGradient: "from-cyan-50 to-blue-50",
   },
   {
     title: "AI/ML Solutions",
+    description: "Intelligent automation & machine learning models to transform your business.",
     href: "/services/ai-ml-solutions",
-    image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&h=400&fit=crop",
-    gradient: "from-violet-500/30 to-purple-600/30",
+    icon: "ai",
+    gradient: "from-violet-500 to-purple-600",
+    lightGradient: "from-violet-50 to-purple-50",
   },
   {
     title: "DevOps & CI/CD",
+    description: "Streamlined deployment pipelines and infrastructure automation at scale.",
     href: "/services/devops-cicd",
-    image: "https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=600&h=400&fit=crop",
-    gradient: "from-orange-500/30 to-red-600/30",
+    icon: "devops",
+    gradient: "from-orange-500 to-red-600",
+    lightGradient: "from-orange-50 to-red-50",
   },
   {
     title: "UI/UX Design",
+    description: "User-centered design that creates engaging digital experiences.",
     href: "/services/ui-ux-design",
-    image: "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=600&h=400&fit=crop",
-    gradient: "from-pink-500/30 to-rose-600/30",
+    icon: "uiux",
+    gradient: "from-pink-500 to-rose-600",
+    lightGradient: "from-pink-50 to-rose-50",
   },
   {
     title: "E-commerce Solutions",
+    description: "End-to-end online store development with secure payment integrations.",
     href: "/services/ecommerce-solutions",
-    image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&h=400&fit=crop",
-    gradient: "from-emerald-500/30 to-teal-600/30",
+    icon: "ecommerce",
+    gradient: "from-emerald-500 to-teal-600",
+    lightGradient: "from-emerald-50 to-teal-50",
   },
   {
     title: "Custom Software",
+    description: "Bespoke software solutions tailored to your unique business requirements.",
     href: "/services/custom-software-development",
-    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&h=400&fit=crop",
-    gradient: "from-slate-500/30 to-gray-600/30",
+    icon: "custom",
+    gradient: "from-slate-600 to-gray-700",
+    lightGradient: "from-slate-50 to-gray-100",
   },
   {
-    title: "SEO/Digital Marketing",
+    title: "SEO & Digital Marketing",
+    description: "Data-driven strategies to boost visibility and drive qualified leads.",
     href: "/services/seo-digital-marketing",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop",
-    gradient: "from-amber-500/30 to-orange-600/30",
+    icon: "seo",
+    gradient: "from-amber-500 to-orange-600",
+    lightGradient: "from-amber-50 to-orange-50",
   },
   {
     title: "Maintenance & Support",
+    description: "24/7 technical support and proactive maintenance for your systems.",
     href: "/services/maintenance-support",
-    image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=400&fit=crop",
-    gradient: "from-teal-500/30 to-cyan-600/30",
+    icon: "support",
+    gradient: "from-teal-500 to-cyan-600",
+    lightGradient: "from-teal-50 to-cyan-50",
   },
 ];
 
@@ -265,7 +339,7 @@ export default function OurServices() {
           </div>
         </div>
 
-        {/* All Service Cards - 2 rows x 5 columns */}
+        {/* Enterprise Service Cards - Modern Grid */}
         <div 
           ref={cardsRef}
           className={`transition-all duration-1000 delay-300 ${
@@ -274,31 +348,64 @@ export default function OurServices() {
               : "opacity-0 translate-y-8"
           }`}
         >
-          {/* Grid - 5 columns on desktop, 2 on mobile */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5 md:gap-6">
+          {/* Grid - 5 columns on desktop, responsive on smaller screens */}
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-5 lg:gap-6">
             {serviceCards.map((card, index) => (
               <Link
                 key={index}
                 href={card.href}
-                className="relative rounded-xl sm:rounded-2xl overflow-hidden aspect-[4/3] group cursor-pointer transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 active:scale-[0.98] shadow-lg"
+                className="group relative"
                 style={{
-                  transitionDelay: `${index * 50}ms`
+                  animationDelay: `${index * 80}ms`
                 }}
               >
-                {/* Background Image */}
-                <div 
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                  style={{ backgroundImage: `url(${card.image})` }}
-                />
-                {/* Gradient Overlay */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} group-hover:opacity-50 transition-opacity duration-300`} />
-                {/* Dark overlay for text readability */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                {/* Title */}
-                <div className="absolute inset-0 p-3 sm:p-4 flex items-end">
-                  <h4 className="text-white text-xs sm:text-sm md:text-base font-semibold leading-tight drop-shadow-lg">
-                    {card.title}
-                  </h4>
+                {/* Card Container */}
+                <div className="relative h-full bg-white rounded-2xl p-5 sm:p-6 border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
+                  {/* Gradient accent line at top */}
+                  <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${card.gradient} transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500`} />
+                  
+                  {/* Background gradient on hover */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${card.lightGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                  
+                  {/* Content */}
+                  <div className="relative z-10">
+                    {/* Icon */}
+                    <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br ${card.gradient} p-3 text-white mb-4 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
+                      {ServiceIcons[card.icon as keyof typeof ServiceIcons]}
+                    </div>
+                    
+                    {/* Title */}
+                    <h4 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 group-hover:text-gray-800 transition-colors leading-tight">
+                      {card.title}
+                    </h4>
+                    
+                    {/* Description */}
+                    <p className="text-sm text-gray-500 leading-relaxed line-clamp-2 group-hover:text-gray-600 transition-colors">
+                      {card.description}
+                    </p>
+                    
+                    {/* Arrow indicator */}
+                    <div className="mt-4 flex items-center text-sm font-medium">
+                      <span className={`bg-gradient-to-r ${card.gradient} bg-clip-text text-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 transform -translate-x-2 group-hover:translate-x-0`}>
+                        Learn more
+                      </span>
+                      <svg 
+                        className={`w-4 h-4 ml-1 opacity-0 group-hover:opacity-100 transition-all duration-300 transform -translate-x-4 group-hover:translate-x-0`}
+                        fill="none" 
+                        viewBox="0 0 24 24" 
+                        stroke="url(#arrow-gradient)"
+                        strokeWidth="2"
+                      >
+                        <defs>
+                          <linearGradient id="arrow-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stopColor="#3B82F6" />
+                            <stop offset="100%" stopColor="#8B5CF6" />
+                          </linearGradient>
+                        </defs>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
               </Link>
             ))}

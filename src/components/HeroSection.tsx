@@ -1,19 +1,17 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import Image from "next/image";
 
-// Desktop videos (original quality)
-const videos = [
-  "/cover1.mp4",
-  "/cover2.mp4",
-  "/cover3.mp4",
+// Hero media - video first, then images
+const heroMedia = [
+  { type: "video", src: "/cover1.mp4", mobileSrc: "/cover1-mobile.mp4" },
+  { type: "image", src: "/cover3.png" },
+  { type: "image", src: "/cover2.png" },
 ];
 
-// Mobile videos (compressed 480p for instant loading)
-const mobileVideos = [
-  "/cover1-mobile.mp4",
-  "/cover2-mobile.mp4",
-];
+// Duration for images (in milliseconds)
+const IMAGE_DISPLAY_DURATION = 6000;
 
 const slides = [
   {
@@ -41,82 +39,85 @@ const getIsMobile = () => {
 };
 
 export default function HeroSection() {
-  const [currentVideo, setCurrentVideo] = useState(0);
-  const [nextVideo, setNextVideo] = useState(1);
+  const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [isReady, setIsReady] = useState(false);
-  const [videosLoaded, setVideosLoaded] = useState<boolean[]>([]);
-  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const [mediaLoaded, setMediaLoaded] = useState(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const imageTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const goToNextVideo = useCallback(() => {
-    const maxVideos = isMobile ? mobileVideos.length : videos.length;
-    const next = (currentVideo + 1) % maxVideos;
-    
-    // Prepare next video before transition
-    const nextVideoEl = videoRefs.current[next];
-    if (nextVideoEl) {
-      nextVideoEl.currentTime = 0;
-      nextVideoEl.play().catch(() => {});
-    }
-    
-    // Smooth crossfade - update state after brief delay for video to start
-    setTimeout(() => {
-      setNextVideo(next);
-      setCurrentVideo(next);
-    }, 50);
-  }, [currentVideo, isMobile]);
+  const currentMedia = heroMedia[currentMediaIndex];
 
-  // Handle video ended event - with fallback for desktop
+  const goToNextMedia = useCallback(() => {
+    const next = (currentMediaIndex + 1) % heroMedia.length;
+    setCurrentMediaIndex(next);
+  }, [currentMediaIndex]);
+
+  // Handle video ended event
   useEffect(() => {
-    if (!isReady) return;
+    if (!isReady || currentMedia.type !== "video") return;
     
-    const currentVideoEl = videoRefs.current[currentVideo];
-    if (!currentVideoEl) return;
+    const videoEl = videoRef.current;
+    if (!videoEl) return;
     
     let hasTransitioned = false;
     
-    const triggerNextVideo = () => {
+    const triggerNext = () => {
       if (hasTransitioned) return;
       hasTransitioned = true;
-      goToNextVideo();
+      goToNextMedia();
     };
 
     const handleEnded = () => {
-      triggerNextVideo();
+      triggerNext();
     };
 
-    // Also use timeupdate as fallback for desktop (in case 'ended' doesn't fire)
     const handleTimeUpdate = () => {
-      if (!hasTransitioned && currentVideoEl.duration && currentVideoEl.currentTime >= currentVideoEl.duration - 0.3) {
-        triggerNextVideo();
+      if (!hasTransitioned && videoEl.duration && videoEl.currentTime >= videoEl.duration - 0.3) {
+        triggerNext();
       }
     };
 
-    currentVideoEl.addEventListener('ended', handleEnded);
+    videoEl.addEventListener('ended', handleEnded);
+    videoEl.addEventListener('timeupdate', handleTimeUpdate);
     
-    // Add timeupdate fallback only for desktop
-    if (!isMobile) {
-      currentVideoEl.addEventListener('timeupdate', handleTimeUpdate);
-    }
+    // Play the video
+    videoEl.currentTime = 0;
+    videoEl.play().catch(() => {});
     
     return () => {
-      currentVideoEl.removeEventListener('ended', handleEnded);
-      if (!isMobile) {
-        currentVideoEl.removeEventListener('timeupdate', handleTimeUpdate);
+      videoEl.removeEventListener('ended', handleEnded);
+      videoEl.removeEventListener('timeupdate', handleTimeUpdate);
+    };
+  }, [currentMediaIndex, goToNextMedia, isReady, currentMedia.type]);
+
+  // Handle image display duration
+  useEffect(() => {
+    if (!isReady || currentMedia.type !== "image") return;
+    
+    // Clear any existing timer
+    if (imageTimerRef.current) {
+      clearTimeout(imageTimerRef.current);
+    }
+    
+    // Set timer for image display duration
+    imageTimerRef.current = setTimeout(() => {
+      goToNextMedia();
+    }, IMAGE_DISPLAY_DURATION);
+    
+    return () => {
+      if (imageTimerRef.current) {
+        clearTimeout(imageTimerRef.current);
       }
     };
-  }, [currentVideo, goToNextVideo, isReady, isMobile]);
+  }, [currentMediaIndex, goToNextMedia, isReady, currentMedia.type]);
 
   // Detect mobile device immediately
   useEffect(() => {
     const mobile = getIsMobile();
     setIsMobile(mobile);
     setIsReady(true);
-    
-    // Initialize videos loaded array
-    const videoCount = mobile ? mobileVideos.length : videos.length;
-    setVideosLoaded(new Array(videoCount).fill(false));
     
     const handleResize = () => {
       setIsMobile(getIsMobile());
@@ -125,56 +126,28 @@ export default function HeroSection() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Preload and auto-play videos
+  // Preload media
   useEffect(() => {
     if (!isReady) return;
     
-    const videosToUse = isMobile ? mobileVideos : videos;
-    
-    // Preload all videos via link tags (high priority)
-    videosToUse.forEach((src, index) => {
+    // Preload video
+    const videoMedia = heroMedia.find(m => m.type === "video");
+    if (videoMedia) {
       const link = document.createElement('link');
       link.rel = 'preload';
       link.as = 'video';
-      link.href = src;
-      if (index === 0) link.setAttribute('fetchpriority', 'high');
+      link.href = isMobile && videoMedia.mobileSrc ? videoMedia.mobileSrc : videoMedia.src;
+      link.setAttribute('fetchpriority', 'high');
       document.head.appendChild(link);
-    });
-
-    // Setup video elements
-    videosToUse.forEach((_, index) => {
-      const videoEl = videoRefs.current[index];
-      if (videoEl) {
-        // Mark as loaded when ready
-        const handleLoaded = () => {
-          setVideosLoaded(prev => {
-            const newState = [...prev];
-            newState[index] = true;
-            return newState;
-          });
-        };
-        videoEl.addEventListener('loadeddata', handleLoaded);
-        videoEl.addEventListener('canplaythrough', handleLoaded);
-        
-        // Load video
-        videoEl.load();
-      }
-    });
-
-    // Play first video
-    const firstVideo = videoRefs.current[0];
-    if (firstVideo) {
-      firstVideo.play().catch(() => {
-        // Autoplay blocked - wait for user interaction
-        const handleInteraction = () => {
-          firstVideo.play().catch(() => {});
-          document.removeEventListener('touchstart', handleInteraction);
-          document.removeEventListener('click', handleInteraction);
-        };
-        document.addEventListener('touchstart', handleInteraction, { once: true });
-        document.addEventListener('click', handleInteraction, { once: true });
-      });
     }
+
+    // Preload images
+    heroMedia.filter(m => m.type === "image").forEach(media => {
+      const img = new window.Image();
+      img.src = media.src;
+    });
+
+    setMediaLoaded(true);
   }, [isReady, isMobile]);
 
   // Text slide rotation
@@ -195,38 +168,63 @@ export default function HeroSection() {
 
   return (
     <section className="relative w-full h-screen overflow-hidden">
-      {/* Fallback Background for Mobile / Video Loading */}
+      {/* Fallback Background for Loading */}
       <div 
         className={`absolute inset-0 bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460] transition-opacity duration-500 ${
-          videosLoaded[0] ? 'opacity-0' : 'opacity-100'
+          mediaLoaded ? 'opacity-0' : 'opacity-100'
         }`}
         style={{ zIndex: 0 }}
       />
 
-      {/* Video Backgrounds - Crossfade Effect */}
-      {isReady && (isMobile ? mobileVideos : videos).map((src, index) => (
-        <video
-          key={src}
-          ref={(el) => { videoRefs.current[index] = el; }}
-          muted
-          playsInline
-          autoPlay={index === 0}
-          loop={false}
-          preload="auto"
-          poster="/hero-poster.jpg"
-          className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700 ease-out ${
-            index === currentVideo
-              ? "opacity-100 z-[2]"
-              : "opacity-0 z-[1]"
-          }`}
-          style={{ 
-            willChange: 'opacity',
-            transform: 'translateZ(0)',
-            backfaceVisibility: 'hidden'
-          }}
-        >
-          <source src={src} type="video/mp4" />
-        </video>
+      {/* Media Backgrounds - Video and Images with Crossfade */}
+      {isReady && heroMedia.map((media, index) => (
+        media.type === "video" ? (
+          <video
+            key={media.src}
+            ref={index === 0 ? videoRef : null}
+            muted
+            playsInline
+            autoPlay={index === currentMediaIndex}
+            loop={false}
+            preload="auto"
+            poster="/hero-poster.jpg"
+            className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 ease-out ${
+              index === currentMediaIndex
+                ? "opacity-100 z-[2]"
+                : "opacity-0 z-[1]"
+            }`}
+            style={{ 
+              willChange: 'opacity',
+              transform: 'translateZ(0)',
+              backfaceVisibility: 'hidden'
+            }}
+          >
+            <source src={isMobile && media.mobileSrc ? media.mobileSrc : media.src} type="video/mp4" />
+          </video>
+        ) : (
+          <div
+            key={media.src}
+            className={`absolute top-0 left-0 w-full h-full transition-opacity duration-1000 ease-out ${
+              index === currentMediaIndex
+                ? "opacity-100 z-[2]"
+                : "opacity-0 z-[1]"
+            }`}
+            style={{ 
+              willChange: 'opacity',
+              transform: 'translateZ(0)',
+              backfaceVisibility: 'hidden'
+            }}
+          >
+            <Image
+              src={media.src}
+              alt="Hero background"
+              fill
+              priority={index === 1}
+              className="object-cover"
+              sizes="100vw"
+            />
+          </div>
+        )
       ))}
 
       {/* Dark Overlay */}

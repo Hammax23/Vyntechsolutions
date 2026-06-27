@@ -150,7 +150,7 @@ export const organizationSchema = {
   contactPoint: [
     {
       "@type": "ContactPoint",
-      telephone: "+1-XXX-XXX-XXXX",
+      telephone: "+1-416-893-5779",
       contactType: "customer service",
       email: "info@vyntechsolutions.ca",
       areaServed: "CA",
@@ -185,7 +185,7 @@ export const localBusinessSchema = {
   name: "VynTech Solutions",
   image: `${siteUrl}/favicon/android-chrome-512x512.png`,
   url: siteUrl,
-  telephone: "+1-XXX-XXX-XXXX",
+  telephone: "+1-416-893-5779",
   email: "info@vyntechsolutions.ca",
   priceRange: "$$",
   address: {
