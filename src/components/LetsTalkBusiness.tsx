@@ -152,7 +152,7 @@ export default function LetsTalkBusiness() {
 
       {/* Slide-out Panel */}
       <div
-        className={`fixed right-0 top-0 h-full w-full max-w-lg bg-white z-50 shadow-2xl transform transition-transform duration-500 ease-out ${
+        className={`fixed right-0 top-0 h-full w-full max-w-lg bg-white z-50 shadow-2xl transform transition-transform duration-500 ease-out flex flex-col ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -195,7 +195,7 @@ export default function LetsTalkBusiness() {
         </div>
 
         {/* Form */}
-        <div className="h-[calc(100%-80px)] overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Full Name */}
             <div>
@@ -278,7 +278,7 @@ export default function LetsTalkBusiness() {
               <label className="block text-sm font-medium text-gray-700 mb-3">
                 Services you are looking for<span className="text-red-500">*</span>
               </label>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {services.map((service) => (
                   <label
                     key={service}

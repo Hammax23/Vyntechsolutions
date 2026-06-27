@@ -15,20 +15,20 @@ const IMAGE_DISPLAY_DURATION = 6000;
 
 const slides = [
   {
-    heading: "Engineering\nDigital\nExcellence",
-    subtext: "Enterprise-grade software solutions that scale with your ambitions. Trusted by Fortune 150+ companies worldwide.",
+    heading: "Build Faster.\nScale Smarter.",
+    subtext: "From MVPs to enterprise platforms — we turn your vision into market-ready products in weeks, not months.",
   },
   {
-    heading: "Accelerate\nYour Digital\nTransformation",
-    subtext: "From strategy to execution, we deliver end-to-end technology solutions that drive measurable business outcomes.",
+    heading: "Your Tech Partner\nfor Growth",
+    subtext: "Stop hiring. Start building. Get a dedicated development team that delivers results from day one.",
   },
   {
-    heading: "Innovation\nMeets\nExecution",
-    subtext: "Cutting-edge AI, Cloud, and DevOps expertise combined with 12+ years of enterprise delivery excellence.",
+    heading: "Enterprise Solutions.\nStartup Speed.",
+    subtext: "AI, Cloud, Mobile & Web — full-stack expertise to power your next big idea. No compromises.",
   },
   {
-    heading: "Your Vision\nOur\nExpertise",
-    subtext: "Partner with a team that has successfully delivered 100+ projects across Healthcare, Finance, and Technology sectors.",
+    heading: "Let's Build\nSomething Extraordinary",
+    subtext: "Join 100+ businesses who chose VynTech to transform their digital presence and 10x their growth.",
   },
 ];
 
