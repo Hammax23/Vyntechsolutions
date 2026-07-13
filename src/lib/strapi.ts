@@ -72,32 +72,30 @@ export async function strapiFetch<T>({
   }
 }
 
-export function unwrapList<T extends { id: number; documentId?: string; attributes?: Record<string, unknown> } | Record<string, unknown>>(
-  payload: StrapiListResponse<T> | null
-): Array<T & Record<string, unknown>> {
-  if (!payload?.data || !Array.isArray(payload.data)) return [];
-  return payload.data.map((item) => flattenStrapiEntity(item));
-}
-
-export function unwrapSingle<T extends { id: number; documentId?: string; attributes?: Record<string, unknown> } | Record<string, unknown>>(
-  payload: StrapiSingleResponse<T> | null
-): (T & Record<string, unknown>) | null {
-  if (!payload?.data) return null;
-  return flattenStrapiEntity(payload.data);
-}
-
 /** Strapi 5 returns flat entities; Strapi 4 uses attributes — support both */
-function flattenStrapiEntity<T>(item: T): T & Record<string, unknown> {
-  if (!item || typeof item !== "object") return item as T & Record<string, unknown>;
+function flattenStrapiEntity(item: unknown): Record<string, unknown> {
+  if (!item || typeof item !== "object") return {};
   const anyItem = item as Record<string, unknown>;
   if (anyItem.attributes && typeof anyItem.attributes === "object") {
     return {
       id: anyItem.id,
       documentId: anyItem.documentId,
       ...(anyItem.attributes as Record<string, unknown>),
-    } as T & Record<string, unknown>;
+    };
   }
-  return item as T & Record<string, unknown>;
+  return anyItem;
+}
+
+export function unwrapList(payload: StrapiListResponse<Record<string, unknown>> | null): Record<string, unknown>[] {
+  if (!payload?.data || !Array.isArray(payload.data)) return [];
+  return payload.data.map((item) => flattenStrapiEntity(item));
+}
+
+export function unwrapSingle(
+  payload: StrapiSingleResponse<Record<string, unknown>> | null
+): Record<string, unknown> | null {
+  if (!payload?.data) return null;
+  return flattenStrapiEntity(payload.data);
 }
 
 export function isStrapiConfigured(): boolean {
