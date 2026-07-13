@@ -1,0 +1,17 @@
+{
+  "kind": "collectionType",
+  "collectionName": "client_logos",
+  "info": {
+    "singularName": "client-logo",
+    "pluralName": "client-logos",
+    "displayName": "Client Logo"
+  },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "name": { "type": "string", "required": true },
+    "url": { "type": "string" },
+    "logoUrl": { "type": "string" },
+    "logo": { "type": "media", "multiple": false, "allowedTypes": ["images"] },
+    "order": { "type": "integer", "default": 0 }
+  }
+}

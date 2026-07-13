@@ -3,8 +3,18 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 
-// Hero media - video first, then images
-const heroMedia = [
+type HeroMediaItem = {
+  type: "video" | "image";
+  src: string;
+  mobileSrc?: string;
+};
+
+type HeroSlide = {
+  heading: string;
+  subtext: string;
+};
+
+const DEFAULT_HERO_MEDIA: HeroMediaItem[] = [
   { type: "video", src: "/cover1.mp4", mobileSrc: "/cover1-mobile.mp4" },
   { type: "image", src: "/cover3.png" },
   { type: "image", src: "/cover2.png" },
@@ -13,7 +23,7 @@ const heroMedia = [
 // Duration for images (in milliseconds)
 const IMAGE_DISPLAY_DURATION = 6000;
 
-const slides = [
+const DEFAULT_SLIDES: HeroSlide[] = [
   {
     heading: "Build Faster.\nScale Smarter.",
     subtext: "From MVPs to enterprise platforms — we turn your vision into market-ready products in weeks, not months.",
@@ -34,11 +44,13 @@ const slides = [
 
 // Check if mobile on client side
 const getIsMobile = () => {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === "undefined") return false;
   return window.innerWidth < 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 };
 
 export default function HeroSection() {
+  const [heroMedia, setHeroMedia] = useState<HeroMediaItem[]>(DEFAULT_HERO_MEDIA);
+  const [slides, setSlides] = useState<HeroSlide[]>(DEFAULT_SLIDES);
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
@@ -46,23 +58,67 @@ export default function HeroSection() {
   const [mediaLoaded, setMediaLoaded] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const imageTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const heroMediaLengthRef = useRef(heroMedia.length);
+  const slidesLengthRef = useRef(slides.length);
 
-  const currentMedia = heroMedia[currentMediaIndex];
+  useEffect(() => {
+    heroMediaLengthRef.current = heroMedia.length;
+  }, [heroMedia.length]);
+
+  useEffect(() => {
+    slidesLengthRef.current = slides.length;
+  }, [slides.length]);
+
+  useEffect(() => {
+    fetch("/api/cms/content?type=homepage")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        const heroSlides = data?.homepage?.heroSlides;
+        if (!Array.isArray(heroSlides) || heroSlides.length === 0) return;
+
+        setSlides(
+          heroSlides.map((s: { heading?: string; subtext?: string }) => ({
+            heading: String(s.heading || "").replace(/\\n/g, "\n"),
+            subtext: String(s.subtext || ""),
+          }))
+        );
+        setCurrentSlide(0);
+
+        const withMedia = heroSlides.filter(
+          (s: { mediaUrl?: string }) => typeof s.mediaUrl === "string" && s.mediaUrl.trim()
+        );
+        if (withMedia.length > 0) {
+          setHeroMedia(
+            withMedia.map((s: { mediaUrl?: string; mediaType?: string }) => {
+              const src = String(s.mediaUrl);
+              const type = s.mediaType === "video" ? "video" : "image";
+              return type === "video"
+                ? { type: "video" as const, src, mobileSrc: src }
+                : { type: "image" as const, src };
+            })
+          );
+          setCurrentMediaIndex(0);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const currentMedia = heroMedia[currentMediaIndex] ?? heroMedia[0];
 
   const goToNextMedia = useCallback(() => {
-    const next = (currentMediaIndex + 1) % heroMedia.length;
-    setCurrentMediaIndex(next);
-  }, [currentMediaIndex]);
+    const len = heroMediaLengthRef.current || 1;
+    setCurrentMediaIndex((prev) => (prev + 1) % len);
+  }, []);
 
   // Handle video ended event
   useEffect(() => {
-    if (!isReady || currentMedia.type !== "video") return;
-    
+    if (!isReady || !currentMedia || currentMedia.type !== "video") return;
+
     const videoEl = videoRef.current;
     if (!videoEl) return;
-    
+
     let hasTransitioned = false;
-    
+
     const triggerNext = () => {
       if (hasTransitioned) return;
       hasTransitioned = true;
@@ -79,153 +135,163 @@ export default function HeroSection() {
       }
     };
 
-    videoEl.addEventListener('ended', handleEnded);
-    videoEl.addEventListener('timeupdate', handleTimeUpdate);
-    
+    videoEl.addEventListener("ended", handleEnded);
+    videoEl.addEventListener("timeupdate", handleTimeUpdate);
+
     // Play the video
     videoEl.currentTime = 0;
     videoEl.play().catch(() => {});
-    
+
     return () => {
-      videoEl.removeEventListener('ended', handleEnded);
-      videoEl.removeEventListener('timeupdate', handleTimeUpdate);
+      videoEl.removeEventListener("ended", handleEnded);
+      videoEl.removeEventListener("timeupdate", handleTimeUpdate);
     };
-  }, [currentMediaIndex, goToNextMedia, isReady, currentMedia.type]);
+  }, [currentMediaIndex, goToNextMedia, isReady, currentMedia?.type]);
 
   // Handle image display duration
   useEffect(() => {
-    if (!isReady || currentMedia.type !== "image") return;
-    
-    // Clear any existing timer
+    if (!isReady || !currentMedia || currentMedia.type !== "image") return;
+
     if (imageTimerRef.current) {
       clearTimeout(imageTimerRef.current);
     }
-    
-    // Set timer for image display duration
+
     imageTimerRef.current = setTimeout(() => {
       goToNextMedia();
     }, IMAGE_DISPLAY_DURATION);
-    
+
     return () => {
       if (imageTimerRef.current) {
         clearTimeout(imageTimerRef.current);
       }
     };
-  }, [currentMediaIndex, goToNextMedia, isReady, currentMedia.type]);
+  }, [currentMediaIndex, goToNextMedia, isReady, currentMedia?.type]);
 
   // Detect mobile device immediately
   useEffect(() => {
     const mobile = getIsMobile();
     setIsMobile(mobile);
     setIsReady(true);
-    
+
     const handleResize = () => {
       setIsMobile(getIsMobile());
     };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Preload media
   useEffect(() => {
     if (!isReady) return;
-    
-    // Preload video
-    const videoMedia = heroMedia.find(m => m.type === "video");
+
+    const videoMedia = heroMedia.find((m) => m.type === "video");
     if (videoMedia) {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'video';
+      const link = document.createElement("link");
+      link.rel = "preload";
+      link.as = "video";
       link.href = isMobile && videoMedia.mobileSrc ? videoMedia.mobileSrc : videoMedia.src;
-      link.setAttribute('fetchpriority', 'high');
+      link.setAttribute("fetchpriority", "high");
       document.head.appendChild(link);
     }
 
-    // Preload images
-    heroMedia.filter(m => m.type === "image").forEach(media => {
-      const img = new window.Image();
-      img.src = media.src;
-    });
+    heroMedia
+      .filter((m) => m.type === "image")
+      .forEach((media) => {
+        const img = new window.Image();
+        img.src = media.src;
+      });
 
     setMediaLoaded(true);
-  }, [isReady, isMobile]);
+  }, [isReady, isMobile, heroMedia]);
 
   // Text slide rotation
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
+      const len = slidesLengthRef.current || 1;
+      setCurrentSlide((prev) => (prev + 1) % len);
     }, 6000);
     return () => clearInterval(interval);
   }, []);
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
+    setCurrentSlide((prev) => (prev + 1) % (slides.length || 1));
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % (slides.length || 1));
   };
+
+  const activeSlide = slides[currentSlide] ?? slides[0];
 
   return (
     <section className="relative w-full h-screen overflow-hidden">
       {/* Fallback Background for Loading */}
-      <div 
+      <div
         className={`absolute inset-0 bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460] transition-opacity duration-500 ${
-          mediaLoaded ? 'opacity-0' : 'opacity-100'
+          mediaLoaded ? "opacity-0" : "opacity-100"
         }`}
         style={{ zIndex: 0 }}
       />
 
       {/* Media Backgrounds - Video and Images with Crossfade */}
-      {isReady && heroMedia.map((media, index) => (
-        media.type === "video" ? (
-          <video
-            key={media.src}
-            ref={index === 0 ? videoRef : null}
-            muted
-            playsInline
-            autoPlay={index === currentMediaIndex}
-            loop={false}
-            preload="auto"
-            poster="/hero-poster.jpg"
-            className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 ease-out ${
-              index === currentMediaIndex
-                ? "opacity-100 z-[2]"
-                : "opacity-0 z-[1]"
-            }`}
-            style={{ 
-              willChange: 'opacity',
-              transform: 'translateZ(0)',
-              backfaceVisibility: 'hidden'
-            }}
-          >
-            <source src={isMobile && media.mobileSrc ? media.mobileSrc : media.src} type="video/mp4" />
-          </video>
-        ) : (
-          <div
-            key={media.src}
-            className={`absolute top-0 left-0 w-full h-full transition-opacity duration-1000 ease-out ${
-              index === currentMediaIndex
-                ? "opacity-100 z-[2]"
-                : "opacity-0 z-[1]"
-            }`}
-            style={{ 
-              willChange: 'opacity',
-              transform: 'translateZ(0)',
-              backfaceVisibility: 'hidden'
-            }}
-          >
-            <Image
-              src={media.src}
-              alt="Hero background"
-              fill
-              priority={index === 1}
-              className="object-cover"
-              sizes="100vw"
-            />
-          </div>
-        )
-      ))}
+      {isReady &&
+        heroMedia.map((media, index) =>
+          media.type === "video" ? (
+            <video
+              key={`${media.src}-${index}`}
+              ref={index === currentMediaIndex ? videoRef : null}
+              muted
+              playsInline
+              autoPlay={index === currentMediaIndex}
+              loop={false}
+              preload="auto"
+              poster="/hero-poster.jpg"
+              className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 ease-out ${
+                index === currentMediaIndex ? "opacity-100 z-[2]" : "opacity-0 z-[1]"
+              }`}
+              style={{
+                willChange: "opacity",
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
+              }}
+            >
+              <source
+                src={isMobile && media.mobileSrc ? media.mobileSrc : media.src}
+                type="video/mp4"
+              />
+            </video>
+          ) : (
+            <div
+              key={`${media.src}-${index}`}
+              className={`absolute top-0 left-0 w-full h-full transition-opacity duration-1000 ease-out ${
+                index === currentMediaIndex ? "opacity-100 z-[2]" : "opacity-0 z-[1]"
+              }`}
+              style={{
+                willChange: "opacity",
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
+              }}
+            >
+              {media.src.startsWith("http") ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={media.src}
+                  alt="Hero background"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              ) : (
+                <Image
+                  src={media.src}
+                  alt="Hero background"
+                  fill
+                  priority={index === 1}
+                  className="object-cover"
+                  sizes="100vw"
+                />
+              )}
+            </div>
+          )
+        )}
 
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black/30 z-[3]" />
@@ -236,7 +302,7 @@ export default function HeroSection() {
           <div className="max-w-2xl">
             {/* Heading */}
             <h1 className="text-white text-5xl md:text-6xl lg:text-7xl font-light leading-tight mb-6">
-              {slides[currentSlide].heading.split("\n").map((line, index) => (
+              {activeSlide.heading.split("\n").map((line, index) => (
                 <span key={index} className="block">
                   {line}
                 </span>
@@ -245,12 +311,12 @@ export default function HeroSection() {
 
             {/* Subtext */}
             <p className="text-white/90 text-lg md:text-xl font-light mb-8 max-w-lg">
-              {slides[currentSlide].subtext}
+              {activeSlide.subtext}
             </p>
 
             {/* CTA Button */}
-            <button 
-              onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent("openLetsTalkBusiness"))}
               className="inline-flex items-center gap-2 border border-white text-white px-8 py-3 text-sm font-light tracking-wider hover:bg-white hover:text-black transition-all duration-300"
             >
               BUILD YOUR PROJECT NOW

@@ -7,6 +7,10 @@ export default function TimedCTAPopup() {
   const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(false);
   const [hasShown, setHasShown] = useState(false);
+  const [promoHeading, setPromoHeading] = useState("Share Your Requirements");
+  const [promoBody, setPromoBody] = useState(
+    "to help our experts understand your business objectives and create your customized plan."
+  );
   const [formData, setFormData] = useState({
     name: "",
     companyEmail: "",
@@ -17,6 +21,17 @@ export default function TimedCTAPopup() {
   });
 
   const isAdminPage = pathname?.startsWith('/admin') || pathname?.startsWith('/seopanel');
+
+  useEffect(() => {
+    fetch("/api/cms/content?type=promos&slot=timed-cta")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        const promo = data?.promos?.[0];
+        if (promo?.heading) setPromoHeading(String(promo.heading));
+        if (promo?.body) setPromoBody(String(promo.body));
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     // Don't show on admin pages
@@ -95,9 +110,9 @@ export default function TimedCTAPopup() {
             {/* Header */}
             <div className="mb-5 sm:mb-8 pr-6">
               <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 leading-relaxed">
-                <span className="text-gray-900">Share Your Requirements</span>{" "}
+                <span className="text-gray-900">{promoHeading}</span>{" "}
                 <span className="text-gray-500 font-normal">
-                  to help our experts understand your business objectives and create your customized plan.
+                  {promoBody}
                 </span>
               </h2>
             </div>

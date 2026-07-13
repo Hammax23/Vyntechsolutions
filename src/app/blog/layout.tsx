@@ -1,35 +1,14 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
+import { metadataFromPath } from "@/lib/cms/metadata";
 
-export const metadata: Metadata = {
-  title: "Blog - Insights & Industry Trends",
-  description:
-    "Stay updated with the latest in web development, digital trends, technology insights, and best practices from VynTech Solutions' expert team in Canada. Tips for businesses in Toronto, Vancouver, Montreal & nationwide.",
-  keywords: [
-    "web development blog",
-    "tech insights Canada",
-    "digital transformation tips",
-    "software development trends",
-    "Canadian tech news",
-    "business technology blog",
-    "web design tips",
-    "mobile app trends",
-  ],
-  openGraph: {
-    title: "VynTech Solutions Blog - Digital Insights & Technology Trends",
+export async function generateMetadata(): Promise<Metadata> {
+  return metadataFromPath("/blog", {
+    title: "Blog | VynTech Solutions",
     description:
-      "Expert insights on web development, digital transformation, and technology trends for Canadian businesses.",
-    url: "https://vyntechsolutions.ca/blog",
-    type: "website",
-  },
-  alternates: {
-    canonical: "https://vyntechsolutions.ca/blog",
-  },
-};
+      "Practical insights on software development, technology decisions, and building digital products.",
+  });
+}
 
-export default function BlogLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function BlogLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }

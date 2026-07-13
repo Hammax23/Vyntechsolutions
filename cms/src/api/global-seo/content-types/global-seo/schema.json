@@ -1,0 +1,25 @@
+{
+  "kind": "singleType",
+  "collectionName": "global_seos",
+  "info": {
+    "singularName": "global-seo",
+    "pluralName": "global-seos",
+    "displayName": "Global SEO",
+    "description": "Site-wide SEO defaults"
+  },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "siteName": { "type": "string", "required": true, "default": "VynTech Solutions" },
+    "siteUrl": { "type": "string", "default": "https://vyntechsolutions.ca" },
+    "defaultTitle": { "type": "string" },
+    "titleTemplate": { "type": "string" },
+    "defaultDescription": { "type": "text" },
+    "ogDescription": { "type": "text" },
+    "twitterTitle": { "type": "string" },
+    "keywords": { "type": "json" },
+    "phone": { "type": "string" },
+    "email": { "type": "string" },
+    "locale": { "type": "string", "default": "en_CA" },
+    "defaultOgImage": { "type": "media", "multiple": false, "allowedTypes": ["images"] }
+  }
+}

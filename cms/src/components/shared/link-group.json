@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_shared_link_groups",
+  "info": { "displayName": "Link Group" },
+  "options": {},
+  "attributes": {
+    "title": { "type": "string", "required": true },
+    "links": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.nav-link"
+    }
+  }
+}

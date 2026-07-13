@@ -1,0 +1,25 @@
+{
+  "kind": "singleType",
+  "collectionName": "homepages",
+  "info": {
+    "singularName": "homepage",
+    "pluralName": "homepages",
+    "displayName": "Homepage"
+  },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "heroSlides": { "type": "component", "repeatable": true, "component": "home.hero-slide" },
+    "servicesHeading": { "type": "string" },
+    "servicesSubheading": { "type": "string" },
+    "servicesBody": { "type": "text" },
+    "impactHeading": { "type": "string" },
+    "impactBody": { "type": "text" },
+    "impactStats": { "type": "component", "repeatable": true, "component": "shared.stat" },
+    "impactCtaLabel": { "type": "string" },
+    "impactCtaHref": { "type": "string" },
+    "insightsHeading": { "type": "string" },
+    "industriesHeading": { "type": "string" },
+    "partnersHeading": { "type": "string", "default": "Technology Partners" },
+    "seo": { "type": "component", "repeatable": false, "component": "shared.seo" }
+  }
+}

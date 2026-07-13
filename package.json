@@ -8,10 +8,15 @@
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
-    "db:migrate": "prisma migrate deploy"
+    "db:migrate": "prisma migrate deploy",
+    "cms:develop": "npm run develop --prefix cms",
+    "cms:build": "npm run build --prefix cms",
+    "cms:start": "npm run start --prefix cms",
+    "cms:seed": "node cms/scripts/seed-from-fallback.mjs"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
+    "@strapi/plugin-cloud": "^5.12.6",
     "@types/nodemailer": "^7.0.11",
     "framer-motion": "^12.38.0",
     "next": "14.2.3",

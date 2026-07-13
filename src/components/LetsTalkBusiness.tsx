@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 
-const regions = [
+const DEFAULT_REGIONS = [
   "Select Region",
   "North America",
   "Europe",
@@ -14,7 +14,7 @@ const regions = [
   "South America",
 ];
 
-const services = [
+const DEFAULT_SERVICES = [
   "Web Development",
   "Custom Software Development",
   "Mobile App Development",
@@ -28,17 +28,40 @@ const services = [
   "Tax & Accounting",
 ];
 
-const jobOptions = [
-  "Please Select",
-  "Yes",
-  "No",
+const DEFAULT_HEAR_ABOUT = [
+  "Google Search",
+  "Social Media",
+  "Referral",
+  "Event/Conference",
+  "Advertisement",
+  "Other",
 ];
+
+function resolveServiceLabels(
+  configServices: string[],
+  cmsServices: { slug?: string; title?: string }[]
+): string[] {
+  const bySlug = new Map(
+    cmsServices
+      .filter((s) => s.slug)
+      .map((s) => [String(s.slug), String(s.title || s.slug)])
+  );
+  return configServices.map((item) => {
+    if (item.includes("-")) {
+      return bySlug.get(item) || item;
+    }
+    return item;
+  });
+}
 
 export default function LetsTalkBusiness() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [regions, setRegions] = useState<string[]>(DEFAULT_REGIONS);
+  const [services, setServices] = useState<string[]>(DEFAULT_SERVICES);
+  const [hearAboutOptions, setHearAboutOptions] = useState<string[]>(DEFAULT_HEAR_ABOUT);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -46,6 +69,7 @@ export default function LetsTalkBusiness() {
     phoneNumber: "",
     companyName: "",
     companyUrl: "",
+    region: "",
     services: [] as string[],
     projectDetails: "",
     hearAbout: "",
@@ -59,6 +83,47 @@ export default function LetsTalkBusiness() {
     const handleOpenPanel = () => setIsOpen(true);
     window.addEventListener('openLetsTalkBusiness', handleOpenPanel);
     return () => window.removeEventListener('openLetsTalkBusiness', handleOpenPanel);
+  }, [isAdminPage]);
+
+  useEffect(() => {
+    if (isAdminPage) return;
+    let cancelled = false;
+    Promise.all([
+      fetch("/api/cms/content?type=form-config").then((r) => (r.ok ? r.json() : null)),
+      fetch("/api/cms/services").then((r) => (r.ok ? r.json() : null)),
+    ])
+      .then(([formDataRes, servicesRes]) => {
+        if (cancelled) return;
+        const formConfig = formDataRes?.formConfig as Record<string, unknown> | undefined;
+        const cmsServices = (servicesRes?.services || []) as { slug?: string; title?: string }[];
+
+        if (Array.isArray(formConfig?.services) && formConfig.services.length) {
+          const labels = resolveServiceLabels(
+            formConfig.services.map(String),
+            cmsServices
+          );
+          if (labels.length) setServices(labels);
+        } else if (cmsServices.length) {
+          setServices(
+            cmsServices.map((s) => String(s.title || s.slug || "")).filter(Boolean)
+          );
+        }
+
+        if (Array.isArray(formConfig?.regions) && formConfig.regions.length) {
+          const list = formConfig.regions.map(String);
+          setRegions(
+            list[0]?.toLowerCase().includes("select") ? list : ["Select Region", ...list]
+          );
+        }
+
+        if (Array.isArray(formConfig?.hearAbout) && formConfig.hearAbout.length) {
+          setHearAboutOptions(formConfig.hearAbout.map(String));
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
   }, [isAdminPage]);
 
   // Hide on admin pages
@@ -108,6 +173,7 @@ export default function LetsTalkBusiness() {
           phoneNumber: "",
           companyName: "",
           companyUrl: "",
+          region: "",
           services: [],
           projectDetails: "",
           hearAbout: "",
@@ -273,6 +339,28 @@ export default function LetsTalkBusiness() {
               />
             </div>
 
+            {/* Region */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Region
+              </label>
+              <select
+                value={formData.region}
+                onChange={(e) => setFormData({ ...formData, region: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0d9488] focus:border-transparent outline-none transition-all bg-white cursor-pointer text-gray-900"
+              >
+                {regions.map((region) => (
+                  <option
+                    key={region}
+                    value={region === "Select Region" ? "" : region}
+                    className="text-gray-900 bg-white"
+                  >
+                    {region}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {/* Services */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-3">
@@ -334,12 +422,11 @@ export default function LetsTalkBusiness() {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0d9488] focus:border-transparent outline-none transition-all bg-white cursor-pointer text-gray-900"
               >
                 <option value="" className="text-gray-900 bg-white">Please Select</option>
-                <option value="Google Search" className="text-gray-900 bg-white">Google Search</option>
-                <option value="Social Media" className="text-gray-900 bg-white">Social Media</option>
-                <option value="Referral" className="text-gray-900 bg-white">Referral</option>
-                <option value="Event/Conference" className="text-gray-900 bg-white">Event/Conference</option>
-                <option value="Advertisement" className="text-gray-900 bg-white">Advertisement</option>
-                <option value="Other" className="text-gray-900 bg-white">Other</option>
+                {hearAboutOptions.map((option) => (
+                  <option key={option} value={option} className="text-gray-900 bg-white">
+                    {option}
+                  </option>
+                ))}
               </select>
             </div>
 

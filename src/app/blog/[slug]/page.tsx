@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
@@ -9,8 +10,23 @@ import { getPostBySlug, getRelatedPosts, BlogPost } from "@/data/blogData";
 export default function BlogPostPage() {
   const params = useParams();
   const slug = params.slug as string;
-  const post = getPostBySlug(slug);
-  const relatedPosts = getRelatedPosts(slug, 3);
+  const [post, setPost] = useState<BlogPost | undefined>(getPostBySlug(slug));
+  const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>(getRelatedPosts(slug, 3));
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`/api/cms/blog/${slug}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (cancelled || !data?.post) return;
+        setPost(data.post);
+        if (data.related) setRelatedPosts(data.related);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [slug]);
 
   if (!post) {
     return (

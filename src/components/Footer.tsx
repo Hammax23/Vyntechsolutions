@@ -1,9 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-const footerLinks = {
+const defaultGroups = {
   services: {
     title: "Services",
     sections: [
@@ -119,6 +120,95 @@ const bottomLinks = [
 ];
 
 export default function Footer() {
+  const [groups, setGroups] = useState(defaultGroups);
+  const [legal, setLegal] = useState(bottomLinks);
+  const [socials, setSocials] = useState(socialLinks);
+
+  useEffect(() => {
+    Promise.all([
+      fetch("/api/cms/content?type=navigation").then((r) => (r.ok ? r.json() : null)),
+      fetch("/api/cms/services").then((r) => (r.ok ? r.json() : null)),
+      fetch("/api/cms/industries").then((r) => (r.ok ? r.json() : null)),
+    ])
+      .then(([navData, servicesData, industriesData]) => {
+        const nav = navData?.navigation;
+        if (nav?.legalLinks?.length) {
+          setLegal(
+            nav.legalLinks.map((l: { label?: string; href?: string }) => ({
+              name: String(l.label || ""),
+              href: String(l.href || "#"),
+            }))
+          );
+        }
+        if (nav?.socialLinks?.length) {
+          setSocials((prev) =>
+            nav.socialLinks.map((l: { label?: string; href?: string }, i: number) => ({
+              name: String(l.label || prev[i]?.name || "Social"),
+              href: String(l.href || prev[i]?.href || "#"),
+              icon: prev[i]?.icon || prev[0].icon,
+            }))
+          );
+        }
+
+        const services = servicesData?.services as { slug: string; title: string }[] | undefined;
+        const industries = industriesData?.industries as { slug: string; title: string }[] | undefined;
+        if (services?.length || industries?.length) {
+          setGroups((prev) => {
+            const next = { ...prev };
+            if (services?.length) {
+              const half = Math.ceil(services.length / 2);
+              next.services = {
+                ...prev.services,
+                sections: [
+                  {
+                    heading: "Development",
+                    links: services.slice(0, half).map((s) => ({
+                      name: s.title,
+                      href: `/services/${s.slug}`,
+                    })),
+                  },
+                  {
+                    heading: "Solutions",
+                    links: services.slice(half).map((s) => ({
+                      name: s.title,
+                      href: `/services/${s.slug}`,
+                    })),
+                  },
+                ],
+              };
+              next.moreServices = {
+                title: "More Services",
+                links: services.slice(-2).map((s) => ({
+                  name: s.title,
+                  href: `/services/${s.slug}`,
+                  highlight: s.slug.includes("seo"),
+                })),
+              };
+            }
+            if (industries?.length) {
+              const half = Math.ceil(industries.length / 2);
+              next.industries = {
+                title: "Industries",
+                links: industries.slice(0, half).map((i) => ({
+                  name: i.title,
+                  href: `/industries/${i.slug}`,
+                })),
+              };
+              next.moreIndustries = {
+                title: "More Industries",
+                links: industries.slice(half).map((i) => ({
+                  name: i.title,
+                  href: `/industries/${i.slug}`,
+                })),
+              };
+            }
+            return next;
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <footer className="w-full bg-[#f5f5f5] relative overflow-hidden">
       {/* Decorative Chevrons - Right Side */}
@@ -156,11 +246,11 @@ export default function Footer() {
           <div className="flex justify-between w-full">
             {/* Services Column */}
             <div>
-              <h4 className="text-base font-semibold text-gray-900 mb-4">{footerLinks.services.title}</h4>
+              <h4 className="text-base font-semibold text-gray-900 mb-4">{groups.services.title}</h4>
               <div className="mb-3">
                 <p className="text-sm font-semibold text-gray-800 mb-2">Development</p>
                 <ul className="space-y-1.5">
-                  {footerLinks.services.sections[0].links.map((link) => (
+                  {groups.services.sections[0].links.map((link) => (
                     <li key={link.name}>
                       <Link
                         href={link.href}
@@ -176,9 +266,9 @@ export default function Footer() {
 
             {/* Industries Column */}
             <div>
-              <h4 className="text-base font-semibold text-gray-900 mb-4">{footerLinks.industries.title}</h4>
+              <h4 className="text-base font-semibold text-gray-900 mb-4">{groups.industries.title}</h4>
               <ul className="space-y-1.5">
-                {footerLinks.industries.links.map((link) => (
+                {groups.industries.links.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
@@ -195,7 +285,7 @@ export default function Footer() {
             <div>
               <h4 className="text-base font-semibold text-gray-900 mb-4">Solutions</h4>
               <ul className="space-y-1.5">
-                {footerLinks.services.sections[1].links.map((link) => (
+                {groups.services.sections[1].links.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
@@ -209,7 +299,7 @@ export default function Footer() {
               {/* More Services */}
               <p className="text-sm font-semibold text-gray-800 mb-2 mt-4">More Services</p>
               <ul className="space-y-1.5">
-                {footerLinks.moreServices.links.map((link) => (
+                {groups.moreServices.links.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
@@ -228,9 +318,9 @@ export default function Footer() {
 
             {/* More Industries Column */}
             <div>
-              <h4 className="text-base font-semibold text-gray-900 mb-4">{footerLinks.moreIndustries.title}</h4>
+              <h4 className="text-base font-semibold text-gray-900 mb-4">{groups.moreIndustries.title}</h4>
               <ul className="space-y-1.5">
-                {footerLinks.moreIndustries.links.map((link) => (
+                {groups.moreIndustries.links.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
@@ -262,7 +352,7 @@ export default function Footer() {
 
           {/* Social Links */}
           <div className="flex items-center gap-3">
-            {socialLinks.map((social) => (
+            {socials.map((social) => (
               <Link
                 key={social.name}
                 href={social.href}
@@ -281,7 +371,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           {/* Bottom Links */}
           <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-            {bottomLinks.map((link) => (
+            {legal.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}

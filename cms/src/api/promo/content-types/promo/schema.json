@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "promos",
+  "info": {
+    "singularName": "promo",
+    "pluralName": "promos",
+    "displayName": "Promo"
+  },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "name": { "type": "string", "required": true },
+    "slot": {
+      "type": "enumeration",
+      "enum": ["announcement-bar", "google-ranking", "timed-cta", "services-promo"],
+      "required": true
+    },
+    "heading": { "type": "string" },
+    "body": { "type": "text" },
+    "ctaLabel": { "type": "string" },
+    "ctaHref": { "type": "string" },
+    "active": { "type": "boolean", "default": true },
+    "priority": { "type": "integer", "default": 0 }
+  }
+}

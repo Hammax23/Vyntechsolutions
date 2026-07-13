@@ -173,16 +173,66 @@ const serviceCards = [
   },
 ];
 
+const DEFAULT_SERVICES_BODY =
+  "Through Innovation, Technology, and Scalable Digital Solutions";
+
+type ServiceCard = (typeof serviceCards)[number];
+
 export default function OurServices() {
   const [isVisible, setIsVisible] = useState(false);
   const [cardsVisible, setCardsVisible] = useState(false);
-  
+  const [heading, setHeading] = useState("Our Services");
+  const [subheading, setSubheading] = useState("Transforming Modern Businesses");
+  const [body, setBody] = useState(DEFAULT_SERVICES_BODY);
+  const [cards, setCards] = useState<ServiceCard[]>(serviceCards);
+
   const sectionRef = useRef<HTMLElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
   const techScrollRef = useRef<HTMLDivElement>(null);
 
   // Duplicate logos for infinite scroll
   const duplicatedStacks = [...techStacks, ...techStacks];
+  const useFancyHeading = heading === "Our Services";
+
+  useEffect(() => {
+    fetch("/api/cms/content?type=homepage")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        const hp = data?.homepage;
+        if (!hp) return;
+        if (hp.servicesHeading) setHeading(String(hp.servicesHeading));
+        if (hp.servicesSubheading) setSubheading(String(hp.servicesSubheading));
+        if (hp.servicesBody) setBody(String(hp.servicesBody));
+      })
+      .catch(() => {});
+
+    fetch("/api/cms/services")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        const list = data?.services as { slug?: string; title?: string; description?: string }[] | undefined;
+        if (!list?.length) return;
+        const homeServices = list.filter(
+          (s) => s.slug && s.slug !== "tax-accounting" && !String(s.slug).includes("tax")
+        );
+        if (!homeServices.length) return;
+        setCards(
+          homeServices.map((s, i) => {
+            const fallback =
+              serviceCards.find((c) => c.href.includes(`/${s.slug}`)) ||
+              serviceCards[i % serviceCards.length];
+            return {
+              title: String(s.title || fallback.title),
+              description: String(s.description || fallback.description),
+              href: `/services/${s.slug}`,
+              icon: fallback.icon,
+              gradient: fallback.gradient,
+              lightGradient: fallback.lightGradient,
+            };
+          })
+        );
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const observerOptions = {
@@ -254,28 +304,32 @@ export default function OurServices() {
           <div className="hidden xl:grid xl:grid-cols-[1fr_auto_1fr] xl:gap-x-6 xl:items-start">
             <div aria-hidden />
             <div className="px-2">
-              <h2
-                className={`text-3xl sm:text-4xl md:text-5xl lg:text-[4rem] font-light leading-tight tracking-tight transition-opacity duration-700 ${isVisible ? "opacity-100" : "opacity-0"}`}
-                style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}
-              >
-                <span className="bg-gradient-to-tr from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] text-transparent bg-clip-text drop-shadow-[0_0_8px_rgba(0,180,255,0.2)]">O</span>
-                <span className="text-[#1a1a2e]">ur</span>
-                <span className="text-[#1a1a2e]">&nbsp;</span>
-                <span className="bg-gradient-to-tr from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] text-transparent bg-clip-text drop-shadow-[0_0_8px_rgba(0,180,255,0.2)]">S</span>
-                <span className="text-[#1a1a2e]">ervic</span>
-                <span className="bg-gradient-to-tr from-[#0055FF] via-[#FF6B6B] to-[#FF4757] text-transparent bg-clip-text drop-shadow-[0_0_8px_rgba(255,107,107,0.2)]">e</span>
-                <span className="text-[#1a1a2e]">s</span>
-              </h2>
+              {useFancyHeading ? (
+                <h2
+                  className={`text-3xl sm:text-4xl md:text-5xl lg:text-[4rem] font-light leading-tight tracking-tight transition-opacity duration-700 ${isVisible ? "opacity-100" : "opacity-0"}`}
+                  style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}
+                >
+                  <span className="bg-gradient-to-tr from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] text-transparent bg-clip-text drop-shadow-[0_0_8px_rgba(0,180,255,0.2)]">O</span>
+                  <span className="text-[#1a1a2e]">ur</span>
+                  <span className="text-[#1a1a2e]">&nbsp;</span>
+                  <span className="bg-gradient-to-tr from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] text-transparent bg-clip-text drop-shadow-[0_0_8px_rgba(0,180,255,0.2)]">S</span>
+                  <span className="text-[#1a1a2e]">ervic</span>
+                  <span className="bg-gradient-to-tr from-[#0055FF] via-[#FF6B6B] to-[#FF4757] text-transparent bg-clip-text drop-shadow-[0_0_8px_rgba(255,107,107,0.2)]">e</span>
+                  <span className="text-[#1a1a2e]">s</span>
+                </h2>
+              ) : (
+                <h2
+                  className={`text-3xl sm:text-4xl md:text-5xl lg:text-[4rem] font-light leading-tight tracking-tight text-[#1a1a2e] transition-opacity duration-700 ${isVisible ? "opacity-100" : "opacity-0"}`}
+                  style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}
+                >
+                  {heading}
+                </h2>
+              )}
               <h3 className="mt-1.5 sm:mt-2 text-xl sm:text-2xl md:text-3xl font-light text-[#1a1a2e]" style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>
-                Transforming Modern Businesses
+                {subheading}
               </h3>
               <p className="mt-2 sm:mt-2.5 text-base sm:text-lg md:text-xl text-gray-600" style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>
-                Through{" "}
-                <span className="font-medium" style={{ background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Innovation</span>
-                ,{" "}
-                <span className="font-medium" style={{ background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Technology</span>
-                , and{" "}
-                <span className="font-medium" style={{ background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Scalable Digital Solutions</span>
+                {body}
               </p>
             </div>
             <div className={`flex justify-end items-start transition-all duration-700 delay-150 ${isVisible ? "opacity-100" : "opacity-0"}`}>
@@ -288,23 +342,24 @@ export default function OurServices() {
             <div className="grid grid-cols-[1fr_auto_1fr] gap-x-4 items-start">
               <div aria-hidden />
               <div>
-                <h2 className={`text-3xl md:text-5xl lg:text-[3.5rem] font-light leading-tight tracking-tight ${isVisible ? "opacity-100" : "opacity-0"}`} style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>
-                  <span className="bg-gradient-to-tr from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] text-transparent bg-clip-text">O</span>
-                  <span className="text-[#1a1a2e]">ur</span>
-                  <span className="text-[#1a1a2e]">&nbsp;</span>
-                  <span className="bg-gradient-to-tr from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] text-transparent bg-clip-text">S</span>
-                  <span className="text-[#1a1a2e]">ervic</span>
-                  <span className="bg-gradient-to-tr from-[#0055FF] via-[#FF6B6B] to-[#FF4757] text-transparent bg-clip-text">e</span>
-                  <span className="text-[#1a1a2e]">s</span>
-                </h2>
-                <h3 className="mt-1.5 text-2xl md:text-3xl font-light text-[#1a1a2e]" style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>Transforming Modern Businesses</h3>
+                {useFancyHeading ? (
+                  <h2 className={`text-3xl md:text-5xl lg:text-[3.5rem] font-light leading-tight tracking-tight ${isVisible ? "opacity-100" : "opacity-0"}`} style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>
+                    <span className="bg-gradient-to-tr from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] text-transparent bg-clip-text">O</span>
+                    <span className="text-[#1a1a2e]">ur</span>
+                    <span className="text-[#1a1a2e]">&nbsp;</span>
+                    <span className="bg-gradient-to-tr from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] text-transparent bg-clip-text">S</span>
+                    <span className="text-[#1a1a2e]">ervic</span>
+                    <span className="bg-gradient-to-tr from-[#0055FF] via-[#FF6B6B] to-[#FF4757] text-transparent bg-clip-text">e</span>
+                    <span className="text-[#1a1a2e]">s</span>
+                  </h2>
+                ) : (
+                  <h2 className={`text-3xl md:text-5xl lg:text-[3.5rem] font-light leading-tight tracking-tight text-[#1a1a2e] ${isVisible ? "opacity-100" : "opacity-0"}`} style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>
+                    {heading}
+                  </h2>
+                )}
+                <h3 className="mt-1.5 text-2xl md:text-3xl font-light text-[#1a1a2e]" style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>{subheading}</h3>
                 <p className="mt-2 text-base sm:text-lg text-gray-600" style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>
-                  Through{" "}
-                  <span className="font-medium" style={{ background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Innovation</span>
-                  ,{" "}
-                  <span className="font-medium" style={{ background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Technology</span>
-                  , and{" "}
-                  <span className="font-medium" style={{ background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Scalable Digital Solutions</span>
+                  {body}
                 </p>
               </div>
               <div className={`flex justify-end ${isVisible ? "opacity-100" : "opacity-0"}`}>
@@ -315,23 +370,24 @@ export default function OurServices() {
 
           {/* Mobile & tablet */}
           <div className="lg:hidden">
-            <h2 className={`text-3xl sm:text-4xl md:text-5xl font-light leading-tight tracking-tight ${isVisible ? "opacity-100" : "opacity-0"}`} style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>
-              <span className="bg-gradient-to-tr from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] text-transparent bg-clip-text">O</span>
-              <span className="text-[#1a1a2e]">ur</span>
-              <span className="text-[#1a1a2e]">&nbsp;</span>
-              <span className="bg-gradient-to-tr from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] text-transparent bg-clip-text">S</span>
-              <span className="text-[#1a1a2e]">ervic</span>
-              <span className="bg-gradient-to-tr from-[#0055FF] via-[#FF6B6B] to-[#FF4757] text-transparent bg-clip-text">e</span>
-              <span className="text-[#1a1a2e]">s</span>
-            </h2>
-            <h3 className="mt-1.5 sm:mt-2 text-xl sm:text-2xl font-light text-[#1a1a2e]" style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>Transforming Modern Businesses</h3>
+            {useFancyHeading ? (
+              <h2 className={`text-3xl sm:text-4xl md:text-5xl font-light leading-tight tracking-tight ${isVisible ? "opacity-100" : "opacity-0"}`} style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>
+                <span className="bg-gradient-to-tr from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] text-transparent bg-clip-text">O</span>
+                <span className="text-[#1a1a2e]">ur</span>
+                <span className="text-[#1a1a2e]">&nbsp;</span>
+                <span className="bg-gradient-to-tr from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] text-transparent bg-clip-text">S</span>
+                <span className="text-[#1a1a2e]">ervic</span>
+                <span className="bg-gradient-to-tr from-[#0055FF] via-[#FF6B6B] to-[#FF4757] text-transparent bg-clip-text">e</span>
+                <span className="text-[#1a1a2e]">s</span>
+              </h2>
+            ) : (
+              <h2 className={`text-3xl sm:text-4xl md:text-5xl font-light leading-tight tracking-tight text-[#1a1a2e] ${isVisible ? "opacity-100" : "opacity-0"}`} style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>
+                {heading}
+              </h2>
+            )}
+            <h3 className="mt-1.5 sm:mt-2 text-xl sm:text-2xl font-light text-[#1a1a2e]" style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>{subheading}</h3>
             <p className="mt-2 text-base sm:text-lg text-gray-600" style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>
-              Through{" "}
-              <span className="font-medium" style={{ background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Innovation</span>
-              ,{" "}
-              <span className="font-medium" style={{ background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Technology</span>
-              , and{" "}
-              <span className="font-medium" style={{ background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Scalable Digital Solutions</span>
+              {body}
             </p>
             <div className={`flex justify-center mt-5 ${isVisible ? "opacity-100" : "opacity-0"}`}>
               <GoogleRankingPromo compact />
@@ -350,7 +406,7 @@ export default function OurServices() {
         >
           {/* Grid - 5 columns on desktop, responsive on smaller screens */}
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-5 lg:gap-6">
-            {serviceCards.map((card, index) => (
+            {cards.map((card, index) => (
               <Link
                 key={index}
                 href={card.href}

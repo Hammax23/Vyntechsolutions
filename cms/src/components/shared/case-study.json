@@ -1,0 +1,10 @@
+{
+  "collectionName": "components_shared_case_studies",
+  "info": { "displayName": "Case Study" },
+  "options": {},
+  "attributes": {
+    "title": { "type": "string", "required": true },
+    "industry": { "type": "string" },
+    "result": { "type": "text" }
+  }
+}

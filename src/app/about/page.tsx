@@ -2,10 +2,17 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import TechnologyImpact from "@/components/TechnologyImpact";
+import CmsHtml from "@/components/CmsHtml";
+
+type AboutSections = {
+  missionHeading?: string;
+  missionBody?: string;
+  missionBody2?: string;
+  [key: string]: unknown;
+};
 
 const values = [
   {
@@ -76,11 +83,56 @@ const processSteps = [
 
 export default function AboutPage() {
   const [isVisible, setIsVisible] = useState(false);
+  const [heroHeading, setHeroHeading] = useState("");
+  const [heroBody, setHeroBody] = useState("");
+  const [bodyHtml, setBodyHtml] = useState<string | null>(null);
+  const [sections, setSections] = useState<AboutSections | null>(null);
   const heroRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     setIsVisible(true);
+    let cancelled = false;
+    fetch("/api/cms/content?type=static-page&slug=about")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (cancelled || !data?.page) return;
+        const page = data.page as Record<string, unknown>;
+        if (page.heroHeading) setHeroHeading(String(page.heroHeading));
+        if (page.heroBody) setHeroBody(String(page.heroBody));
+        const body = page.body != null ? String(page.body).trim() : "";
+        if (body) setBodyHtml(body);
+        if (page.sections && typeof page.sections === "object" && !Array.isArray(page.sections)) {
+          setSections(page.sections as AboutSections);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
   }, []);
+
+  const renderHeroHeading = () => {
+    if (!heroHeading) {
+      return (
+        <>
+          We Build Software
+          <span className="block text-blue-400">That Drives Growth</span>
+        </>
+      );
+    }
+    if (heroHeading.includes("\n")) {
+      const [first, ...rest] = heroHeading.split("\n");
+      return (
+        <>
+          {first}
+          {rest.length > 0 && (
+            <span className="block text-blue-400">{rest.join("\n")}</span>
+          )}
+        </>
+      );
+    }
+    return heroHeading;
+  };
 
   return (
     <>
@@ -108,14 +160,12 @@ export default function AboutPage() {
             <div className="max-w-3xl">
               <div className={`transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-[1.1]">
-                  We Build Software
-                  <span className="block text-blue-400">
-                    That Drives Growth
-                  </span>
+                  {renderHeroHeading()}
                 </h1>
                 
                 <p className="text-lg text-white/60 mb-8 leading-relaxed">
-                  VynTech Solutions is a full-service software development company helping businesses transform ideas into powerful digital products.
+                  {heroBody ||
+                    "VynTech Solutions is a full-service software development company helping businesses transform ideas into powerful digital products."}
                 </p>
 
                 <button
@@ -132,111 +182,126 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Mission Section */}
-        <section className="py-24 bg-gradient-to-b from-white to-gray-50">
-          <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
-              <div>
-                <span className="inline-block text-sm font-semibold text-blue-600 tracking-wider uppercase mb-4">Our Mission</span>
-                <h2 className="text-3xl sm:text-4xl font-bold text-[#1a1a2e] mb-6 leading-tight">
-                  Empowering Businesses Through Innovative Technology
-                </h2>
-                <p className="text-gray-600 text-lg leading-relaxed mb-6">
-                  We believe every business deserves access to world-class software. Our mission is to bridge the gap between visionary ideas and technical execution — delivering solutions that are not just functional, but transformative.
-                </p>
-                <p className="text-gray-600 leading-relaxed">
-                  Whether you&apos;re a startup validating your first MVP or an enterprise modernizing legacy systems, we bring the same level of dedication, expertise, and passion to every project.
-                </p>
-              </div>
-              
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-3xl blur-2xl opacity-20" />
-                <div className="relative bg-[#1a1a2e] rounded-3xl p-8 sm:p-10">
-                  <div className="grid grid-cols-2 gap-6">
-                    <div className="text-center p-4">
-                      <div className="text-4xl font-bold text-white mb-2">5+</div>
-                      <div className="text-sm text-white/60">Years of Excellence</div>
-                    </div>
-                    <div className="text-center p-4">
-                      <div className="text-4xl font-bold text-white mb-2">30+</div>
-                      <div className="text-sm text-white/60">Expert Engineers</div>
-                    </div>
-                    <div className="text-center p-4">
-                      <div className="text-4xl font-bold text-white mb-2">24/7</div>
-                      <div className="text-sm text-white/60">Support Available</div>
-                    </div>
-                    <div className="text-center p-4">
-                      <div className="text-4xl font-bold text-white mb-2">3x</div>
-                      <div className="text-sm text-white/60">Faster Delivery</div>
-                    </div>
-                  </div>
-                </div>
+        {bodyHtml ? (
+          <section className="py-24 bg-gradient-to-b from-white to-gray-50">
+            <div className="max-w-3xl mx-auto px-4 sm:px-6">
+              <div className="bg-[#0a0a14] rounded-2xl p-8 sm:p-10 text-white/80">
+                <CmsHtml html={bodyHtml} />
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* Values Section */}
-        <section className="py-24 bg-gray-50">
-          <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
-            <div className="text-center mb-16">
-              <span className="inline-block text-sm font-semibold text-blue-600 tracking-wider uppercase mb-4">Our Values</span>
-              <h2 className="text-3xl sm:text-4xl font-bold text-[#1a1a2e] mb-4">
-                What Drives Us Every Day
-              </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                These aren&apos;t just words on a wall — they&apos;re principles that guide every decision we make.
-              </p>
-            </div>
-
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {values.map((value, index) => (
-                <div
-                  key={index}
-                  className="group bg-white rounded-2xl p-6 border border-gray-100 hover:border-gray-200 hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300 hover:-translate-y-1"
-                >
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${value.gradient} flex items-center justify-center text-white mb-5 group-hover:scale-110 transition-transform`}>
-                    {value.icon}
+          </section>
+        ) : (
+          <>
+            {/* Mission Section */}
+            <section className="py-24 bg-gradient-to-b from-white to-gray-50">
+              <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
+                <div className="grid lg:grid-cols-2 gap-16 items-center">
+                  <div>
+                    <span className="inline-block text-sm font-semibold text-blue-600 tracking-wider uppercase mb-4">Our Mission</span>
+                    <h2 className="text-3xl sm:text-4xl font-bold text-[#1a1a2e] mb-6 leading-tight">
+                      {sections?.missionHeading ||
+                        "Empowering Businesses Through Innovative Technology"}
+                    </h2>
+                    <p className="text-gray-600 text-lg leading-relaxed mb-6">
+                      {sections?.missionBody ||
+                        "We believe every business deserves access to world-class software. Our mission is to bridge the gap between visionary ideas and technical execution — delivering solutions that are not just functional, but transformative."}
+                    </p>
+                    <p className="text-gray-600 leading-relaxed">
+                      {sections?.missionBody2 ||
+                        "Whether you\u2019re a startup validating your first MVP or an enterprise modernizing legacy systems, we bring the same level of dedication, expertise, and passion to every project."}
+                    </p>
                   </div>
-                  <h3 className="text-lg font-semibold text-[#1a1a2e] mb-2">{value.title}</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">{value.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Process Section */}
-        <section className="py-24 bg-white">
-          <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
-            <div className="text-center mb-16">
-              <span className="inline-block text-sm font-semibold text-blue-600 tracking-wider uppercase mb-4">Our Process</span>
-              <h2 className="text-3xl sm:text-4xl font-bold text-[#1a1a2e] mb-4">
-                How We Bring Ideas to Life
-              </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                A proven methodology refined over hundreds of successful projects.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {processSteps.map((step, index) => (
-                <div key={index} className="relative">
-                  {index < processSteps.length - 1 && (
-                    <div className="hidden lg:block absolute top-8 left-full w-full h-[2px] bg-gradient-to-r from-blue-500/30 to-transparent -translate-x-4" />
-                  )}
-                  <div className="relative bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border border-gray-100">
-                    <div className="text-5xl font-bold bg-gradient-to-br from-blue-500 to-purple-500 bg-clip-text text-transparent mb-4">
-                      {step.number}
+                  
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-3xl blur-2xl opacity-20" />
+                    <div className="relative bg-[#1a1a2e] rounded-3xl p-8 sm:p-10">
+                      <div className="grid grid-cols-2 gap-6">
+                        <div className="text-center p-4">
+                          <div className="text-4xl font-bold text-white mb-2">5+</div>
+                          <div className="text-sm text-white/60">Years of Excellence</div>
+                        </div>
+                        <div className="text-center p-4">
+                          <div className="text-4xl font-bold text-white mb-2">30+</div>
+                          <div className="text-sm text-white/60">Expert Engineers</div>
+                        </div>
+                        <div className="text-center p-4">
+                          <div className="text-4xl font-bold text-white mb-2">24/7</div>
+                          <div className="text-sm text-white/60">Support Available</div>
+                        </div>
+                        <div className="text-center p-4">
+                          <div className="text-4xl font-bold text-white mb-2">3x</div>
+                          <div className="text-sm text-white/60">Faster Delivery</div>
+                        </div>
+                      </div>
                     </div>
-                    <h3 className="text-lg font-semibold text-[#1a1a2e] mb-2">{step.title}</h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">{step.description}</p>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
+              </div>
+            </section>
+
+            {/* Values Section */}
+            <section className="py-24 bg-gray-50">
+              <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
+                <div className="text-center mb-16">
+                  <span className="inline-block text-sm font-semibold text-blue-600 tracking-wider uppercase mb-4">Our Values</span>
+                  <h2 className="text-3xl sm:text-4xl font-bold text-[#1a1a2e] mb-4">
+                    What Drives Us Every Day
+                  </h2>
+                  <p className="text-gray-600 max-w-2xl mx-auto">
+                    These aren&apos;t just words on a wall — they&apos;re principles that guide every decision we make.
+                  </p>
+                </div>
+
+                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {values.map((value, index) => (
+                    <div
+                      key={index}
+                      className="group bg-white rounded-2xl p-6 border border-gray-100 hover:border-gray-200 hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300 hover:-translate-y-1"
+                    >
+                      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${value.gradient} flex items-center justify-center text-white mb-5 group-hover:scale-110 transition-transform`}>
+                        {value.icon}
+                      </div>
+                      <h3 className="text-lg font-semibold text-[#1a1a2e] mb-2">{value.title}</h3>
+                      <p className="text-gray-600 text-sm leading-relaxed">{value.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            {/* Process Section */}
+            <section className="py-24 bg-white">
+              <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
+                <div className="text-center mb-16">
+                  <span className="inline-block text-sm font-semibold text-blue-600 tracking-wider uppercase mb-4">Our Process</span>
+                  <h2 className="text-3xl sm:text-4xl font-bold text-[#1a1a2e] mb-4">
+                    How We Bring Ideas to Life
+                  </h2>
+                  <p className="text-gray-600 max-w-2xl mx-auto">
+                    A proven methodology refined over hundreds of successful projects.
+                  </p>
+                </div>
+
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                  {processSteps.map((step, index) => (
+                    <div key={index} className="relative">
+                      {index < processSteps.length - 1 && (
+                        <div className="hidden lg:block absolute top-8 left-full w-full h-[2px] bg-gradient-to-r from-blue-500/30 to-transparent -translate-x-4" />
+                      )}
+                      <div className="relative bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border border-gray-100">
+                        <div className="text-5xl font-bold bg-gradient-to-br from-blue-500 to-purple-500 bg-clip-text text-transparent mb-4">
+                          {step.number}
+                        </div>
+                        <h3 className="text-lg font-semibold text-[#1a1a2e] mb-2">{step.title}</h3>
+                        <p className="text-gray-600 text-sm leading-relaxed">{step.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          </>
+        )}
 
         {/* Technology Impact Section */}
         <TechnologyImpact />

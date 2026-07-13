@@ -1,0 +1,16 @@
+{
+  "kind": "singleType",
+  "collectionName": "form_configs",
+  "info": {
+    "singularName": "form-config",
+    "pluralName": "form-configs",
+    "displayName": "Form Config"
+  },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "services": { "type": "json" },
+    "regions": { "type": "json" },
+    "hearAbout": { "type": "json" },
+    "budgetOptions": { "type": "json" }
+  }
+}

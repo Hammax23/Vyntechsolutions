@@ -1,35 +1,14 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
+import { metadataFromPath } from "@/lib/cms/metadata";
 
-export const metadata: Metadata = {
-  title: "Industries We Serve - Specialized Digital Solutions",
-  description:
-    "Specialized digital solutions for healthcare, fintech, retail, real estate, education, and more. Industry-specific expertise delivering tailored web and software solutions for Canadian businesses.",
-  keywords: [
-    "healthcare software Canada",
-    "fintech development Toronto",
-    "retail ecommerce solutions",
-    "real estate software",
-    "education technology Canada",
-    "industry specific software",
-    "enterprise solutions",
-    "Canadian industry solutions",
-  ],
-  openGraph: {
-    title: "Industries We Serve - VynTech Solutions | Specialized Digital Solutions",
+export async function generateMetadata(): Promise<Metadata> {
+  return metadataFromPath("/industries", {
+    title: "Industries We Serve | VynTech Solutions",
     description:
-      "Industry-specific digital solutions for healthcare, fintech, retail, and more. Tailored expertise for Canadian businesses.",
-    url: "https://vyntechsolutions.ca/industries",
-    type: "website",
-  },
-  alternates: {
-    canonical: "https://vyntechsolutions.ca/industries",
-  },
-};
+      "Industry-focused digital solutions for healthcare, finance, retail, education, and more across Canada.",
+  });
+}
 
-export default function IndustriesLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function IndustriesLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }

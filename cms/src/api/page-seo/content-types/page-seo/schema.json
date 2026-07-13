@@ -1,0 +1,15 @@
+{
+  "kind": "collectionType",
+  "collectionName": "page_seos",
+  "info": {
+    "singularName": "page-seo",
+    "pluralName": "page-seos",
+    "displayName": "Page SEO"
+  },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "path": { "type": "string", "required": true, "unique": true },
+    "h1": { "type": "string" },
+    "seo": { "type": "component", "repeatable": false, "component": "shared.seo" }
+  }
+}

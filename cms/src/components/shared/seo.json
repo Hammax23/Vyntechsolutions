@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_shared_seos",
+  "info": {
+    "displayName": "SEO",
+    "description": "Page/entry SEO metadata"
+  },
+  "options": {},
+  "attributes": {
+    "metaTitle": { "type": "string" },
+    "metaDescription": { "type": "text" },
+    "focusKeyword": { "type": "string" },
+    "canonical": { "type": "string" },
+    "ogImage": { "type": "media", "multiple": false, "allowedTypes": ["images"] },
+    "indexable": { "type": "boolean", "default": true }
+  }
+}

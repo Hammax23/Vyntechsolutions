@@ -6,7 +6,9 @@ import LetsTalkBusiness from "@/components/LetsTalkBusiness";
 import TimedCTAPopup from "@/components/TimedCTAPopup";
 import CookieConsent from "@/components/CookieConsent";
 // import FloatingSEOButton from "@/components/FloatingSEOButton";
-import { defaultSEO, organizationSchema, localBusinessSchema, websiteSchema, servicesSchema, faqSchema, reviewSchema, howToSchema } from "@/lib/seo.config";
+import { organizationSchema, localBusinessSchema, websiteSchema, servicesSchema, faqSchema, reviewSchema, howToSchema } from "@/lib/seo.config";
+import { getCmsFaqs, getCmsOrganizationProfile, getCmsGlobalSeo } from "@/lib/cms/content";
+import { rootMetadataFromCms } from "@/lib/cms/metadata";
 
 const inter = Inter({ subsets: ["latin"] });
 const oswald = Oswald({ 
@@ -15,13 +17,66 @@ const oswald = Oswald({
   variable: "--font-oswald"
 });
 
-export const metadata: Metadata = defaultSEO;
+export async function generateMetadata(): Promise<Metadata> {
+  return rootMetadataFromCms();
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cmsFaqs = await getCmsFaqs();
+  const [orgProfile, globalSeo] = await Promise.all([
+    getCmsOrganizationProfile(),
+    getCmsGlobalSeo(),
+  ]);
+
+  const liveOrgSchema = {
+    ...organizationSchema,
+    ...(orgProfile?.name ? { name: orgProfile.name } : {}),
+    ...(orgProfile?.email || globalSeo?.email
+      ? { email: String(orgProfile?.email || globalSeo?.email) }
+      : {}),
+    ...(orgProfile?.phone || globalSeo?.phone
+      ? { telephone: String(orgProfile?.phone || globalSeo?.phone) }
+      : {}),
+    ...(orgProfile?.sameAs ? { sameAs: orgProfile.sameAs } : {}),
+  };
+
+  const liveLocalSchema = {
+    ...localBusinessSchema,
+    ...(orgProfile?.name ? { name: orgProfile.name } : {}),
+    ...(orgProfile?.phone || globalSeo?.phone
+      ? { telephone: String(orgProfile?.phone || globalSeo?.phone) }
+      : {}),
+    ...(orgProfile?.email || globalSeo?.email
+      ? { email: String(orgProfile?.email || globalSeo?.email) }
+      : {}),
+    ...(orgProfile?.geoLatitude && orgProfile?.geoLongitude
+      ? {
+          geo: {
+            "@type": "GeoCoordinates",
+            latitude: String(orgProfile.geoLatitude),
+            longitude: String(orgProfile.geoLongitude),
+          },
+        }
+      : {}),
+  };
+
+  const liveFaqSchema =
+    cmsFaqs.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: cmsFaqs.map((f) => ({
+            "@type": "Question",
+            name: f.question,
+            acceptedAnswer: { "@type": "Answer", text: f.answer },
+          })),
+        }
+      : faqSchema;
+
   return (
     <html lang="en-CA">
       <head>
@@ -36,13 +91,13 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationSchema),
+            __html: JSON.stringify(liveOrgSchema),
           }}
         />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(localBusinessSchema),
+            __html: JSON.stringify(liveLocalSchema),
           }}
         />
         <script
@@ -60,13 +115,24 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(faqSchema),
+            __html: JSON.stringify(liveFaqSchema),
           }}
         />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(reviewSchema),
+            __html: JSON.stringify({
+              ...reviewSchema,
+              ...(orgProfile?.ratingValue
+                ? {
+                    aggregateRating: {
+                      "@type": "AggregateRating",
+                      ratingValue: String(orgProfile.ratingValue),
+                      reviewCount: String(orgProfile.reviewCount || 0),
+                    },
+                  }
+                : {}),
+            }),
           }}
         />
         <script

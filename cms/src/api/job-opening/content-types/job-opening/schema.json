@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "job_openings",
+  "info": {
+    "singularName": "job-opening",
+    "pluralName": "job-openings",
+    "displayName": "Job Opening"
+  },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "title": { "type": "string", "required": true },
+    "department": { "type": "string" },
+    "location": { "type": "string" },
+    "type": { "type": "string", "default": "Full-time" },
+    "experience": { "type": "string" },
+    "salary": { "type": "string" },
+    "description": { "type": "richtext" },
+    "requirements": { "type": "json" },
+    "responsibilities": { "type": "json" },
+    "benefits": { "type": "json" },
+    "isActive": { "type": "boolean", "default": true }
+  }
+}

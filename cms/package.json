@@ -1,0 +1,36 @@
+{
+  "name": "vyntech-strapi-cms",
+  "version": "1.0.0",
+  "private": true,
+  "description": "VynTech Solutions Strapi Headless CMS",
+  "scripts": {
+    "copy-schemas": "node ./scripts/copy-schemas.mjs",
+    "build": "strapi build && npm run copy-schemas",
+    "console": "strapi console",
+    "deploy": "strapi deploy",
+    "develop": "node ./scripts/develop.mjs",
+    "start": "npm run copy-schemas && strapi start",
+    "strapi": "strapi",
+    "seed": "node ./scripts/seed-from-fallback.mjs"
+  },
+  "dependencies": {
+    "@strapi/plugin-users-permissions": "5.12.6",
+    "@strapi/strapi": "5.12.6",
+    "pg": "8.13.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0",
+    "styled-components": "^6.1.13"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=18.0.0 <=22.x.x",
+    "npm": ">=6.0.0"
+  },
+  "strapi": {
+    "uuid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+  }
+}

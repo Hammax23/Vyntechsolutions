@@ -101,9 +101,52 @@ const IndustryIcon = ({ type }: { type: string }) => {
 
 export default function IndustriesPage() {
   const [isVisible, setIsVisible] = useState(false);
+  const [list, setList] = useState(industries);
 
   useEffect(() => {
     setIsVisible(true);
+
+    fetch("/api/cms/industries")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        const cmsIndustries = data?.industries as
+          | {
+              slug?: string;
+              title?: string;
+              description?: string;
+              highlights?: string[];
+              services?: { title?: string }[];
+            }[]
+          | undefined;
+        if (!cmsIndustries?.length) return;
+
+        setList(
+          cmsIndustries.map((industry) => {
+            const fallback = industries.find((d) => d.slug === industry.slug);
+            const fromHighlights = Array.isArray(industry.highlights)
+              ? industry.highlights.map(String).filter(Boolean)
+              : [];
+            const fromServices = Array.isArray(industry.services)
+              ? industry.services.map((s) => String(s?.title || "")).filter(Boolean)
+              : [];
+            const highlights =
+              fromHighlights.length > 0
+                ? fromHighlights
+                : fromServices.length > 0
+                  ? fromServices
+                  : fallback?.highlights || [];
+
+            return {
+              slug: String(industry.slug || fallback?.slug || ""),
+              title: String(industry.title || fallback?.title || ""),
+              description: String(industry.description || fallback?.description || ""),
+              icon: fallback?.icon || "healthcare",
+              highlights,
+            };
+          })
+        );
+      })
+      .catch(() => {});
   }, []);
 
   return (
@@ -158,7 +201,7 @@ export default function IndustriesPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {industries.map((industry, index) => (
+              {list.map((industry, index) => (
                 <Link
                   key={industry.slug}
                   href={`/industries/${industry.slug}`}

@@ -1,0 +1,2582 @@
+{
+  "globalSeo": {
+    "siteName": "VynTech Solutions",
+    "siteUrl": "https://vyntechsolutions.ca",
+    "defaultTitle": "VynTech Solutions | Building Digital Excellence for Canadian Businesses",
+    "titleTemplate": "%s | VynTech Solutions - Canadian Digital Agency",
+    "defaultDescription": "VynTech Solutions is Canada's leading digital agency specializing in custom web development, mobile apps, UI/UX design, and enterprise software solutions. Serving businesses across Toronto, Vancouver, Montreal & nationwide.",
+    "phone": "+1-416-893-5779",
+    "email": "info@vyntechsolutions.ca",
+    "locale": "en_CA"
+  },
+  "pageSeos": [
+    {
+      "path": "/",
+      "h1": "VynTech Solutions",
+      "seo": {
+        "metaTitle": "VynTech Solutions | Building Digital Excellence for Canadian Businesses",
+        "metaDescription": "Canada's leading digital agency.",
+        "indexable": true
+      }
+    },
+    {
+      "path": "/blog",
+      "h1": "Blog",
+      "seo": {
+        "metaTitle": "Blog",
+        "metaDescription": "Practical insights on software development.",
+        "indexable": true
+      }
+    },
+    {
+      "path": "/services",
+      "h1": "Services",
+      "seo": {
+        "metaTitle": "Our Services",
+        "metaDescription": "Web, mobile, cloud, AI and more.",
+        "indexable": true
+      }
+    },
+    {
+      "path": "/industries",
+      "h1": "Industries",
+      "seo": {
+        "metaTitle": "Industries",
+        "metaDescription": "Industry digital solutions.",
+        "indexable": true
+      }
+    },
+    {
+      "path": "/about",
+      "h1": "About",
+      "seo": {
+        "metaTitle": "About Us",
+        "metaDescription": "About VynTech Solutions.",
+        "indexable": true
+      }
+    }
+  ],
+  "faqs": [
+    {
+      "question": "What services does VynTech Solutions offer?",
+      "answer": "VynTech Solutions offers comprehensive digital services including custom web development, mobile app development (iOS & Android), UI/UX design, cloud solutions, AI/ML development, e-commerce solutions, and enterprise software development. We serve businesses across Canada including Toronto, Vancouver, and Montreal.",
+      "order": 1,
+      "page": "global"
+    },
+    {
+      "question": "How much does web development cost in Canada?",
+      "answer": "Web development costs vary based on project complexity. Simple websites start from $5,000 CAD, while custom web applications range from $15,000 to $100,000+ CAD. Contact VynTech Solutions for a free consultation and accurate quote for your specific requirements.",
+      "order": 2,
+      "page": "global"
+    },
+    {
+      "question": "How long does it take to build a website?",
+      "answer": "Timeline depends on project scope. A simple website takes 2-4 weeks, while complex web applications may take 3-6 months. We follow agile methodologies with regular updates and transparent communication throughout the development process.",
+      "order": 3,
+      "page": "global"
+    },
+    {
+      "question": "Do you work with startups and enterprises?",
+      "answer": "Yes! VynTech Solutions works with businesses of all sizes - from early-stage startups launching their first MVP to established enterprises modernizing their digital infrastructure. We tailor our approach to match your business needs and budget.",
+      "order": 4,
+      "page": "global"
+    },
+    {
+      "question": "What technologies do you use?",
+      "answer": "We use modern, scalable technologies including React, Next.js, Node.js, Python, TypeScript, PostgreSQL, MongoDB, AWS, Azure, Google Cloud, React Native, Flutter, and more. We choose the best tech stack based on your project requirements.",
+      "order": 5,
+      "page": "global"
+    }
+  ],
+  "categories": [
+    {
+      "name": "Business",
+      "slug": "business"
+    },
+    {
+      "name": "Development",
+      "slug": "development"
+    },
+    {
+      "name": "Technology",
+      "slug": "technology"
+    },
+    {
+      "name": "Design",
+      "slug": "design"
+    }
+  ],
+  "blogPosts": [
+    {
+      "title": "Why Custom Software Development Beats Off-the-Shelf Solutions",
+      "slug": "why-custom-software-beats-off-the-shelf",
+      "metaDescription": "Discover why businesses choose custom software development over ready-made solutions. Learn about ROI, scalability, and competitive advantages.",
+      "excerpt": "Off-the-shelf software seems cheaper upfront, but custom solutions often deliver better ROI. Here's when to build vs buy.",
+      "content": "\n## The Build vs Buy Decision\n\nEvery business faces this choice: buy existing software or build something custom. The answer depends on your specific needs, but here's what most people get wrong.\n\n### When Off-the-Shelf Works\n\nReady-made software makes sense when:\n- Your needs are generic (email, basic accounting, project management)\n- You're a small team with standard workflows\n- Budget is extremely limited and time-sensitive\n\n### When Custom Software Wins\n\nCustom development becomes the better choice when:\n\n**1. Your Process Is Your Advantage**\n\nIf your business does something differently than competitors—and that difference matters—generic software forces you to change your process. Custom software adapts to you.\n\n**2. Integration Requirements**\n\nMost businesses run 10+ software tools. Off-the-shelf products rarely talk to each other well. Custom software can connect everything into one workflow.\n\n**3. Scaling Costs**\n\nSaaS pricing usually scales with users or usage. At some point, monthly fees exceed what custom development would cost—and you'd own the result.\n\n**4. Data Ownership**\n\nWith custom software, your data stays on your servers. You control security, backups, and compliance. No vendor lock-in.\n\n### Real Cost Comparison\n\nA typical SaaS tool costs $50-200/user/month. For a 50-person company:\n- SaaS: $30,000-120,000/year, ongoing forever\n- Custom: $80,000-150,000 one-time, plus maintenance\n\nBy year three, custom often costs less. By year five, significantly less.\n\n### The Right Approach\n\nStart with off-the-shelf for non-critical functions. Invest in custom development for core business processes where software directly impacts revenue or efficiency.\n\nMost successful companies use both—they just know which is which.\n    ",
+      "tags": [
+        "custom software",
+        "software development",
+        "business solutions",
+        "ROI"
+      ],
+      "author": "VynTech Solutions Team",
+      "readTime": "5 min",
+      "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
+      "featured": true,
+      "categoryName": "Business",
+      "seo": {
+        "metaTitle": "Why Custom Software Development Beats Off-the-Shelf Solutions",
+        "metaDescription": "Discover why businesses choose custom software development over ready-made solutions. Learn about ROI, scalability, and competitive advantages.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "Web App vs Mobile App: Which Should You Build First?",
+      "slug": "web-app-vs-mobile-app-which-to-build-first",
+      "metaDescription": "Web app or mobile app first? Compare development costs, user reach, and maintenance to make the right choice for your startup or business.",
+      "excerpt": "Startups often debate web vs mobile. The answer is usually simpler than you think—and it's not always mobile first.",
+      "content": "\n## The Platform Decision\n\n\"Should we build a mobile app or web app first?\" We hear this from almost every startup. Here's how to decide.\n\n### Start With Web (Usually)\n\nFor most B2B products and many B2C products, web should come first:\n\n**Faster Development**\nWeb apps typically take 30-50% less time to build than native mobile apps. One codebase works everywhere.\n\n**Easier Updates**\nPush changes instantly. No app store approval process. Fix bugs in minutes, not days.\n\n**Better for Validation**\nTest your idea faster. Pivot without rebuilding everything. Users can try without downloading anything.\n\n**SEO Benefits**\nWeb apps get indexed by search engines. Free organic traffic. Mobile apps don't.\n\n### Start With Mobile When...\n\nMobile-first makes sense in specific cases:\n\n- Camera/GPS/sensors are core features\n- Offline functionality is essential\n- Push notifications drive engagement\n- Your audience lives on mobile (certain consumer apps)\n\n### The Progressive Web App Middle Ground\n\nPWAs give you mobile app features (offline, push notifications, home screen icon) with web app benefits. For many products, this is the right first step.\n\n### Our Recommendation\n\n1. Build a responsive web app first\n2. Validate your core product\n3. Add PWA features\n4. Build native mobile only when you have proven demand\n\nThis approach minimizes risk and maximizes learning speed. You can always build mobile later—but you can't get back the money spent on a mobile app nobody uses.\n\n### Cost Comparison\n\n- Web app: $40,000-100,000\n- iOS app: $50,000-150,000\n- Android app: $50,000-150,000\n- PWA: $50,000-120,000\n\nBuilding web first lets you validate before tripling your investment.\n    ",
+      "tags": [
+        "web development",
+        "mobile app development",
+        "startup",
+        "product strategy"
+      ],
+      "author": "VynTech Solutions Team",
+      "readTime": "6 min",
+      "image": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80",
+      "featured": false,
+      "categoryName": "Development",
+      "seo": {
+        "metaTitle": "Web App vs Mobile App: Which Should You Build First?",
+        "metaDescription": "Web app or mobile app first? Compare development costs, user reach, and maintenance to make the right choice for your startup or business.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "How to Choose the Right Tech Stack for Your Startup",
+      "slug": "how-to-choose-tech-stack-for-startup",
+      "metaDescription": "Learn how to select the best technology stack for your startup. Compare React, Node.js, Python, and other technologies for different use cases.",
+      "excerpt": "Your tech stack affects development speed, hiring, and scalability. Here's how to choose without overengineering.",
+      "content": "\n## Choosing Your Tech Stack\n\nThe tech stack decision paralyzes many founders. Here's the practical approach.\n\n### The Only Rule That Matters\n\n**Use what your team knows.**\n\nA great developer using familiar tools will outperform a great developer learning new tools. Speed matters more than theoretical perfection.\n\n### If You're Starting Fresh\n\nFor most web applications in 2024:\n\n**Frontend:**\n- React or Next.js (largest ecosystem, easiest hiring)\n- TypeScript (catches bugs, better developer experience)\n- Tailwind CSS (fast styling, consistent design)\n\n**Backend:**\n- Node.js for JavaScript teams\n- Python/Django for data-heavy apps\n- Go for high-performance requirements\n\n**Database:**\n- PostgreSQL (handles 90% of use cases well)\n- MongoDB only if you truly have unstructured data\n\n**Infrastructure:**\n- Vercel or Netlify for frontend\n- AWS or Google Cloud for backend\n- Start simple, optimize later\n\n### Common Mistakes\n\n**1. Overengineering**\nYou don't need Kubernetes on day one. You don't need microservices for an MVP. Start simple.\n\n**2. Chasing Trends**\nThat new framework might be exciting, but can you hire developers who know it? Will it exist in 3 years?\n\n**3. Premature Optimization**\nBuild for 1,000 users first. Scale when you actually have scaling problems.\n\n### Our Standard Stack\n\nFor most client projects, we use:\n- Next.js (React framework)\n- TypeScript\n- PostgreSQL\n- Tailwind CSS\n- Vercel or AWS\n\nThis stack is boring—and that's the point. Boring technology is reliable, well-documented, and easy to maintain.\n\n### When to Deviate\n\nConsider alternatives when:\n- Your app has specific performance requirements (games, real-time trading)\n- You're building in a specialized domain (ML, blockchain)\n- Your team has deep expertise in something else\n\nOtherwise, go with proven tools and focus on building your product.\n    ",
+      "tags": [
+        "tech stack",
+        "startup development",
+        "React",
+        "Node.js",
+        "software architecture"
+      ],
+      "author": "VynTech Solutions Team",
+      "readTime": "7 min",
+      "image": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80",
+      "featured": false,
+      "categoryName": "Technology",
+      "seo": {
+        "metaTitle": "How to Choose the Right Tech Stack for Your Startup",
+        "metaDescription": "Learn how to select the best technology stack for your startup. Compare React, Node.js, Python, and other technologies for different use cases.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "MVP Development: Realistic Timelines and Costs in 2024",
+      "slug": "mvp-development-how-long-and-how-much",
+      "metaDescription": "Get realistic MVP development costs and timelines. Learn what affects pricing and how to budget for your minimum viable product.",
+      "excerpt": "How long does an MVP take? What does it cost? Here are real numbers based on hundreds of projects.",
+      "content": "\n## MVP Development Reality Check\n\nEveryone wants to know: \"How much will my app cost?\" Here's the honest answer.\n\n### What's an MVP?\n\nA Minimum Viable Product is the simplest version that delivers core value. It's not:\n- A prototype (that's just a demo)\n- A complete product (that comes later)\n- A proof of concept (that's for internal validation)\n\nAn MVP is something real users can actually use.\n\n### Realistic Timelines\n\n**Simple MVP (8-12 weeks)**\n- 5-10 screens\n- Basic user authentication\n- Core functionality only\n- Simple database\n- One platform (web or mobile)\n\n**Medium MVP (12-20 weeks)**\n- 10-20 screens\n- User roles and permissions\n- Third-party integrations\n- Payment processing\n- Admin dashboard\n\n**Complex MVP (20-30 weeks)**\n- 20+ screens\n- Real-time features\n- Complex business logic\n- Multiple integrations\n- Advanced security requirements\n\n### Realistic Costs\n\nBased on North American development rates:\n\n- Simple MVP: $40,000-80,000\n- Medium MVP: $80,000-150,000\n- Complex MVP: $150,000-300,000\n\nOffshore development costs 40-60% less but often takes longer and requires more management.\n\n### What Affects Cost\n\n**Scope (biggest factor)**\nEvery feature adds weeks. Ruthlessly cut features for your first version.\n\n**Design Requirements**\nCustom design costs more than templates. For MVPs, start simple.\n\n**Technical Complexity**\nReal-time features, complex algorithms, and third-party integrations all add cost.\n\n**Team Location**\nNorth American developers: $150-250/hour\nEastern European: $50-100/hour\nSouth Asian: $25-50/hour\n\n### How to Budget\n\n1. Define your core use case (one sentence)\n2. List only features that use case requires\n3. Get 3 quotes from development teams\n4. Add 30% buffer for unexpected issues\n5. Plan for post-launch iteration\n\n### Common Mistake\n\nBuilding too much before validating. Spend 60% of your budget on version 1, save 40% for improvements based on real user feedback.\n    ",
+      "tags": [
+        "MVP development",
+        "startup costs",
+        "software budgeting",
+        "product development"
+      ],
+      "author": "VynTech Solutions Team",
+      "readTime": "6 min",
+      "image": "https://images.unsplash.com/photo-1553484771-371a605b060b?w=800&q=80",
+      "featured": false,
+      "categoryName": "Business",
+      "seo": {
+        "metaTitle": "MVP Development: Realistic Timelines and Costs in 2024",
+        "metaDescription": "Get realistic MVP development costs and timelines. Learn what affects pricing and how to budget for your minimum viable product.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "API Integration: A Non-Technical Guide for Business Owners",
+      "slug": "api-integration-guide-for-business-owners",
+      "metaDescription": "Understand API integrations without the technical jargon. Learn how connecting your business tools saves time and reduces errors.",
+      "excerpt": "APIs connect your business tools. Here's what that means for your operations and how to think about integration projects.",
+      "content": "\n## APIs Explained Simply\n\nYour business probably runs on multiple software tools that don't talk to each other. APIs fix that.\n\n### What's an API?\n\nAPI stands for Application Programming Interface. Think of it as a translator that lets different software systems share information automatically.\n\n**Without API:**\nYou manually export data from System A, reformat it, and import it into System B. Every day. Forever.\n\n**With API:**\nSystem A automatically sends data to System B whenever something changes. No manual work.\n\n### Real Examples\n\n**CRM + Email Marketing**\nWhen a new customer signs up in your CRM, they're automatically added to your email list with the right tags.\n\n**E-commerce + Accounting**\nEvery sale automatically creates an invoice in your accounting software. No manual entry.\n\n**HR System + Payroll**\nTime-off requests approved in HR flow directly to payroll calculations.\n\n### Why Integrate?\n\n**Save Time**\nManual data entry takes hours. APIs work in seconds.\n\n**Reduce Errors**\nHumans make typos. APIs don't.\n\n**Real-Time Data**\nMake decisions based on current information, not yesterday's export.\n\n**Scale Operations**\nHandle 10x the volume without hiring 10x the staff.\n\n### Integration Options\n\n**1. Native Integrations**\nMany tools have built-in connections. Check if your software already supports this.\n\n**2. Zapier/Make**\nNo-code tools that connect 5,000+ apps. Good for simple workflows.\n\n**3. Custom Integration**\nBuilt specifically for your needs. More powerful, more expensive.\n\n### What to Expect\n\n**Timeline:** 2-8 weeks depending on complexity\n**Cost:** $5,000-50,000 for custom integrations\n\n### Questions to Ask\n\nBefore starting an integration project:\n1. What data needs to move between systems?\n2. How often does it need to sync?\n3. What happens when something fails?\n4. Who maintains it long-term?\n\nIntegration projects pay for themselves quickly—usually within 6-12 months through time savings alone.\n    ",
+      "tags": [
+        "API integration",
+        "business automation",
+        "software integration",
+        "workflow automation"
+      ],
+      "author": "VynTech Solutions Team",
+      "readTime": "5 min",
+      "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80",
+      "featured": false,
+      "categoryName": "Technology",
+      "seo": {
+        "metaTitle": "API Integration: A Non-Technical Guide for Business Owners",
+        "metaDescription": "Understand API integrations without the technical jargon. Learn how connecting your business tools saves time and reduces errors.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "Website Redesign Checklist: 15 Things to Get Right",
+      "slug": "website-redesign-checklist-2024",
+      "metaDescription": "Planning a website redesign? Use this checklist to ensure your new site performs better, ranks higher, and converts more visitors.",
+      "excerpt": "Website redesigns often hurt performance. Follow this checklist to make sure yours actually improves things.",
+      "content": "\n## The Website Redesign Checklist\n\nMost redesigns fail because teams focus on looks and forget function. Use this checklist.\n\n### Before You Start\n\n**1. Document Current Performance**\nExport your Google Analytics data. Note current rankings for important keywords. You need baselines to measure improvement.\n\n**2. List What's Working**\nDon't redesign pages that already convert well. Keep what works.\n\n**3. Identify Real Problems**\n\"It looks dated\" isn't enough. What specific business problems will the redesign solve?\n\n### Planning Phase\n\n**4. Define Success Metrics**\nHow will you know the redesign worked? Pick 2-3 measurable goals.\n\n**5. Map User Journeys**\nWhat do visitors actually do on your site? Design for their needs, not your org chart.\n\n**6. Content Inventory**\nList every page. Decide: keep, update, merge, or delete. Most sites have 30% dead content.\n\n### Design Phase\n\n**7. Mobile First**\n60%+ of traffic is mobile. Design for phones first, then expand to desktop.\n\n**8. Page Speed Budget**\nSet a target: under 3 seconds on mobile. Test every page.\n\n**9. Accessibility**\nWCAG compliance isn't optional. Check contrast, alt text, keyboard navigation.\n\n### Development Phase\n\n**10. URL Structure**\nChanging URLs kills SEO. Keep them the same, or set up 301 redirects for every page.\n\n**11. Technical SEO**\nMeta titles, descriptions, schema markup, sitemap, robots.txt. All must transfer correctly.\n\n**12. Forms and Tracking**\nTest every form. Verify analytics, conversion tracking, and CRM integrations.\n\n### Launch Phase\n\n**13. Staged Rollout**\nDon't launch everything at once. Start with less important pages, verify everything works.\n\n**14. Monitor Everything**\nWatch analytics daily for two weeks. Look for traffic drops, conversion changes, error pages.\n\n**15. Redirect Audit**\nCheck for 404 errors. Fix broken links. Search Console will show issues.\n\n### Post-Launch\n\nCompare performance at 30, 60, and 90 days. If metrics dropped, diagnose and fix immediately.\n\nA good redesign improves metrics within 90 days. If yours didn't, something went wrong.\n    ",
+      "tags": [
+        "website redesign",
+        "web design",
+        "UX design",
+        "SEO",
+        "conversion optimization"
+      ],
+      "author": "VynTech Solutions Team",
+      "readTime": "8 min",
+      "image": "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=800&q=80",
+      "featured": false,
+      "categoryName": "Design",
+      "seo": {
+        "metaTitle": "Website Redesign Checklist: 15 Things to Get Right",
+        "metaDescription": "Planning a website redesign? Use this checklist to ensure your new site performs better, ranks higher, and converts more visitors.",
+        "indexable": true
+      }
+    }
+  ],
+  "services": [
+    {
+      "title": "Web Development",
+      "subtitle": "Websites & Web Applications",
+      "description": "From business websites to complex web applications — we handle frontend, backend, databases, and everything in between.",
+      "heroImage": "/services/web-dev.jpg",
+      "overview": "We build websites and web apps using modern frameworks like React, Next.js, and Node.js. Whether you need a company website, a customer portal, an admin dashboard, or a full SaaS product — we write clean, maintainable code that works reliably. No bloated templates, no unnecessary complexity.",
+      "features": [
+        {
+          "title": "Business Websites",
+          "description": "Corporate sites, landing pages, and marketing websites. Mobile-responsive, fast-loading, SEO-friendly.",
+          "icon": "code"
+        },
+        {
+          "title": "Web Applications",
+          "description": "Dashboards, portals, booking systems, internal tools — any web-based software your business needs.",
+          "icon": "mobile"
+        },
+        {
+          "title": "API Development",
+          "description": "RESTful APIs and GraphQL services to connect your frontend, mobile apps, and third-party systems.",
+          "icon": "api"
+        },
+        {
+          "title": "Database Design",
+          "description": "PostgreSQL, MongoDB, MySQL — proper schema design, indexing, and query optimization.",
+          "icon": "speed"
+        }
+      ],
+      "technologies": [
+        "React",
+        "Next.js",
+        "Node.js",
+        "TypeScript",
+        "PostgreSQL",
+        "MongoDB",
+        "Redis",
+        "AWS"
+      ],
+      "process": [
+        {
+          "step": "Requirements",
+          "description": "We discuss what you need, who will use it, and what problems it should solve."
+        },
+        {
+          "step": "Planning",
+          "description": "Technical approach, timeline, and milestones — you know what to expect."
+        },
+        {
+          "step": "Development",
+          "description": "We build in iterations. You see progress weekly, not after months."
+        },
+        {
+          "step": "Testing",
+          "description": "We test across browsers and devices. Bugs get fixed before launch."
+        },
+        {
+          "step": "Deployment",
+          "description": "We set up hosting, domains, SSL, and get your site live."
+        },
+        {
+          "step": "Handover",
+          "description": "Documentation, training if needed, and support for any issues."
+        }
+      ],
+      "stats": [
+        {
+          "value": "200+",
+          "label": "Projects Completed"
+        },
+        {
+          "value": "8+",
+          "label": "Years in Business"
+        },
+        {
+          "value": "50+",
+          "label": "Active Clients"
+        },
+        {
+          "value": "4.9",
+          "label": "Client Rating"
+        }
+      ],
+      "caseStudies": [
+        {
+          "title": "Real Estate Portal",
+          "industry": "Property",
+          "result": "Property listing and inquiry management system"
+        },
+        {
+          "title": "Patient Booking System",
+          "industry": "Healthcare",
+          "result": "Online appointment scheduling for clinics"
+        },
+        {
+          "title": "Inventory Dashboard",
+          "industry": "Retail",
+          "result": "Stock tracking and reporting for 5 warehouses"
+        }
+      ],
+      "slug": "web-development",
+      "order": 0,
+      "seo": {
+        "metaTitle": "Web Development | VynTech Solutions",
+        "metaDescription": "From business websites to complex web applications — we handle frontend, backend, databases, and everything in between.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "Mobile App Development",
+      "subtitle": "iOS & Android Apps",
+      "description": "Native and cross-platform mobile apps for iOS and Android. We handle design, development, testing, and app store submission.",
+      "heroImage": "/services/mobile-dev.jpg",
+      "overview": "We build mobile apps using React Native, Flutter, or native Swift/Kotlin — depending on what makes sense for your project. Most clients choose cross-platform to save time and budget while still getting a quality app on both platforms. We also handle the app store submission process.",
+      "features": [
+        {
+          "title": "iOS Apps",
+          "description": "iPhone and iPad apps built with Swift or cross-platform frameworks. App Store submission included.",
+          "icon": "apple"
+        },
+        {
+          "title": "Android Apps",
+          "description": "Apps for Android phones and tablets. We test on multiple devices to ensure compatibility.",
+          "icon": "android"
+        },
+        {
+          "title": "Cross-Platform",
+          "description": "One codebase for both iOS and Android using React Native or Flutter. Faster development, lower cost.",
+          "icon": "cross"
+        },
+        {
+          "title": "Backend & APIs",
+          "description": "Your app needs a server? We build that too — user auth, data storage, push notifications, payments.",
+          "icon": "store"
+        }
+      ],
+      "technologies": [
+        "React Native",
+        "Flutter",
+        "Swift",
+        "Kotlin",
+        "Firebase",
+        "Node.js",
+        "PostgreSQL",
+        "AWS"
+      ],
+      "process": [
+        {
+          "step": "Concept",
+          "description": "We define what the app does, who uses it, and the core features for v1."
+        },
+        {
+          "step": "Design",
+          "description": "Wireframes first, then full UI designs. You approve before we code."
+        },
+        {
+          "step": "Development",
+          "description": "We build the app with regular builds for you to test on your phone."
+        },
+        {
+          "step": "Testing",
+          "description": "Bug fixing, performance testing, and testing on real devices."
+        },
+        {
+          "step": "Launch",
+          "description": "We handle App Store and Google Play submission and approval."
+        },
+        {
+          "step": "Updates",
+          "description": "Bug fixes, OS updates, and new features as needed."
+        }
+      ],
+      "stats": [
+        {
+          "value": "80+",
+          "label": "Apps Built"
+        },
+        {
+          "value": "iOS+Android",
+          "label": "Both Platforms"
+        },
+        {
+          "value": "4.5+",
+          "label": "Avg Store Rating"
+        },
+        {
+          "value": "3-6 mo",
+          "label": "Typical Timeline"
+        }
+      ],
+      "caseStudies": [
+        {
+          "title": "Service Booking App",
+          "industry": "Home Services",
+          "result": "Booking and payment for local service providers"
+        },
+        {
+          "title": "Delivery Tracking",
+          "industry": "Logistics",
+          "result": "Real-time tracking for drivers and customers"
+        },
+        {
+          "title": "Membership App",
+          "industry": "Fitness",
+          "result": "Class booking and member management for gyms"
+        }
+      ],
+      "slug": "mobile-app-development",
+      "order": 1,
+      "seo": {
+        "metaTitle": "Mobile App Development | VynTech Solutions",
+        "metaDescription": "Native and cross-platform mobile apps for iOS and Android. We handle design, development, testing, and app store submission.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "Cloud Solutions",
+      "subtitle": "AWS, Azure & Cloud Infrastructure",
+      "description": "Cloud setup, migration, and management. We help you move to the cloud or optimize what you already have.",
+      "heroImage": "/services/cloud.jpg",
+      "overview": "We work with AWS, Google Cloud, and Azure. Whether you are moving from on-premise servers, setting up a new infrastructure, or trying to reduce your monthly cloud bill — we can help. We focus on practical solutions: reliable hosting, proper security, automated backups, and costs that make sense.",
+      "features": [
+        {
+          "title": "Cloud Setup",
+          "description": "New cloud infrastructure from scratch — servers, databases, storage, networking, all configured properly.",
+          "icon": "migrate"
+        },
+        {
+          "title": "Migration",
+          "description": "Move your existing apps and data to the cloud. We plan it carefully to minimize downtime.",
+          "icon": "architecture"
+        },
+        {
+          "title": "Cost Optimization",
+          "description": "Already on cloud but bills are high? We audit your setup and find ways to reduce costs.",
+          "icon": "serverless"
+        },
+        {
+          "title": "DevOps Setup",
+          "description": "CI/CD pipelines, Docker, Kubernetes — automated deployments so your team ships faster.",
+          "icon": "multicloud"
+        }
+      ],
+      "technologies": [
+        "AWS",
+        "Google Cloud",
+        "Azure",
+        "Docker",
+        "Kubernetes",
+        "Terraform",
+        "GitHub Actions",
+        "Linux"
+      ],
+      "process": [
+        {
+          "step": "Audit",
+          "description": "We look at your current setup (or requirements) and identify what needs to be done."
+        },
+        {
+          "step": "Planning",
+          "description": "Architecture design, cost estimates, and migration plan if applicable."
+        },
+        {
+          "step": "Setup",
+          "description": "We configure the infrastructure, security groups, databases, and monitoring."
+        },
+        {
+          "step": "Migration",
+          "description": "Data and application migration with testing at each step."
+        },
+        {
+          "step": "Testing",
+          "description": "Load testing, security checks, and failover testing."
+        },
+        {
+          "step": "Handover",
+          "description": "Documentation and training for your team to manage day-to-day."
+        }
+      ],
+      "stats": [
+        {
+          "value": "AWS",
+          "label": "Certified Team"
+        },
+        {
+          "value": "50+",
+          "label": "Cloud Projects"
+        },
+        {
+          "value": "30-50%",
+          "label": "Typical Cost Savings"
+        },
+        {
+          "value": "99.9%",
+          "label": "Uptime Target"
+        }
+      ],
+      "caseStudies": [
+        {
+          "title": "E-commerce Migration",
+          "industry": "Retail",
+          "result": "Moved from shared hosting to AWS with auto-scaling"
+        },
+        {
+          "title": "Startup Infrastructure",
+          "industry": "SaaS",
+          "result": "Full AWS setup with CI/CD for a new product"
+        },
+        {
+          "title": "Cost Reduction",
+          "industry": "Media",
+          "result": "Reduced monthly cloud bill from $8K to $3K"
+        }
+      ],
+      "slug": "cloud-solutions",
+      "order": 2,
+      "seo": {
+        "metaTitle": "Cloud Solutions | VynTech Solutions",
+        "metaDescription": "Cloud setup, migration, and management. We help you move to the cloud or optimize what you already have.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "AI/ML Solutions",
+      "subtitle": "AI Integration & Automation",
+      "description": "Practical AI solutions — chatbots, automation, data analysis, and integrating AI APIs into your existing systems.",
+      "heroImage": "/services/ai-ml.jpg",
+      "overview": "We help businesses use AI where it actually makes sense. This includes building chatbots, integrating OpenAI/GPT into your apps, automating repetitive tasks, and analyzing data to find useful patterns. We are not here to sell you on AI hype — we focus on practical applications that save time or improve your product.",
+      "features": [
+        {
+          "title": "Chatbots & Assistants",
+          "description": "Customer support bots, internal helpdesk assistants, or product Q&A bots using GPT and similar models.",
+          "icon": "ml"
+        },
+        {
+          "title": "AI API Integration",
+          "description": "Add OpenAI, Claude, or other AI services to your existing software. Text generation, summarization, etc.",
+          "icon": "nlp"
+        },
+        {
+          "title": "Document Processing",
+          "description": "Extract data from invoices, forms, contracts. OCR + AI to automate manual data entry.",
+          "icon": "vision"
+        },
+        {
+          "title": "Data Analysis",
+          "description": "Make sense of your data — trends, predictions, anomaly detection. Dashboards you can actually use.",
+          "icon": "analytics"
+        }
+      ],
+      "technologies": [
+        "Python",
+        "OpenAI API",
+        "LangChain",
+        "TensorFlow",
+        "PostgreSQL",
+        "Node.js",
+        "AWS",
+        "Pinecone"
+      ],
+      "process": [
+        {
+          "step": "Problem Definition",
+          "description": "What are you trying to automate or improve? We define the actual use case."
+        },
+        {
+          "step": "Feasibility",
+          "description": "Is AI the right solution? Sometimes simpler approaches work better."
+        },
+        {
+          "step": "Prototype",
+          "description": "We build a quick proof-of-concept so you can see if it works for your needs."
+        },
+        {
+          "step": "Development",
+          "description": "Full implementation with proper error handling and edge cases."
+        },
+        {
+          "step": "Integration",
+          "description": "Connect it to your existing systems, databases, and workflows."
+        },
+        {
+          "step": "Monitoring",
+          "description": "Track usage, accuracy, and costs. Adjust as needed."
+        }
+      ],
+      "stats": [
+        {
+          "value": "30+",
+          "label": "AI Projects"
+        },
+        {
+          "value": "GPT-4",
+          "label": "Latest Models"
+        },
+        {
+          "value": "2-8 wk",
+          "label": "Typical Timeline"
+        },
+        {
+          "value": "ROI Focus",
+          "label": "Practical Results"
+        }
+      ],
+      "caseStudies": [
+        {
+          "title": "Support Chatbot",
+          "industry": "E-commerce",
+          "result": "Handles 60% of customer questions automatically"
+        },
+        {
+          "title": "Invoice Processing",
+          "industry": "Accounting",
+          "result": "Extracts data from PDFs, saves 20 hrs/week"
+        },
+        {
+          "title": "Content Generator",
+          "industry": "Marketing",
+          "result": "AI-assisted product descriptions for 5000+ SKUs"
+        }
+      ],
+      "slug": "ai-ml-solutions",
+      "order": 3,
+      "seo": {
+        "metaTitle": "AI/ML Solutions | VynTech Solutions",
+        "metaDescription": "Practical AI solutions — chatbots, automation, data analysis, and integrating AI APIs into your existing systems.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "DevOps & CI/CD",
+      "subtitle": "Automated Deployments & Infrastructure",
+      "description": "Set up automated deployment pipelines, Docker containers, and proper infrastructure so your team can ship code faster.",
+      "heroImage": "/services/devops.jpg",
+      "overview": "We help development teams deploy code without manual headaches. This means setting up CI/CD pipelines (GitHub Actions, GitLab CI, Jenkins), containerizing apps with Docker, and managing infrastructure with Terraform. The goal: push code, tests run automatically, and it deploys to staging/production without anyone SSH-ing into servers.",
+      "features": [
+        {
+          "title": "CI/CD Pipelines",
+          "description": "Automated testing and deployment. Push to main branch, it goes live. No manual steps.",
+          "icon": "pipeline"
+        },
+        {
+          "title": "Docker & Containers",
+          "description": "Package your app properly so it runs the same everywhere — local, staging, production.",
+          "icon": "iac"
+        },
+        {
+          "title": "Infrastructure Setup",
+          "description": "Terraform, CloudFormation — your infrastructure defined in code, version controlled.",
+          "icon": "container"
+        },
+        {
+          "title": "Monitoring & Logs",
+          "description": "Know when things break before users tell you. Alerts, dashboards, log aggregation.",
+          "icon": "monitor"
+        }
+      ],
+      "technologies": [
+        "GitHub Actions",
+        "GitLab CI",
+        "Docker",
+        "Kubernetes",
+        "Terraform",
+        "AWS",
+        "Datadog",
+        "Grafana"
+      ],
+      "process": [
+        {
+          "step": "Current State",
+          "description": "How do you deploy now? What is painful? What breaks often?"
+        },
+        {
+          "step": "Design",
+          "description": "We design the pipeline and infrastructure based on your actual needs."
+        },
+        {
+          "step": "Setup",
+          "description": "Configure CI/CD, containers, hosting, and monitoring tools."
+        },
+        {
+          "step": "Migration",
+          "description": "Move your existing apps to the new setup with minimal disruption."
+        },
+        {
+          "step": "Documentation",
+          "description": "Your team needs to understand it. We write clear docs."
+        },
+        {
+          "step": "Training",
+          "description": "We show your devs how to use and maintain the new setup."
+        }
+      ],
+      "stats": [
+        {
+          "value": "Minutes",
+          "label": "Deploy Time"
+        },
+        {
+          "value": "Auto",
+          "label": "Rollbacks"
+        },
+        {
+          "value": "40+",
+          "label": "Teams Helped"
+        },
+        {
+          "value": "Zero",
+          "label": "Manual Deploys"
+        }
+      ],
+      "caseStudies": [
+        {
+          "title": "Startup Pipeline",
+          "industry": "SaaS",
+          "result": "From FTP uploads to automated CI/CD in 2 weeks"
+        },
+        {
+          "title": "Docker Migration",
+          "industry": "Fintech",
+          "result": "Containerized 12 microservices, unified deployment"
+        },
+        {
+          "title": "Multi-Environment",
+          "industry": "Agency",
+          "result": "Staging, QA, Production — all automated"
+        }
+      ],
+      "slug": "devops-cicd",
+      "order": 4,
+      "seo": {
+        "metaTitle": "DevOps & CI/CD | VynTech Solutions",
+        "metaDescription": "Set up automated deployment pipelines, Docker containers, and proper infrastructure so your team can ship code faster.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "UI/UX Design",
+      "subtitle": "App & Website Design",
+      "description": "User interface design for websites, mobile apps, and web applications. Figma designs your developers can actually build.",
+      "heroImage": "/services/design.jpg",
+      "overview": "We design interfaces that look good and work well. This means wireframes to figure out the structure, then full visual designs in Figma. We hand off organized files with proper components, spacing, and specs — not messy artboards that leave developers guessing. We can also redesign existing apps that need a refresh.",
+      "features": [
+        {
+          "title": "Website Design",
+          "description": "Landing pages, corporate sites, and marketing websites. Clean layouts that communicate clearly.",
+          "icon": "research"
+        },
+        {
+          "title": "App Design",
+          "description": "Mobile and web app interfaces. Dashboard layouts, user flows, and all the screens you need.",
+          "icon": "strategy"
+        },
+        {
+          "title": "Wireframes & Prototypes",
+          "description": "Low-fidelity wireframes first, then interactive prototypes you can click through.",
+          "icon": "visual"
+        },
+        {
+          "title": "Design Systems",
+          "description": "Reusable components, color palettes, typography — keeps your product consistent as it grows.",
+          "icon": "prototype"
+        }
+      ],
+      "technologies": [
+        "Figma",
+        "Adobe XD",
+        "Sketch",
+        "Photoshop",
+        "Illustrator",
+        "Principle",
+        "Lottie",
+        "Zeplin"
+      ],
+      "process": [
+        {
+          "step": "Brief",
+          "description": "What does the app/site need to do? Who uses it? Any brand guidelines?"
+        },
+        {
+          "step": "Wireframes",
+          "description": "Rough layouts to nail down structure and flow before we polish visuals."
+        },
+        {
+          "step": "Visual Design",
+          "description": "Full designs with real content, proper spacing, and your brand style."
+        },
+        {
+          "step": "Prototype",
+          "description": "Clickable prototype so you can test the flow before development."
+        },
+        {
+          "step": "Revisions",
+          "description": "We refine based on your feedback. Usually 2-3 rounds."
+        },
+        {
+          "step": "Handoff",
+          "description": "Organized Figma file with components, specs, and assets for devs."
+        }
+      ],
+      "stats": [
+        {
+          "value": "150+",
+          "label": "Projects Designed"
+        },
+        {
+          "value": "Figma",
+          "label": "Primary Tool"
+        },
+        {
+          "value": "1-4 wk",
+          "label": "Typical Timeline"
+        },
+        {
+          "value": "Dev-Ready",
+          "label": "Proper Handoff"
+        }
+      ],
+      "caseStudies": [
+        {
+          "title": "SaaS Dashboard",
+          "industry": "B2B Software",
+          "result": "Complete UI for analytics platform, 40+ screens"
+        },
+        {
+          "title": "Mobile App Redesign",
+          "industry": "Fitness",
+          "result": "Modernized outdated app, improved usability"
+        },
+        {
+          "title": "E-commerce Website",
+          "industry": "Fashion",
+          "result": "Full website design with product pages and checkout"
+        }
+      ],
+      "slug": "ui-ux-design",
+      "order": 5,
+      "seo": {
+        "metaTitle": "UI/UX Design | VynTech Solutions",
+        "metaDescription": "User interface design for websites, mobile apps, and web applications. Figma designs your developers can actually build.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "E-commerce Solutions",
+      "subtitle": "Online Stores & Shopping Platforms",
+      "description": "Shopify stores, WooCommerce sites, or custom e-commerce platforms. We build online stores that work.",
+      "heroImage": "/services/ecommerce.jpg",
+      "overview": "We build online stores using Shopify, WooCommerce, or custom solutions depending on your needs and budget. This includes product catalog setup, payment integration (Stripe, PayPal, local gateways), shipping configuration, and the admin tools you need to manage orders. We also handle migrations if you are moving from an existing platform.",
+      "features": [
+        {
+          "title": "Shopify Stores",
+          "description": "Custom Shopify themes, app integrations, and store setup. Good for most retail businesses.",
+          "icon": "custom"
+        },
+        {
+          "title": "WooCommerce",
+          "description": "WordPress-based stores with more flexibility. Good if you need custom functionality.",
+          "icon": "platform"
+        },
+        {
+          "title": "Custom E-commerce",
+          "description": "Built from scratch when Shopify/WooCommerce does not fit. Full control over everything.",
+          "icon": "payment"
+        },
+        {
+          "title": "Payment & Shipping",
+          "description": "Stripe, PayPal, local payment methods. Shipping rates, zones, and carrier integrations.",
+          "icon": "inventory"
+        }
+      ],
+      "technologies": [
+        "Shopify",
+        "WooCommerce",
+        "Next.js",
+        "Stripe",
+        "PayPal",
+        "Node.js",
+        "PostgreSQL",
+        "AWS"
+      ],
+      "process": [
+        {
+          "step": "Requirements",
+          "description": "What are you selling? How many products? Any special requirements?"
+        },
+        {
+          "step": "Platform Choice",
+          "description": "We recommend Shopify, WooCommerce, or custom based on your needs."
+        },
+        {
+          "step": "Design",
+          "description": "Store design — homepage, product pages, cart, checkout."
+        },
+        {
+          "step": "Setup",
+          "description": "Products, categories, payments, shipping, taxes — all configured."
+        },
+        {
+          "step": "Testing",
+          "description": "Test orders, payment flows, edge cases before going live."
+        },
+        {
+          "step": "Launch",
+          "description": "Go live, monitor for issues, fix anything that comes up."
+        }
+      ],
+      "stats": [
+        {
+          "value": "100+",
+          "label": "Stores Built"
+        },
+        {
+          "value": "Shopify",
+          "label": "Partner"
+        },
+        {
+          "value": "2-8 wk",
+          "label": "Typical Timeline"
+        },
+        {
+          "value": "All Sizes",
+          "label": "10 to 10K Products"
+        }
+      ],
+      "caseStudies": [
+        {
+          "title": "Fashion Brand",
+          "industry": "Apparel",
+          "result": "Shopify store with 500+ products, custom theme"
+        },
+        {
+          "title": "Food Delivery",
+          "industry": "F&B",
+          "result": "WooCommerce with local delivery zones and time slots"
+        },
+        {
+          "title": "B2B Wholesale",
+          "industry": "Manufacturing",
+          "result": "Custom pricing tiers and bulk order system"
+        }
+      ],
+      "slug": "ecommerce-solutions",
+      "order": 6,
+      "seo": {
+        "metaTitle": "E-commerce Solutions | VynTech Solutions",
+        "metaDescription": "Shopify stores, WooCommerce sites, or custom e-commerce platforms. We build online stores that work.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "Custom Software Development",
+      "subtitle": "Business Software & Internal Tools",
+      "description": "Custom software built for your specific workflow. When off-the-shelf tools do not fit, we build what you need.",
+      "heroImage": "/services/custom.jpg",
+      "overview": "Sometimes you need software that does exactly what your business requires — not a generic tool you have to work around. We build custom internal tools, admin panels, workflow automation systems, and business applications. You own the code, and it works the way your business works.",
+      "features": [
+        {
+          "title": "Internal Tools",
+          "description": "Admin dashboards, reporting tools, data management systems for your team.",
+          "icon": "enterprise"
+        },
+        {
+          "title": "Workflow Automation",
+          "description": "Automate repetitive processes. Approvals, notifications, data sync between systems.",
+          "icon": "integration"
+        },
+        {
+          "title": "System Integration",
+          "description": "Connect your existing tools — CRM, accounting, inventory — so data flows automatically.",
+          "icon": "modernize"
+        },
+        {
+          "title": "Legacy Updates",
+          "description": "Old system still works but needs updating? We modernize without breaking what works.",
+          "icon": "saas"
+        }
+      ],
+      "technologies": [
+        "Node.js",
+        "Python",
+        "React",
+        "PostgreSQL",
+        "MySQL",
+        "Redis",
+        "AWS",
+        "Docker"
+      ],
+      "process": [
+        {
+          "step": "Discovery",
+          "description": "We learn your current workflow. What works? What does not? What is manual?"
+        },
+        {
+          "step": "Scope",
+          "description": "Define exactly what the software needs to do. No scope creep."
+        },
+        {
+          "step": "Design",
+          "description": "Database structure, user interface, how it fits with existing systems."
+        },
+        {
+          "step": "Build",
+          "description": "Iterative development. You see progress and can give feedback regularly."
+        },
+        {
+          "step": "Test",
+          "description": "We test with real scenarios. You test before it goes live."
+        },
+        {
+          "step": "Deploy",
+          "description": "We handle hosting, training, and support for the first few months."
+        }
+      ],
+      "stats": [
+        {
+          "value": "70+",
+          "label": "Custom Systems"
+        },
+        {
+          "value": "Your Code",
+          "label": "Full Ownership"
+        },
+        {
+          "value": "Long-term",
+          "label": "Maintainable"
+        },
+        {
+          "value": "1-6 mo",
+          "label": "Timeline Range"
+        }
+      ],
+      "caseStudies": [
+        {
+          "title": "Order Management",
+          "industry": "Distribution",
+          "result": "Replaced spreadsheets with proper order tracking system"
+        },
+        {
+          "title": "HR Portal",
+          "industry": "Services",
+          "result": "Leave requests, timesheets, employee directory — all in one place"
+        },
+        {
+          "title": "Booking System",
+          "industry": "Healthcare",
+          "result": "Custom scheduling for multi-location clinic network"
+        }
+      ],
+      "slug": "custom-software-development",
+      "order": 7,
+      "seo": {
+        "metaTitle": "Custom Software Development | VynTech Solutions",
+        "metaDescription": "Custom software built for your specific workflow. When off-the-shelf tools do not fit, we build what you need.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "SEO/Digital Marketing",
+      "subtitle": "SEO & Online Marketing",
+      "description": "Get found on Google. Technical SEO fixes, content that ranks, and marketing that brings real leads — not vanity metrics.",
+      "heroImage": "/services/seo.jpg",
+      "overview": "We help businesses show up when people search for what they offer. This includes fixing technical SEO issues, optimizing existing pages, creating content that targets relevant keywords, and running Google/Meta ads when paid traffic makes sense. We focus on results you can measure — rankings, traffic, leads — not just reports.",
+      "features": [
+        {
+          "title": "Technical SEO",
+          "description": "Site speed, mobile-friendliness, crawl errors, structured data. The foundation stuff.",
+          "icon": "technical"
+        },
+        {
+          "title": "On-Page SEO",
+          "description": "Keyword research, meta tags, content optimization. Make your pages rank for the right terms.",
+          "icon": "content"
+        },
+        {
+          "title": "Content Strategy",
+          "description": "Blog posts, landing pages, and content that targets keywords your customers actually search.",
+          "icon": "ppc"
+        },
+        {
+          "title": "Google Ads",
+          "description": "Search and display campaigns. We manage the ads so you get leads, not wasted budget.",
+          "icon": "analytics"
+        }
+      ],
+      "technologies": [
+        "Google Search Console",
+        "Ahrefs",
+        "SEMrush",
+        "Google Analytics",
+        "Google Ads",
+        "Screaming Frog",
+        "Surfer",
+        "WordPress"
+      ],
+      "process": [
+        {
+          "step": "Audit",
+          "description": "We check your site for SEO issues and see where you stand vs competitors."
+        },
+        {
+          "step": "Quick Wins",
+          "description": "Fix obvious issues first — broken links, missing tags, slow pages."
+        },
+        {
+          "step": "Keyword Plan",
+          "description": "What should you rank for? We find keywords with traffic and intent."
+        },
+        {
+          "step": "Optimization",
+          "description": "Update existing pages, create new content, build authority."
+        },
+        {
+          "step": "Tracking",
+          "description": "Set up proper tracking so you know what is working."
+        },
+        {
+          "step": "Monthly Work",
+          "description": "Ongoing optimization, new content, link building, reporting."
+        }
+      ],
+      "stats": [
+        {
+          "value": "50+",
+          "label": "SEO Clients"
+        },
+        {
+          "value": "Organic",
+          "label": "Focus Area"
+        },
+        {
+          "value": "3-6 mo",
+          "label": "Results Timeline"
+        },
+        {
+          "value": "Monthly",
+          "label": "Reporting"
+        }
+      ],
+      "caseStudies": [
+        {
+          "title": "Local Business",
+          "industry": "Services",
+          "result": "Page 1 rankings for 15 local keywords in 4 months"
+        },
+        {
+          "title": "E-commerce SEO",
+          "industry": "Retail",
+          "result": "Organic traffic up 180% in 6 months"
+        },
+        {
+          "title": "B2B Lead Gen",
+          "industry": "Software",
+          "result": "Google Ads campaign generating leads at $45/lead"
+        }
+      ],
+      "slug": "seo-digital-marketing",
+      "order": 8,
+      "seo": {
+        "metaTitle": "SEO/Digital Marketing | VynTech Solutions",
+        "metaDescription": "Get found on Google. Technical SEO fixes, content that ranks, and marketing that brings real leads — not vanity metrics.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "Maintenance & Support",
+      "subtitle": "Ongoing Support & Maintenance",
+      "description": "Keep your website or app running. Bug fixes, updates, security patches, and someone to call when things break.",
+      "heroImage": "/services/support.jpg",
+      "overview": "You have a website or app that needs ongoing care — updates, bug fixes, security patches, small changes. We offer monthly retainer plans so you have developers available when you need them. No need to hire full-time staff for work that is only needed sometimes. We also take over projects built by other teams if you need new support.",
+      "features": [
+        {
+          "title": "Bug Fixes",
+          "description": "Something broken? We fix it. Usually within 24-48 hours depending on complexity.",
+          "icon": "monitoring"
+        },
+        {
+          "title": "Updates & Patches",
+          "description": "Keep your CMS, plugins, and dependencies up to date. Security patches applied promptly.",
+          "icon": "security"
+        },
+        {
+          "title": "Small Changes",
+          "description": "Need to update content, add a feature, or tweak something? That is what we are here for.",
+          "icon": "performance"
+        },
+        {
+          "title": "Monitoring",
+          "description": "We set up alerts so we know when your site goes down — often before you do.",
+          "icon": "support"
+        }
+      ],
+      "technologies": [
+        "WordPress",
+        "React",
+        "Node.js",
+        "AWS",
+        "Cloudflare",
+        "UptimeRobot",
+        "GitHub",
+        "Slack"
+      ],
+      "process": [
+        {
+          "step": "Handover",
+          "description": "You give us access. We review the codebase and document how things work."
+        },
+        {
+          "step": "Retainer Setup",
+          "description": "We agree on hours per month and priority levels for requests."
+        },
+        {
+          "step": "Request System",
+          "description": "You submit requests via email or Slack. We track everything."
+        },
+        {
+          "step": "Regular Work",
+          "description": "We handle updates, fixes, and improvements each month."
+        },
+        {
+          "step": "Reporting",
+          "description": "Monthly summary of what we did and any recommendations."
+        },
+        {
+          "step": "Availability",
+          "description": "Need something urgent? We are reachable. Response times defined upfront."
+        }
+      ],
+      "stats": [
+        {
+          "value": "40+",
+          "label": "Active Clients"
+        },
+        {
+          "value": "< 24hr",
+          "label": "Response Time"
+        },
+        {
+          "value": "Monthly",
+          "label": "Retainer Plans"
+        },
+        {
+          "value": "No Lock-in",
+          "label": "Cancel Anytime"
+        }
+      ],
+      "caseStudies": [
+        {
+          "title": "E-commerce Store",
+          "industry": "Retail",
+          "result": "Ongoing Shopify support, 10-15 requests/month"
+        },
+        {
+          "title": "Company Website",
+          "industry": "Professional Services",
+          "result": "WordPress maintenance and content updates"
+        },
+        {
+          "title": "Web App Takeover",
+          "industry": "SaaS",
+          "result": "Took over codebase from previous agency, ongoing development"
+        }
+      ],
+      "slug": "maintenance-support",
+      "order": 9,
+      "seo": {
+        "metaTitle": "Maintenance & Support | VynTech Solutions",
+        "metaDescription": "Keep your website or app running. Bug fixes, updates, security patches, and someone to call when things break.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "Tax & Accounting Services",
+      "subtitle": "Financial & Tax Solutions",
+      "description": "Comprehensive tax planning, accounting, and financial services for businesses and individuals. From tax filing to CFO services — we handle your numbers.",
+      "heroImage": "/services/tax.jpg",
+      "overview": "We provide end-to-end financial services including tax preparation, bookkeeping, financial planning, and CFO advisory. Whether you're a startup needing incorporation help, a growing business requiring financial forecasting, or an established company looking for tax optimization — our team of certified professionals delivers accurate, compliant, and strategic financial guidance.",
+      "features": [
+        {
+          "title": "Comprehensive Tax & Accounting",
+          "description": "Corporate and personal tax filing, GST/HST, payroll taxes, and year-round tax planning to minimize your liability.",
+          "icon": "analytics"
+        },
+        {
+          "title": "Business Incorporation & CFO Services",
+          "description": "Company formation, corporate structure advice, and part-time CFO services for strategic financial leadership.",
+          "icon": "enterprise"
+        },
+        {
+          "title": "Financial Planning & Forecasting",
+          "description": "Cash flow projections, budgeting, financial modeling, and scenario planning to guide business decisions.",
+          "icon": "speed"
+        },
+        {
+          "title": "Strategic Investment Planning",
+          "description": "Investment strategy, portfolio review, retirement planning, and wealth building guidance for business owners.",
+          "icon": "integration"
+        },
+        {
+          "title": "Generational Wealth & Estate Planning",
+          "description": "Succession planning, estate tax strategies, trusts, and wealth transfer to protect your family's future.",
+          "icon": "security"
+        },
+        {
+          "title": "Government Grants Assistance",
+          "description": "SR&ED claims, CEWS, CEBA, and other government programs. We help you claim what you're entitled to.",
+          "icon": "support"
+        },
+        {
+          "title": "Financial Audits & Compliance",
+          "description": "Audit preparation, internal controls review, and compliance with regulatory requirements.",
+          "icon": "monitoring"
+        }
+      ],
+      "technologies": [
+        "QuickBooks",
+        "Xero",
+        "Sage",
+        "FreshBooks",
+        "Excel",
+        "CRA Portal",
+        "TaxCycle",
+        "CaseWare"
+      ],
+      "process": [
+        {
+          "step": "Consultation",
+          "description": "We review your current financial situation and understand your goals."
+        },
+        {
+          "step": "Assessment",
+          "description": "Analyze your books, identify issues, and find optimization opportunities."
+        },
+        {
+          "step": "Strategy",
+          "description": "Develop a tailored tax and financial strategy for your situation."
+        },
+        {
+          "step": "Implementation",
+          "description": "Set up systems, file returns, and execute the financial plan."
+        },
+        {
+          "step": "Monitoring",
+          "description": "Ongoing review and adjustments as regulations and your business change."
+        },
+        {
+          "step": "Reporting",
+          "description": "Regular financial reports and tax summaries so you always know where you stand."
+        }
+      ],
+      "stats": [
+        {
+          "value": "500+",
+          "label": "Clients Served"
+        },
+        {
+          "value": "$2M+",
+          "label": "Tax Savings"
+        },
+        {
+          "value": "15+",
+          "label": "Years Experience"
+        },
+        {
+          "value": "CPA",
+          "label": "Certified Team"
+        }
+      ],
+      "caseStudies": [
+        {
+          "title": "Tech Startup",
+          "industry": "Technology",
+          "result": "Saved $120K in taxes through SR&ED claims and proper structure"
+        },
+        {
+          "title": "Restaurant Group",
+          "industry": "Hospitality",
+          "result": "Streamlined accounting for 5 locations, reduced overhead 30%"
+        },
+        {
+          "title": "Real Estate Investor",
+          "industry": "Property",
+          "result": "Estate planning saved $500K in potential inheritance taxes"
+        }
+      ],
+      "slug": "tax-accounting",
+      "order": 10,
+      "seo": {
+        "metaTitle": "Tax & Accounting Services | VynTech Solutions",
+        "metaDescription": "Comprehensive tax planning, accounting, and financial services for businesses and individuals. From tax filing to CFO services — we handle your numbers.",
+        "indexable": true
+      }
+    }
+  ],
+  "industries": [
+    {
+      "title": "Healthcare & Pharmaceuticals",
+      "subtitle": "Driving Healthcare Innovation with Scalable Solutions",
+      "description": "In today's evolving healthcare landscape, providers need technology solutions that are flexible, scalable, and capable of meeting the demands of modern healthcare. We empower healthcare organizations to deliver exceptional care by integrating innovative technology that enhances operational efficiency, streamlines processes, and improves patient outcomes.",
+      "heroStats": [
+        {
+          "value": "50+",
+          "label": "Healthcare Projects"
+        },
+        {
+          "value": "99.9%",
+          "label": "Uptime SLA"
+        },
+        {
+          "value": "HIPAA",
+          "label": "Compliant"
+        },
+        {
+          "value": "24/7",
+          "label": "Support"
+        }
+      ],
+      "challenges": [
+        {
+          "title": "Access to Care",
+          "description": "Extend reach through telehealth and remote patient monitoring solutions, making healthcare accessible anytime, anywhere."
+        },
+        {
+          "title": "Patient Experience",
+          "description": "Deliver intuitive, user-centered digital health experiences that patients expect and trust."
+        },
+        {
+          "title": "Cost Reduction",
+          "description": "Drive operational efficiency and reduce costs by optimizing workflows with AI-driven insights and automation."
+        },
+        {
+          "title": "Digital Transformation",
+          "description": "Embrace the future of healthcare with cloud integration, health information systems, and hospital information systems."
+        },
+        {
+          "title": "Patient Engagement",
+          "description": "Keep patients connected and engaged with mHealth applications and patient-centric tools that foster trust."
+        },
+        {
+          "title": "Compliance",
+          "description": "Ensure data protection with cybersecurity in healthcare and HIPAA/GDPR-compliant systems."
+        }
+      ],
+      "services": [
+        {
+          "title": "Health Experience Platform",
+          "description": "An integrated solution tailored for healthcare providers to drive smarter patient acquisition, increase retention, and improve patient experience through seamless, multi-channel communication."
+        },
+        {
+          "title": "Telehealth & Telemedicine",
+          "description": "Deliver quality care remotely with virtual care models that ensure secure, compliant interactions, expanding access to treatment for patients wherever they are."
+        },
+        {
+          "title": "Healthcare Software Development",
+          "description": "Customized healthcare software solutions designed to integrate with your existing workflows, meeting your unique organizational needs and enhancing operational efficiency."
+        },
+        {
+          "title": "Patient Management Systems",
+          "description": "Comprehensive solutions for the management of EHR and EMR, appointments, and patient communication, making it easier to deliver timely, personalized care."
+        },
+        {
+          "title": "AI-Driven Analytics",
+          "description": "Leverage AI in healthcare for actionable insights from patient data, enabling informed decision-making and driving improved patient outcomes."
+        },
+        {
+          "title": "Cloud Healthcare Solutions",
+          "description": "Secure, scalable cloud services designed for healthcare, streamlining medical operations, enhancing patient data management, and ensuring regulatory compliance."
+        }
+      ],
+      "technologies": [
+        "React",
+        "Node.js",
+        "Python",
+        "AWS",
+        "Azure",
+        "MongoDB",
+        "PostgreSQL",
+        "Docker",
+        "Kubernetes",
+        "HL7 FHIR"
+      ],
+      "slug": "healthcare",
+      "order": 0,
+      "seo": {
+        "metaTitle": "Healthcare & Pharmaceuticals | VynTech Solutions",
+        "metaDescription": "In today's evolving healthcare landscape, providers need technology solutions that are flexible, scalable, and capable of meeting the demands of modern healthcare. We empower healthcare organizations to deliver exceptional care by integrating innovative technology that enhances operational efficiency, streamlines processes, and improves patient outcomes.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "Finance & Banking",
+      "subtitle": "Secure & Scalable Financial Technology Solutions",
+      "description": "The financial services industry demands precision, security, and innovation. We deliver cutting-edge fintech solutions that help banks, insurance companies, and financial institutions modernize their operations, enhance customer experiences, and maintain regulatory compliance.",
+      "heroStats": [
+        {
+          "value": "100+",
+          "label": "Fintech Projects"
+        },
+        {
+          "value": "PCI DSS",
+          "label": "Compliant"
+        },
+        {
+          "value": "$500M+",
+          "label": "Transactions Processed"
+        },
+        {
+          "value": "99.99%",
+          "label": "Uptime"
+        }
+      ],
+      "challenges": [
+        {
+          "title": "Digital Banking",
+          "description": "Transform traditional banking with mobile-first digital experiences that meet modern customer expectations."
+        },
+        {
+          "title": "Security & Compliance",
+          "description": "Implement robust security measures and maintain compliance with PCI DSS, SOX, and other regulations."
+        },
+        {
+          "title": "Real-time Processing",
+          "description": "Enable instant transactions and real-time data processing for seamless financial operations."
+        },
+        {
+          "title": "Risk Management",
+          "description": "Leverage AI and analytics for fraud detection, risk assessment, and predictive modeling."
+        },
+        {
+          "title": "Customer Experience",
+          "description": "Create personalized, omnichannel experiences that drive customer loyalty and engagement."
+        },
+        {
+          "title": "Legacy Modernization",
+          "description": "Migrate legacy systems to modern, cloud-native architectures without disrupting operations."
+        }
+      ],
+      "services": [
+        {
+          "title": "Digital Banking Platforms",
+          "description": "End-to-end digital banking solutions including mobile banking apps, online portals, and omnichannel customer experiences."
+        },
+        {
+          "title": "Payment Solutions",
+          "description": "Secure payment processing systems, payment gateways, and digital wallet integrations for seamless transactions."
+        },
+        {
+          "title": "Risk & Compliance Systems",
+          "description": "Automated compliance monitoring, KYC/AML solutions, and regulatory reporting platforms."
+        },
+        {
+          "title": "Trading Platforms",
+          "description": "High-performance trading systems with real-time market data, analytics, and algorithmic trading capabilities."
+        },
+        {
+          "title": "Insurance Technology",
+          "description": "Claims management, policy administration, and customer portal solutions for insurance providers."
+        },
+        {
+          "title": "Blockchain & DeFi",
+          "description": "Decentralized finance solutions, smart contracts, and blockchain-based financial applications."
+        }
+      ],
+      "technologies": [
+        "Java",
+        "Python",
+        "React",
+        "Angular",
+        "AWS",
+        "Azure",
+        "Kafka",
+        "Redis",
+        "PostgreSQL",
+        "Blockchain"
+      ],
+      "slug": "finance-banking",
+      "order": 1,
+      "seo": {
+        "metaTitle": "Finance & Banking | VynTech Solutions",
+        "metaDescription": "The financial services industry demands precision, security, and innovation. We deliver cutting-edge fintech solutions that help banks, insurance companies, and financial institutions modernize their operations, enhance customer experiences, and maintain regulatory compliance.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "E-commerce & Retail",
+      "subtitle": "Transform Retail with Seamless Digital Experiences",
+      "description": "The retail landscape is evolving rapidly. We help retailers and e-commerce businesses create compelling shopping experiences, optimize operations, and drive growth through innovative technology solutions that connect with customers across all channels.",
+      "heroStats": [
+        {
+          "value": "200+",
+          "label": "E-commerce Projects"
+        },
+        {
+          "value": "$1B+",
+          "label": "GMV Processed"
+        },
+        {
+          "value": "35%",
+          "label": "Avg. Conversion Lift"
+        },
+        {
+          "value": "99.9%",
+          "label": "Uptime"
+        }
+      ],
+      "challenges": [
+        {
+          "title": "Omnichannel Experience",
+          "description": "Deliver consistent, seamless shopping experiences across web, mobile, and physical stores."
+        },
+        {
+          "title": "Personalization",
+          "description": "Use AI-driven recommendations and personalized content to increase conversions and customer loyalty."
+        },
+        {
+          "title": "Inventory Management",
+          "description": "Optimize inventory across channels with real-time visibility and demand forecasting."
+        },
+        {
+          "title": "Customer Engagement",
+          "description": "Build lasting relationships through loyalty programs, targeted marketing, and exceptional service."
+        },
+        {
+          "title": "Scalability",
+          "description": "Handle traffic spikes during peak seasons without compromising performance or user experience."
+        },
+        {
+          "title": "Analytics & Insights",
+          "description": "Leverage data analytics to understand customer behavior and make informed business decisions."
+        }
+      ],
+      "services": [
+        {
+          "title": "E-commerce Platforms",
+          "description": "Custom e-commerce solutions on Shopify, Magento, WooCommerce, or headless commerce architectures."
+        },
+        {
+          "title": "Mobile Commerce",
+          "description": "Native and cross-platform mobile shopping apps with seamless checkout and payment integration."
+        },
+        {
+          "title": "POS & Retail Systems",
+          "description": "Modern point-of-sale solutions that integrate with your e-commerce and inventory systems."
+        },
+        {
+          "title": "Marketplace Development",
+          "description": "Multi-vendor marketplace platforms with seller management, commission handling, and analytics."
+        },
+        {
+          "title": "Inventory & Order Management",
+          "description": "Real-time inventory tracking, order fulfillment automation, and supply chain optimization."
+        },
+        {
+          "title": "Customer Analytics",
+          "description": "Advanced analytics platforms for customer insights, behavior analysis, and predictive modeling."
+        }
+      ],
+      "technologies": [
+        "Shopify",
+        "Magento",
+        "React",
+        "Next.js",
+        "Node.js",
+        "AWS",
+        "Stripe",
+        "Elasticsearch",
+        "Redis",
+        "GraphQL"
+      ],
+      "slug": "ecommerce-retail",
+      "order": 2,
+      "seo": {
+        "metaTitle": "E-commerce & Retail | VynTech Solutions",
+        "metaDescription": "The retail landscape is evolving rapidly. We help retailers and e-commerce businesses create compelling shopping experiences, optimize operations, and drive growth through innovative technology solutions that connect with customers across all channels.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "Education & E-learning",
+      "subtitle": "Transforming Education Through Technology",
+      "description": "Education is undergoing a digital revolution. We help educational institutions, EdTech startups, and corporate training programs create engaging learning experiences that empower students and educators with innovative technology solutions.",
+      "heroStats": [
+        {
+          "value": "100+",
+          "label": "EdTech Projects"
+        },
+        {
+          "value": "5M+",
+          "label": "Students Reached"
+        },
+        {
+          "value": "50+",
+          "label": "Institutions Served"
+        },
+        {
+          "value": "40%",
+          "label": "Engagement Increase"
+        }
+      ],
+      "challenges": [
+        {
+          "title": "Remote Learning",
+          "description": "Enable effective distance learning with virtual classrooms, video conferencing, and collaboration tools."
+        },
+        {
+          "title": "Student Engagement",
+          "description": "Create interactive, gamified learning experiences that keep students motivated and engaged."
+        },
+        {
+          "title": "Accessibility",
+          "description": "Ensure learning platforms are accessible to all students, including those with disabilities."
+        },
+        {
+          "title": "Assessment & Analytics",
+          "description": "Track student progress with comprehensive analytics and adaptive assessment tools."
+        },
+        {
+          "title": "Content Management",
+          "description": "Manage and deliver educational content efficiently across multiple formats and devices."
+        },
+        {
+          "title": "Administrative Efficiency",
+          "description": "Streamline administrative tasks with automated systems for enrollment, scheduling, and reporting."
+        }
+      ],
+      "services": [
+        {
+          "title": "Learning Management Systems",
+          "description": "Custom LMS platforms with course management, progress tracking, and certification capabilities."
+        },
+        {
+          "title": "Virtual Classroom Solutions",
+          "description": "Interactive virtual learning environments with video, whiteboarding, and real-time collaboration."
+        },
+        {
+          "title": "Student Information Systems",
+          "description": "Comprehensive SIS platforms for enrollment, grades, attendance, and student records management."
+        },
+        {
+          "title": "Mobile Learning Apps",
+          "description": "Native mobile applications for on-the-go learning with offline access and push notifications."
+        },
+        {
+          "title": "Assessment Platforms",
+          "description": "Online testing and assessment tools with proctoring, analytics, and adaptive questioning."
+        },
+        {
+          "title": "Corporate Training Solutions",
+          "description": "Enterprise learning platforms for employee training, compliance, and skill development."
+        }
+      ],
+      "technologies": [
+        "React",
+        "React Native",
+        "Node.js",
+        "Python",
+        "AWS",
+        "WebRTC",
+        "MongoDB",
+        "PostgreSQL",
+        "Canvas API",
+        "SCORM"
+      ],
+      "slug": "education",
+      "order": 3,
+      "seo": {
+        "metaTitle": "Education & E-learning | VynTech Solutions",
+        "metaDescription": "Education is undergoing a digital revolution. We help educational institutions, EdTech startups, and corporate training programs create engaging learning experiences that empower students and educators with innovative technology solutions.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "Real Estate & Property",
+      "subtitle": "Digital Solutions for Modern Real Estate",
+      "description": "The real estate industry is embracing digital transformation. We help real estate companies, property managers, and proptech startups leverage technology to streamline operations, enhance customer experiences, and drive growth in a competitive market.",
+      "heroStats": [
+        {
+          "value": "75+",
+          "label": "PropTech Projects"
+        },
+        {
+          "value": "$2B+",
+          "label": "Properties Managed"
+        },
+        {
+          "value": "30%",
+          "label": "Efficiency Gain"
+        },
+        {
+          "value": "24/7",
+          "label": "Support"
+        }
+      ],
+      "challenges": [
+        {
+          "title": "Property Discovery",
+          "description": "Help buyers and renters find their perfect property with intelligent search and recommendations."
+        },
+        {
+          "title": "Virtual Experiences",
+          "description": "Enable remote property viewing with 3D tours, VR experiences, and high-quality visuals."
+        },
+        {
+          "title": "Transaction Management",
+          "description": "Streamline the buying, selling, and leasing process with digital document management and e-signatures."
+        },
+        {
+          "title": "Property Management",
+          "description": "Automate maintenance requests, rent collection, and tenant communications."
+        },
+        {
+          "title": "Market Intelligence",
+          "description": "Provide accurate property valuations and market insights with AI-powered analytics."
+        },
+        {
+          "title": "Lead Management",
+          "description": "Convert more leads with CRM systems designed specifically for real estate professionals."
+        }
+      ],
+      "services": [
+        {
+          "title": "Property Listing Platforms",
+          "description": "MLS-integrated platforms with advanced search, filters, and property comparison features."
+        },
+        {
+          "title": "Property Management Software",
+          "description": "Comprehensive solutions for lease management, maintenance tracking, and tenant portals."
+        },
+        {
+          "title": "Virtual Tour Solutions",
+          "description": "3D virtual tours, VR experiences, and interactive floor plans for remote property viewing."
+        },
+        {
+          "title": "Real Estate CRM",
+          "description": "Lead management, pipeline tracking, and automated follow-up systems for agents and brokers."
+        },
+        {
+          "title": "Transaction Platforms",
+          "description": "Digital closing platforms with document management, e-signatures, and compliance tracking."
+        },
+        {
+          "title": "Investment Analytics",
+          "description": "ROI calculators, market analysis tools, and investment portfolio management platforms."
+        }
+      ],
+      "technologies": [
+        "React",
+        "Node.js",
+        "Python",
+        "AWS",
+        "Three.js",
+        "MongoDB",
+        "PostgreSQL",
+        "Mapbox",
+        "DocuSign API",
+        "Twilio"
+      ],
+      "slug": "real-estate",
+      "order": 4,
+      "seo": {
+        "metaTitle": "Real Estate & Property | VynTech Solutions",
+        "metaDescription": "The real estate industry is embracing digital transformation. We help real estate companies, property managers, and proptech startups leverage technology to streamline operations, enhance customer experiences, and drive growth in a competitive market.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "Logistics & Transportation",
+      "subtitle": "Intelligent Solutions for Supply Chain Excellence",
+      "description": "The logistics industry demands efficiency, visibility, and reliability. We deliver technology solutions that optimize supply chain operations, improve fleet management, and provide real-time visibility across your entire logistics network.",
+      "heroStats": [
+        {
+          "value": "80+",
+          "label": "Logistics Projects"
+        },
+        {
+          "value": "1M+",
+          "label": "Shipments Tracked"
+        },
+        {
+          "value": "25%",
+          "label": "Cost Reduction"
+        },
+        {
+          "value": "99.9%",
+          "label": "Accuracy"
+        }
+      ],
+      "challenges": [
+        {
+          "title": "Real-time Visibility",
+          "description": "Track shipments, vehicles, and inventory in real-time across your entire supply chain network."
+        },
+        {
+          "title": "Route Optimization",
+          "description": "Reduce fuel costs and delivery times with AI-powered route planning and optimization."
+        },
+        {
+          "title": "Warehouse Efficiency",
+          "description": "Optimize warehouse operations with automation, robotics integration, and smart inventory management."
+        },
+        {
+          "title": "Last-mile Delivery",
+          "description": "Improve customer satisfaction with efficient last-mile delivery solutions and tracking."
+        },
+        {
+          "title": "Compliance",
+          "description": "Maintain compliance with transportation regulations, customs requirements, and safety standards."
+        },
+        {
+          "title": "Predictive Analytics",
+          "description": "Anticipate demand, prevent disruptions, and optimize capacity with predictive analytics."
+        }
+      ],
+      "services": [
+        {
+          "title": "Fleet Management Systems",
+          "description": "GPS tracking, driver management, maintenance scheduling, and fuel monitoring solutions."
+        },
+        {
+          "title": "Warehouse Management",
+          "description": "WMS platforms with inventory tracking, pick-pack-ship automation, and barcode/RFID integration."
+        },
+        {
+          "title": "Transportation Management",
+          "description": "TMS solutions for carrier management, freight optimization, and shipment tracking."
+        },
+        {
+          "title": "Route Optimization",
+          "description": "AI-powered routing algorithms that minimize costs while meeting delivery windows."
+        },
+        {
+          "title": "Supply Chain Visibility",
+          "description": "End-to-end visibility platforms that track goods from origin to destination."
+        },
+        {
+          "title": "Delivery Apps",
+          "description": "Customer-facing and driver apps for order tracking, proof of delivery, and communication."
+        }
+      ],
+      "technologies": [
+        "React",
+        "React Native",
+        "Node.js",
+        "Python",
+        "AWS",
+        "IoT",
+        "GPS APIs",
+        "PostgreSQL",
+        "Redis",
+        "Machine Learning"
+      ],
+      "slug": "logistics",
+      "order": 5,
+      "seo": {
+        "metaTitle": "Logistics & Transportation | VynTech Solutions",
+        "metaDescription": "The logistics industry demands efficiency, visibility, and reliability. We deliver technology solutions that optimize supply chain operations, improve fleet management, and provide real-time visibility across your entire logistics network.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "Entertainment & Media",
+      "subtitle": "Engaging Digital Experiences for Modern Audiences",
+      "description": "The entertainment and media industry is being transformed by digital technology. We help media companies, streaming platforms, and content creators deliver engaging experiences that captivate audiences and drive content monetization.",
+      "heroStats": [
+        {
+          "value": "60+",
+          "label": "Media Projects"
+        },
+        {
+          "value": "10M+",
+          "label": "Users Served"
+        },
+        {
+          "value": "4K/HDR",
+          "label": "Streaming Quality"
+        },
+        {
+          "value": "99.99%",
+          "label": "Uptime"
+        }
+      ],
+      "challenges": [
+        {
+          "title": "Content Delivery",
+          "description": "Deliver high-quality video and audio content to global audiences with minimal latency."
+        },
+        {
+          "title": "User Engagement",
+          "description": "Keep audiences engaged with personalized recommendations and interactive features."
+        },
+        {
+          "title": "Monetization",
+          "description": "Implement effective monetization strategies including subscriptions, ads, and pay-per-view."
+        },
+        {
+          "title": "Content Protection",
+          "description": "Protect valuable content with DRM, watermarking, and anti-piracy measures."
+        },
+        {
+          "title": "Multi-platform Support",
+          "description": "Reach audiences across web, mobile, smart TVs, and gaming consoles."
+        },
+        {
+          "title": "Live Streaming",
+          "description": "Enable real-time live streaming for events, sports, and interactive broadcasts."
+        }
+      ],
+      "services": [
+        {
+          "title": "OTT Streaming Platforms",
+          "description": "End-to-end video streaming solutions with adaptive bitrate, offline viewing, and multi-device support."
+        },
+        {
+          "title": "Content Management Systems",
+          "description": "Media asset management, metadata tagging, and content workflow automation."
+        },
+        {
+          "title": "Live Streaming Solutions",
+          "description": "Low-latency live streaming infrastructure for events, sports, and interactive broadcasts."
+        },
+        {
+          "title": "Recommendation Engines",
+          "description": "AI-powered content discovery and personalized recommendations to increase engagement."
+        },
+        {
+          "title": "Ad Tech Solutions",
+          "description": "Programmatic advertising, ad insertion, and campaign management platforms."
+        },
+        {
+          "title": "Gaming Platforms",
+          "description": "Online gaming platforms, social features, and in-game economy management."
+        }
+      ],
+      "technologies": [
+        "React",
+        "Node.js",
+        "Python",
+        "AWS MediaServices",
+        "CDN",
+        "HLS/DASH",
+        "FFmpeg",
+        "Redis",
+        "Elasticsearch",
+        "Machine Learning"
+      ],
+      "slug": "entertainment-media",
+      "order": 6,
+      "seo": {
+        "metaTitle": "Entertainment & Media | VynTech Solutions",
+        "metaDescription": "The entertainment and media industry is being transformed by digital technology. We help media companies, streaming platforms, and content creators deliver engaging experiences that captivate audiences and drive content monetization.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "Manufacturing & Industry",
+      "subtitle": "Smart Manufacturing for the Digital Age",
+      "description": "Industry 4.0 is transforming manufacturing. We help manufacturers leverage IoT, AI, and automation to optimize production, improve quality, and drive operational excellence across their facilities.",
+      "heroStats": [
+        {
+          "value": "50+",
+          "label": "Manufacturing Projects"
+        },
+        {
+          "value": "30%",
+          "label": "Productivity Gain"
+        },
+        {
+          "value": "50%",
+          "label": "Downtime Reduction"
+        },
+        {
+          "value": "IoT",
+          "label": "Enabled"
+        }
+      ],
+      "challenges": [
+        {
+          "title": "Production Optimization",
+          "description": "Maximize throughput and minimize waste with data-driven production planning and scheduling."
+        },
+        {
+          "title": "Quality Control",
+          "description": "Implement automated quality inspection using computer vision and machine learning."
+        },
+        {
+          "title": "Predictive Maintenance",
+          "description": "Prevent equipment failures and reduce downtime with IoT sensors and predictive analytics."
+        },
+        {
+          "title": "Supply Chain Integration",
+          "description": "Connect manufacturing with suppliers and customers for seamless end-to-end visibility."
+        },
+        {
+          "title": "Worker Safety",
+          "description": "Enhance workplace safety with monitoring systems, alerts, and compliance tracking."
+        },
+        {
+          "title": "Energy Efficiency",
+          "description": "Optimize energy consumption and reduce environmental impact with smart monitoring."
+        }
+      ],
+      "services": [
+        {
+          "title": "MES & ERP Systems",
+          "description": "Manufacturing execution systems and ERP integration for end-to-end production management."
+        },
+        {
+          "title": "IoT & Sensor Integration",
+          "description": "Connect machines and equipment with IoT sensors for real-time monitoring and data collection."
+        },
+        {
+          "title": "Predictive Maintenance",
+          "description": "AI-powered maintenance scheduling based on equipment condition and usage patterns."
+        },
+        {
+          "title": "Quality Management",
+          "description": "Automated inspection, defect detection, and quality analytics platforms."
+        },
+        {
+          "title": "Production Planning",
+          "description": "Advanced planning and scheduling systems that optimize resource utilization."
+        },
+        {
+          "title": "Digital Twin Solutions",
+          "description": "Virtual replicas of production systems for simulation, optimization, and training."
+        }
+      ],
+      "technologies": [
+        "Python",
+        "Node.js",
+        "React",
+        "AWS IoT",
+        "Azure IoT",
+        "MQTT",
+        "TimescaleDB",
+        "TensorFlow",
+        "Computer Vision",
+        "Edge Computing"
+      ],
+      "slug": "manufacturing",
+      "order": 7,
+      "seo": {
+        "metaTitle": "Manufacturing & Industry | VynTech Solutions",
+        "metaDescription": "Industry 4.0 is transforming manufacturing. We help manufacturers leverage IoT, AI, and automation to optimize production, improve quality, and drive operational excellence across their facilities.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "Hospitality & Travel",
+      "subtitle": "Elevating Guest Experiences Through Technology",
+      "description": "The hospitality and travel industry thrives on exceptional experiences. We help hotels, restaurants, airlines, and travel companies leverage technology to delight guests, streamline operations, and drive revenue growth.",
+      "heroStats": [
+        {
+          "value": "70+",
+          "label": "Hospitality Projects"
+        },
+        {
+          "value": "5M+",
+          "label": "Bookings Processed"
+        },
+        {
+          "value": "40%",
+          "label": "Revenue Increase"
+        },
+        {
+          "value": "4.8★",
+          "label": "Avg. Guest Rating"
+        }
+      ],
+      "challenges": [
+        {
+          "title": "Seamless Booking",
+          "description": "Provide frictionless booking experiences across web, mobile, and third-party channels."
+        },
+        {
+          "title": "Guest Experience",
+          "description": "Personalize every touchpoint of the guest journey from booking to check-out."
+        },
+        {
+          "title": "Revenue Management",
+          "description": "Optimize pricing and inventory with dynamic revenue management strategies."
+        },
+        {
+          "title": "Operational Efficiency",
+          "description": "Streamline housekeeping, maintenance, and staff management operations."
+        },
+        {
+          "title": "Loyalty & Engagement",
+          "description": "Build lasting relationships with loyalty programs and personalized marketing."
+        },
+        {
+          "title": "Multi-property Management",
+          "description": "Manage multiple properties, brands, or locations from a centralized platform."
+        }
+      ],
+      "services": [
+        {
+          "title": "Booking & Reservation Systems",
+          "description": "Central reservation systems with real-time availability, rate management, and channel integration."
+        },
+        {
+          "title": "Property Management Systems",
+          "description": "Comprehensive PMS solutions for front desk, housekeeping, and guest services."
+        },
+        {
+          "title": "Guest Experience Platforms",
+          "description": "Mobile apps and digital concierge services for personalized guest experiences."
+        },
+        {
+          "title": "Revenue Management",
+          "description": "AI-powered pricing optimization and demand forecasting solutions."
+        },
+        {
+          "title": "Restaurant & POS Systems",
+          "description": "Table management, ordering, and payment solutions for food service operations."
+        },
+        {
+          "title": "Travel Booking Platforms",
+          "description": "OTA and travel agency platforms with flights, hotels, and package booking capabilities."
+        }
+      ],
+      "technologies": [
+        "React",
+        "React Native",
+        "Node.js",
+        "Python",
+        "AWS",
+        "GDS Integration",
+        "Stripe",
+        "PostgreSQL",
+        "Redis",
+        "Machine Learning"
+      ],
+      "slug": "hospitality-travel",
+      "order": 8,
+      "seo": {
+        "metaTitle": "Hospitality & Travel | VynTech Solutions",
+        "metaDescription": "The hospitality and travel industry thrives on exceptional experiences. We help hotels, restaurants, airlines, and travel companies leverage technology to delight guests, streamline operations, and drive revenue growth.",
+        "indexable": true
+      }
+    },
+    {
+      "title": "Telecommunications",
+      "subtitle": "Next-Generation Connectivity Solutions",
+      "description": "The telecommunications industry is at the forefront of digital innovation. We help telecom operators and service providers modernize their infrastructure, enhance customer experiences, and capitalize on emerging technologies like 5G and IoT.",
+      "heroStats": [
+        {
+          "value": "40+",
+          "label": "Telecom Projects"
+        },
+        {
+          "value": "100M+",
+          "label": "Subscribers Served"
+        },
+        {
+          "value": "5G",
+          "label": "Ready Solutions"
+        },
+        {
+          "value": "99.999%",
+          "label": "Network Uptime"
+        }
+      ],
+      "challenges": [
+        {
+          "title": "Network Modernization",
+          "description": "Upgrade legacy infrastructure to support 5G, IoT, and next-generation services."
+        },
+        {
+          "title": "Customer Experience",
+          "description": "Reduce churn and increase satisfaction with personalized digital experiences."
+        },
+        {
+          "title": "Billing & Revenue",
+          "description": "Implement flexible billing systems that support new business models and pricing strategies."
+        },
+        {
+          "title": "Network Operations",
+          "description": "Optimize network performance with AI-driven monitoring and predictive maintenance."
+        },
+        {
+          "title": "Digital Services",
+          "description": "Launch new digital services and value-added offerings to drive revenue growth."
+        },
+        {
+          "title": "Regulatory Compliance",
+          "description": "Maintain compliance with telecommunications regulations and data protection laws."
+        }
+      ],
+      "services": [
+        {
+          "title": "BSS/OSS Solutions",
+          "description": "Business and operations support systems for billing, CRM, and service fulfillment."
+        },
+        {
+          "title": "Customer Self-Service",
+          "description": "Digital portals and mobile apps for account management, billing, and support."
+        },
+        {
+          "title": "Network Management",
+          "description": "NOC tools, network monitoring, and performance optimization platforms."
+        },
+        {
+          "title": "5G & IoT Platforms",
+          "description": "Solutions for 5G network slicing, edge computing, and IoT device management."
+        },
+        {
+          "title": "Revenue Assurance",
+          "description": "Fraud detection, revenue leakage prevention, and billing accuracy systems."
+        },
+        {
+          "title": "Field Service Management",
+          "description": "Workforce management, dispatch optimization, and mobile technician apps."
+        }
+      ],
+      "technologies": [
+        "Java",
+        "Python",
+        "React",
+        "Angular",
+        "AWS",
+        "Kubernetes",
+        "Kafka",
+        "Elasticsearch",
+        "5G APIs",
+        "Network Protocols"
+      ],
+      "slug": "telecommunications",
+      "order": 9,
+      "seo": {
+        "metaTitle": "Telecommunications | VynTech Solutions",
+        "metaDescription": "The telecommunications industry is at the forefront of digital innovation. We help telecom operators and service providers modernize their infrastructure, enhance customer experiences, and capitalize on emerging technologies like 5G and IoT.",
+        "indexable": true
+      }
+    }
+  ],
+  "homepage": {
+    "servicesHeading": "Our Services",
+    "servicesSubheading": "Transforming Modern Businesses",
+    "servicesBody": "Through Innovation, Technology, and Scalable Digital Solutions",
+    "impactHeading": "Technology That Makes an Impact",
+    "partnersHeading": "Technology Partners",
+    "insightsHeading": "Featured Insights",
+    "industriesHeading": "Industries We Serve",
+    "heroSlides": [
+      {
+        "heading": "Build Faster.\nScale Smarter.",
+        "subtext": "From MVPs to enterprise platforms — we turn your vision into market-ready products in weeks, not months.",
+        "mediaUrl": "/cover1.mp4",
+        "mediaType": "video"
+      },
+      {
+        "heading": "Your Tech Partner\nfor Growth",
+        "subtext": "Stop hiring. Start building. Get a dedicated development team that delivers results from day one.",
+        "mediaUrl": "/cover3.png",
+        "mediaType": "image"
+      },
+      {
+        "heading": "Enterprise Solutions.\nStartup Speed.",
+        "subtext": "AI, Cloud, Mobile & Web — full-stack expertise to power your next big idea. No compromises.",
+        "mediaUrl": "/cover2.png",
+        "mediaType": "image"
+      },
+      {
+        "heading": "Let's Build\nSomething Extraordinary",
+        "subtext": "Join 100+ businesses who chose VynTech to transform their digital presence and 10x their growth.",
+        "mediaUrl": "/cover3.png",
+        "mediaType": "image"
+      }
+    ]
+  },
+  "navigation": {
+    "primaryLinks": [
+      {
+        "label": "Blog",
+        "href": "/blog",
+        "order": 1
+      },
+      {
+        "label": "About",
+        "href": "/about",
+        "order": 2
+      },
+      {
+        "label": "Careers",
+        "href": "/careers",
+        "order": 3
+      }
+    ],
+    "legalLinks": [
+      {
+        "label": "Privacy Policy",
+        "href": "/privacy-policy"
+      },
+      {
+        "label": "Terms & Conditions",
+        "href": "/terms-and-conditions"
+      }
+    ],
+    "socialLinks": [
+      { "label": "LinkedIn", "href": "https://linkedin.com" },
+      { "label": "Facebook", "href": "https://facebook.com" },
+      { "label": "Instagram", "href": "https://instagram.com" },
+      { "label": "YouTube", "href": "https://youtube.com" },
+      { "label": "X", "href": "https://x.com" }
+    ]
+  },
+  "clientLogos": [
+    { "name": "Maple Harvest Foods", "order": 1 },
+    { "name": "True North Realty", "order": 2 },
+    { "name": "ShopBC Online", "order": 3 },
+    { "name": "Prairie Farms", "order": 4 },
+    { "name": "Calgary Homes", "order": 5 },
+    { "name": "Fresh Market", "order": 6 },
+    { "name": "CanadaCart", "order": 7 },
+    { "name": "Ontario Bites", "order": 8 },
+    { "name": "Edmonton Properties", "order": 9 },
+    { "name": "West Coast Eats", "order": 10 },
+    { "name": "Vancouver Realtors", "order": 11 },
+    { "name": "QuickShop", "order": 12 }
+  ],
+  "promos": [
+    {
+      "name": "SEO Packages Bar",
+      "slot": "announcement-bar",
+      "heading": "SEO Packages",
+      "body": "From $799/mo",
+      "ctaLabel": "Learn more",
+      "ctaHref": "/services/seo-digital-marketing",
+      "active": true,
+      "priority": 10
+    },
+    {
+      "name": "Google Ranking Promo",
+      "slot": "google-ranking",
+      "heading": "Get your Website",
+      "body": "Google RANKING",
+      "ctaLabel": "Boost with SEO",
+      "ctaHref": "/services/seo-digital-marketing",
+      "active": true,
+      "priority": 5
+    },
+    {
+      "name": "Timed CTA Popup",
+      "slot": "timed-cta",
+      "heading": "Share Your Requirements",
+      "body": "to help our experts understand your business objectives and create your customized plan.",
+      "ctaLabel": "Submit",
+      "ctaHref": "/lets-talk-business",
+      "active": true,
+      "priority": 5
+    }
+  ],
+  "formConfig": {
+    "services": [
+      "web-development",
+      "mobile-app-development",
+      "cloud-solutions",
+      "ai-ml-solutions",
+      "devops-cicd",
+      "ui-ux-design",
+      "ecommerce-solutions",
+      "custom-software-development",
+      "seo-digital-marketing",
+      "maintenance-support",
+      "tax-accounting"
+    ],
+    "regions": [
+      "Ontario",
+      "British Columbia",
+      "Quebec",
+      "Alberta",
+      "Other Canada",
+      "International"
+    ],
+    "hearAbout": [
+      "Google",
+      "Referral",
+      "LinkedIn",
+      "Other"
+    ],
+    "budgetOptions": [
+      "Under $10,000",
+      "$10,000 – $25,000",
+      "$25,000 – $50,000",
+      "$50,000 – $100,000",
+      "$100,000+"
+    ]
+  },
+  "organizationProfile": {
+    "name": "VynTech Solutions",
+    "phone": "+1-416-893-5779",
+    "email": "info@vyntechsolutions.ca",
+    "geoLatitude": "43.6532",
+    "geoLongitude": "-79.3832",
+    "ratingValue": 4.9,
+    "reviewCount": 50
+  },
+  "staticPages": [
+    {
+      "title": "About",
+      "slug": "about",
+      "heroHeading": "We Build Software That Drives Growth",
+      "heroBody": "VynTech Solutions is a full-service software development company helping businesses transform ideas into powerful digital products.",
+      "sections": {
+        "missionHeading": "Empowering Businesses Through Innovative Technology",
+        "missionBody": "We believe every business deserves access to world-class software. Our mission is to bridge the gap between visionary ideas and technical execution — delivering solutions that are not just functional, but transformative.",
+        "missionBody2": "Whether you're a startup validating your first MVP or an enterprise modernizing legacy systems, we bring the same level of dedication, expertise, and passion to every project."
+      }
+    },
+    {
+      "title": "Careers",
+      "slug": "careers",
+      "heroHeading": "Careers",
+      "heroBody": "Join the VynTech Solutions team."
+    }
+  ],
+  "legalPages": [
+    {
+      "title": "Privacy Policy",
+      "slug": "privacy-policy",
+      "lastUpdated": "2026-03-27",
+      "body": "<p>VynTech Solutions (\"we\", \"us\", \"our\") respects your privacy. This policy explains how we collect and use your information when you use vyntechsolutions.ca or our services. We comply with PIPEDA and Canadian privacy laws.</p><h2>What We Collect</h2><p><strong>Information you provide:</strong> Name, email, phone number, company name when you contact us or request a quote.</p><p><strong>Automatic data:</strong> IP address, browser type, pages visited, and cookies for website functionality and analytics.</p><p><strong>Payment info:</strong> Processed securely through Stripe — we never store your card details.</p><h2>How We Use Your Information</h2><ul><li>Respond to your inquiries and provide our services</li><li>Send project updates, invoices, and important notices</li><li>Improve our website and services</li><li>Send marketing emails (only with your consent — you can unsubscribe anytime)</li></ul><h2>Information Sharing</h2><p><strong>We do not sell your data.</strong> We only share with service providers (hosting, email, payments, analytics) and when required by law.</p><h2>Your Rights</h2><p>Email us at info@vyntechsolutions.ca to access, correct, or delete your data.</p><h2>Contact Us</h2><p><strong>VynTech Solutions</strong><br/>Email: info@vyntechsolutions.ca<br/>Location: Toronto, Ontario, Canada</p>"
+    },
+    {
+      "title": "Terms and Conditions",
+      "slug": "terms-and-conditions",
+      "lastUpdated": "2026-03-27",
+      "body": "<p>Welcome to VynTech Solutions. By accessing vyntechsolutions.ca or engaging our services, you agree to these Terms and Conditions.</p><h2>Services</h2><p>We provide software development, digital design, SEO/marketing, and related consulting. Project scope, fees, and timelines are defined in separate agreements or statements of work.</p><h2>Website Use</h2><p>You may use this website for lawful purposes only. You may not attempt to disrupt the site, scrape content without permission, or misuse contact forms.</p><h2>Intellectual Property</h2><p>Site content, branding, and materials are owned by VynTech Solutions unless otherwise stated. Client deliverables ownership is governed by your project agreement.</p><h2>Limitation of Liability</h2><p>To the fullest extent permitted by Canadian law, VynTech Solutions is not liable for indirect or consequential damages arising from website use or general informational content on this site.</p><h2>Contact</h2><p>Questions about these terms: info@vyntechsolutions.ca</p>"
+    }
+  ]
+}

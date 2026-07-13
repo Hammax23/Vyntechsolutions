@@ -107,9 +107,44 @@ const ServiceIcon = ({ type }: { type: string }) => {
 export default function ServicesPage() {
   const [isVisible, setIsVisible] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [list, setList] = useState(services);
 
   useEffect(() => {
     setIsVisible(true);
+
+    fetch("/api/cms/services")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        const cmsServices = data?.services as
+          | {
+              slug?: string;
+              title?: string;
+              description?: string;
+              features?: { title?: string }[] | string[];
+            }[]
+          | undefined;
+        if (!cmsServices?.length) return;
+
+        setList(
+          cmsServices.map((s) => {
+            const fallback = services.find((d) => d.slug === s.slug);
+            const features = Array.isArray(s.features)
+              ? s.features
+                  .map((f) => (typeof f === "string" ? f : String(f?.title || "")))
+                  .filter(Boolean)
+              : fallback?.features || [];
+
+            return {
+              slug: String(s.slug || fallback?.slug || ""),
+              title: String(s.title || fallback?.title || ""),
+              description: String(s.description || fallback?.description || ""),
+              icon: fallback?.icon || "code",
+              features: features.length ? features : fallback?.features || [],
+            };
+          })
+        );
+      })
+      .catch(() => {});
   }, []);
 
   return (
@@ -166,7 +201,7 @@ export default function ServicesPage() {
       <section className="py-20 md:py-28 bg-white">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.map((service, index) => (
+            {list.map((service, index) => (
               <Link
                 key={service.slug}
                 href={`/services/${service.slug}`}

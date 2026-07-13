@@ -5,7 +5,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const services = [
+const DEFAULT_SERVICES = [
   "Web Development",
   "Mobile App Development",
   "Cloud Solutions",
@@ -18,7 +18,7 @@ const services = [
   "Maintenance & Support"
 ];
 
-const budgetRanges = [
+const DEFAULT_BUDGET_RANGES = [
   "Less than $10,000",
   "$10,000 - $25,000",
   "$25,000 - $50,000",
@@ -66,6 +66,23 @@ const stats = [
   { value: "15+", label: "Years Experience" }
 ];
 
+function resolveServiceLabels(
+  configServices: string[],
+  cmsServices: { slug?: string; title?: string }[]
+): string[] {
+  const bySlug = new Map(
+    cmsServices
+      .filter((s) => s.slug)
+      .map((s) => [String(s.slug), String(s.title || s.slug)])
+  );
+  return configServices.map((item) => {
+    if (item.includes("-")) {
+      return bySlug.get(item) || item;
+    }
+    return item;
+  });
+}
+
 const BenefitIcon = ({ type }: { type: string }) => {
   const icons: { [key: string]: JSX.Element } = {
     clock: <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />,
@@ -83,6 +100,8 @@ const BenefitIcon = ({ type }: { type: string }) => {
 
 export default function LetsTalkBusinessPage() {
   const [isVisible, setIsVisible] = useState(false);
+  const [services, setServices] = useState<string[]>(DEFAULT_SERVICES);
+  const [budgetRanges, setBudgetRanges] = useState<string[]>(DEFAULT_BUDGET_RANGES);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -101,6 +120,36 @@ export default function LetsTalkBusinessPage() {
 
   useEffect(() => {
     setIsVisible(true);
+    let cancelled = false;
+    Promise.all([
+      fetch("/api/cms/content?type=form-config").then((r) => (r.ok ? r.json() : null)),
+      fetch("/api/cms/services").then((r) => (r.ok ? r.json() : null)),
+    ])
+      .then(([formDataRes, servicesRes]) => {
+        if (cancelled) return;
+        const formConfig = formDataRes?.formConfig as Record<string, unknown> | undefined;
+        const cmsServices = (servicesRes?.services || []) as { slug?: string; title?: string }[];
+
+        if (Array.isArray(formConfig?.services) && formConfig.services.length) {
+          const labels = resolveServiceLabels(
+            formConfig.services.map(String),
+            cmsServices
+          );
+          if (labels.length) setServices(labels);
+        } else if (cmsServices.length) {
+          setServices(
+            cmsServices.map((s) => String(s.title || s.slug || "")).filter(Boolean)
+          );
+        }
+
+        if (Array.isArray(formConfig?.budgetOptions) && formConfig.budgetOptions.length) {
+          setBudgetRanges(formConfig.budgetOptions.map(String));
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {

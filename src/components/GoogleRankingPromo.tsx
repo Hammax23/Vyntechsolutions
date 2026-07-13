@@ -21,6 +21,21 @@ export default function GoogleRankingPromo({ compact = false }: GoogleRankingPro
   const [stepIndex, setStepIndex] = useState(0);
   const [chartProgress, setChartProgress] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const [title, setTitle] = useState("Get your Website");
+  const [subtitle, setSubtitle] = useState("Google RANKING");
+  const [cta, setCta] = useState("Boost with SEO");
+
+  useEffect(() => {
+    fetch("/api/cms/content?type=promos&slot=google-ranking")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        const promo = data?.promos?.[0];
+        if (promo?.heading) setTitle(String(promo.heading));
+        if (promo?.body) setSubtitle(String(promo.body));
+        if (promo?.ctaLabel) setCta(String(promo.ctaLabel));
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -123,14 +138,14 @@ export default function GoogleRankingPromo({ compact = false }: GoogleRankingPro
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-[#1a1a2e] leading-tight">Get your Website</p>
+              <p className="text-xs font-semibold text-[#1a1a2e] leading-tight">{title}</p>
               <p className="text-sm font-bold leading-tight mt-0.5">
                 <span className="bg-gradient-to-r from-[#4285F4] via-[#0055FF] to-[#34A853] bg-clip-text text-transparent seo-ranking-shimmer-text">
-                  Google RANKING
+                  {subtitle}
                 </span>
               </p>
               <span className="inline-flex items-center gap-1 mt-1.5 text-[10px] font-bold text-[#0055FF] group-hover:gap-1.5 transition-all">
-                Boost with SEO
+                {cta}
                 <span aria-hidden>→</span>
               </span>
             </div>

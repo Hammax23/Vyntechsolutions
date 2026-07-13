@@ -1,0 +1,23 @@
+{
+  "kind": "singleType",
+  "collectionName": "organization_profiles",
+  "info": {
+    "singularName": "organization-profile",
+    "pluralName": "organization-profiles",
+    "displayName": "Organization Profile"
+  },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "name": { "type": "string", "default": "VynTech Solutions" },
+    "foundingDate": { "type": "date" },
+    "phone": { "type": "string" },
+    "email": { "type": "string" },
+    "address": { "type": "text" },
+    "geoLatitude": { "type": "string" },
+    "geoLongitude": { "type": "string" },
+    "sameAs": { "type": "json" },
+    "ratingValue": { "type": "decimal" },
+    "reviewCount": { "type": "integer" },
+    "openingHours": { "type": "json" }
+  }
+}

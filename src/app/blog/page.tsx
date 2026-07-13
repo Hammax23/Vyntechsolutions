@@ -1,22 +1,54 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { blogPosts } from "@/data/blogData";
+import { blogPosts, type BlogPost } from "@/data/blogData";
 
-const categories = ["All", "Business", "Development", "Technology", "Design"];
+const defaultCategories = ["All", "Business", "Development", "Technology", "Design"];
 
 export default function BlogPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [posts, setPosts] = useState<BlogPost[]>(blogPosts);
+  const [categories, setCategories] = useState(defaultCategories);
 
-  const filteredPosts = selectedCategory === "All" 
-    ? blogPosts 
-    : blogPosts.filter(post => post.category === selectedCategory);
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/cms/blog")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (cancelled || !data?.posts?.length) return;
+        setPosts(data.posts);
+        const cats = Array.from(
+          new Set<string>(["All", ...data.posts.map((p: BlogPost) => p.category).filter(Boolean)])
+        );
+        setCategories(cats);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
-  const featuredPost = blogPosts[0];
+  const filteredPosts =
+    selectedCategory === "All"
+      ? posts
+      : posts.filter((post) => post.category === selectedCategory);
+
+  const featuredPost = posts[0];
+  if (!featuredPost) {
+    return (
+      <>
+        <Navbar />
+        <main className="min-h-screen bg-white flex items-center justify-center">
+          <p className="text-gray-500">No blog posts yet.</p>
+        </main>
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>

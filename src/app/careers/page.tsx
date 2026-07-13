@@ -32,6 +32,33 @@ export default function CareersPage() {
 
   const fetchPositions = async () => {
     try {
+      // Prefer Strapi CMS job openings when available
+      const cmsRes = await fetch("/api/cms/content?type=jobs");
+      if (cmsRes.ok) {
+        const cms = await cmsRes.json();
+        if (cms.jobs?.length) {
+          setPositions(
+            cms.jobs.map((j: Record<string, unknown>, idx: number) => ({
+              id: String(j.documentId || j.id || idx),
+              title: String(j.title || ""),
+              department: String(j.department || ""),
+              location: String(j.location || ""),
+              type: String(j.type || "Full-time"),
+              experience: String(j.experience || ""),
+              salary: (j.salary as string) || null,
+              description: String(j.description || ""),
+              requirements: Array.isArray(j.requirements) ? j.requirements : [],
+              responsibilities: Array.isArray(j.responsibilities) ? j.responsibilities : [],
+              benefits: Array.isArray(j.benefits) ? j.benefits : [],
+              isActive: j.isActive !== false,
+              createdAt: String(j.createdAt || new Date().toISOString()),
+            }))
+          );
+          setLoading(false);
+          return;
+        }
+      }
+
       const response = await fetch("/api/careers");
       if (response.ok) {
         const data = await response.json();

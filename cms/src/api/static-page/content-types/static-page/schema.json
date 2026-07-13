@@ -1,0 +1,19 @@
+{
+  "kind": "collectionType",
+  "collectionName": "static_pages",
+  "info": {
+    "singularName": "static-page",
+    "pluralName": "static-pages",
+    "displayName": "Static Page"
+  },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "title": { "type": "string", "required": true },
+    "slug": { "type": "uid", "targetField": "title", "required": true },
+    "heroHeading": { "type": "string" },
+    "heroBody": { "type": "text" },
+    "body": { "type": "richtext" },
+    "sections": { "type": "json" },
+    "seo": { "type": "component", "repeatable": false, "component": "shared.seo" }
+  }
+}

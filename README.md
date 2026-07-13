@@ -4,19 +4,30 @@ Next.js application with Swagger API documentation.
 
 ## Getting Started
 
-### Install Dependencies
+### Next.js frontend
 
 ```bash
+docker compose up -d postgres
 npm install
-```
-
-### Run Development Server
-
-```bash
+npx prisma migrate deploy
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser.
+Open [http://localhost:3000](http://localhost:3000).
+
+### Strapi CMS (headless)
+
+```bash
+docker compose up -d strapi_db
+cd cms
+npm install
+npm run develop
+```
+
+Admin: [http://localhost:1337/admin](http://localhost:1337/admin)  
+Docs: [cms/README.md](cms/README.md) · Deploy: [deploy/STRAPI_DEPLOY.md](deploy/STRAPI_DEPLOY.md)
+
+SEO experts edit Blog, Services, Industries, FAQs, SEO, Homepage, Legal, Nav, Promos, Jobs in Strapi. Frontend stays Next.js.
 
 ### API Documentation
 

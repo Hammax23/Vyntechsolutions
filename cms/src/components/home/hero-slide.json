@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_home_hero_slides",
+  "info": { "displayName": "Hero Slide" },
+  "options": {},
+  "attributes": {
+    "heading": { "type": "string", "required": true },
+    "subtext": { "type": "text" },
+    "mediaUrl": { "type": "string" },
+    "mediaType": { "type": "enumeration", "enum": ["image", "video"], "default": "image" },
+    "ctaLabel": { "type": "string" },
+    "ctaHref": { "type": "string" }
+  }
+}

@@ -3,58 +3,45 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { blogPosts } from "@/data/blogData";
+import { blogPosts, type BlogPost } from "@/data/blogData";
 
-// Featured Insights data - maps to actual blog posts
-const insights = [
-  {
-    id: 1,
-    slug: blogPosts[0]?.slug || "why-custom-software-beats-off-the-shelf",
-    category: blogPosts[0]?.category.toUpperCase() || "BUSINESS",
-    categoryColor: "bg-teal-500",
-    title: blogPosts[0]?.title || "Why Custom Software Development Beats Off-the-Shelf Solutions",
-    image: blogPosts[0]?.image || "",
-    gradient: "bg-gradient-to-br from-[#1e3a5f] via-[#2d1b4e] to-[#1a1a2e]",
-    hasOverlay: true,
-    overlayType: "circles",
-  },
-  {
-    id: 2,
-    slug: blogPosts[1]?.slug || "web-app-vs-mobile-app-which-to-build-first",
-    category: blogPosts[1]?.category.toUpperCase() || "DEVELOPMENT",
-    categoryColor: "bg-orange-500",
-    title: blogPosts[1]?.title || "Web App vs Mobile App: Which Should You Build First?",
-    image: blogPosts[1]?.image || "",
-    gradient: "bg-gradient-to-br from-[#7b2d8e] via-[#9c27b0] to-[#e91e63]",
-    hasOverlay: true,
-    overlayType: "innerCircle",
-  },
-  {
-    id: 3,
-    slug: blogPosts[2]?.slug || "how-to-choose-tech-stack-for-startup",
-    category: blogPosts[2]?.category.toUpperCase() || "TECHNOLOGY",
-    categoryColor: "bg-purple-500",
-    title: blogPosts[2]?.title || "How to Choose the Right Tech Stack for Your Startup",
-    image: blogPosts[2]?.image || "",
-    gradient: "bg-gradient-to-br from-[#e91e63] via-[#ff5722] to-[#ff9800]",
-    hasOverlay: true,
-    overlayType: "abstract",
-  },
-  {
-    id: 4,
-    slug: blogPosts[3]?.slug || "mvp-development-how-long-and-how-much",
-    category: blogPosts[3]?.category.toUpperCase() || "BUSINESS",
-    categoryColor: "bg-teal-500",
-    title: blogPosts[3]?.title || "MVP Development: Realistic Timelines and Costs",
-    image: blogPosts[3]?.image || "https://images.unsplash.com/photo-1553484771-371a605b060b?w=600&h=800&fit=crop",
-    gradient: "",
-    hasOverlay: false,
-  },
-];
+function buildInsights(posts: BlogPost[]) {
+  const palette = [
+    { categoryColor: "bg-teal-500", gradient: "bg-gradient-to-br from-[#1e3a5f] via-[#2d1b4e] to-[#1a1a2e]", hasOverlay: true, overlayType: "circles" },
+    { categoryColor: "bg-orange-500", gradient: "bg-gradient-to-br from-[#7b2d8e] via-[#9c27b0] to-[#e91e63]", hasOverlay: true, overlayType: "innerCircle" },
+    { categoryColor: "bg-purple-500", gradient: "bg-gradient-to-br from-[#e91e63] via-[#ff5722] to-[#ff9800]", hasOverlay: true, overlayType: "abstract" },
+    { categoryColor: "bg-teal-500", gradient: "", hasOverlay: false, overlayType: "" },
+  ];
+  return posts.slice(0, 4).map((p, i) => ({
+    id: i + 1,
+    slug: p.slug,
+    category: (p.category || "BUSINESS").toUpperCase(),
+    title: p.title,
+    image: p.image || "",
+    ...palette[i % palette.length],
+  }));
+}
 
 export default function FeaturedInsights() {
+  const [insights, setInsights] = useState(() => buildInsights(blogPosts));
+  const [heading, setHeading] = useState("Featured Insights");
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    fetch("/api/cms/blog")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.posts?.length) setInsights(buildInsights(data.posts));
+      })
+      .catch(() => {});
+    fetch("/api/cms/content?type=homepage")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.homepage?.insightsHeading) setHeading(String(data.homepage.insightsHeading));
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -87,7 +74,7 @@ export default function FeaturedInsights() {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
         >
-          Featured Insights
+          {heading}
         </h2>
 
         {/* Two Column Layout - Video Left, Content Right */}
