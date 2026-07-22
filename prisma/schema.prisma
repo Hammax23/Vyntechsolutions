@@ -141,6 +141,39 @@ model JobPosition {
   updatedAt     DateTime @updatedAt
 }
 
+// Client quotations / offer letters (admin generator)
+model ClientQuotation {
+  id               String   @id @default(cuid())
+  quoteNumber      String   @unique
+  customerName     String
+  companyName      String?
+  quoteDate        DateTime @default(now())
+  projectTitle     String
+  projectSubtitle  String?
+  introText        String?
+  projectType      String?
+  technology       String?
+  totalPages       String?
+  timeline         String?
+  scopeSections    Json     @default("[]")
+  includes         String[]
+  optionalServices Json     @default("[]")
+  showSocialMedia  Boolean  @default(true)
+  socialMediaFee   Float    @default(600)
+  socialIncludes   String[]
+  baseAmount       Float
+  discountPercent  Float    @default(10)
+  hstPercent       Float    @default(13)
+  depositPercent   Float    @default(50)
+  terms            String[]
+  status           String   @default("draft")
+  shareToken       String?  @unique
+  shareExpiresAt   DateTime?
+  clientSelections Json     @default("{}")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
 // ─── SEO Panel ───────────────────────────────────────────────
 
 model SeoSession {

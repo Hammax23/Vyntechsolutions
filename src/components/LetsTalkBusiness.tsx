@@ -75,18 +75,21 @@ export default function LetsTalkBusiness() {
     hearAbout: "",
   });
 
-  const isAdminPage = pathname?.startsWith('/admin') || pathname?.startsWith('/seopanel');
+  const hideWidgets =
+    pathname?.startsWith("/admin") ||
+    pathname?.startsWith("/seopanel") ||
+    pathname?.startsWith("/quote");
 
   // Listen for custom event to open the panel
   useEffect(() => {
-    if (isAdminPage) return;
+    if (hideWidgets) return;
     const handleOpenPanel = () => setIsOpen(true);
     window.addEventListener('openLetsTalkBusiness', handleOpenPanel);
     return () => window.removeEventListener('openLetsTalkBusiness', handleOpenPanel);
-  }, [isAdminPage]);
+  }, [hideWidgets]);
 
   useEffect(() => {
-    if (isAdminPage) return;
+    if (hideWidgets) return;
     let cancelled = false;
     Promise.all([
       fetch("/api/cms/content?type=form-config").then((r) => (r.ok ? r.json() : null)),
@@ -124,10 +127,10 @@ export default function LetsTalkBusiness() {
     return () => {
       cancelled = true;
     };
-  }, [isAdminPage]);
+  }, [hideWidgets]);
 
-  // Hide on admin pages
-  if (isAdminPage) {
+  // Hide on admin / SEO panel / client quote pages
+  if (hideWidgets) {
     return null;
   }
 

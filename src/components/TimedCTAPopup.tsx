@@ -20,9 +20,13 @@ export default function TimedCTAPopup() {
     projectDescription: "",
   });
 
-  const isAdminPage = pathname?.startsWith('/admin') || pathname?.startsWith('/seopanel');
+  const hideWidgets =
+    pathname?.startsWith("/admin") ||
+    pathname?.startsWith("/seopanel") ||
+    pathname?.startsWith("/quote");
 
   useEffect(() => {
+    if (hideWidgets) return;
     fetch("/api/cms/content?type=promos&slot=timed-cta")
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
@@ -31,11 +35,11 @@ export default function TimedCTAPopup() {
         if (promo?.body) setPromoBody(String(promo.body));
       })
       .catch(() => {});
-  }, []);
+  }, [hideWidgets]);
 
   useEffect(() => {
-    // Don't show on admin pages
-    if (isAdminPage) return;
+    // Don't show on admin / quote pages
+    if (hideWidgets) return;
     
     // Check if popup was already shown in this session
     const alreadyShown = sessionStorage.getItem("ctaPopupShown");
@@ -54,10 +58,10 @@ export default function TimedCTAPopup() {
     }, 60000);
 
     return () => clearTimeout(timer);
-  }, [hasShown, isAdminPage]);
+  }, [hasShown, hideWidgets]);
 
-  // Hide on admin pages
-  if (isAdminPage) {
+  // Hide on admin / SEO panel / client quote pages
+  if (hideWidgets) {
     return null;
   }
 
