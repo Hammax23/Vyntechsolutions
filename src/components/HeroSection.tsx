@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 type HeroMediaItem = {
   type: "video" | "image";
@@ -100,7 +101,7 @@ export default function HeroSection() {
           setCurrentMediaIndex(0);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   const currentMedia = heroMedia[currentMediaIndex] ?? heroMedia[0];
@@ -140,7 +141,7 @@ export default function HeroSection() {
 
     // Play the video
     videoEl.currentTime = 0;
-    videoEl.play().catch(() => {});
+    videoEl.play().catch(() => { });
 
     return () => {
       videoEl.removeEventListener("ended", handleEnded);
@@ -224,12 +225,11 @@ export default function HeroSection() {
   const activeSlide = slides[currentSlide] ?? slides[0];
 
   return (
-    <section className="relative w-full h-screen overflow-hidden">
+    <section className="relative w-full h-[85vh] min-h-[600px] overflow-hidden">
       {/* Fallback Background for Loading */}
       <div
-        className={`absolute inset-0 bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460] transition-opacity duration-500 ${
-          mediaLoaded ? "opacity-0" : "opacity-100"
-        }`}
+        className={`absolute inset-0 bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460] transition-opacity duration-500 ${mediaLoaded ? "opacity-0" : "opacity-100"
+          }`}
         style={{ zIndex: 0 }}
       />
 
@@ -246,9 +246,8 @@ export default function HeroSection() {
               loop={false}
               preload="auto"
               poster="/hero-poster.jpg"
-              className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 ease-out ${
-                index === currentMediaIndex ? "opacity-100 z-[2]" : "opacity-0 z-[1]"
-              }`}
+              className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 ease-out ${index === currentMediaIndex ? "opacity-100 z-[2]" : "opacity-0 z-[1]"
+                }`}
               style={{
                 willChange: "opacity",
                 transform: "translateZ(0)",
@@ -263,9 +262,8 @@ export default function HeroSection() {
           ) : (
             <div
               key={`${media.src}-${index}`}
-              className={`absolute top-0 left-0 w-full h-full transition-opacity duration-1000 ease-out ${
-                index === currentMediaIndex ? "opacity-100 z-[2]" : "opacity-0 z-[1]"
-              }`}
+              className={`absolute top-0 left-0 w-full h-full transition-opacity duration-1000 ease-out ${index === currentMediaIndex ? "opacity-100 z-[2]" : "opacity-0 z-[1]"
+                }`}
               style={{
                 willChange: "opacity",
                 transform: "translateZ(0)",
@@ -297,33 +295,86 @@ export default function HeroSection() {
       <div className="absolute inset-0 bg-black/30 z-[3]" />
 
       {/* Content */}
-      <div className="relative z-[10] h-full flex items-center">
+      <div className="relative z-[10] h-full flex items-center justify-center text-center">
         <div className="max-w-[1400px] mx-auto px-6 w-full">
-          <div className="max-w-2xl">
-            {/* Heading */}
-            <h1 className="text-white text-5xl md:text-6xl lg:text-7xl font-light leading-tight mb-6">
-              {activeSlide.heading.split("\n").map((line, index) => (
-                <span key={index} className="block">
-                  {line}
-                </span>
-              ))}
-            </h1>
+          <div className="max-w-4xl mx-auto flex flex-col items-center">
+            {/* Text Container with fixed minimum height to prevent button from jumping */}
+            <div className="min-h-[350px] sm:min-h-[300px] md:min-h-[280px] lg:min-h-[320px] w-full flex flex-col items-center justify-start pt-4 md:pt-0">
+              {/* Heading */}
+              <motion.h1
+                key={`heading-${currentSlide}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="text-white text-5xl md:text-6xl lg:text-7xl font-light leading-tight mb-6"
+              >
+                {activeSlide.heading.split("\n").map((line, index) => (
+                  <span key={index} className="block">
+                    {line}
+                  </span>
+                ))}
+              </motion.h1>
 
-            {/* Subtext */}
-            <p className="text-white/90 text-lg md:text-xl font-light mb-8 max-w-lg">
-              {activeSlide.subtext}
-            </p>
+              {/* Subtext */}
+              <motion.p
+                key={`subtext-${currentSlide}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+                className="text-white/90 text-lg md:text-xl font-light mb-8 max-w-2xl mx-auto"
+              >
+                {activeSlide.subtext}
+              </motion.p>
+            </div>
 
             {/* CTA Button */}
             <button
               onClick={() => window.dispatchEvent(new CustomEvent("openLetsTalkBusiness"))}
-              className="inline-flex items-center gap-2 border border-white text-white px-8 py-3 text-sm font-light tracking-wider hover:bg-white hover:text-black transition-all duration-300"
+              className="inline-flex items-center justify-center gap-2 border border-white text-white px-8 py-3 text-sm font-light tracking-wider hover:bg-white hover:text-black transition-all duration-300"
             >
-              BUILD YOUR PROJECT NOW
+              GET FREE CONSULTATION
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
             </button>
+
+            {/* Stats */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
+              className="hidden md:block w-full mt-16 pt-10 border-t border-white/10 max-w-3xl mx-auto"
+            >
+              <div className="grid grid-cols-3 divide-x divide-white/10 text-center">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.8 }}
+                  className="flex flex-col items-center justify-center px-2 sm:px-4"
+                >
+                  <span className="text-3xl md:text-4xl font-light text-white mb-2">12+</span>
+                  <span className="text-[10px] md:text-xs font-medium tracking-[0.2em] text-white/50 uppercase">YEARS EXPERIENCE</span>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 1.0 }}
+                  className="flex flex-col items-center justify-center px-2 sm:px-4"
+                >
+                  <span className="text-3xl md:text-4xl font-light text-white mb-2">50+</span>
+                  <span className="text-[10px] md:text-xs font-medium tracking-[0.2em] text-white/50 uppercase">PROJECTS DELIVERED</span>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 1.2 }}
+                  className="flex flex-col items-center justify-center px-2 sm:px-4"
+                >
+                  <span className="text-3xl md:text-4xl font-light text-white mb-2">98%</span>
+                  <span className="text-[10px] md:text-xs font-medium tracking-[0.2em] text-white/50 uppercase">CLIENT SATISFACTION</span>
+                </motion.div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </div>
@@ -361,9 +412,8 @@ export default function HeroSection() {
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
-              index === currentSlide ? "bg-white w-6" : "bg-white/50"
-            }`}
+            className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentSlide ? "bg-white w-6" : "bg-white/50"
+              }`}
           />
         ))}
       </div>

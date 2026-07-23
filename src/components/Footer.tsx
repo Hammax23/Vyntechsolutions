@@ -1,332 +1,217 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-
-const defaultGroups = {
-  services: {
-    title: "Services",
-    sections: [
-      {
-        heading: "Development",
-        links: [
-          { name: "Web Development", href: "/services/web-development" },
-          { name: "Mobile App Development", href: "/services/mobile-app-development" },
-          { name: "Custom Software Development", href: "/services/custom-software-development" },
-        ],
-      },
-      {
-        heading: "Solutions",
-        links: [
-          { name: "Cloud Solutions", href: "/services/cloud-solutions" },
-          { name: "AI/ML Solutions", href: "/services/ai-ml-solutions" },
-          { name: "E-commerce Solutions", href: "/services/ecommerce-solutions" },
-          { name: "DevOps & CI/CD", href: "/services/devops-cicd" },
-          { name: "UI/UX Design", href: "/services/ui-ux-design" },
-        ],
-      },
-    ],
-  },
-  moreServices: {
-    title: "More Services",
-    links: [
-      { name: "SEO/Digital Marketing", href: "/services/seo-digital-marketing", highlight: true },
-      { name: "Maintenance & Support", href: "/services/maintenance-support" },
-    ],
-  },
-  industries: {
-    title: "Industries",
-    links: [
-      { name: "Healthcare", href: "/industries/healthcare" },
-      { name: "Finance & Banking", href: "/industries/finance-banking" },
-      { name: "E-commerce & Retail", href: "/industries/ecommerce-retail" },
-      { name: "Education & E-learning", href: "/industries/education" },
-      { name: "Real Estate", href: "/industries/real-estate" },
-    ],
-  },
-  moreIndustries: {
-    title: "More Industries",
-    links: [
-      { name: "Logistics & Transportation", href: "/industries/logistics" },
-      { name: "Entertainment & Media", href: "/industries/entertainment-media" },
-      { name: "Manufacturing", href: "/industries/manufacturing" },
-      { name: "Hospitality & Travel", href: "/industries/hospitality-travel" },
-      { name: "Telecommunications", href: "/industries/telecommunications" },
-    ],
-  },
-  quickLinks: {
-    title: "Quick Links",
-    links: [
-      { name: "About Us", href: "/about" },
-      { name: "Blog", href: "/blog" },
-      { name: "Careers", href: "/careers" },
-      { name: "Contact Us", href: "/lets-talk-business" },
-    ],
-  },
-};
+import VynTechLogo from "./VynTechLogo";
 
 const socialLinks = [
   {
     name: "LinkedIn",
-    href: "https://linkedin.com",
+    href: "#",
     icon: (
-      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
         <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
       </svg>
     ),
   },
   {
     name: "Facebook",
-    href: "https://facebook.com",
+    href: "#",
     icon: (
-      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
         <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
       </svg>
     ),
   },
   {
     name: "Instagram",
-    href: "https://instagram.com",
+    href: "#",
     icon: (
-      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
         <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
       </svg>
     ),
   },
   {
     name: "YouTube",
-    href: "https://youtube.com",
+    href: "#",
     icon: (
-      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
         <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
       </svg>
     ),
   },
   {
     name: "X",
-    href: "https://x.com",
+    href: "#",
     icon: (
-      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
       </svg>
     ),
   },
 ];
 
-const bottomLinks = [
-  { name: "Privacy Policy", href: "/privacy-policy" },
-  { name: "Terms & Conditions", href: "/terms-and-conditions" },
-];
-
 export default function Footer() {
-  const [groups, setGroups] = useState(defaultGroups);
-  const [legal, setLegal] = useState(bottomLinks);
-  const [socials, setSocials] = useState(socialLinks);
+  const [openSection, setOpenSection] = useState<string | null>(null);
 
-  useEffect(() => {
-    Promise.all([
-      fetch("/api/cms/content?type=navigation").then((r) => (r.ok ? r.json() : null)),
-      fetch("/api/cms/services").then((r) => (r.ok ? r.json() : null)),
-      fetch("/api/cms/industries").then((r) => (r.ok ? r.json() : null)),
-    ])
-      .then(([navData, servicesData, industriesData]) => {
-        const nav = navData?.navigation;
-        if (nav?.legalLinks?.length) {
-          setLegal(
-            nav.legalLinks.map((l: { label?: string; href?: string }) => ({
-              name: String(l.label || ""),
-              href: String(l.href || "#"),
-            }))
-          );
-        }
-        if (nav?.socialLinks?.length) {
-          setSocials((prev) =>
-            nav.socialLinks.map((l: { label?: string; href?: string }, i: number) => ({
-              name: String(l.label || prev[i]?.name || "Social"),
-              href: String(l.href || prev[i]?.href || "#"),
-              icon: prev[i]?.icon || prev[0].icon,
-            }))
-          );
-        }
-
-        const services = servicesData?.services as { slug: string; title: string }[] | undefined;
-        const industries = industriesData?.industries as { slug: string; title: string }[] | undefined;
-        if (services?.length || industries?.length) {
-          setGroups((prev) => {
-            const next = { ...prev };
-            if (services?.length) {
-              const half = Math.ceil(services.length / 2);
-              next.services = {
-                ...prev.services,
-                sections: [
-                  {
-                    heading: "Development",
-                    links: services.slice(0, half).map((s) => ({
-                      name: s.title,
-                      href: `/services/${s.slug}`,
-                    })),
-                  },
-                  {
-                    heading: "Solutions",
-                    links: services.slice(half).map((s) => ({
-                      name: s.title,
-                      href: `/services/${s.slug}`,
-                    })),
-                  },
-                ],
-              };
-              next.moreServices = {
-                title: "More Services",
-                links: services.slice(-2).map((s) => ({
-                  name: s.title,
-                  href: `/services/${s.slug}`,
-                  highlight: s.slug.includes("seo"),
-                })),
-              };
-            }
-            if (industries?.length) {
-              const half = Math.ceil(industries.length / 2);
-              next.industries = {
-                title: "Industries",
-                links: industries.slice(0, half).map((i) => ({
-                  name: i.title,
-                  href: `/industries/${i.slug}`,
-                })),
-              };
-              next.moreIndustries = {
-                title: "More Industries",
-                links: industries.slice(half).map((i) => ({
-                  name: i.title,
-                  href: `/industries/${i.slug}`,
-                })),
-              };
-            }
-            return next;
-          });
-        }
-      })
-      .catch(() => {});
-  }, []);
+  const toggleSection = (section: string) => {
+    setOpenSection(openSection === section ? null : section);
+  };
 
   return (
-    <footer className="w-full bg-[#f5f5f5] relative overflow-hidden">
-      {/* Decorative Chevrons - Right Side */}
-      <div className="absolute right-0 top-0 h-full w-32 sm:w-48 md:w-64 hidden lg:flex flex-col justify-center items-end pr-4 gap-2 opacity-30">
-        {[...Array(5)].map((_, i) => (
-          <svg
-            key={i}
-            className="w-12 h-8 text-gray-400"
-            fill="none"
-            viewBox="0 0 48 32"
-            style={{ transform: `translateX(${i * 8}px)` }}
-          >
-            <path
-              d="M8 4L24 16L8 28"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M24 4L40 16L24 28"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        ))}
-      </div>
+    <footer className="w-full bg-[#E5E5E5] pt-8 sm:pt-16 pb-6">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-12 lg:px-20">
+        
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-8 mb-6 md:mb-16">
+          
+          {/* Column 1: Brand & Info */}
+          <div className="md:col-span-4 lg:col-span-4 pr-0 lg:pr-12 mb-4 md:mb-0">
+            {/* Logo */}
+            <div className="mb-4 sm:mb-6">
+              <VynTechLogo darkText className="!gap-2" />
+            </div>
+            
+            {/* Description */}
+            <p className="text-[#4A5568] text-sm leading-relaxed mb-4 md:mb-8">
+              Empowering businesses with innovative technology solutions. We deliver cutting-edge software, robust cloud architectures, and transformative digital experiences that drive growth.
+            </p>
 
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-12 lg:px-20 pt-12 sm:pt-14 pb-6 sm:pb-8 relative z-10">
-        {/* Main Footer Links Grid - All in one row */}
-        <div className="flex justify-between items-start mb-12 w-full">
-          {/* All Sections in One Row - Full Width */}
-          <div className="flex justify-between w-full">
-            {/* Services Column */}
-            <div>
-              <h4 className="text-base font-semibold text-gray-900 mb-4">{groups.services.title}</h4>
-              <div className="mb-3">
-                <p className="text-sm font-semibold text-gray-800 mb-2">Development</p>
-                <ul className="space-y-1.5">
-                  {groups.services.sections[0].links.map((link) => (
-                    <li key={link.name}>
-                      <Link
-                        href={link.href}
-                        className="text-sm text-gray-600 hover:text-[#0d9488] transition-colors"
-                      >
-                        {link.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+            {/* Address & Social Desktop */}
+            <div className="hidden md:block">
+              {/* Address */}
+              <div className="mb-8">
+                <h4 className="text-[#1a1a2e] text-sm font-semibold flex items-center gap-2 mb-2">
+                  Canada <span className="font-normal text-[#4A5568]">(Head Office)</span>
+                  <Image src="https://flagcdn.com/w40/ca.png" alt="Canada Flag" width={20} height={14} className="object-cover rounded-sm shadow-sm" />
+                </h4>
+                <p className="text-[#4A5568] text-sm leading-relaxed">
+                  231 Oak Park Blvd, Suit#301,<br />
+                  Oakville, ON L6H 7S8
+                </p>
+              </div>
+
+              {/* Social Icons */}
+              <div className="flex items-center gap-3">
+                {socialLinks.map((social) => (
+                  <Link
+                    key={social.name}
+                    href={social.href}
+                    className="w-10 h-10 rounded-full bg-[#374151] hover:bg-[#4B5563] text-white flex items-center justify-center transition-colors shadow-sm"
+                    aria-label={social.name}
+                  >
+                    {social.icon}
+                  </Link>
+                ))}
               </div>
             </div>
+          </div>
 
-            {/* Industries Column */}
-            <div>
-              <h4 className="text-base font-semibold text-gray-900 mb-4">{groups.industries.title}</h4>
-              <ul className="space-y-1.5">
-                {groups.industries.links.map((link) => (
-                  <li key={link.name}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-gray-600 hover:text-[#0d9488] transition-colors"
-                    >
-                      {link.name}
+          {/* Column 2: Services */}
+          <div className="md:col-span-2 lg:col-span-2 border-b border-gray-300 md:border-none py-2 md:py-0">
+            <button 
+              onClick={() => toggleSection("services")}
+              className="flex justify-between items-center w-full md:cursor-default"
+            >
+              <h4 className="text-[#1a1a2e] text-base font-bold md:mb-6">Services</h4>
+              <div className="md:hidden w-8 h-8 flex items-center justify-center rounded-full bg-white shadow-sm border border-gray-200 text-gray-600">
+                <svg className={`w-4 h-4 transition-transform ${openSection === "services" ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </div>
+            </button>
+            <div className={`mt-4 md:mt-0 overflow-hidden transition-all duration-300 ${openSection === "services" ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0 md:max-h-none md:opacity-100"}`}>
+              <h5 className="text-[#1a1a2e] text-sm font-semibold mb-4">Development</h5>
+              <ul className="space-y-3">
+                {[
+                  "Web Development",
+                  "Mobile App Development",
+                  "Cloud Solutions",
+                  "AI/ML Solutions",
+                  "DevOps & CI/CD",
+                  "UI/UX Design"
+                ].map((link) => (
+                  <li key={link}>
+                    <Link href="#" className="text-sm text-[#4A5568] hover:text-[#00A3FF] transition-colors">
+                      {link}
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
+          </div>
 
-            {/* Solutions Column */}
-            <div>
-              <h4 className="text-base font-semibold text-gray-900 mb-4">Solutions</h4>
-              <ul className="space-y-1.5">
-                {groups.services.sections[1].links.map((link) => (
-                  <li key={link.name}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-gray-600 hover:text-[#0d9488] transition-colors"
-                    >
-                      {link.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              {/* More Services */}
-              <p className="text-sm font-semibold text-gray-800 mb-2 mt-4">More Services</p>
-              <ul className="space-y-1.5">
-                {groups.moreServices.links.map((link) => (
-                  <li key={link.name}>
-                    <Link
-                      href={link.href}
-                      className={`text-sm transition-colors ${
-                        link.highlight
-                          ? "text-[#f97316] hover:text-[#ea580c]"
-                          : "text-gray-600 hover:text-[#0d9488]"
-                      }`}
-                    >
-                      {link.name}
+          {/* Column 3: Industries */}
+          <div className="md:col-span-3 lg:col-span-3 border-b border-gray-300 md:border-none py-2 md:py-0">
+            <button 
+              onClick={() => toggleSection("industries")}
+              className="flex justify-between items-center w-full md:cursor-default"
+            >
+              <h4 className="text-[#1a1a2e] text-base font-bold md:mb-6">Industries</h4>
+              <div className="md:hidden w-8 h-8 flex items-center justify-center rounded-full bg-white shadow-sm border border-gray-200 text-gray-600">
+                <svg className={`w-4 h-4 transition-transform ${openSection === "industries" ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </div>
+            </button>
+            <div className={`mt-4 md:mt-0 overflow-hidden transition-all duration-300 ${openSection === "industries" ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0 md:max-h-none md:opacity-100"}`}>
+              <ul className="space-y-3">
+                {[
+                  "Healthcare & Pharmaceuticals",
+                  "Finance & Banking",
+                  "E-commerce & Retail",
+                  "Education & E-learning",
+                  "Real Estate & Property",
+                  "Logistics & Transportation",
+                  "Entertainment & Media",
+                  "Manufacturing & Industry",
+                  "Hospitality & Travel",
+                  "Telecommunications"
+                ].map((link) => (
+                  <li key={link}>
+                    <Link href="#" className="text-sm text-[#4A5568] hover:text-[#00A3FF] transition-colors">
+                      {link}
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
+          </div>
 
-            {/* More Industries Column */}
-            <div>
-              <h4 className="text-base font-semibold text-gray-900 mb-4">{groups.moreIndustries.title}</h4>
-              <ul className="space-y-1.5">
-                {groups.moreIndustries.links.map((link) => (
-                  <li key={link.name}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-gray-600 hover:text-[#0d9488] transition-colors"
-                    >
-                      {link.name}
+          {/* Column 4: Solutions */}
+          <div className="md:col-span-3 lg:col-span-3 py-2 md:py-0">
+            <button 
+              onClick={() => toggleSection("solutions")}
+              className="flex justify-between items-center w-full md:cursor-default"
+            >
+              <h4 className="text-[#1a1a2e] text-base font-bold md:mb-6">Solutions</h4>
+              <div className="md:hidden w-8 h-8 flex items-center justify-center rounded-full bg-white shadow-sm border border-gray-200 text-gray-600">
+                <svg className={`w-4 h-4 transition-transform ${openSection === "solutions" ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </div>
+            </button>
+            <div className={`mt-4 md:mt-0 overflow-hidden transition-all duration-300 ${openSection === "solutions" ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0 md:max-h-none md:opacity-100"}`}>
+              <ul className="space-y-3 mb-8">
+                {[
+                  "E-commerce Solutions",
+                  "Custom Software Development",
+                  "SEO/Digital Marketing",
+                  "Maintenance & Support",
+                  "Tax & Accounting Services"
+                ].map((link) => (
+                  <li key={link}>
+                    <Link href="#" className="text-sm text-[#4A5568] hover:text-[#00A3FF] transition-colors">
+                      {link}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+
+              <h5 className="text-[#1a1a2e] text-sm font-semibold mb-4">More Services</h5>
+              <ul className="space-y-3">
+                {[
+                  "Maintenance & Support",
+                  "Tax & Accounting Services"
+                ].map((link) => (
+                  <li key={link}>
+                    <Link href="#" className="text-sm text-[#4A5568] hover:text-[#00A3FF] transition-colors">
+                      {link}
                     </Link>
                   </li>
                 ))}
@@ -336,29 +221,25 @@ export default function Footer() {
 
         </div>
 
-        {/* Social Links Section */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 mb-10 pb-10 border-b border-gray-300">
-          {/* Canada Head Office */}
-          <div>
-            <h4 className="text-base font-semibold text-gray-900 mb-2 flex items-center gap-2">
-              Canada <span className="font-normal text-gray-600">(Head Office)</span>
-              <Image src="https://flagcdn.com/w40/ca.png" alt="Canada Flag" width={24} height={16} className="object-cover rounded-sm" />
+        {/* Address & Social Mobile */}
+        <div className="md:hidden block mt-4 mb-4">
+          <div className="mb-8">
+            <h4 className="text-[#1a1a2e] text-sm font-semibold flex items-center gap-2 mb-2">
+              Canada <span className="font-normal text-[#4A5568]">(Head Office)</span>
+              <Image src="https://flagcdn.com/w40/ca.png" alt="Canada Flag" width={20} height={14} className="object-cover rounded-sm shadow-sm" />
             </h4>
-            <p className="text-sm text-gray-600 leading-relaxed">
+            <p className="text-[#4A5568] text-sm leading-relaxed">
               231 Oak Park Blvd, Suit#301,<br />
               Oakville, ON L6H 7S8
             </p>
           </div>
 
-          {/* Social Links */}
           <div className="flex items-center gap-3">
-            {socials.map((social) => (
+            {socialLinks.map((social) => (
               <Link
                 key={social.name}
                 href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-gray-700 hover:bg-[#0d9488] text-white flex items-center justify-center transition-colors"
+                className="w-10 h-10 rounded-full bg-[#374151] hover:bg-[#4B5563] text-white flex items-center justify-center transition-colors shadow-sm"
                 aria-label={social.name}
               >
                 {social.icon}
@@ -367,26 +248,24 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Divider */}
+        <div className="border-t border-gray-300 mb-6" />
+
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          {/* Bottom Links */}
-          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-            {legal.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="text-xs text-gray-600 hover:text-[#0d9488] transition-colors"
-              >
-                {link.name}
-              </Link>
-            ))}
+          <div className="flex items-center gap-6">
+            <Link href="#" className="text-xs text-[#4A5568] hover:text-[#00A3FF] transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="#" className="text-xs text-[#4A5568] hover:text-[#00A3FF] transition-colors">
+              Terms & Conditions
+            </Link>
           </div>
-
-          {/* Copyright */}
-          <p className="text-xs text-gray-500">
-            © {new Date().getFullYear()} VynTech Solutions All Rights Reserved.
+          <p className="text-xs text-[#4A5568]">
+            © 2026 VynTech Solutions All Rights Reserved.
           </p>
         </div>
+
       </div>
     </footer>
   );

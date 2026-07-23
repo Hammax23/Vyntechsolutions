@@ -153,6 +153,11 @@ export default function Navbar() {
   const langRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
+  // Scroll state
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
+  const lastScrollY = useRef(0);
+
   const languages = [
     { code: "EN", name: "English", flag: "🇨🇦" },
     { code: "FR", name: "Français", flag: "🇨🇦" },
@@ -205,7 +210,7 @@ export default function Navbar() {
 
         setSearchItems(buildSearchItems(nextServices, nextIndustries));
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   useEffect(() => {
@@ -216,6 +221,25 @@ export default function Navbar() {
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      setIsScrolled(currentScrollY > 10);
+
+      if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
+        setIsHidden(true);
+      } else {
+        setIsHidden(false);
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
@@ -307,7 +331,13 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-transparent border-b border-white/20">
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isHidden ? "-translate-y-full" : "translate-y-0"
+          } ${isScrolled || isMobileMenuOpen || isSearchOpen
+            ? "bg-[#05050F]/90 backdrop-blur-md border-b border-white/10"
+            : "bg-transparent border-transparent"
+          }`}
+      >
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between py-3 lg:py-4">
             <div className="flex items-center z-50">
@@ -326,7 +356,7 @@ export default function Navbar() {
                   onMouseLeave={handleMouseLeave}
                 >
                   <button className="flex items-center gap-1 text-white text-sm font-light hover:text-white/80 transition-colors py-2">
-                    WHAT WE DO
+                    SERVICES
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
@@ -339,7 +369,7 @@ export default function Navbar() {
                   onMouseLeave={handleMouseLeave}
                 >
                   <button className="flex items-center gap-1 text-white text-sm font-light hover:text-white/80 transition-colors py-2">
-                    WHO WE HELP
+                    INDUSTRIES
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
@@ -407,16 +437,14 @@ export default function Navbar() {
       </nav>
 
       <div
-        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300 ${
-          isMobileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
-        }`}
+        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300 ${isMobileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"
+          }`}
         onClick={toggleMobileMenu}
       />
 
       <div
-        className={`fixed top-0 right-0 h-full w-full sm:w-96 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 z-40 lg:hidden transform transition-transform duration-500 ease-out ${
-          isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-0 right-0 h-full w-full sm:w-96 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 z-40 lg:hidden transform transition-transform duration-500 ease-out ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         <div className="h-full overflow-y-auto pt-20 pb-8 px-6">
           <nav className="space-y-1">
@@ -425,7 +453,7 @@ export default function Navbar() {
                 onClick={() => toggleMobileAccordion("services")}
                 className="w-full flex items-center justify-between py-4 text-white text-lg font-light tracking-wide"
               >
-                WHAT WE DO
+                SERVICES
                 <svg
                   className={`w-4 h-4 transform transition-transform duration-300 ${mobileAccordion === "services" ? "rotate-180" : ""}`}
                   fill="none"
@@ -436,35 +464,23 @@ export default function Navbar() {
                 </svg>
               </button>
               <div className={`overflow-hidden transition-all duration-300 ${mobileAccordion === "services" ? "max-h-[800px] pb-4" : "max-h-0"}`}>
-                <div className="pl-4 space-y-4">
+                <div className="pl-2 pr-2 space-y-1">
                   {navServices.map((service) => (
                     <Link
                       key={service.slug}
                       href={`/services/${service.slug}`}
                       onClick={toggleMobileMenu}
-                      className="block text-white/70 text-sm hover:text-[#00B4FF] transition-colors"
+                      className="group flex items-center gap-3 py-2.5 px-2 text-white/80 text-[14px] hover:text-[#00B4FF] hover:bg-white/5 hover:translate-x-1 transition-all duration-300 rounded-lg border-b border-white/5 last:border-0"
                     >
-                      {service.title}
+                      <div className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#00B4FF]/20 transition-colors">
+                        <ServiceNavIcon slug={service.slug} />
+                      </div>
+                      <span className="flex-1">{service.title}</span>
+                      <svg className="w-3 h-3 opacity-30 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
                     </Link>
                   ))}
-
-                  <div className="mt-4 pt-4 border-t border-white/20">
-                      <p className="text-emerald-400 text-xs font-semibold mb-3">TAX & ACCOUNTING</p>
-                      <Link href="/services/tax-accounting" onClick={toggleMobileMenu} className="block text-white/70 text-sm hover:text-emerald-400 transition-colors mb-2">Comprehensive Tax & Accounting</Link>
-                      <Link href="/services/tax-accounting" onClick={toggleMobileMenu} className="block text-white/70 text-sm hover:text-emerald-400 transition-colors mb-2">Business Incorporation & CFO</Link>
-                      <Link href="/services/tax-accounting" onClick={toggleMobileMenu} className="block text-white/70 text-sm hover:text-emerald-400 transition-colors mb-2">Financial Planning & Forecasting</Link>
-                      <Link href="/services/tax-accounting" onClick={toggleMobileMenu} className="block text-white/70 text-sm hover:text-emerald-400 transition-colors mb-3">Government Grants Assistance</Link>
-                      <Link
-                        href="/services/tax-accounting"
-                        onClick={toggleMobileMenu}
-                        className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white text-sm font-medium px-4 py-2 rounded-lg hover:from-emerald-500 hover:to-emerald-400 transition-all"
-                      >
-                        View All Tax Services
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                      </Link>
-                    </div>
                 </div>
               </div>
             </div>
@@ -474,7 +490,7 @@ export default function Navbar() {
                 onClick={() => toggleMobileAccordion("industries")}
                 className="w-full flex items-center justify-between py-4 text-white text-lg font-light tracking-wide"
               >
-                WHO WE HELP
+                INDUSTRIES
                 <svg
                   className={`w-4 h-4 transform transition-transform duration-300 ${mobileAccordion === "industries" ? "rotate-180" : ""}`}
                   fill="none"
@@ -484,16 +500,22 @@ export default function Navbar() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              <div className={`overflow-hidden transition-all duration-300 ${mobileAccordion === "industries" ? "max-h-[500px] pb-4" : "max-h-0"}`}>
-                <div className="pl-4 space-y-3">
+              <div className={`overflow-hidden transition-all duration-300 ${mobileAccordion === "industries" ? "max-h-[700px] pb-4" : "max-h-0"}`}>
+                <div className="pl-2 pr-2 space-y-1">
                   {navIndustries.map((industry) => (
                     <Link
                       key={industry.slug}
                       href={`/industries/${industry.slug}`}
                       onClick={toggleMobileMenu}
-                      className="block text-white/70 text-sm hover:text-[#00B4FF] transition-colors"
+                      className="group flex items-center gap-3 py-2.5 px-2 text-white/80 text-[14px] hover:text-[#00B4FF] hover:bg-white/5 hover:translate-x-1 transition-all duration-300 rounded-lg border-b border-white/5 last:border-0"
                     >
-                      {industry.title}
+                      <div className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#00B4FF]/20 transition-colors">
+                        <IndustryNavIcon slug={industry.slug} />
+                      </div>
+                      <span className="flex-1">{industry.title}</span>
+                      <svg className="w-3 h-3 opacity-30 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
                     </Link>
                   ))}
                 </div>
@@ -549,11 +571,10 @@ export default function Navbar() {
                   <button
                     key={lang.code}
                     onClick={() => setSelectedLang(lang)}
-                    className={`flex items-center gap-1 px-3 py-1 rounded-full text-sm transition-colors ${
-                      selectedLang.code === lang.code
-                        ? "bg-white/20 text-white"
-                        : "text-white/50 hover:text-white"
-                    }`}
+                    className={`flex items-center gap-1 px-3 py-1 rounded-full text-sm transition-colors ${selectedLang.code === lang.code
+                      ? "bg-white/20 text-white"
+                      : "text-white/50 hover:text-white"
+                      }`}
                   >
                     <span>{lang.flag}</span>
                     <span>{lang.code}</span>
@@ -564,13 +585,13 @@ export default function Navbar() {
 
             <div className="flex items-center gap-4 mt-6">
               <a href="#" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white/70 hover:text-white hover:border-white transition-all">
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" /></svg>
               </a>
               <a href="#" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white/70 hover:text-white hover:border-white transition-all">
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" /></svg>
               </a>
               <a href="#" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white/70 hover:text-white hover:border-white transition-all">
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" /></svg>
               </a>
             </div>
           </div>
@@ -585,67 +606,74 @@ export default function Navbar() {
         >
           <div className="max-w-[1400px] mx-auto px-6 py-8">
             <div className="grid grid-cols-12 gap-6">
-              <div className="col-span-3 border-r border-gray-200 pr-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">WHAT WE DO</h3>
-                <div className="mb-4">
+              <div className="col-span-3 pr-6 flex flex-col border-r border-gray-100">
+                <h3 className="text-xs font-bold text-gray-400 mb-4 uppercase tracking-wider">OUR EXPERTISE</h3>
+                <div className="relative rounded-lg overflow-hidden h-40 mb-6 group cursor-pointer">
                   <Image
                     src="/whatwedo.png"
-                    alt="What We Do"
-                    width={200}
-                    height={120}
-                    className="w-4/5 h-36 object-cover rounded-lg ml-0"
+                    alt="Our Expertise"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                  <p className="absolute bottom-3 left-3 text-white text-sm font-semibold pr-3 leading-tight">
+                    Why data standards matter & why they&apos;re important
+                  </p>
                 </div>
-                <p className="text-gray-700 text-sm">
-                  Why data standards matter & why they&apos;re important
-                </p>
+                <div className="mt-auto">
+                  <Link href="/services" className="text-[#00B4FF] text-sm font-semibold hover:underline">
+                    Explore all services &rarr;
+                  </Link>
+                </div>
               </div>
 
-              <div className="col-span-5 grid grid-cols-2 gap-y-4 gap-x-4 border-r border-gray-200 pr-6">
+              <div className="col-span-5 grid grid-cols-2 gap-y-6 gap-x-8 pr-6">
                 {navServices.map((service) => (
                   <Link
                     key={service.slug}
                     href={`/services/${service.slug}`}
-                    className="flex items-center gap-2 text-gray-700 hover:text-[#00B4FF] transition-colors"
+                    className="flex items-center gap-3 transition-colors group"
                   >
-                    <ServiceNavIcon slug={service.slug} />
-                    <span className="text-sm">{service.title}</span>
+                    <div className="w-8 h-8 rounded bg-gray-100/80 flex items-center justify-center shrink-0 group-hover:bg-[#00E1FF]/10 transition-colors">
+                      <ServiceNavIcon slug={service.slug} />
+                    </div>
+                    <span className="text-sm font-medium text-gray-600 group-hover:bg-gradient-to-r group-hover:from-[#00E1FF] group-hover:to-[#0055FF] group-hover:bg-clip-text group-hover:text-transparent transition-all">{service.title}</span>
                   </Link>
                 ))}
               </div>
 
-              <div className="col-span-4 bg-gradient-to-br from-[#0d9488] via-[#059669] to-[#047857] rounded-2xl p-5 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-                <div className="absolute bottom-0 left-0 w-20 h-20 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2"></div>
-
-                <div className="relative z-10">
-                  <h4 className="text-white font-bold text-base mb-3">Tax & Accounting Services</h4>
-
-                  <div className="space-y-2 mb-4">
-                    <Link href="/services/tax-accounting" className="block border border-white/40 text-white text-xs px-3 py-2 rounded-full hover:bg-white hover:text-[#059669] transition-all duration-300 truncate">
-                      Comprehensive Tax & Accounting
-                    </Link>
-                    <Link href="/services/tax-accounting" className="block border border-white/40 text-white text-xs px-3 py-2 rounded-full hover:bg-white hover:text-[#059669] transition-all duration-300 truncate">
-                      Business Incorporation & CFO
-                    </Link>
-                    <Link href="/services/tax-accounting" className="block border border-white/40 text-white text-xs px-3 py-2 rounded-full hover:bg-white hover:text-[#059669] transition-all duration-300 truncate">
-                      Financial Planning & Forecasting
-                    </Link>
-                    <Link href="/services/tax-accounting" className="block border border-white/40 text-white text-xs px-3 py-2 rounded-full hover:bg-white hover:text-[#059669] transition-all duration-300 truncate">
-                      Government Grants Assistance
-                    </Link>
-                  </div>
-
-                  <Link
-                    href="/services/tax-accounting"
-                    className="w-full bg-white text-[#059669] font-semibold py-2.5 px-4 rounded-lg hover:bg-white/90 transition-all duration-300 flex items-center justify-center gap-2 group text-sm"
-                  >
-                    <span>View All Services</span>
-                    <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              <div className="col-span-4 bg-[#0F172A] rounded-xl p-6 relative overflow-hidden flex flex-col shadow-xl">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-8 h-8 rounded-lg bg-[#3B82F6] flex items-center justify-center shrink-0">
+                    <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                  </Link>
+                  </div>
+                  <h4 className="text-white font-bold text-base">Tax & Accounting</h4>
                 </div>
+
+                <div className="space-y-3 mb-6 flex-1">
+                  {[
+                    "Comprehensive Tax & Accounting",
+                    "Business Incorporation & CFO",
+                    "Financial Planning & Forecasting",
+                    "Government Grants Assistance"
+                  ].map((title, i) => (
+                    <Link key={i} href="/services/tax-accounting" className="block border border-white/10 bg-white/5 text-gray-300 text-xs font-medium px-4 py-3 rounded-lg hover:bg-white/10 hover:text-white hover:border-white/20 transition-all duration-300">
+                      {title}
+                    </Link>
+                  ))}
+                </div>
+
+                <Link
+                  href="/services/tax-accounting"
+                  className="w-full bg-[#3B82F6] text-white font-semibold py-3 px-4 rounded-lg hover:bg-blue-500 transition-all duration-300 flex items-center justify-center gap-2 group text-sm shadow-[0_4px_14px_0_rgba(59,130,246,0.39)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.23)]"
+                >
+                  <span>View All Services</span>
+                  <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </Link>
               </div>
             </div>
           </div>
@@ -660,31 +688,37 @@ export default function Navbar() {
         >
           <div className="max-w-[1400px] mx-auto px-6 py-8">
             <div className="grid grid-cols-12 gap-8">
-              <div className="col-span-3 border-r border-gray-200 pr-8">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">WHO WE HELP</h3>
-                <div className="mb-4">
+              <div className="col-span-3 pr-6 flex flex-col border-r border-gray-100">
+                <h3 className="text-xs font-bold text-gray-400 mb-4 uppercase tracking-wider">INDUSTRIES</h3>
+                <div className="relative rounded-lg overflow-hidden h-40 mb-6 group cursor-pointer">
                   <Image
                     src="/whowehelp.png"
                     alt="Who We Help"
-                    width={200}
-                    height={120}
-                    className="w-4/5 h-36 object-cover rounded-lg ml-0"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                  <p className="absolute bottom-3 left-3 text-white text-sm font-semibold pr-3 leading-tight">
+                    Transforming industries with innovative solutions
+                  </p>
                 </div>
-                <p className="text-gray-700 text-sm">
-                  Transforming industries with innovative solutions
-                </p>
+                <div className="mt-auto">
+                  <Link href="/industries" className="text-[#00B4FF] text-sm font-semibold hover:underline">
+                    Explore all industries &rarr;
+                  </Link>
+                </div>
               </div>
-              <div className="col-span-9 grid grid-cols-2 gap-y-5 gap-x-8">
+              <div className="col-span-9 grid grid-cols-2 gap-y-6 gap-x-8 pl-4">
                 {navIndustries.map((industry) => (
                   <Link
                     key={industry.slug}
                     href={`/industries/${industry.slug}`}
-                    className="flex items-center gap-3 text-gray-700 hover:text-[#00B4FF] transition-colors"
+                    className="flex items-center gap-3 transition-colors group"
                   >
-                    <IndustryNavIcon slug={industry.slug} />
-                    <span className="text-sm">{industry.title}</span>
-                    <span className="text-[#00B4FF]">→</span>
+                    <div className="w-8 h-8 rounded bg-gray-100/80 flex items-center justify-center shrink-0 group-hover:bg-[#00E1FF]/10 transition-colors">
+                      <IndustryNavIcon slug={industry.slug} />
+                    </div>
+                    <span className="text-sm font-medium text-gray-600 group-hover:bg-gradient-to-r group-hover:from-[#00E1FF] group-hover:to-[#0055FF] group-hover:bg-clip-text group-hover:text-transparent transition-all">{industry.title}</span>
                   </Link>
                 ))}
               </div>

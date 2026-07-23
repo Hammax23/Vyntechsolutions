@@ -15,8 +15,8 @@ function mapBlog(entry: Record<string, unknown>): CmsBlogPost {
     title: String(entry.title || ""),
     metaDescription: String(
       entry.metaDescription ||
-        (entry.seo as { metaDescription?: string } | undefined)?.metaDescription ||
-        ""
+      (entry.seo as { metaDescription?: string } | undefined)?.metaDescription ||
+      ""
     ),
     excerpt: String(entry.excerpt || ""),
     category: categoryName,
@@ -156,6 +156,7 @@ export type CmsIndustry = {
   title: string;
   subtitle: string;
   description: string;
+  heroImage?: string;
   heroStats: { value: string; label: string }[];
   challenges: { title: string; description: string }[];
   services: { title: string; description: string }[];
@@ -170,6 +171,7 @@ function mapIndustry(entry: Record<string, unknown>, fallbackSlug?: string): Cms
     title: String(entry.title || ""),
     subtitle: String(entry.subtitle || ""),
     description: String(entry.description || ""),
+    heroImage: typeof entry.hero === "object" && entry.hero !== null ? String((entry.hero as any).url || "") : String(entry.hero || ""),
     heroStats: Array.isArray(entry.heroStats) ? (entry.heroStats as CmsIndustry["heroStats"]) : [],
     challenges: Array.isArray(entry.challenges)
       ? (entry.challenges as CmsIndustry["challenges"])
@@ -191,6 +193,7 @@ export async function getCmsIndustries(
       "populate[1]": "challenges",
       "populate[2]": "services",
       "populate[3]": "seo",
+      "populate[4]": "hero",
       "sort": "order:asc",
       "pagination[pageSize]": 100,
     },
@@ -214,6 +217,7 @@ export async function getCmsIndustry(
       "populate[1]": "challenges",
       "populate[2]": "services",
       "populate[3]": "seo",
+      "populate[4]": "hero",
       "pagination[pageSize]": 1,
     },
     tags: ["strapi", "industries", `industry-${slug}`],

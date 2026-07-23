@@ -105,7 +105,7 @@ export default function AboutPage() {
           setSections(page.sections as AboutSections);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
     return () => {
       cancelled = true;
     };
@@ -116,7 +116,7 @@ export default function AboutPage() {
       return (
         <>
           We Build Software
-          <span className="block text-blue-400">That Drives Growth</span>
+          <span className="block bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text">That Drives Growth</span>
         </>
       );
     }
@@ -126,7 +126,7 @@ export default function AboutPage() {
         <>
           {first}
           {rest.length > 0 && (
-            <span className="block text-blue-400">{rest.join("\n")}</span>
+            <span className="block bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text">{rest.join("\n")}</span>
           )}
         </>
       );
@@ -142,11 +142,11 @@ export default function AboutPage() {
         <section ref={heroRef} className="relative bg-[#0a0a14] pt-32 pb-24 overflow-hidden">
           {/* Background Elements */}
           <div className="absolute inset-0">
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#00E1FF]/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#0055FF]/10 rounded-full blur-3xl" />
             <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.02]" />
           </div>
-          
+
           <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6">
             {/* Breadcrumb */}
             <div className={`flex items-center gap-2 text-white/40 text-sm mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
@@ -162,7 +162,7 @@ export default function AboutPage() {
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-[1.1]">
                   {renderHeroHeading()}
                 </h1>
-                
+
                 <p className="text-lg text-white/60 mb-8 leading-relaxed">
                   {heroBody ||
                     "VynTech Solutions is a full-service software development company helping businesses transform ideas into powerful digital products."}
@@ -197,7 +197,7 @@ export default function AboutPage() {
               <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
                 <div className="grid lg:grid-cols-2 gap-16 items-center">
                   <div>
-                    <span className="inline-block text-sm font-semibold text-blue-600 tracking-wider uppercase mb-4">Our Mission</span>
+                    <span className="inline-block text-sm font-semibold bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text tracking-wider uppercase mb-4">Our Mission</span>
                     <h2 className="text-3xl sm:text-4xl font-bold text-[#1a1a2e] mb-6 leading-tight">
                       {sections?.missionHeading ||
                         "Empowering Businesses Through Innovative Technology"}
@@ -206,63 +206,64 @@ export default function AboutPage() {
                       {sections?.missionBody ||
                         "We believe every business deserves access to world-class software. Our mission is to bridge the gap between visionary ideas and technical execution — delivering solutions that are not just functional, but transformative."}
                     </p>
-                    <p className="text-gray-600 leading-relaxed">
+                    <p className="text-gray-600 leading-relaxed mb-10">
                       {sections?.missionBody2 ||
                         "Whether you\u2019re a startup validating your first MVP or an enterprise modernizing legacy systems, we bring the same level of dedication, expertise, and passion to every project."}
                     </p>
+                    <button
+                      onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
+                      className="inline-flex items-center gap-2 bg-[#1DA1F2] hover:bg-[#1DA1F2]/90 text-white px-8 py-3.5 rounded-full font-semibold transition-all shadow-lg shadow-[#1DA1F2]/20"
+                    >
+                      Work With Us
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
+                    </button>
                   </div>
-                  
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-3xl blur-2xl opacity-20" />
-                    <div className="relative bg-[#1a1a2e] rounded-3xl p-8 sm:p-10">
-                      <div className="grid grid-cols-2 gap-6">
-                        <div className="text-center p-4">
-                          <div className="text-4xl font-bold text-white mb-2">5+</div>
-                          <div className="text-sm text-white/60">Years of Excellence</div>
+
+                  <div className="flex flex-col gap-4 relative z-10">
+                    {[
+                      { title: "Web Design & Development", subtitle: "500+ custom websites delivered", icon: "💻" },
+                      { title: "SEO & Digital Marketing", subtitle: "300% avg traffic growth for clients", icon: "📈" },
+                      { title: "UI/UX", subtitle: "Branding for 100+ Canadian businesses", icon: "🎨" },
+                      { title: "AI & ML", subtitle: "Automation strategies that save hours", icon: "🤖" },
+                    ].map((stat, i) => (
+                      <div key={i} className="flex items-center gap-5 bg-white p-6 rounded-2xl border border-gray-100 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1)] transition-shadow cursor-default">
+                        <div className="w-12 h-12 flex-shrink-0 bg-gray-50 rounded-xl flex items-center justify-center text-2xl border border-gray-100">
+                          {stat.icon}
                         </div>
-                        <div className="text-center p-4">
-                          <div className="text-4xl font-bold text-white mb-2">30+</div>
-                          <div className="text-sm text-white/60">Expert Engineers</div>
-                        </div>
-                        <div className="text-center p-4">
-                          <div className="text-4xl font-bold text-white mb-2">24/7</div>
-                          <div className="text-sm text-white/60">Support Available</div>
-                        </div>
-                        <div className="text-center p-4">
-                          <div className="text-4xl font-bold text-white mb-2">3x</div>
-                          <div className="text-sm text-white/60">Faster Delivery</div>
+                        <div>
+                          <h4 className="font-bold text-[#1a1a2e] text-base mb-1">{stat.title}</h4>
+                          <p className="text-gray-500 text-sm">{stat.subtitle}</p>
                         </div>
                       </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
               </div>
             </section>
 
             {/* Values Section */}
-            <section className="py-24 bg-gray-50">
+            <section className="py-24 bg-[#0a0a14]">
               <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
                 <div className="text-center mb-16">
-                  <span className="inline-block text-sm font-semibold text-blue-600 tracking-wider uppercase mb-4">Our Values</span>
-                  <h2 className="text-3xl sm:text-4xl font-bold text-[#1a1a2e] mb-4">
-                    What Drives Us Every Day
+                  <span className="inline-block text-sm font-semibold text-[#00E1FF] tracking-widest uppercase mb-4">What Drives Us</span>
+                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+                    Our Core Values
                   </h2>
-                  <p className="text-gray-600 max-w-2xl mx-auto">
-                    These aren&apos;t just words on a wall — they&apos;re principles that guide every decision we make.
-                  </p>
                 </div>
 
                 <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
                   {values.map((value, index) => (
                     <div
                       key={index}
-                      className="group bg-white rounded-2xl p-6 border border-gray-100 hover:border-gray-200 hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300 hover:-translate-y-1"
+                      className="bg-[#1a1a2e] rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300"
                     >
-                      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${value.gradient} flex items-center justify-center text-white mb-5 group-hover:scale-110 transition-transform`}>
+                      <div className="w-12 h-12 rounded-xl bg-[#00E1FF]/10 text-[#00E1FF] flex items-center justify-center mb-6">
                         {value.icon}
                       </div>
-                      <h3 className="text-lg font-semibold text-[#1a1a2e] mb-2">{value.title}</h3>
-                      <p className="text-gray-600 text-sm leading-relaxed">{value.description}</p>
+                      <h3 className="text-xl font-bold text-white mb-3">{value.title}</h3>
+                      <p className="text-white/60 text-sm leading-relaxed">{value.description}</p>
                     </div>
                   ))}
                 </div>
@@ -273,7 +274,7 @@ export default function AboutPage() {
             <section className="py-24 bg-white">
               <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
                 <div className="text-center mb-16">
-                  <span className="inline-block text-sm font-semibold text-blue-600 tracking-wider uppercase mb-4">Our Process</span>
+                  <span className="inline-block text-sm font-semibold bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text tracking-wider uppercase mb-4">Our Process</span>
                   <h2 className="text-3xl sm:text-4xl font-bold text-[#1a1a2e] mb-4">
                     How We Bring Ideas to Life
                   </h2>
@@ -286,10 +287,10 @@ export default function AboutPage() {
                   {processSteps.map((step, index) => (
                     <div key={index} className="relative">
                       {index < processSteps.length - 1 && (
-                        <div className="hidden lg:block absolute top-8 left-full w-full h-[2px] bg-gradient-to-r from-blue-500/30 to-transparent -translate-x-4" />
+                        <div className="hidden lg:block absolute top-8 left-full w-full h-[2px] bg-gradient-to-r from-[#00E1FF]/30 to-transparent -translate-x-4" />
                       )}
                       <div className="relative bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border border-gray-100">
-                        <div className="text-5xl font-bold bg-gradient-to-br from-blue-500 to-purple-500 bg-clip-text text-transparent mb-4">
+                        <div className="text-5xl font-bold bg-gradient-to-br from-[#00E1FF] to-[#0055FF] bg-clip-text text-transparent mb-4">
                           {step.number}
                         </div>
                         <h3 className="text-lg font-semibold text-[#1a1a2e] mb-2">{step.title}</h3>
@@ -310,14 +311,14 @@ export default function AboutPage() {
         <section className="py-24 bg-[#0a0a14] relative overflow-hidden">
           {/* Background */}
           <div className="absolute inset-0">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-[#00E1FF]/20 to-[#0055FF]/20 rounded-full blur-3xl" />
           </div>
-          
+
           <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6">
             <div className="text-center max-w-3xl mx-auto">
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
                 Ready to Build Something
-                <span className="block bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                <span className="block bg-gradient-to-r from-[#00E1FF] to-[#0055FF] bg-clip-text text-transparent">
                   Extraordinary?
                 </span>
               </h2>
@@ -327,7 +328,7 @@ export default function AboutPage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
                   onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
-                  className="group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4 rounded-xl font-semibold hover:opacity-90 transition-all shadow-lg shadow-blue-500/25"
+                  className="group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-white px-8 py-4 rounded-xl font-semibold hover:opacity-90 transition-all shadow-lg shadow-[#0055FF]/25"
                 >
                   Start Your Project
                   <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">

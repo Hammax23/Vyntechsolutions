@@ -17,11 +17,11 @@ const techPartners = [
   { name: "Salesforce", url: "https://www.salesforce.com", logo: "https://www.vectorlogo.zone/logos/salesforce/salesforce-icon.svg" },
 ];
 
-// Industry data with icons
 const industries = [
   {
     id: 1,
     name: "Healthcare",
+    href: "/contact?industry=healthcare",
     icon: (
       <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
@@ -31,6 +31,7 @@ const industries = [
   {
     id: 2,
     name: "Finance & Banking",
+    href: "/contact?industry=finance-banking",
     icon: (
       <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3" />
@@ -40,6 +41,7 @@ const industries = [
   {
     id: 3,
     name: "E-commerce & Retail",
+    href: "/contact?industry=ecommerce-retail",
     icon: (
       <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17M17 17a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM9 17a2 2 0 1 0 0 4 2 2 0 0 0 0-4z" />
@@ -49,6 +51,7 @@ const industries = [
   {
     id: 4,
     name: "Education & E-learning",
+    href: "/contact?industry=education-elearning",
     icon: (
       <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <path d="M12 14l9-5-9-5-9 5 9 5z" />
@@ -60,6 +63,7 @@ const industries = [
   {
     id: 5,
     name: "Real Estate",
+    href: "/contact?industry=real-estate",
     icon: (
       <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <path d="M3 21h18M5 21V7l8-4 8 4v14M9 21v-6h6v6" />
@@ -69,6 +73,7 @@ const industries = [
   {
     id: 6,
     name: "Logistics & Transportation",
+    href: "/contact?industry=logistics-transportation",
     icon: (
       <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <path d="M16 3h5v5M4 20L20.2 3.8M21 16v5h-5M15 15l5.1 5.1M4 4l5 5" />
@@ -79,6 +84,7 @@ const industries = [
   {
     id: 7,
     name: "Entertainment & Media",
+    href: "/contact?industry=entertainment-media",
     icon: (
       <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <rect x="2" y="4" width="20" height="16" rx="2" />
@@ -89,6 +95,7 @@ const industries = [
   {
     id: 8,
     name: "Manufacturing",
+    href: "/contact?industry=manufacturing",
     icon: (
       <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <path d="M14 2v4a2 2 0 0 0 2 2h4" />
@@ -100,6 +107,7 @@ const industries = [
   {
     id: 9,
     name: "Hospitality & Travel",
+    href: "/contact?industry=hospitality-travel",
     icon: (
       <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <path d="M4 10V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4M2 14h20M4 10h16a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2z" />
@@ -109,6 +117,7 @@ const industries = [
   {
     id: 10,
     name: "Telecommunications",
+    href: "/contact?industry=telecommunications",
     icon: (
       <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
         <path d="M8.111 16.404a5.5 5.5 0 0 1 7.778 0M12 20h.01M5.636 13.636a9 9 0 0 1 12.728 0M2.05 10.636a13.5 13.5 0 0 1 19.9 0" />
@@ -116,6 +125,7 @@ const industries = [
     ),
   },
 ];
+
 
 export default function IndustriesImpact() {
   const [isVisible, setIsVisible] = useState(false);
@@ -154,8 +164,9 @@ export default function IndustriesImpact() {
     index: number; 
     isLeft: boolean;
   }) => (
-    <div
-      className={`group flex items-center justify-between py-5 border-b border-gray-200 cursor-pointer transition-all duration-300 ${
+    <Link
+      href={industry.href}
+      className={`group flex items-center justify-between py-5 border-b border-gray-200 transition-all duration-300 ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
       }`}
       style={{ transitionDelay: `${index * 100}ms` }}
@@ -164,12 +175,12 @@ export default function IndustriesImpact() {
     >
       <div className="flex items-center gap-4">
         <span className={`text-gray-700 transition-colors duration-300 ${
-          hoveredItem === industry.id ? "text-[#0d9488]" : ""
+          hoveredItem === industry.id ? "text-[#0055FF]" : ""
         }`}>
           {industry.icon}
         </span>
         <span className={`text-base sm:text-lg font-medium text-gray-800 transition-colors duration-300 ${
-          hoveredItem === industry.id ? "text-[#0d9488]" : ""
+          hoveredItem === industry.id ? "text-[#0055FF]" : ""
         }`}>
           {industry.name}
         </span>
@@ -180,7 +191,7 @@ export default function IndustriesImpact() {
         hoveredItem === industry.id ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2"
       }`}>
         <svg 
-          className="w-5 h-5 text-[#0d9488]" 
+          className="w-5 h-5 text-[#0055FF]" 
           fill="none" 
           viewBox="0 0 24 24" 
           stroke="currentColor"
@@ -188,7 +199,7 @@ export default function IndustriesImpact() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
       </div>
-    </div>
+    </Link>
   );
 
   return (

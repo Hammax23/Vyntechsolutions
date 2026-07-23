@@ -6,9 +6,10 @@ import Image from "next/image";
 interface VynTechLogoProps {
   className?: string;
   onClick?: () => void;
+  darkText?: boolean;
 }
 
-export default function VynTechLogo({ className = "", onClick }: VynTechLogoProps) {
+export default function VynTechLogo({ className = "", onClick, darkText = false }: VynTechLogoProps) {
   return (
     <div
       onClick={onClick}
@@ -27,7 +28,7 @@ export default function VynTechLogo({ className = "", onClick }: VynTechLogoProp
 
       <div className="flex items-center gap-1.5 lg:gap-2 -translate-y-0.5">
         <span
-          className="text-[1.4rem] lg:text-[1.85rem] tracking-[0.01em] leading-none text-white font-light lowercase"
+          className={`text-[1.4rem] lg:text-[1.85rem] tracking-[0.01em] leading-none font-light lowercase ${darkText ? 'text-[#1a1a2e]' : 'text-white'}`}
           style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}
         >
           vyntech

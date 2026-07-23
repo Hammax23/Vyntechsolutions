@@ -620,6 +620,7 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
 export interface ApiIndustryIndustry extends Struct.CollectionTypeSchema {
   collectionName: 'industries';
   info: {
+    description: '';
     displayName: 'Industry';
     pluralName: 'industries';
     singularName: 'industry';
@@ -633,6 +634,7 @@ export interface ApiIndustryIndustry extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     description: Schema.Attribute.Text;
+    hero: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     heroStats: Schema.Attribute.Component<'shared.stat', true>;
     highlights: Schema.Attribute.JSON;
     locale: Schema.Attribute.String & Schema.Attribute.Private;

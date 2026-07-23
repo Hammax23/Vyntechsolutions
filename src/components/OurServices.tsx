@@ -204,7 +204,7 @@ export default function OurServices() {
         if (hp.servicesSubheading) setSubheading(String(hp.servicesSubheading));
         if (hp.servicesBody) setBody(String(hp.servicesBody));
       })
-      .catch(() => {});
+      .catch(() => { });
 
     fetch("/api/cms/services")
       .then((r) => (r.ok ? r.json() : null))
@@ -231,7 +231,7 @@ export default function OurServices() {
           })
         );
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   useEffect(() => {
@@ -274,7 +274,7 @@ export default function OurServices() {
 
     let scrollPosition = 0;
     const scrollSpeed = 1;
-    
+
     const animate = () => {
       scrollPosition += scrollSpeed;
       const halfWidth = scrollContainer.scrollWidth / 2;
@@ -289,11 +289,10 @@ export default function OurServices() {
   }, [isVisible]);
 
   return (
-    <section 
+    <section
       ref={sectionRef}
-      className={`w-full bg-gradient-to-br from-[#e8f4f8] via-[#f0f0f0] to-[#e8f0f4] py-16 sm:py-20 md:py-24 lg:py-28 transition-all duration-1000 overflow-hidden ${
-        isVisible ? "opacity-100" : "opacity-0"
-      }`}
+      className={`w-full bg-gradient-to-br from-[#e8f4f8] via-[#f0f0f0] to-[#e8f0f4] py-16 sm:py-20 md:py-24 lg:py-28 transition-all duration-1000 overflow-hidden ${isVisible ? "opacity-100" : "opacity-0"
+        }`}
     >
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-12 lg:px-20">
         {/* Header: title + subheading stacked tight; SEO card in right column */}
@@ -396,13 +395,12 @@ export default function OurServices() {
         </div>
 
         {/* Enterprise Service Cards - Modern Grid */}
-        <div 
+        <div
           ref={cardsRef}
-          className={`transition-all duration-1000 delay-300 ${
-            cardsVisible 
-              ? "opacity-100 translate-y-0" 
-              : "opacity-0 translate-y-8"
-          }`}
+          className={`transition-all duration-1000 delay-300 ${cardsVisible
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-8"
+            }`}
         >
           {/* Grid - 5 columns on desktop, responsive on smaller screens */}
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-5 lg:gap-6">
@@ -419,36 +417,36 @@ export default function OurServices() {
                 <div className="relative h-full bg-white rounded-2xl p-5 sm:p-6 border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
                   {/* Gradient accent line at top */}
                   <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${card.gradient} transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500`} />
-                  
+
                   {/* Background gradient on hover */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${card.lightGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-                  
+
                   {/* Content */}
                   <div className="relative z-10">
                     {/* Icon */}
                     <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br ${card.gradient} p-3 text-white mb-4 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
                       {ServiceIcons[card.icon as keyof typeof ServiceIcons]}
                     </div>
-                    
+
                     {/* Title */}
                     <h4 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 group-hover:text-gray-800 transition-colors leading-tight">
                       {card.title}
                     </h4>
-                    
+
                     {/* Description */}
                     <p className="text-sm text-gray-500 leading-relaxed line-clamp-2 group-hover:text-gray-600 transition-colors">
                       {card.description}
                     </p>
-                    
+
                     {/* Arrow indicator */}
                     <div className="mt-4 flex items-center text-sm font-medium">
                       <span className={`bg-gradient-to-r ${card.gradient} bg-clip-text text-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 transform -translate-x-2 group-hover:translate-x-0`}>
                         Learn more
                       </span>
-                      <svg 
+                      <svg
                         className={`w-4 h-4 ml-1 opacity-0 group-hover:opacity-100 transition-all duration-300 transform -translate-x-4 group-hover:translate-x-0`}
-                        fill="none" 
-                        viewBox="0 0 24 24" 
+                        fill="none"
+                        viewBox="0 0 24 24"
                         stroke="url(#arrow-gradient)"
                         strokeWidth="2"
                       >
@@ -470,10 +468,9 @@ export default function OurServices() {
 
         {/* Tech Stack Carousel */}
         <div className="mt-10 sm:mt-12 md:mt-14 lg:mt-16">
-          <div 
-            className={`relative transition-all duration-700 delay-500 ${
-              isVisible ? "opacity-100" : "opacity-0"
-            }`}
+          <div
+            className={`relative transition-all duration-700 delay-500 ${isVisible ? "opacity-100" : "opacity-0"
+              }`}
           >
             {/* Gradient Overlays */}
             <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 md:w-32 bg-gradient-to-r from-[#e8f4f8] to-transparent z-10 pointer-events-none" />

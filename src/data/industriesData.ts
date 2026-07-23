@@ -2,6 +2,7 @@ export type IndustryData = {
   title: string;
   subtitle: string;
   description: string;
+  heroImage?: string;
   heroStats: { value: string; label: string }[];
   challenges: { title: string; description: string }[];
   services: { title: string; description: string }[];
