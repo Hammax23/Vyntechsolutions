@@ -45,12 +45,17 @@ const faqData = [
   }
 ];
 
-export default function FAQ() {
+export default function FAQ({ faqs }: { faqs?: { question: string; answer: string }[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const toggleAccordion = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
+
+  const displayFaqs = (faqs && faqs.length > 0) ? faqs : faqData;
+
+  // Only render if we have FAQs to display
+  if (!displayFaqs || displayFaqs.length === 0) return null;
 
   return (
     <section className="w-full bg-white py-12">
@@ -71,7 +76,7 @@ export default function FAQ() {
 
         {/* Accordion */}
         <div className="space-y-2.5">
-          {faqData.map((faq, index) => {
+          {displayFaqs.map((faq, index) => {
             const isOpen = openIndex === index;
             return (
               <div 

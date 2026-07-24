@@ -77,6 +77,7 @@ export default function HeroSection() {
         const heroSlides = data?.homepage?.heroSlides;
         if (!Array.isArray(heroSlides) || heroSlides.length === 0) return;
 
+        // We pull the slides from the CMS to ensure they are fully dynamic
         setSlides(
           heroSlides.map((s: { heading?: string; subtext?: string }) => ({
             heading: String(s.heading || "").replace(/\\n/g, "\n"),
@@ -225,7 +226,7 @@ export default function HeroSection() {
   const activeSlide = slides[currentSlide] ?? slides[0];
 
   return (
-    <section className="relative w-full h-[85vh] min-h-[600px] overflow-hidden">
+    <section className="relative w-full min-h-screen overflow-hidden flex flex-col justify-center">
       {/* Fallback Background for Loading */}
       <div
         className={`absolute inset-0 bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460] transition-opacity duration-500 ${mediaLoaded ? "opacity-0" : "opacity-100"
@@ -295,7 +296,7 @@ export default function HeroSection() {
       <div className="absolute inset-0 bg-black/30 z-[3]" />
 
       {/* Content */}
-      <div className="relative z-[10] h-full flex items-center justify-center text-center">
+      <div className="relative z-[10] w-full flex-1 flex items-center justify-center text-center pt-24 md:pt-32 pb-12">
         <div className="max-w-[1400px] mx-auto px-6 w-full">
           <div className="max-w-4xl mx-auto flex flex-col items-center">
             {/* Text Container with fixed minimum height to prevent button from jumping */}

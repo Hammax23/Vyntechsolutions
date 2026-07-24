@@ -87,8 +87,8 @@ export default function Footer() {
                   <Image src="https://flagcdn.com/w40/ca.png" alt="Canada Flag" width={20} height={14} className="object-cover rounded-sm shadow-sm" />
                 </h4>
                 <p className="text-[#4A5568] text-sm leading-relaxed">
-                  231 Oak Park Blvd, Suit#301,<br />
-                  Oakville, ON L6H 7S8
+                  55 Village Centre Pl #200,<br />
+                  Mississauga, ON L4Z 1V9
                 </p>
               </div>
 
@@ -229,8 +229,8 @@ export default function Footer() {
               <Image src="https://flagcdn.com/w40/ca.png" alt="Canada Flag" width={20} height={14} className="object-cover rounded-sm shadow-sm" />
             </h4>
             <p className="text-[#4A5568] text-sm leading-relaxed">
-              231 Oak Park Blvd, Suit#301,<br />
-              Oakville, ON L6H 7S8
+              55 Village Centre Pl #200,<br />
+              Mississauga, ON L4Z 1V9
             </p>
           </div>
 

@@ -124,15 +124,13 @@ export default function TechnologyImpact() {
             }`}
           >
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-bold text-[#1a1a2e] leading-tight mb-6 sm:mb-8">
-              Translating technology
+              Turning Technology Into
               <br />
-              into a positive impact
+              Real Business Impact
             </h2>
             
             <p className="text-base sm:text-lg text-gray-600 leading-relaxed mb-8 max-w-[500px]">
-              Our approach allows us to deliver exceptional experiences that drive 
-              growth and success for all stakeholders. Let&apos;s rise to new heights with the 
-              power of digital transformation.
+              We don't just build software we build outcomes. Every project is guided by one question: Does this genuinely move your business forward? That focus is what turns technology into growth, and growth into lasting success.
             </p>
 
             <Link

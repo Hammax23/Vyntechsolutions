@@ -27,17 +27,72 @@ const allServices = [
 
 // Icon component
 const FeatureIcon = ({ type }: { type: string }) => {
-  const icons: { [key: string]: JSX.Element } = {
-    code: <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />,
-    mobile: <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />,
-    api: <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />,
-    speed: <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />,
-    default: <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+  const iconPaths: Record<string, string> = {
+    // Development
+    code: "M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5",
+    api: "M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5",
+    iac: "M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5", // code
+
+    // Devices & Mobile
+    mobile: "M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3",
+    apple: "M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3", // mobile
+    android: "M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3", // mobile
+
+    // Speed & Performance
+    speed: "M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z",
+    performance: "M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z", // speed
+    modernize: "M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z", // speed
+
+    // Ecommerce & Shopping
+    custom: "M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z",
+    store: "M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.999 2.999 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.999 2.999 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V15a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.75c0 .415.336.75.75.75z",
+    payment: "M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z",
+    inventory: "M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12",
+
+    // Abstract & Platforms
+    platform: "M14.25 6.087c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.036-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959v0a.64.64 0 01-.657.643 48.39 48.39 0 01-4.163-.3c.186 1.613.293 3.25.315 4.907a.656.656 0 01-.658.663v0c-.355 0-.676-.186-.959-.401a1.647 1.647 0 00-1.003-.349c-1.036 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401v0c.31 0 .555.26.536.57a48.053 48.053 0 01-.223 5.162c1.613-.186 3.25-.293 4.907-.315a.656.656 0 01.663.658v0c0 .355-.186.676-.401.959a1.647 1.647 0 00-.349 1.003c0 1.036 1.007 1.875 2.25 1.875s2.25-.84 2.25-1.875a1.647 1.647 0 00-.349-1.003c-.215-.283-.401-.604-.401-.959v0c0-.31.26-.555.57-.536a48.053 48.053 0 015.162.223c-.186-1.613-.293-3.25-.315-4.907a.656.656 0 01.658-.663v0c.355 0 .676.186.959.401.29.221.634.349 1.003.349 1.036 0 1.875-1.007 1.875-2.25s-.84-2.25-1.875-2.25a1.647 1.647 0 00-1.003.349c-.283.215-.604.401-.959.401v0c-.31 0-.555-.26-.536-.57a48.053 48.053 0 01.223-5.162c-1.613.186-3.25.293-4.907.315a.656.656 0 01-.663-.658v0z",
+    integration: "M14.25 6.087c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.036-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959v0a.64.64 0 01-.657.643 48.39 48.39 0 01-4.163-.3c.186 1.613.293 3.25.315 4.907a.656.656 0 01-.658.663v0c-.355 0-.676-.186-.959-.401a1.647 1.647 0 00-1.003-.349c-1.036 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401v0c.31 0 .555.26.536.57a48.053 48.053 0 01-.223 5.162c1.613-.186 3.25-.293 4.907-.315a.656.656 0 01.663.658v0c0 .355-.186.676-.401.959a1.647 1.647 0 00-.349 1.003c0 1.036 1.007 1.875 2.25 1.875s2.25-.84 2.25-1.875a1.647 1.647 0 00-.349-1.003c-.215-.283-.401-.604-.401-.959v0c0-.31.26-.555.57-.536a48.053 48.053 0 015.162.223c-.186-1.613-.293-3.25-.315-4.907a.656.656 0 01.658-.663v0c.355 0 .676.186.959.401.29.221.634.349 1.003.349 1.036 0 1.875-1.007 1.875-2.25s-.84-2.25-1.875-2.25a1.647 1.647 0 00-1.003.349c-.283.215-.604.401-.959.401v0c-.31 0-.555-.26-.536-.57a48.053 48.053 0 01.223-5.162c-1.613.186-3.25.293-4.907.315a.656.656 0 01-.663-.658v0z", // platform
+    cross: "M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15",
+
+    // Cloud & Infrastructure
+    multicloud: "M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z",
+    saas: "M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z", // cloud
+    serverless: "M21.75 17.25v-.228a4.5 4.5 0 00-.12-1.03l-2.268-9.64a3.375 3.375 0 00-3.285-2.602H7.923a3.375 3.375 0 00-3.285 2.602l-2.268 9.64a4.5 4.5 0 00-.12 1.03v.228m19.5 0a3 3 0 01-3 3H5.25a3 3 0 01-3-3m19.5 0a3 3 0 00-3-3H5.25a3 3 0 00-3 3m16.5 0h.008v.008h-.008v-.008zm-3 0h.008v.008h-.008v-.008z",
+    container: "M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9",
+    pipeline: "M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z",
+    migrate: "M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99",
+
+    // Analysis & AI
+    ml: "M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 002.25-2.25V6.75a2.25 2.25 0 00-2.25-2.25H6.75A2.25 2.25 0 004.5 6.75v10.5a2.25 2.25 0 002.25 2.25zm.75-12h9v9h-9v-9z",
+    nlp: "M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 002.25-2.25V6.75a2.25 2.25 0 00-2.25-2.25H6.75A2.25 2.25 0 004.5 6.75v10.5a2.25 2.25 0 002.25 2.25zm.75-12h9v9h-9v-9z", // ml
+    vision: "M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z M15 12a3 3 0 11-6 0 3 3 0 016 0z",
+    analytics: "M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z",
+
+    // Screens & General
+    monitor: "M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25",
+    monitoring: "M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25", // monitor
+    visual: "M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25", // monitor
+
+    // Tools & Others
+    technical: "M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.905-4.905M11.42 15.17l-4.905 4.905",
+    content: "M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z",
+    security: "M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z",
+    support: "M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z",
+    research: "M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z",
+    strategy: "M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z",
+    prototype: "M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5",
+    enterprise: "M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z",
+    architecture: "M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z", // enterprise
+    ppc: "M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zm-7.518-.267A8.25 8.25 0 1120.25 10.5M8.288 14.212A5.25 5.25 0 1117.25 10.5",
+
+    default: "M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"
   };
+
+  const pathD = iconPaths[type] || iconPaths.default;
 
   return (
     <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-      {icons[type] || icons.default}
+      <path strokeLinecap="round" strokeLinejoin="round" d={pathD} />
     </svg>
   );
 };
@@ -311,37 +366,25 @@ const CategorizedTechStack = () => {
 };
 
 // How We Deliver Services Accordion Component
-const deliveryAccordionItems = [
-  {
-    title: "Discovery & Product Strategy",
-    content: "We define product goals, target audience requirements, feature prioritization, system architecture blueprints, and a clear execution roadmap before writing code."
-  },
-  {
-    title: "UX/UI Design & Prototyping",
-    content: "Our design team crafts intuitive user journeys, wireframes, high-fidelity UI components, and interactive prototypes tailored for high conversion and seamless interaction."
-  },
-  {
-    title: "Agile Engineering & QA",
-    content: "We build scalable frontend and backend systems using agile 2-week sprints, automated unit/integration testing, continuous code reviews, and frequent demo deployments."
-  },
-  {
-    title: "Cloud Deployment & DevOps",
-    content: "We establish automated CI/CD pipelines, containerized environments, secure cloud infrastructure, and zero-downtime deployment strategies on AWS, Azure, or GCP."
-  },
-  {
-    title: "Support, Optimize & Scale",
-    content: "After launch, we continuously monitor app performance, perform security audits, optimize load times, and ship ongoing feature enhancements to support your business growth."
-  }
-];
-
-
-
-const WebDevDeliveryModelSection = () => {
+const WebDevDeliveryModelSection = ({
+  heading,
+  description,
+  steps,
+}: {
+  heading?: string;
+  description?: string;
+  steps?: { title: string; content: string }[];
+}) => {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
 
   const toggleAccordion = (idx: number) => {
     setOpenIdx(openIdx === idx ? null : idx);
   };
+
+  // Only render if we have Strapi content for this section
+  if (!heading || !steps || steps.length === 0) return null;
+
+  const sectionDescription = description ? description.split('\n\n') : [];
 
   return (
     <section className="py-20 bg-white border-t border-gray-100">
@@ -354,27 +397,21 @@ const WebDevDeliveryModelSection = () => {
             </span>
 
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0f172a] mb-6 leading-tight">
-              How We Deliver Web Application Development Services
+              {heading}
             </h2>
 
             <div className="w-20 h-1 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full mb-8" />
 
             <div className="space-y-5 text-gray-600 text-sm sm:text-base leading-relaxed">
-              <p>
-                Web application development only pays off when the product is fast, secure, easy to use, and built to scale. At <strong className="text-[#0055FF] font-semibold">VynTech Solutions</strong>, our delivery model is structured, outcome-oriented, and refined across hundreds of web and product engagements.
-              </p>
-              <p>
-                We work in clear phases so discovery is thorough, build quality is high, and launches are predictable. Scope, timelines, architecture, and support are defined upfront, which removes ambiguity and gives stakeholders full visibility from day one.
-              </p>
-              <p>
-                By pairing human-centric UI/UX design with product-grade engineering, we move your business from fragile websites to a web application that performs, converts, and compounds value release after release.
-              </p>
+              {sectionDescription.map((para, i) => (
+                <p key={i} dangerouslySetInnerHTML={{ __html: para.replace("VynTech Solutions", '<strong class="text-[#0055FF] font-semibold">VynTech Solutions</strong>') }} />
+              ))}
             </div>
           </div>
 
           {/* Right Column: Expandable Accordions */}
           <div className="lg:col-span-6 space-y-4">
-            {deliveryAccordionItems.map((phase, idx) => {
+            {steps.map((phase, idx) => {
               const isOpen = openIdx === idx;
               return (
                 <div
@@ -885,252 +922,135 @@ const EcommerceHeroGraphic = () => {
   return (
     <div className="relative w-full h-[340px] sm:h-[480px] flex items-center justify-center overflow-visible py-4">
       {/* Background glows */}
-      <div className="absolute w-80 h-80 sm:w-[500px] sm:h-[500px] bg-[#1e40af]/12 rounded-full blur-3xl -z-10" />
-      <div className="absolute w-52 h-52 sm:w-80 sm:h-80 bg-[#00E1FF]/8 rounded-full blur-2xl -z-10 translate-x-20 -translate-y-10" />
+      <div className="absolute w-80 h-80 sm:w-[500px] sm:h-[500px] bg-[#0055FF]/15 rounded-full blur-3xl -z-10" />
+      <div className="absolute w-52 h-52 sm:w-80 sm:h-80 bg-[#00E1FF]/10 rounded-full blur-2xl -z-10 translate-x-20 -translate-y-10" />
 
       <svg
         viewBox="0 0 600 440"
-        className="w-full max-w-[600px] h-auto"
+        className="w-full max-w-[600px] h-auto drop-shadow-2xl"
         xmlns="http://www.w3.org/2000/svg"
         overflow="visible"
       >
         <defs>
-          {/* Phone shadow */}
-          <filter id="phoneShadow" x="-20%" y="-10%" width="140%" height="130%">
-            <feDropShadow dx="0" dy="16" stdDeviation="18" floodColor="#0f172a" floodOpacity="0.35" />
+          <filter id="shadow3d" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="16" stdDeviation="18" floodColor="#0f172a" floodOpacity="0.25" />
           </filter>
-          {/* Card shadow */}
           <filter id="cardShadow" x="-15%" y="-15%" width="130%" height="140%">
-            <feDropShadow dx="0" dy="4" stdDeviation="8" floodColor="#1e3a8a" floodOpacity="0.12" />
+            <feDropShadow dx="0" dy="6" stdDeviation="10" floodColor="#0055FF" floodOpacity="0.15" />
           </filter>
-          {/* Badge shadow */}
-          <filter id="badgeShadow" x="-20%" y="-20%" width="140%" height="160%">
-            <feDropShadow dx="0" dy="6" stdDeviation="10" floodColor="#0f172a" floodOpacity="0.15" />
-          </filter>
+          <linearGradient id="blueGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#00E1FF" />
+            <stop offset="100%" stopColor="#0055FF" />
+          </linearGradient>
+          <linearGradient id="whiteGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#ffffff" />
+            <stop offset="100%" stopColor="#f8fafc" />
+          </linearGradient>
         </defs>
 
-        {/* ══ PHONE ══ */}
-        <g filter="url(#phoneShadow)">
-          {/* Phone outer frame */}
-          <rect x="178" y="18" width="210" height="390" rx="34" fill="#0f172a" />
-          {/* Phone inner bezel */}
-          <rect x="184" y="24" width="198" height="378" rx="28" fill="#1e293b" />
-          {/* Screen */}
-          <rect x="186" y="52" width="194" height="342" rx="22" fill="#f0f6ff" />
+        {/* ══ LAPTOP BASE & SCREEN ══ */}
+        <g filter="url(#shadow3d)">
+          {/* Laptop outer frame */}
+          <rect x="70" y="50" width="460" height="290" rx="16" fill="#1e293b" />
+          {/* Laptop screen */}
+          <rect x="76" y="56" width="448" height="278" rx="10" fill="#f8fafc" />
         </g>
 
-        {/* Dynamic Island / Notch */}
-        <rect x="246" y="30" width="74" height="16" rx="8" fill="#0f172a" />
+        {/* ══ E-COMMERCE UI INSIDE SCREEN ══ */}
+        {/* Header / Nav */}
+        <rect x="76" y="56" width="448" height="40" rx="10" fill="white" />
+        {/* Store Logo */}
+        <circle cx="106" cy="76" r="12" fill="url(#blueGradient)" />
+        <path d="M102 74 L110 74 L108 80 L104 80 Z" fill="white" />
+        <circle cx="104" cy="83" r="1.5" fill="white" />
+        <circle cx="108" cy="83" r="1.5" fill="white" />
+        <text x="126" y="80" fontSize="14" fontWeight="800" fill="#1e293b" fontFamily="system-ui">ShopSphere</text>
 
-        {/* ══ APP CONTENT ══ */}
+        {/* Nav Links */}
+        <text x="240" y="80" fontSize="11" fontWeight="600" fill="#64748b" fontFamily="system-ui">Women</text>
+        <text x="290" y="80" fontSize="11" fontWeight="600" fill="#64748b" fontFamily="system-ui">Men</text>
+        <text x="330" y="80" fontSize="11" fontWeight="600" fill="#64748b" fontFamily="system-ui">Kids</text>
+        <text x="370" y="80" fontSize="11" fontWeight="600" fill="#64748b" fontFamily="system-ui">Sale</text>
 
-        {/* Top nav bar */}
-        <rect x="186" y="52" width="194" height="48" rx="22" fill="#1e40af" />
-        <rect x="186" y="72" width="194" height="28" fill="#1e40af" />
+        {/* Cart & Search Icons */}
+        <circle cx="484" cy="76" r="12" fill="#f1f5f9" />
+        <circle cx="454" cy="76" r="12" fill="#f1f5f9" />
+        <text x="484" y="80" fontSize="10" textAnchor="middle" fill="#64748b">🛒</text>
+        <text x="454" y="80" fontSize="10" textAnchor="middle" fill="#64748b">🔍</text>
+        <circle cx="490" cy="70" r="4" fill="#00E1FF" />
 
-        {/* App store logo circle */}
-        <circle cx="212" cy="76" r="12" fill="white" opacity="0.2" />
-        <text x="212" y="81" fontSize="11" textAnchor="middle" fontFamily="system-ui" fill="white">🛍</text>
+        {/* Hero Section of UI */}
+        <rect x="96" y="110" width="408" height="120" rx="16" fill="url(#blueGradient)" />
+        {/* Hero Text */}
+        <text x="126" y="146" fontSize="24" fontWeight="800" fill="white" fontFamily="system-ui">Summer</text>
+        <text x="126" y="172" fontSize="24" fontWeight="800" fill="white" fontFamily="system-ui">Collection</text>
+        <text x="126" y="190" fontSize="11" fill="white" opacity="0.8" fontFamily="system-ui">Up to 50% off on selected items.</text>
+        <rect x="126" y="202" width="90" height="26" rx="13" fill="#00E1FF" />
+        <text x="171" y="219" fontSize="10" fontWeight="700" fill="#ffffff" fontFamily="system-ui" textAnchor="middle">Shop Now</text>
 
-        {/* Store name */}
-        <text x="230" y="81" fontSize="11" fontWeight="800" fill="white" fontFamily="system-ui, sans-serif" letterSpacing="0.3">Fashion Store</text>
+        {/* Hero Graphic / Model Placeholder */}
+        <circle cx="430" cy="170" r="45" fill="white" opacity="0.2" />
+        <rect x="390" y="140" width="80" height="90" rx="40" fill="white" opacity="0.3" />
 
-        {/* Search icon */}
-        <circle cx="356" cy="76" r="7" fill="none" stroke="white" strokeWidth="1.8" opacity="0.8" />
-        <line x1="361" y1="81" x2="365" y2="85" stroke="white" strokeWidth="2" strokeLinecap="round" opacity="0.8" />
+        {/* Product Cards */}
+        <text x="96" y="255" fontSize="14" fontWeight="700" fill="#1e293b" fontFamily="system-ui">Trending Now</text>
 
-        {/* Cart icon with badge */}
-        <rect x="368" y="69" width="8" height="7" rx="1" fill="white" opacity="0.6" />
-        <path d="M366 69 Q283 66 374 66" fill="none" stroke="white" strokeWidth="1.5" opacity="0.6" />
+        {/* Card 1 */}
+        <rect x="96" y="265" width="126" height="50" rx="8" fill="white" filter="url(#cardShadow)" />
+        <rect x="104" y="273" width="34" height="34" rx="6" fill="#f1f5f9" />
+        <text x="121" y="294" fontSize="16" textAnchor="middle">👟</text>
+        <text x="146" y="286" fontSize="11" fontWeight="700" fill="#1e293b" fontFamily="system-ui">Running Shoes</text>
+        <text x="146" y="300" fontSize="10" fontWeight="700" fill="#0055FF" fontFamily="system-ui">$129.99</text>
 
-        {/* ── AWNING ── */}
-        {/* Awning base */}
-        <rect x="196" y="100" width="174" height="32" rx="0" fill="#1e40af" />
-        {/* Awning triangle flap */}
-        <path d="M196 100 L196 132 L283 132 Z" fill="#1e40af" />
-        <path d="M283 132 L370 100 L370 132 Z" fill="#1e40af" />
-        {/* White stripes */}
-        {[0, 1, 2, 3, 4, 5, 6, 7].map((n) => (
-          <rect key={n} x={196 + n * 22} y="100" width="11" height="32" fill="white" opacity="0.16" />
-        ))}
-        {/* Scalloped bottom edge */}
-        {[0, 1, 2, 3, 4, 5, 6].map((n) => (
-          <path key={n} d={`M ${196 + n * 25} 132 Q ${208 + n * 25} 144 ${221 + n * 25} 132`} fill="#1740b0" />
-        ))}
+        {/* Card 2 */}
+        <rect x="236" y="265" width="126" height="50" rx="8" fill="white" filter="url(#cardShadow)" />
+        <rect x="244" y="273" width="34" height="34" rx="6" fill="#f1f5f9" />
+        <text x="261" y="294" fontSize="16" textAnchor="middle">👕</text>
+        <text x="286" y="286" fontSize="11" fontWeight="700" fill="#1e293b" fontFamily="system-ui">Cotton T-Shirt</text>
+        <text x="286" y="300" fontSize="10" fontWeight="700" fill="#0055FF" fontFamily="system-ui">$24.99</text>
 
-        {/* ── PRODUCT CARDS ── */}
+        {/* Card 3 */}
+        <rect x="376" y="265" width="126" height="50" rx="8" fill="white" filter="url(#cardShadow)" />
+        <rect x="384" y="273" width="34" height="34" rx="6" fill="#f1f5f9" />
+        <text x="401" y="294" fontSize="16" textAnchor="middle">🎒</text>
+        <text x="426" y="286" fontSize="11" fontWeight="700" fill="#1e293b" fontFamily="system-ui">Travel Backpack</text>
+        <text x="426" y="300" fontSize="10" fontWeight="700" fill="#0055FF" fontFamily="system-ui">$79.99</text>
 
-        {/* Card 1 - T-shirt / blue background */}
-        <g filter="url(#cardShadow)">
-          <rect x="196" y="152" width="82" height="96" rx="14" fill="white" />
-        </g>
-        {/* Product image area */}
-        <rect x="196" y="152" width="82" height="62" rx="14" fill="#dbeafe" />
-        <rect x="196" y="200" width="82" height="14" fill="#dbeafe" />
-        {/* T-shirt icon */}
-        <g transform="translate(225, 164) scale(1.1)">
-          <path d="M0 6 L6 0 L12 3 L18 0 L24 6 L19 6 L19 24 L5 24 L5 6 Z" fill="#1e40af" />
-          <path d="M6 0 L12 3 L18 0 L12 0 Z" fill="#3b82f6" />
-        </g>
-        {/* Price */}
-        <text x="237" y="226" fontSize="8" fontWeight="700" fill="#64748b" fontFamily="system-ui" textAnchor="middle">$89</text>
-        {/* Name */}
-        <text x="237" y="237" fontSize="7.5" fontWeight="800" fill="#0f172a" fontFamily="system-ui" textAnchor="middle">Jacket</text>
-        {/* Button */}
-        <rect x="201" y="240" width="72" height="15" rx="7.5" fill="#1e40af" />
-        <text x="237" y="251" fontSize="6.5" fontWeight="700" fill="white" fontFamily="system-ui" textAnchor="middle">Add to Cart</text>
+        {/* ══ LAPTOP KEYBOARD / BOTTOM ══ */}
+        <path d="M40 340 L560 340 L580 354 L20 354 Z" fill="#cbd5e1" />
+        <rect x="250" y="342" width="100" height="8" rx="4" fill="#94a3b8" />
+        <path d="M20 354 L580 354 L580 360 C580 364, 576 368, 572 368 L28 368 C24 368, 20 364, 20 360 Z" fill="#94a3b8" />
 
-        {/* Card 2 - Shorts / cream background */}
-        <g filter="url(#cardShadow)">
-          <rect x="288" y="152" width="82" height="96" rx="14" fill="white" />
-        </g>
-        <rect x="288" y="152" width="82" height="62" rx="14" fill="#fef3c7" />
-        <rect x="288" y="200" width="82" height="14" fill="#fef3c7" />
-        {/* Pants/shorts icon */}
-        <g transform="translate(316, 160) scale(1.05)">
-          <path d="M0 0 L26 0 L26 4 L20 22 L14 22 L13 13 L12 22 L6 22 L0 4 Z" fill="#1e293b" />
-          <line x1="13" y1="4" x2="13" y2="22" stroke="#475569" strokeWidth="1.5" />
-        </g>
-        <text x="329" y="226" fontSize="8" fontWeight="700" fill="#64748b" fontFamily="system-ui" textAnchor="middle">$42</text>
-        <text x="329" y="237" fontSize="7.5" fontWeight="800" fill="#0f172a" fontFamily="system-ui" textAnchor="middle">Shorts</text>
-        <rect x="293" y="240" width="72" height="15" rx="7.5" fill="#1e40af" />
-        <text x="329" y="251" fontSize="6.5" fontWeight="700" fill="white" fontFamily="system-ui" textAnchor="middle">Add to Cart</text>
+        {/* ══ FLOATING ELEMENTS ══ */}
 
-        {/* ── Sale Banner ── */}
-        <rect x="196" y="258" width="174" height="30" rx="10" fill="#eff6ff" />
-        <text x="283" y="269" fontSize="7" fontWeight="700" fill="#1e40af" fontFamily="system-ui" textAnchor="middle">🏷 SUMMER SALE — Up to 50% OFF</text>
-        <text x="283" y="280" fontSize="6.5" fill="#64748b" fontFamily="system-ui" textAnchor="middle">Limited time offer on selected items</text>
-
-        {/* ── Bottom Nav ── */}
-        <rect x="186" y="352" width="194" height="42" rx="0" fill="white" />
-        <rect x="186" y="372" width="194" height="22" rx="22" fill="white" />
-        {/* Nav icons */}
-        <text x="226" y="376" fontSize="13" textAnchor="middle" fontFamily="system-ui" fill="#94a3b8">⌂</text>
-        <text x="259" y="375" fontSize="11" textAnchor="middle" fontFamily="system-ui" fill="#94a3b8">♡</text>
-        <text x="292" y="375" fontSize="11" textAnchor="middle" fontFamily="system-ui" fill="#94a3b8">⊞</text>
-        <text x="325" y="376" fontSize="11" textAnchor="middle" fontFamily="system-ui" fill="#94a3b8">◯</text>
-        {/* Active indicator */}
-        <rect x="217" y="388" width="18" height="2.5" rx="1.25" fill="#1e40af" />
-
-        {/* ══ CHECKMARK BADGE ══ */}
-        <g filter="url(#badgeShadow)">
-          <circle cx="183" cy="220" r="26" fill="#0d1b3e" />
-          <circle cx="183" cy="220" r="20" fill="#1e40af" />
-          <path d="M173 220 L180 228 L195 212" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        {/* Floating Add to Cart Button */}
+        <g filter="url(#shadow3d)" transform="translate(430, 240)">
+          <rect x="0" y="0" width="120" height="44" rx="22" fill="url(#whiteGradient)" />
+          <text x="60" y="26" fontSize="12" fontWeight="800" fill="#0055FF" fontFamily="system-ui" textAnchor="middle">Add to Cart 🛒</text>
         </g>
 
-        {/* ══ STACKED BOXES ══ */}
-        {/* Shadow under boxes */}
-        <ellipse cx="70" cy="382" rx="44" ry="8" fill="#0f172a" opacity="0.12" />
-        {/* Big box */}
-        <rect x="34" y="320" width="72" height="62" rx="8" fill="#f97316" />
-        {/* Box lid */}
-        <rect x="30" y="316" width="80" height="12" rx="5" fill="#ea580c" />
-        {/* Tape strip */}
-        <rect x="68" y="316" width="4" height="66" rx="2" fill="#fed7aa" opacity="0.7" />
-        <rect x="30" y="334" width="80" height="4" rx="2" fill="#ea580c" opacity="0.4" />
+        {/* Floating Price Tag */}
+        <g filter="url(#shadow3d)" transform="translate(30, 100) rotate(-15)">
+          <path d="M20 10 L60 10 L70 30 L40 60 L10 30 Z" fill="#0055FF" />
+          <circle cx="40" cy="22" r="4" fill="white" />
+          <text x="40" y="44" fontSize="10" fontWeight="800" fill="white" fontFamily="system-ui" textAnchor="middle">SALE</text>
+        </g>
 
-        {/* Small box on top */}
-        <rect x="46" y="278" width="48" height="40" rx="7" fill="#fb923c" />
-        <rect x="42" y="274" width="56" height="10" rx="4" fill="#ea580c" />
-        <rect x="68" y="274" width="4" height="44" rx="2" fill="#fed7aa" opacity="0.7" />
+        {/* Floating Shopping Bag */}
+        <g filter="url(#shadow3d)" transform="translate(490, 80) rotate(10)">
+          <path d="M10 20 C10 10 30 10 30 20" fill="none" stroke="#00E1FF" strokeWidth="4" />
+          <rect x="0" y="20" width="40" height="40" rx="6" fill="#f0f9ff" />
+          <rect x="0" y="20" width="40" height="40" rx="6" fill="#00E1FF" opacity="0.2" />
+          <path d="M10 35 L30 35" stroke="#00E1FF" strokeWidth="3" strokeLinecap="round" />
+        </g>
 
-        {/* ══ PERSON SITTING ON BEAN BAG ══ */}
-
-        {/* Bean bag - teal blob */}
-        <ellipse cx="470" cy="368" rx="78" ry="48" fill="#0ea5e9" opacity="0.85" />
-        <ellipse cx="470" cy="358" rx="60" ry="38" fill="#38bdf8" opacity="0.6" />
-
-        {/* Legs (dark jeans) */}
-        <path d="M445 330 Q430 355 420 370 Q435 378 448 370 Q455 355 462 338 Z" fill="#1e293b" />
-        <path d="M495 330 Q510 355 520 370 Q505 378 492 370 Q485 355 478 338 Z" fill="#1e293b" />
-
-        {/* Feet / shoes */}
-        <ellipse cx="418" cy="372" rx="16" ry="8" fill="#0f172a" />
-        <ellipse cx="522" cy="372" rx="16" ry="8" fill="#0f172a" />
-
-        {/* Body (orange hoodie) */}
-        <path d="M445 270 Q438 285 436 310 Q438 335 462 338 Q478 338 504 335 Q526 310 524 285 Q520 268 510 264 Q500 295 470 295 Q440 295 430 264 Z" fill="#f97316" />
-
-        {/* Laptop base */}
-        <rect x="440" y="308" width="60" height="4" rx="2" fill="#1e293b" />
-        <ellipse cx="470" cy="312" rx="36" ry="4" fill="#1e293b" opacity="0.5" />
-
-        {/* Laptop screen */}
-        <rect x="438" y="264" width="64" height="46" rx="5" fill="#0f172a" />
-        <rect x="441" y="267" width="58" height="40" rx="3" fill="#1e293b" />
-        {/* Laptop screen content (CODE) */}
-        <rect x="445" y="272" width="20" height="3" rx="1.5" fill="#f43f5e" opacity="0.9" />
-        <rect x="468" y="272" width="24" height="3" rx="1.5" fill="#38bdf8" opacity="0.9" />
-        <rect x="445" y="278" width="14" height="2.5" rx="1.25" fill="#a78bfa" opacity="0.8" />
-        <rect x="462" y="278" width="30" height="2.5" rx="1.25" fill="#10b981" opacity="0.8" />
-        <rect x="450" y="284" width="38" height="2.5" rx="1.25" fill="#fcd34d" opacity="0.8" />
-        <rect x="450" y="289" width="28" height="2.5" rx="1.25" fill="#e2e8f0" opacity="0.6" />
-        <rect x="445" y="295" width="12" height="2.5" rx="1.25" fill="#a78bfa" opacity="0.8" />
-
-        {/* Laptop base/hinge */}
-        <rect x="432" y="308" width="76" height="5" rx="2.5" fill="#0f172a" />
-        <rect x="436" y="312" width="68" height="3" rx="1.5" fill="#1e293b" />
-
-        {/* Arms */}
-        <path d="M443 280 Q430 295 435 308" stroke="#f97316" strokeWidth="12" strokeLinecap="round" fill="none" />
-        <circle cx="436" cy="310" r="7" fill="#fbbf24" />
-        <path d="M497 280 Q510 295 505 308" stroke="#f97316" strokeWidth="12" strokeLinecap="round" fill="none" />
-        <circle cx="504" cy="310" r="7" fill="#fbbf24" />
-
-        {/* Floating code symbols */}
+        {/* Floating Stars */}
         <g style={{ animation: "pulse 3s infinite" }}>
-          <text x="416" y="266" fontSize="14" fontWeight="900" fill="#38bdf8" fontFamily="monospace" opacity="0.7">{`{ }`}</text>
+          <path d="M70 250 L75 260 L85 265 L75 270 L70 280 L65 270 L55 265 L65 260 Z" fill="#00E1FF" />
         </g>
-        <g style={{ animation: "pulse 3s infinite 1s" }}>
-          <text x="502" y="330" fontSize="16" fontWeight="900" fill="#f43f5e" fontFamily="monospace" opacity="0.6">{`< >`}</text>
+        <g style={{ animation: "pulse 3s infinite 1.5s" }}>
+          <path d="M520 200 L524 206 L530 210 L524 214 L520 220 L516 214 L510 210 L516 206 Z" fill="#0055FF" />
         </g>
-        <g style={{ animation: "pulse 3s infinite 2s" }}>
-          <text x="514" y="278" fontSize="16" fontWeight="900" fill="#10b981" fontFamily="monospace" opacity="0.8">{`;`}</text>
-        </g>
-
-        {/* Neck */}
-        <rect x="462" y="248" width="16" height="18" rx="4" fill="#fbbf24" />
-
-        {/* Head (round, yellow skin) */}
-        <circle cx="470" cy="238" r="26" fill="#fbbf24" />
-
-        {/* Hair (dark cap) */}
-        <path d="M444 232 Q448 206 470 204 Q492 206 496 232 Q490 224 470 222 Q450 224 444 232 Z" fill="#1e293b" />
-        <rect x="442" y="228" width="56" height="8" rx="4" fill="#1e293b" />
-
-        {/* Eyes */}
-        <ellipse cx="461" cy="238" rx="3" ry="3.5" fill="#1e293b" />
-        <ellipse cx="479" cy="238" rx="3" ry="3.5" fill="#1e293b" />
-        {/* Eye shine */}
-        <circle cx="462.5" cy="236" r="1" fill="white" />
-        <circle cx="480.5" cy="236" r="1" fill="white" />
-        {/* Smile */}
-        <path d="M461 247 Q470 255 479 247" stroke="#1e293b" strokeWidth="2" fill="none" strokeLinecap="round" />
-
-        {/* ══ CHAT BUBBLE ══ */}
-        <g filter="url(#badgeShadow)">
-          <rect x="506" y="200" width="76" height="34" rx="12" fill="white" />
-          <path d="M512 234 L506 248 L522 234" fill="white" />
-        </g>
-        <text x="544" y="224" fontSize="15" fontWeight="900" fontFamily="monospace" textAnchor="middle" fill="#0ea5e9">&lt;/&gt;</text>
-
-        {/* ══ FAST DELIVERY BADGE ══ */}
-        <g filter="url(#badgeShadow)">
-          <rect x="20" y="212" width="100" height="46" rx="14" fill="white" />
-        </g>
-        <circle cx="44" cy="235" r="13" fill="#dbeafe" />
-        <text x="44" y="240" fontSize="13" textAnchor="middle" fontFamily="system-ui">📦</text>
-        <text x="66" y="227" fontSize="8" fontWeight="800" fill="#0f172a" fontFamily="system-ui">Fast</text>
-        <text x="66" y="238" fontSize="7.5" fontWeight="700" fill="#1e40af" fontFamily="system-ui">Delivery</text>
-        <text x="66" y="249" fontSize="6.5" fill="#64748b" fontFamily="system-ui">Free shipping</text>
-
-        {/* ══ STARS BADGE ══ */}
-        <g filter="url(#badgeShadow)">
-          <rect x="388" y="30" width="90" height="42" rx="14" fill="white" />
-        </g>
-        <text x="433" y="51" fontSize="11" fontWeight="700" fill="#f59e0b" fontFamily="system-ui" textAnchor="middle">★★★★★</text>
-        <text x="433" y="64" fontSize="7.5" fontWeight="600" fill="#64748b" fontFamily="system-ui" textAnchor="middle">4.9 Rating</text>
 
       </svg>
     </div>
@@ -2911,20 +2831,6 @@ export default function ServicePage() {
               <div className={`transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
                 {/* Category Badge */}
                 <div className="inline-flex items-center gap-2 border border-[#00E1FF]/30 bg-gradient-to-r from-[#00E1FF]/10 to-[#0055FF]/10 rounded-full px-4 py-1.5 mb-6">
-                  {slug === "mobile-app-development" ? (
-                    <svg className="w-3.5 h-3.5 text-[#00E1FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                    </svg>
-                  ) : (
-                    /* Chrome browser icon */
-                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="12" cy="12" r="10" stroke="#00E1FF" strokeWidth="1.5" />
-                      <circle cx="12" cy="12" r="4" fill="#00E1FF" />
-                      <line x1="12" y1="8" x2="4.5" y2="14.5" stroke="#00E1FF" strokeWidth="1.5" strokeLinecap="round" />
-                      <line x1="12" y1="8" x2="19.5" y2="14.5" stroke="#00E1FF" strokeWidth="1.5" strokeLinecap="round" />
-                      <line x1="12" y1="16" x2="12" y2="22" stroke="#00E1FF" strokeWidth="1.5" strokeLinecap="round" />
-                    </svg>
-                  )}
                   <span className="text-xs font-bold bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text uppercase tracking-widest">{service.title}</span>
                 </div>
 
@@ -3235,7 +3141,7 @@ export default function ServicePage() {
                 {service.subtitle}
               </h2>
               <p className="text-gray-600 text-lg leading-relaxed">
-                We focus on understanding your business goals first, then build solutions that actually solve problems — not just look good on paper. Every project gets dedicated attention, clear communication, and a team that takes ownership of delivering results on time.
+                {service.overviewTagline || "We focus on understanding your business goals first, then build solutions that actually solve problems — not just look good on paper. Every project gets dedicated attention, clear communication, and a team that takes ownership of delivering results on time."}
               </p>
             </div>
 
@@ -3255,13 +3161,21 @@ export default function ServicePage() {
                   {service.features.map((feature, index) => (
                     <div
                       key={index}
-                      className="bg-white rounded-xl p-6 border border-gray-200/80 shadow-sm hover:shadow-md hover:border-[#00E1FF]/40 transition-all duration-300 group"
+                      className="bg-white rounded-2xl p-6 flex flex-col justify-start min-h-[190px] border border-gray-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_30px_rgba(0,85,255,0.12)] hover:border-[#00E1FF]/50 hover:-translate-y-1.5 transition-all duration-300 relative group overflow-hidden"
                     >
-                      <div className="w-10 h-10 bg-gradient-to-r from-[#00E1FF]/10 to-[#0055FF]/10 text-[#0055FF] group-hover:bg-gradient-to-r group-hover:from-[#00E1FF] group-hover:to-[#0055FF] group-hover:text-white rounded-lg flex items-center justify-center transition-all duration-300 mb-4">
-                        <FeatureIcon type={feature.icon} />
+                      {/* Ambient Accent Line */}
+                      <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#00E1FF] to-[#0055FF] opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-t-2xl" />
+
+                      <div className="mb-4">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#00E1FF]/10 to-[#0055FF]/10 text-[#0055FF] group-hover:bg-gradient-to-r group-hover:from-[#00E1FF] group-hover:to-[#0055FF] group-hover:text-white flex items-center justify-center transition-all duration-300 group-hover:scale-110 shadow-sm">
+                          <FeatureIcon type={feature.icon} />
+                        </div>
                       </div>
-                      <h3 className="text-base font-bold text-[#0f172a] mb-2">{feature.title}</h3>
-                      <p className="text-gray-600 text-sm leading-relaxed">{feature.description}</p>
+
+                      <div>
+                        <h3 className="text-base font-bold text-[#0f172a] mb-2">{feature.title}</h3>
+                        <p className="text-gray-600 text-sm leading-relaxed font-normal">{feature.description}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -3306,7 +3220,7 @@ export default function ServicePage() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-6 lg:gap-8">
                 {/* Starter Package */}
                 <div className="relative bg-white border-2 border-gray-200 rounded-2xl p-8 hover:border-[#262b3f]/30 hover:shadow-xl transition-all duration-300">
                   <div className="mb-6">
@@ -3506,65 +3420,239 @@ export default function ServicePage() {
           </section>
         )}
 
-        {/* Local SEO Services Section - Only for SEO/Digital Marketing */}
-        {slug === "seo-digital-marketing" && (
-          <>
-            {/* Section 1: Local SEO Services Toronto & Across Canada */}
-            <section className="py-20 bg-[#f8fafc] border-t border-gray-100">
-              <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12">
-                {/* Header */}
-                <div className="text-center mb-12 max-w-3xl mx-auto">
-                  <span className="inline-block bg-gradient-to-r from-[#00E1FF]/10 to-[#0055FF]/10 text-[#0055FF] border border-[#00E1FF]/30 text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full mb-5 shadow-sm">
-                    Local SEO Specialists
-                  </span>
-                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0f172a] mb-5 leading-tight">
-                    Local SEO Services Toronto &amp; Across Canada
-                  </h2>
-                  <div className="w-20 h-1 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full mb-6 mx-auto" />
-                  <p className="text-gray-500 text-sm sm:text-base leading-relaxed max-w-xl mx-auto">
-                    We provide affordable local SEO services to businesses in every major Canadian city. Our hyper-targeted strategies help you dominate the Google Maps pack and rank for searches that actually convert.
-                  </p>
-                </div>
+        {/* Web Development Packages Section - Only for Web Development */}
+        {slug === "web-development" && (
+          <section className="py-20 bg-white">
+            <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
+              <div className="text-center mb-16">
+                <span className="inline-block bg-[#262b3f]/10 text-[#262b3f] text-sm font-semibold px-4 py-2 rounded-full mb-4">
+                  Web Development Packages
+                </span>
+                <h2 className="text-3xl sm:text-4xl font-bold text-[#1a1a2e] mb-4">
+                  Choose Your Development Plan
+                </h2>
+                <p className="text-gray-600 max-w-2xl mx-auto">
+                  Transparent pricing with real deliverables. No hidden fees, no long-term contracts.
+                </p>
+              </div>
 
-                {/* Cities Grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-16 max-w-4xl mx-auto">
-                  {[
-                    "Toronto", "Brampton", "Mississauga", "North York",
-                    "Calgary", "Vancouver", "Ottawa", "Hamilton"
-                  ].map((city) => (
-                    <div
-                      key={city}
-                      className="flex items-center gap-2.5 border border-gray-200 rounded-xl px-4 py-3 bg-white hover:border-[#00E1FF]/50 hover:shadow-md transition-all duration-200 cursor-default group"
-                    >
-                      <svg className="w-4 h-4 text-[#0055FF] flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                        <path fillRule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-2.079 3.218-4.461 3.218-7.327a7.5 7.5 0 00-15 0c0 2.866 1.274 5.248 3.218 7.327a19.58 19.58 0 002.683 2.282 16.974 16.974 0 001.144.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-6 lg:gap-8 mt-4 md:mt-0">
+                {/* Starter Package */}
+                <div className="relative bg-white border-2 border-gray-200 rounded-2xl p-8 hover:border-[#262b3f]/30 hover:shadow-xl transition-all duration-300">
+                  <div className="mb-6">
+                    <h3 className="text-xl font-bold text-[#1a1a2e] mb-2">Landing Page</h3>
+                    <p className="text-gray-500 text-sm">For small businesses establishing a simple online presence</p>
+                  </div>
+                  <div className="mb-6">
+                    <span className="text-4xl font-bold text-[#1a1a2e]">$1,499</span>
+                    <span className="text-gray-500"> one-time</span>
+                  </div>
+                  <ul className="space-y-3 mb-8">
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="text-sm font-semibold text-[#0f172a] group-hover:text-[#0055FF] transition-colors">{city}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* CTA */}
-                <div className="text-center">
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-[#0f172a] mb-3">
-                    Ready to Grow Your Organic Traffic?
-                  </h3>
-                  <p className="text-gray-500 text-sm sm:text-base mb-8 max-w-lg mx-auto leading-relaxed">
-                    Every SEO engagement is scoped to your market, goals, and competition. Get a free strategy call and custom quote — no contracts, no lock-in.
-                  </p>
+                      <span className="text-gray-600 text-sm">Up to 5 Pages</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-gray-600 text-sm">Mobile Responsive Design</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-gray-600 text-sm">Basic SEO Setup</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-gray-600 text-sm">Contact Form Integration</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-gray-600 text-sm">Social Media Links</span>
+                    </li>
+                  </ul>
                   <button
                     onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
-                    className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] hover:opacity-90 text-white px-8 py-4 rounded-xl font-semibold text-base transition-all duration-300 shadow-lg shadow-[#00E1FF]/25 hover:-translate-y-0.5"
+                    className="w-full py-3 px-6 border-2 border-[#262b3f] text-[#262b3f] font-semibold rounded-lg hover:bg-[#262b3f] hover:text-white transition-all duration-300"
                   >
-                    Request a Free Quote
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
+                    Get Started
+                  </button>
+                </div>
+
+                {/* Growth Package - Popular */}
+                <div className="relative bg-[#1a1a2e] border-2 border-[#262b3f] rounded-2xl p-8 shadow-2xl transform md:-translate-y-4">
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                    <span className="bg-gradient-to-r from-[#0055FF] to-[#00AAFF] text-white text-xs font-bold px-4 py-1.5 rounded-full">
+                      MOST POPULAR
+                    </span>
+                  </div>
+                  <div className="mb-6">
+                    <h3 className="text-xl font-bold text-white mb-2">Corporate Website</h3>
+                    <p className="text-white/60 text-sm">For growing businesses needing a professional web presence</p>
+                  </div>
+                  <div className="mb-6">
+                    <span className="text-4xl font-bold text-white">$3,499</span>
+                    <span className="text-white/60"> one-time</span>
+                  </div>
+                  <ul className="space-y-3 mb-8">
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-white/80 text-sm">Up to 15 Pages</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-white/80 text-sm">CMS Integration (WordPress/Strapi)</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-white/80 text-sm">Advanced On-Page SEO</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-white/80 text-sm">Custom Animations & Interactions</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-white/80 text-sm">Performance & Speed Optimization</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-white/80 text-sm">Google Analytics Integration</span>
+                    </li>
+                  </ul>
+                  <button
+                    onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
+                    className="w-full py-3 px-6 bg-gradient-to-r from-[#0055FF] to-[#00AAFF] text-white font-semibold rounded-lg hover:opacity-90 transition-all duration-300"
+                  >
+                    Get Started
+                  </button>
+                </div>
+
+                {/* Enterprise Package */}
+                <div className="relative bg-white border-2 border-gray-200 rounded-2xl p-8 hover:border-[#262b3f]/30 hover:shadow-xl transition-all duration-300">
+                  <div className="mb-6">
+                    <h3 className="text-xl font-bold text-[#1a1a2e] mb-2">E-Commerce / Custom Web App</h3>
+                    <p className="text-gray-500 text-sm">For complex custom functionalities and high-traffic stores</p>
+                  </div>
+                  <div className="mb-6">
+                    <span className="text-4xl font-bold text-[#1a1a2e]">$7,999</span>
+                    <span className="text-gray-500">+</span>
+                  </div>
+                  <ul className="space-y-3 mb-8">
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-gray-600 text-sm">Unlimited Pages & Products</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-gray-600 text-sm">Secure Payment Gateways</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-gray-600 text-sm">User Authentication & Profiles</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-gray-600 text-sm">Custom API Integrations</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-gray-600 text-sm">Scalable Cloud Architecture</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-gray-600 text-sm">Dedicated Project Manager</span>
+                    </li>
+                  </ul>
+                  <button
+                    onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
+                    className="w-full py-3 px-6 border-2 border-[#262b3f] text-[#262b3f] font-semibold rounded-lg hover:bg-[#262b3f] hover:text-white transition-all duration-300"
+                  >
+                    Get Started
                   </button>
                 </div>
               </div>
-            </section>
 
+              {/* Additional Info */}
+              <div className="mt-12 text-center">
+                <p className="text-gray-500 text-sm mb-4">
+                  All packages include: Custom Design, Mobile Optimization, and 30 Days of Free Post-Launch Support.
+                </p>
+                <p className="text-gray-600 font-medium">
+                  Need a custom solution? <button onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))} className="text-[#0055FF] hover:underline">Contact us</button> for a tailored quote.
+                </p>
+              </div>
+            </div>
+          </section>
+        )}
+
+
+        {/* Process Section - Interactive Step Selector */}
+        {service.process && service.process.length > 0 && (
+          <section className="py-20 bg-[#eef0f8]">
+            <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
+              {/* Header */}
+              <div className="text-center mb-10 max-w-4xl mx-auto px-2">
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#1a1a2e] mb-4 leading-tight">
+                  {service.processHeading || `Our ${service.title} Process: Discover to Scale`}
+                </h2>
+                {service.processDescription ? (
+                  <p
+                    className="text-gray-600 max-w-2xl mx-auto text-xs sm:text-sm md:text-base leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: service.processDescription }}
+                  />
+                ) : (
+                  <p className="text-gray-600 max-w-2xl mx-auto text-xs sm:text-sm md:text-base leading-relaxed">
+                    Our {service.title.toLowerCase()} services follow a proven{" "}
+                    <strong className="text-[#1a1a2e]">five-phase process</strong> —{" "}
+                    {service.process.slice(0, 5).map(s => s.step).join(", ")} — so every project is structured,
+                    measurable, and built to grow safely after go-live.
+                  </p>
+                )}
+              </div>
+
+              {/* Interactive Step Selector */}
+              <ProcessSteps steps={service.process} />
+            </div>
+          </section>
+        )}
+
+        {/* Local SEO Services Section - Only for SEO/Digital Marketing */}
+        {slug === "seo-digital-marketing" && (
+          <>
+            {/* Section 1: Local SEO Services Toronto & Across Canada (Elegant Blue Theme) */}
             {/* Section 2: Why Our Local SEO Works */}
             <section className="py-20 bg-white border-t border-gray-100">
               <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12">
@@ -3609,33 +3697,88 @@ export default function ServicePage() {
                 </div>
               </div>
             </section>
+            <section className="py-24 bg-white border-t border-gray-100">
+              <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12">
+                {/* Header Container */}
+                <div className="max-w-3xl mx-auto text-center mb-16">
+                  <div className="flex items-center justify-center gap-4 mb-6">
+                    <div className="w-12 h-[2px] bg-gradient-to-r from-[#00E1FF] to-[#0055FF]" />
+                    <span className="text-[#0055FF] text-xs font-bold uppercase tracking-[0.2em]">
+                      Local SEO Specialists
+                    </span>
+                    <div className="w-12 h-[2px] bg-gradient-to-l from-[#00E1FF] to-[#0055FF]" />
+                  </div>
+
+                  <h2 className="text-4xl sm:text-5xl font-bold text-[#0f172a] mb-8 leading-[1.15] tracking-tight">
+                    Local SEO Services Toronto <br />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0055FF] to-[#00E1FF] font-medium">&amp; Across Canada</span>
+                  </h2>
+
+                  <p className="text-gray-500 text-lg leading-relaxed max-w-2xl mx-auto font-light">
+                    We provide sophisticated local SEO services to businesses in every major Canadian city. Our targeted strategies help you dominate the Google Maps pack and rank for searches that actually convert.
+                  </p>
+                </div>
+
+                {/* Cities Grid - Elegant Typography Focus with Blue Accents */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-24 border-t border-b border-gray-100 py-12 relative">
+                  {/* Subtle background glow for the grid */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#00E1FF]/5 via-[#0055FF]/5 to-transparent blur-2xl -z-10" />
+
+                  {[
+                    "Toronto", "Brampton", "Mississauga", "North York",
+                    "Calgary", "Vancouver", "Ottawa", "Hamilton"
+                  ].map((city) => (
+                    <Link
+                      href={`/services/${slug}/${city.toLowerCase().replace(/ /g, '-')}`}
+                      key={city}
+                      className="group flex items-center gap-4 cursor-pointer border border-gray-200 rounded-2xl px-5 py-4 hover:border-[#0055FF]/30 hover:shadow-[0_4px_20px_rgba(0,85,255,0.05)] transition-all duration-300 bg-white/60 backdrop-blur-sm"
+                    >
+                      <div className="w-8 h-8 rounded-full bg-[#0055FF]/5 flex items-center justify-center text-[#0055FF] group-hover:bg-[#0055FF] group-hover:text-white transition-colors duration-300 shrink-0">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                      </div>
+                      <span className="text-base sm:text-lg text-gray-900 font-medium group-hover:text-[#0055FF] transition-colors duration-300">{city}</span>
+                    </Link>
+                  ))}
+                </div>
+
+                {/* Refined CTA - Classy Blue */}
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 bg-[#f8fbff] p-10 rounded-2xl border border-[#0055FF]/10 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#00E1FF]/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+
+                  <div className="max-w-xl relative z-10">
+                    <h3 className="text-2xl font-bold text-[#0f172a] mb-3 tracking-tight">
+                      Ready to Grow Your Organic Traffic?
+                    </h3>
+                    <p className="text-gray-600 text-sm leading-relaxed font-light">
+                      Every SEO engagement is scoped to your market, goals, and competition. Get a free strategy call and custom quote — no contracts, no lock-in.
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
+                    className="relative z-10 shrink-0 inline-flex items-center justify-center gap-3 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] hover:opacity-90 text-white px-8 py-4 rounded-full font-medium text-sm transition-all duration-300 shadow-[0_8px_20px_rgba(0,85,255,0.2)] hover:-translate-y-0.5 hover:shadow-[0_12px_25px_rgba(0,85,255,0.3)]"
+                  >
+                    Request a Free Quote
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </section>
+
           </>
         )}
-
-        {/* Process Section - Interactive Step Selector */}
-        <section className="py-20 bg-[#eef0f8]">
-          <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
-            {/* Header */}
-            <div className="text-center mb-10 max-w-4xl mx-auto px-2">
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#1a1a2e] mb-4 leading-tight">
-                Our {service.title} Process: Discover to Scale
-              </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto text-xs sm:text-sm md:text-base leading-relaxed">
-                Our {service.title.toLowerCase()} services follow a proven{" "}
-                <strong className="text-[#1a1a2e]">five-phase process</strong>,{" "}
-                {service.process.slice(0, 5).map(s => s.step).join(", ")}, so every project is structured,
-                measurable, and built to grow safely after go-live.
-              </p>
-            </div>
-
-            {/* Interactive Step Selector */}
-            <ProcessSteps steps={service.process} />
-          </div>
-        </section>
-
         {/* How We Deliver Section (ONLY for Web Development Service Page, directly after Process section) */}
         {slug === "web-development" && (
-          <WebDevDeliveryModelSection />
+          <WebDevDeliveryModelSection
+            heading={service.deliveryHeading}
+            description={service.deliveryDescription}
+            steps={service.deliverySteps}
+          />
         )}
 
         {/* What's Included Section (ONLY for Cloud Solutions Service Page, directly after Process section) */}
@@ -3654,95 +3797,89 @@ export default function ServicePage() {
         )}
 
         {/* Categorized Tech Stack */}
-        {slug !== "tax-accounting" && (
+        {slug !== "tax-accounting" && slug !== "seo-digital-marketing" && (
           <CategorizedTechStack />
         )}
 
 
 
 
-        {/* Why Choose Us Section - Reference Design */}
-        {slug !== "tax-accounting" && (
-          <section className="py-20 bg-[#f8fafc]">
-            <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                {/* Left Column: Heading + Text */}
-                <div className="lg:col-span-5">
-                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0f172a] mb-4">
-                    Why <span className="bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text">choose us</span>
-                  </h2>
-                  <div className="w-24 h-1 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full mb-8" />
+        {/* Why Choose Us Section - CMS Driven with Fallback */}
+        {(() => {
+          if (!service.whyChooseUsHeading || !service.whyChooseUsCards || service.whyChooseUsCards.length === 0) return null;
 
+          const heading = service.whyChooseUsHeading;
+          const intro = service.whyChooseUsIntro;
+          const subHeading = service.whyChooseUsSubHeading;
+          const subText = service.whyChooseUsSubText;
 
-                  <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6">
-                    As you know, digital solutions are the core concept of online businesses today. Either driving qualified traffic or building scalable software, digital strategy is essential for your enterprise to grow revenue and stay competitive. VynTech Solutions is a premier web design and software development agency delivering reliable, high-performance services.
-                  </p>
+          // Icon map: key -> SVG path
+          const iconPaths: Record<string, string> = {
+            chart: "M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z",
+            desktop: "M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0h-18",
+            users: "M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z",
+            clock: "M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z",
+            check: "M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z",
+            trend: "M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941",
+            shield: "M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z",
+            star: "M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z",
+            lightning: "M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z",
+          };
 
-                  <h3 className="text-base sm:text-lg font-bold text-[#0f172a] mb-2">
-                    Imaginations into creativity
-                  </h3>
+          const cards: { icon: string; label: string }[] = service.whyChooseUsCards;
 
-                  <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
-                    As a dedicated software and web development company, we have worked on websites and web applications with incredible clients for diverse industries. It has enabled us to stretch our imaginations into a new realm of creativity and apply technical skills to enhance user experience. Finally, it has resulted in delivering perfect, bespoke solutions that aptly represent the goals of our clients.
-                  </p>
-                </div>
+          // Smart heading renderer: last 2 words get gradient
+          const renderHeading = (text: string) => {
+            const words = text.trim().split(" ");
+            if (words.length <= 2) {
+              return <span className="bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text">{text}</span>;
+            }
+            const firstPart = words.slice(0, words.length - 2).join(" ");
+            const lastPart = words.slice(-2).join(" ");
+            return <>{firstPart} <span className="bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text">{lastPart}</span></>;
+          };
 
-                {/* Right Column: 6 White Cards Grid (2 cols on mobile) */}
-                <div className="lg:col-span-7">
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3.5 sm:gap-5">
-                    {/* Card 1 */}
-                    <div className="bg-white rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-lg hover:border-[#00E1FF]/40 transition-all duration-300 min-h-[130px] sm:min-h-[160px] border border-gray-100 group">
-                      <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#0f172a] group-hover:text-[#00E1FF] transition-colors mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
-                      </svg>
-                      <span className="text-[#0f172a] font-semibold text-[11px] sm:text-xs md:text-sm leading-snug">Result Driven<br />Approach</span>
-                    </div>
+          return (
+            <section className="py-20 bg-[#f8fafc]">
+              <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                  {/* Left Column */}
+                  <div className="lg:col-span-5">
+                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0f172a] mb-4">
+                      {renderHeading(heading)}
+                    </h2>
+                    <div className="w-24 h-1 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full mb-8" />
+                    <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6">{intro}</p>
+                    <h3 className="text-base sm:text-lg font-bold text-[#0f172a] mb-2">{subHeading}</h3>
+                    <p className="text-gray-600 text-sm sm:text-base leading-relaxed">{subText}</p>
+                  </div>
 
-                    {/* Card 2 */}
-                    <div className="bg-white rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-lg hover:border-[#00E1FF]/40 transition-all duration-300 min-h-[130px] sm:min-h-[160px] border border-gray-100 group">
-                      <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#0f172a] group-hover:text-[#00E1FF] transition-colors mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0h-18" />
-                      </svg>
-                      <span className="text-[#0f172a] font-semibold text-[11px] sm:text-xs md:text-sm leading-snug">Digital First<br />Strategies</span>
-                    </div>
-
-                    {/* Card 3 */}
-                    <div className="bg-white rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-lg hover:border-[#00E1FF]/40 transition-all duration-300 min-h-[130px] sm:min-h-[160px] border border-gray-100 group">
-                      <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#0f172a] group-hover:text-[#00E1FF] transition-colors mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-                      </svg>
-                      <span className="text-[#0f172a] font-semibold text-[11px] sm:text-xs md:text-sm leading-snug">Team of Experienced<br />Professionals</span>
-                    </div>
-
-                    {/* Card 4 */}
-                    <div className="bg-white rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-lg hover:border-[#00E1FF]/40 transition-all duration-300 min-h-[130px] sm:min-h-[160px] border border-gray-100 group">
-                      <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#0f172a] group-hover:text-[#00E1FF] transition-colors mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <span className="text-[#0f172a] font-semibold text-[11px] sm:text-xs md:text-sm leading-snug">On Time Delivery</span>
-                    </div>
-
-                    {/* Card 5 */}
-                    <div className="bg-white rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-lg hover:border-[#00E1FF]/40 transition-all duration-300 min-h-[130px] sm:min-h-[160px] border border-gray-100 group">
-                      <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#0f172a] group-hover:text-[#00E1FF] transition-colors mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
-                      </svg>
-                      <span className="text-[#0f172a] font-semibold text-[11px] sm:text-xs md:text-sm leading-snug">No False<br />Commitments</span>
-                    </div>
-
-                    {/* Card 6 */}
-                    <div className="bg-white rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-lg hover:border-[#00E1FF]/40 transition-all duration-300 min-h-[130px] sm:min-h-[160px] border border-gray-100 group">
-                      <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#0f172a] group-hover:text-[#00E1FF] transition-colors mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
-                      </svg>
-                      <span className="text-[#0f172a] font-semibold text-[11px] sm:text-xs md:text-sm leading-snug">Data-driven experiments</span>
+                  {/* Right Column: Cards Grid */}
+                  <div className="lg:col-span-7">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3.5 sm:gap-5">
+                      {cards.map((card, i) => {
+                        const path = iconPaths[card.icon] || iconPaths.chart;
+                        const lines = card.label.split("\n");
+                        return (
+                          <div key={i} className="bg-white rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-lg hover:border-[#00E1FF]/40 transition-all duration-300 min-h-[130px] sm:min-h-[160px] border border-gray-100 group">
+                            <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#0f172a] group-hover:text-[#00E1FF] transition-colors mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d={path} />
+                            </svg>
+                            <span className="text-[#0f172a] font-semibold text-[11px] sm:text-xs md:text-sm leading-snug">
+                              {lines.map((line, li) => (
+                                <span key={li}>{line}{li < lines.length - 1 && <br />}</span>
+                              ))}
+                            </span>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
-        )}
+            </section>
+          );
+        })()}
 
         {/* Why Choose Us — Tax & Accounting (custom version) */}
         {slug === "tax-accounting" && (
@@ -3836,7 +3973,7 @@ export default function ServicePage() {
           <section className="py-16 bg-[#f8fafc] border-t border-gray-100">
             <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 text-center">
               <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0f172a] mb-3">
-                {service.title} Services Across Canada
+                {service.title} Services <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0055FF] to-[#00E1FF]">Across Canada</span>
               </h2>
               <p className="text-gray-500 text-sm sm:text-base max-w-2xl mx-auto mb-10 leading-relaxed">
                 We serve businesses in every major Canadian city. Click your city to learn more about our local {service.title.toLowerCase()} services.
@@ -3845,22 +3982,27 @@ export default function ServicePage() {
               <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 max-w-5xl mx-auto">
                 {[
                   "Toronto",
-                  "Brampton",
-                  "Mississauga",
-                  "Calgary",
                   "Vancouver",
-                  "Kitchener",
-                  "Surrey",
-                  "Burnaby"
+                  "Calgary",
+                  "Ottawa",
+                  "Mississauga",
+                  "Brampton",
+                  "Edmonton",
+                  "Hamilton"
                 ].map((city, idx) => (
-                  <button
+                  <Link
+                    href={`/services/${slug}/${city.toLowerCase().replace(/ /g, '-')}`}
                     key={idx}
-                    onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
-                    className="bg-white border border-gray-200/80 rounded-2xl py-3 sm:py-4 px-3 sm:px-6 flex items-center justify-center gap-2 shadow-sm hover:shadow-md hover:border-[#00E1FF]/40 text-[#0f172a] font-bold text-xs sm:text-base transition-all duration-300 group"
+                    className="bg-white border border-gray-200/80 rounded-2xl py-3 sm:py-4 px-3 sm:px-6 flex items-center justify-center gap-3 shadow-sm hover:shadow-[0_4px_20px_rgba(0,85,255,0.05)] hover:border-[#0055FF]/30 transition-all duration-300 group"
                   >
-                    <span className="text-red-500 text-base sm:text-lg group-hover:scale-110 transition-transform">📍</span>
-                    <span>{city}</span>
-                  </button>
+                    <div className="w-8 h-8 rounded-full bg-[#0055FF]/5 flex items-center justify-center text-[#0055FF] group-hover:bg-[#0055FF] group-hover:text-white transition-colors duration-300 shrink-0">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </div>
+                    <span className="text-[#0f172a] font-bold text-sm sm:text-base group-hover:text-[#0055FF] transition-colors">{city}</span>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -3870,7 +4012,7 @@ export default function ServicePage() {
 
 
         {/* FAQ Section */}
-        <FAQ />
+        <FAQ faqs={service.faqs} />
 
         {/* CTA Section - Slim */}
         <section id="contact" className="py-10 bg-[#1a1a2e]">

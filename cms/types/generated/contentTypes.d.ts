@@ -880,7 +880,11 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    deliveryDescription: Schema.Attribute.Text;
+    deliveryHeading: Schema.Attribute.String;
+    deliverySteps: Schema.Attribute.Component<'sections.delivery-step', true>;
     description: Schema.Attribute.Text;
+    faqs: Schema.Attribute.Component<'shared.faq', true>;
     features: Schema.Attribute.Component<'shared.named-item', true>;
     heroImage: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -891,7 +895,10 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     overview: Schema.Attribute.RichText;
+    overviewTagline: Schema.Attribute.Text;
     process: Schema.Attribute.Component<'shared.process-step', true>;
+    processDescription: Schema.Attribute.Text;
+    processHeading: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     seo: Schema.Attribute.Component<'shared.seo', false>;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
@@ -902,12 +909,18 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    whyChooseUsCards: Schema.Attribute.Component<'sections.value-card', true>;
+    whyChooseUsHeading: Schema.Attribute.String;
+    whyChooseUsIntro: Schema.Attribute.Text;
+    whyChooseUsSubHeading: Schema.Attribute.String;
+    whyChooseUsSubText: Schema.Attribute.Text;
   };
 }
 
 export interface ApiStaticPageStaticPage extends Struct.CollectionTypeSchema {
   collectionName: 'static_pages';
   info: {
+    description: '';
     displayName: 'Static Page';
     pluralName: 'static-pages';
     singularName: 'static-page';
@@ -922,6 +935,7 @@ export interface ApiStaticPageStaticPage extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     heroBody: Schema.Attribute.Text;
     heroHeading: Schema.Attribute.String;
+    heroimage: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',

@@ -81,12 +81,26 @@ export type CmsService = {
   description: string;
   heroImage: string;
   overview: string;
+  overviewTagline?: string;
   features: { title: string; description: string; icon: string }[];
   technologies: string[];
   process: { step: string; description: string }[];
   stats: { value: string; label: string }[];
   caseStudies: { title: string; industry: string; result: string }[];
   seo?: Record<string, unknown>;
+  // Why Choose Us
+  whyChooseUsHeading?: string;
+  whyChooseUsIntro?: string;
+  whyChooseUsSubHeading?: string;
+  whyChooseUsSubText?: string;
+  whyChooseUsCards?: { icon: string; label: string }[];
+  // How We Deliver
+  deliveryHeading?: string;
+  deliveryDescription?: string;
+  deliverySteps?: { title: string; content: string }[];
+  processHeading?: string;
+  processDescription?: string;
+  faqs?: { question: string; answer: string }[];
 };
 
 function mapService(entry: Record<string, unknown>, fallbackSlug?: string): CmsService {
@@ -97,12 +111,33 @@ function mapService(entry: Record<string, unknown>, fallbackSlug?: string): CmsS
     description: String(entry.description || ""),
     heroImage: String(entry.heroImage || ""),
     overview: String(entry.overview || ""),
+    overviewTagline: entry.overviewTagline ? String(entry.overviewTagline) : undefined,
     features: Array.isArray(entry.features) ? (entry.features as CmsService["features"]) : [],
     technologies: Array.isArray(entry.technologies) ? (entry.technologies as string[]) : [],
+    processHeading: entry.processHeading ? String(entry.processHeading) : undefined,
+    processDescription: entry.processDescription ? String(entry.processDescription) : undefined,
     process: Array.isArray(entry.process) ? (entry.process as CmsService["process"]) : [],
     stats: Array.isArray(entry.stats) ? (entry.stats as CmsService["stats"]) : [],
     caseStudies: Array.isArray(entry.caseStudies) ? (entry.caseStudies as CmsService["caseStudies"]) : [],
     seo: (entry.seo as Record<string, unknown>) || undefined,
+    // Why Choose Us
+    whyChooseUsHeading: entry.whyChooseUsHeading ? String(entry.whyChooseUsHeading) : undefined,
+    whyChooseUsIntro: entry.whyChooseUsIntro ? String(entry.whyChooseUsIntro) : undefined,
+    whyChooseUsSubHeading: entry.whyChooseUsSubHeading ? String(entry.whyChooseUsSubHeading) : undefined,
+    whyChooseUsSubText: entry.whyChooseUsSubText ? String(entry.whyChooseUsSubText) : undefined,
+    whyChooseUsCards: Array.isArray(entry.whyChooseUsCards)
+      ? (entry.whyChooseUsCards as { icon: string; label: string }[])
+      : undefined,
+    // How We Deliver
+    deliveryHeading: entry.deliveryHeading ? String(entry.deliveryHeading) : undefined,
+    deliveryDescription: entry.deliveryDescription ? String(entry.deliveryDescription) : undefined,
+    deliverySteps: Array.isArray(entry.deliverySteps)
+      ? (entry.deliverySteps as { title: string; content: string }[])
+      : undefined,
+    // FAQs
+    faqs: Array.isArray(entry.faqs)
+      ? (entry.faqs as { question: string; answer: string }[])
+      : undefined,
   };
 }
 
@@ -140,6 +175,9 @@ export async function getCmsService(
       "populate[2]": "stats",
       "populate[3]": "caseStudies",
       "populate[4]": "seo",
+      "populate[5]": "whyChooseUsCards",
+      "populate[6]": "deliverySteps",
+      "populate[7]": "faqs",
       "pagination[pageSize]": 1,
     },
     tags: ["strapi", "services", `service-${slug}`],
@@ -304,6 +342,7 @@ export async function getCmsStaticPage(slug: string): Promise<Record<string, unk
     query: {
       "filters[slug][$eq]": slug,
       "populate[0]": "seo",
+      "populate[1]": "heroimage",
       "pagination[pageSize]": 1,
     },
     tags: ["strapi", "static-page", slug],

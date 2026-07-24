@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_sections_delivery_steps",
+  "info": {
+    "displayName": "Delivery Step",
+    "icon": "list"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "text"
+    }
+  }
+}

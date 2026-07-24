@@ -197,12 +197,14 @@ export default function LetsTalkBusiness() {
     }
   };
 
+  const isLocationPage = pathname?.startsWith('/services/') && pathname.split('/').length === 4;
+
   return (
     <>
       {/* Floating Side Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed right-0 top-1/2 -translate-y-1/2 z-50 bg-gradient-to-b from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] hover:opacity-90 text-white py-6 px-2 rounded-l-md shadow-lg transition-all duration-300 group overflow-hidden"
+        className="fixed right-0 top-1/2 -translate-y-1/2 z-50 bg-gradient-to-b from-[#00E1FF] via-[#0055FF] to-[#FF6B6B] hover:opacity-90 text-white py-6 px-2 rounded-l-md shadow-lg transition-all duration-300 group overflow-hidden hidden sm:block"
         style={{ writingMode: "vertical-rl", textOrientation: "mixed" }}
       >
         <span className="text-sm font-semibold tracking-wider whitespace-nowrap">

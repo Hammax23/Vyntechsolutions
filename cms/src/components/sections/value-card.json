@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_sections_value_cards",
+  "info": {
+    "displayName": "Value Card",
+    "icon": "star"
+  },
+  "options": {},
+  "attributes": {
+    "icon": {
+      "type": "string",
+      "default": "chart"
+    },
+    "label": {
+      "type": "string"
+    }
+  }
+}

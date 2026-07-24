@@ -16,6 +16,30 @@ export interface HomeHeroSlide extends Struct.ComponentSchema {
   };
 }
 
+export interface SectionsDeliveryStep extends Struct.ComponentSchema {
+  collectionName: 'components_sections_delivery_steps';
+  info: {
+    displayName: 'Delivery Step';
+    icon: 'list';
+  };
+  attributes: {
+    content: Schema.Attribute.Text;
+    title: Schema.Attribute.String;
+  };
+}
+
+export interface SectionsValueCard extends Struct.ComponentSchema {
+  collectionName: 'components_sections_value_cards';
+  info: {
+    displayName: 'Value Card';
+    icon: 'star';
+  };
+  attributes: {
+    icon: Schema.Attribute.String & Schema.Attribute.DefaultTo<'chart'>;
+    label: Schema.Attribute.String;
+  };
+}
+
 export interface SharedCaseStudy extends Struct.ComponentSchema {
   collectionName: 'components_shared_case_studies';
   info: {
@@ -25,6 +49,19 @@ export interface SharedCaseStudy extends Struct.ComponentSchema {
     industry: Schema.Attribute.String;
     result: Schema.Attribute.Text;
     title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface SharedFaq extends Struct.ComponentSchema {
+  collectionName: 'components_shared_faqs';
+  info: {
+    description: '';
+    displayName: 'FAQ';
+    icon: 'question';
+  };
+  attributes: {
+    answer: Schema.Attribute.Text & Schema.Attribute.Required;
+    question: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
 
@@ -106,7 +143,10 @@ declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'home.hero-slide': HomeHeroSlide;
+      'sections.delivery-step': SectionsDeliveryStep;
+      'sections.value-card': SectionsValueCard;
       'shared.case-study': SharedCaseStudy;
+      'shared.faq': SharedFaq;
       'shared.link-group': SharedLinkGroup;
       'shared.named-item': SharedNamedItem;
       'shared.nav-link': SharedNavLink;
