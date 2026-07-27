@@ -277,6 +277,7 @@ function OfferPage({ data, variant }: { data: QuotationData; variant: "client" |
       {/* Letterhead */}
       <View style={s.header}>
         <View style={s.brandBlock}>
+          {/* eslint-disable-next-line jsx-a11y/alt-text */}
           <Image src={logo} style={s.logo} />
           <View>
             <Text style={s.brandName}>VYNTECH SOLUTIONS</Text>

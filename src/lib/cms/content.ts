@@ -103,41 +103,44 @@ export type CmsService = {
   faqs?: { question: string; answer: string }[];
 };
 
-function mapService(entry: Record<string, unknown>, fallbackSlug?: string): CmsService {
+function mapService(entry: Record<string, unknown>, fallbackSlug?: string, localFallback?: CmsService): CmsService {
+  const isPopulated = (val: unknown) => val !== null && val !== undefined && val !== "";
+  const isArrayPopulated = (val: unknown) => Array.isArray(val) && val.length > 0;
+
   return {
     slug: String(entry.slug || fallbackSlug || ""),
-    title: String(entry.title || ""),
-    subtitle: String(entry.subtitle || ""),
-    description: String(entry.description || ""),
-    heroImage: String(entry.heroImage || ""),
-    overview: String(entry.overview || ""),
-    overviewTagline: entry.overviewTagline ? String(entry.overviewTagline) : undefined,
-    features: Array.isArray(entry.features) ? (entry.features as CmsService["features"]) : [],
-    technologies: Array.isArray(entry.technologies) ? (entry.technologies as string[]) : [],
-    processHeading: entry.processHeading ? String(entry.processHeading) : undefined,
-    processDescription: entry.processDescription ? String(entry.processDescription) : undefined,
-    process: Array.isArray(entry.process) ? (entry.process as CmsService["process"]) : [],
-    stats: Array.isArray(entry.stats) ? (entry.stats as CmsService["stats"]) : [],
-    caseStudies: Array.isArray(entry.caseStudies) ? (entry.caseStudies as CmsService["caseStudies"]) : [],
-    seo: (entry.seo as Record<string, unknown>) || undefined,
+    title: isPopulated(entry.title) ? String(entry.title) : (localFallback?.title || ""),
+    subtitle: isPopulated(entry.subtitle) ? String(entry.subtitle) : (localFallback?.subtitle || ""),
+    description: isPopulated(entry.description) ? String(entry.description) : (localFallback?.description || ""),
+    heroImage: isPopulated(entry.heroImage) ? String(entry.heroImage) : (localFallback?.heroImage || ""),
+    overview: isPopulated(entry.overview) ? String(entry.overview) : (localFallback?.overview || ""),
+    overviewTagline: isPopulated(entry.overviewTagline) ? String(entry.overviewTagline) : localFallback?.overviewTagline,
+    features: isArrayPopulated(entry.features) ? (entry.features as CmsService["features"]) : (localFallback?.features || []),
+    technologies: isArrayPopulated(entry.technologies) ? (entry.technologies as string[]) : (localFallback?.technologies || []),
+    processHeading: isPopulated(entry.processHeading) ? String(entry.processHeading) : localFallback?.processHeading,
+    processDescription: isPopulated(entry.processDescription) ? String(entry.processDescription) : localFallback?.processDescription,
+    process: isArrayPopulated(entry.process) ? (entry.process as CmsService["process"]) : (localFallback?.process || []),
+    stats: isArrayPopulated(entry.stats) ? (entry.stats as CmsService["stats"]) : (localFallback?.stats || []),
+    caseStudies: isArrayPopulated(entry.caseStudies) ? (entry.caseStudies as CmsService["caseStudies"]) : (localFallback?.caseStudies || []),
+    seo: (entry.seo as Record<string, unknown>) || localFallback?.seo,
     // Why Choose Us
-    whyChooseUsHeading: entry.whyChooseUsHeading ? String(entry.whyChooseUsHeading) : undefined,
-    whyChooseUsIntro: entry.whyChooseUsIntro ? String(entry.whyChooseUsIntro) : undefined,
-    whyChooseUsSubHeading: entry.whyChooseUsSubHeading ? String(entry.whyChooseUsSubHeading) : undefined,
-    whyChooseUsSubText: entry.whyChooseUsSubText ? String(entry.whyChooseUsSubText) : undefined,
-    whyChooseUsCards: Array.isArray(entry.whyChooseUsCards)
+    whyChooseUsHeading: isPopulated(entry.whyChooseUsHeading) ? String(entry.whyChooseUsHeading) : localFallback?.whyChooseUsHeading,
+    whyChooseUsIntro: isPopulated(entry.whyChooseUsIntro) ? String(entry.whyChooseUsIntro) : localFallback?.whyChooseUsIntro,
+    whyChooseUsSubHeading: isPopulated(entry.whyChooseUsSubHeading) ? String(entry.whyChooseUsSubHeading) : localFallback?.whyChooseUsSubHeading,
+    whyChooseUsSubText: isPopulated(entry.whyChooseUsSubText) ? String(entry.whyChooseUsSubText) : localFallback?.whyChooseUsSubText,
+    whyChooseUsCards: isArrayPopulated(entry.whyChooseUsCards)
       ? (entry.whyChooseUsCards as { icon: string; label: string }[])
-      : undefined,
+      : localFallback?.whyChooseUsCards,
     // How We Deliver
-    deliveryHeading: entry.deliveryHeading ? String(entry.deliveryHeading) : undefined,
-    deliveryDescription: entry.deliveryDescription ? String(entry.deliveryDescription) : undefined,
-    deliverySteps: Array.isArray(entry.deliverySteps)
+    deliveryHeading: isPopulated(entry.deliveryHeading) ? String(entry.deliveryHeading) : localFallback?.deliveryHeading,
+    deliveryDescription: isPopulated(entry.deliveryDescription) ? String(entry.deliveryDescription) : localFallback?.deliveryDescription,
+    deliverySteps: isArrayPopulated(entry.deliverySteps)
       ? (entry.deliverySteps as { title: string; content: string }[])
-      : undefined,
+      : localFallback?.deliverySteps,
     // FAQs
-    faqs: Array.isArray(entry.faqs)
+    faqs: isArrayPopulated(entry.faqs)
       ? (entry.faqs as { question: string; answer: string }[])
-      : undefined,
+      : localFallback?.faqs,
   };
 }
 
@@ -156,7 +159,11 @@ export async function getCmsServices(fallback: Record<string, Omit<CmsService, "
     tags: ["strapi", "services"],
   });
 
-  const list = unwrapList(res).map((e) => mapService(e));
+  const list = unwrapList(res).map((e) => {
+    const slug = String(e.slug || "");
+    const local = fallback[slug];
+    return mapService(e, slug, local ? { slug, ...local } : undefined);
+  });
   if (list.length) return list;
 
   return Object.entries(fallback).map(([slug, data]) => ({ slug, ...data }));
@@ -184,8 +191,8 @@ export async function getCmsService(
   });
 
   const entry = unwrapList(res)[0];
-  if (entry) return mapService(entry, slug);
   const local = fallback[slug];
+  if (entry) return mapService(entry, slug, local ? { slug, ...local } : undefined);
   return local ? { slug, ...local } : null;
 }
 

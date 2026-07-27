@@ -269,10 +269,10 @@ export default function AboutPage() {
                       })()}
                     </h2>
                     <p className="text-gray-600 text-lg leading-relaxed mb-6">
-                      You deserve more than just a service provider you deserve a partner invested in your success. At VynTech Solutions, we bridge the gap between your vision and technical execution, delivering software that's not just functional but transformative for your business.
+                      You deserve more than just a service provider you deserve a partner invested in your success. At VynTech Solutions, we bridge the gap between your vision and technical execution, delivering software that&apos;s not just functional but transformative for your business.
                     </p>
                     <p className="text-gray-600 leading-relaxed mb-10">
-                      Whether you're a startup validating your first MVP or an enterprise modernizing legacy systems, we bring the same dedication, expertise, and passion to every project we take on because your growth is our priority.
+                      Whether you&apos;re a startup validating your first MVP or an enterprise modernizing legacy systems, we bring the same dedication, expertise, and passion to every project we take on because your growth is our priority.
                     </p>
                     <button
                       onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}

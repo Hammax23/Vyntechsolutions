@@ -306,7 +306,7 @@ export default function CityServicePage() {
                       Ready to Capture the <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00E1FF] to-[#0055FF]">{formattedCity}</span> Market?
                     </h2>
                     <p className="text-gray-300 text-lg font-light mb-8 leading-relaxed max-w-lg">
-                      46% of all Google searches have local intent. If you aren't visible when local customers search for your services, you're handing revenue directly to your competitors. Let's fix that.
+                      46% of all Google searches have local intent. If you aren&apos;t visible when local customers search for your services, you&apos;re handing revenue directly to your competitors. Let&apos;s fix that.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4">
                       <button onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))} className="bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-white px-8 py-4 rounded-full font-bold text-sm shadow-[0_8px_20px_rgba(0,85,255,0.2)] hover:shadow-[0_12px_25px_rgba(0,85,255,0.4)] hover:-translate-y-0.5 transition-all duration-300 w-full sm:w-auto flex justify-center items-center text-center">
@@ -348,7 +348,7 @@ export default function CityServicePage() {
                   {service.title} for {formattedCity} Businesses
                 </h2>
                 <p className="text-lg text-gray-600 leading-relaxed mb-12 font-light">
-                  {formattedCity} is a highly competitive digital market — with hundreds of thousands of businesses all fighting for the same Google searches. A generic digital presence won't cut it here. VynTech Solutions builds custom, conversion-focused {service.title.toLowerCase()} campaigns for {formattedCity} businesses that are engineered to rank, load fast, and turn visitors into paying customers. We understand the {formattedCity} market deeply. Our strategies are tailored to local neighbourhoods and business verticals — so you're not just getting traffic, you're getting the right traffic. With five-star reviews and clients across every major industry, we're the agency that {formattedCity} businesses trust to grow online.
+                  {formattedCity} is a highly competitive digital market — with hundreds of thousands of businesses all fighting for the same Google searches. A generic digital presence won&apos;t cut it here. VynTech Solutions builds custom, conversion-focused {service.title.toLowerCase()} campaigns for {formattedCity} businesses that are engineered to rank, load fast, and turn visitors into paying customers. We understand the {formattedCity} market deeply. Our strategies are tailored to local neighbourhoods and business verticals — so you&apos;re not just getting traffic, you&apos;re getting the right traffic. With five-star reviews and clients across every major industry, we&apos;re the agency that {formattedCity} businesses trust to grow online.
                 </p>
 
                 <h3 className="text-xl font-bold text-[#0d1117] mb-6">
@@ -440,7 +440,7 @@ export default function CityServicePage() {
               onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
               className="bg-white text-[#0d1117] px-8 py-3 rounded-full font-bold text-base hover:bg-gradient-to-r hover:from-[#00E1FF] hover:to-[#0055FF] hover:text-white hover:shadow-[0_0_30px_rgba(0,225,255,0.4)] hover:-translate-y-1 transition-all duration-300 shadow-xl"
             >
-              Let's Talk Business
+              Let&apos;s Talk Business
             </button>
           </div>
         </section>

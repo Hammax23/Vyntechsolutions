@@ -124,6 +124,30 @@ export const servicesData: Record<string, ServiceData> = {
         "industry": "Retail",
         "result": "Stock tracking and reporting for 5 warehouses"
       }
+    ],
+    "deliveryHeading": "How We Deliver Web Application Development Services",
+    "deliveryDescription": "Web application development only pays off when the product is fast, secure, easy to use, and built to scale. At VynTech Solutions, our delivery model is structured, outcome-oriented, and refined across hundreds of web and product engagements.\\n\\nWe work in clear phases so discovery is thorough, build quality is high, and launches are predictable. Scope, timelines, architecture, and support are defined upfront, which removes ambiguity and gives stakeholders full visibility from day one.\\n\\nBy pairing human-centric UI/UX design with product-grade engineering, we move your business from fragile websites to a web application that performs, converts, and compounds value release after release.",
+    "deliverySteps": [
+      {
+        "title": "Discovery & Product Strategy",
+        "content": "We define product goals, target audience requirements, feature prioritization, system architecture blueprints, and a clear execution roadmap before writing code."
+      },
+      {
+        "title": "UX/UI Design & Prototyping",
+        "content": "Our design team crafts intuitive user journeys, wireframes, high-fidelity UI components, and interactive prototypes tailored for high conversion and seamless interaction."
+      },
+      {
+        "title": "Agile Engineering & QA",
+        "content": "We build scalable frontend and backend systems using agile 2-week sprints, automated unit/integration testing, continuous code reviews, and frequent demo deployments."
+      },
+      {
+        "title": "Cloud Deployment & DevOps",
+        "content": "We establish automated CI/CD pipelines, containerized environments, secure cloud infrastructure, and zero-downtime deployment strategies on AWS, Azure, or GCP."
+      },
+      {
+        "title": "Support, Optimize & Scale",
+        "content": "After launch, we continuously monitor app performance, perform security audits, optimize load times, and ship ongoing feature enhancements to support your business growth."
+      }
     ]
   },
   "mobile-app-development": {

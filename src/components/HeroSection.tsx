@@ -148,7 +148,7 @@ export default function HeroSection() {
       videoEl.removeEventListener("ended", handleEnded);
       videoEl.removeEventListener("timeupdate", handleTimeUpdate);
     };
-  }, [currentMediaIndex, goToNextMedia, isReady, currentMedia?.type]);
+  }, [currentMediaIndex, goToNextMedia, isReady, currentMedia]);
 
   // Handle image display duration
   useEffect(() => {
@@ -167,7 +167,7 @@ export default function HeroSection() {
         clearTimeout(imageTimerRef.current);
       }
     };
-  }, [currentMediaIndex, goToNextMedia, isReady, currentMedia?.type]);
+  }, [currentMediaIndex, goToNextMedia, isReady, currentMedia]);
 
   // Detect mobile device immediately
   useEffect(() => {

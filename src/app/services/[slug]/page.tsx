@@ -2508,8 +2508,10 @@ const MobileDevServicesTabSection = () => {
   );
 };
 
-const CoreCapabilitiesSection = () => {
-  const capabilities = [
+const CoreCapabilitiesSection = ({ slug }: { slug: string }) => {
+  const isCustomSoftware = slug === "custom-software-development";
+
+  const mobileCapabilities = [
     {
       title: "Cloud Native",
       icon: (
@@ -2577,6 +2579,77 @@ const CoreCapabilitiesSection = () => {
     }
   ];
 
+  const customSoftwareCapabilities = [
+    {
+      title: "Enterprise Architecture",
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
+        </svg>
+      ),
+      text: (
+        <>
+          Scalable systems engineered to <strong className="font-semibold text-[#0f172a]">support complex operations</strong> and growth.
+        </>
+      )
+    },
+    {
+      title: "Legacy Modernization",
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+        </svg>
+      ),
+      text: (
+        <>
+          Upgrading outdated platforms to <strong className="font-semibold text-[#0f172a]">modern technology stacks</strong> securely.
+        </>
+      )
+    },
+    {
+      title: "Workflow Automation",
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+        </svg>
+      ),
+      text: (
+        <>
+          Replacing manual tasks with <strong className="font-semibold text-[#0f172a]">automated business workflows</strong>.
+        </>
+      )
+    },
+    {
+      title: "Custom Integrations",
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+        </svg>
+      ),
+      text: (
+        <>
+          Connecting <strong className="font-bold text-[#0f172a]">ERPs, CRMs</strong>, and third-party APIs seamlessly.
+        </>
+      )
+    },
+    {
+      title: "Enterprise Security",
+      icon: (
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.75} viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+        </svg>
+      ),
+      text: (
+        <>
+          Robust data protection adhering to <strong className="font-bold text-[#0f172a]">ISO standards and PIPEDA</strong>.
+        </>
+      )
+    }
+  ];
+
+  const capabilities = isCustomSoftware ? customSoftwareCapabilities : mobileCapabilities;
+
+
   return (
     <div className="mt-16 pt-8 border-t border-gray-100">
       {/* Header */}
@@ -2588,8 +2661,8 @@ const CoreCapabilitiesSection = () => {
         <div className="w-10 sm:w-16 h-[1px] bg-gradient-to-l from-transparent to-gray-300" />
       </div>
 
-      {/* 5 Card Modern Grid (2 cols on mobile) */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 sm:gap-5">
+      {/* 5 Card Modern Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-5">
         {capabilities.map((item, idx) => (
           <div
             key={idx}
@@ -3145,42 +3218,38 @@ export default function ServicePage() {
               </p>
             </div>
 
-            {/* Our Core Capabilities Section - ONLY on Mobile App Development Service Page */}
-            {isMobilePage && <CoreCapabilitiesSection />}
+            {/* What We Offer Label & Feature Cards */}
+            <>
+              <div className="text-center mb-8">
+                <span className="inline-block bg-gradient-to-r from-[#00E1FF]/10 to-[#0055FF]/10 text-[#0055FF] border border-[#00E1FF]/30 text-sm font-semibold px-4 py-2 rounded-full">
+                  What We Offer
+                </span>
+              </div>
 
-            {/* What We Offer Label & Feature Cards (Hidden for specialized service pages) */}
-            {!isMobilePage && slug !== "custom-software-development" && (
-              <>
-                <div className="text-center mb-8">
-                  <span className="inline-block bg-gradient-to-r from-[#00E1FF]/10 to-[#0055FF]/10 text-[#0055FF] border border-[#00E1FF]/30 text-sm font-semibold px-4 py-2 rounded-full">
-                    What We Offer
-                  </span>
-                </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {service.features.map((feature, index) => (
+                  <div
+                    key={index}
+                    className="bg-white rounded-2xl p-6 flex flex-col justify-start min-h-[190px] border border-gray-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_30px_rgba(0,85,255,0.12)] hover:border-[#00E1FF]/50 hover:-translate-y-1.5 transition-all duration-300 relative group overflow-hidden"
+                  >
+                    {/* Ambient Accent Line */}
+                    <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#00E1FF] to-[#0055FF] opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-t-2xl" />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {service.features.map((feature, index) => (
-                    <div
-                      key={index}
-                      className="bg-white rounded-2xl p-6 flex flex-col justify-start min-h-[190px] border border-gray-200/80 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_30px_rgba(0,85,255,0.12)] hover:border-[#00E1FF]/50 hover:-translate-y-1.5 transition-all duration-300 relative group overflow-hidden"
-                    >
-                      {/* Ambient Accent Line */}
-                      <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#00E1FF] to-[#0055FF] opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-t-2xl" />
-
-                      <div className="mb-4">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#00E1FF]/10 to-[#0055FF]/10 text-[#0055FF] group-hover:bg-gradient-to-r group-hover:from-[#00E1FF] group-hover:to-[#0055FF] group-hover:text-white flex items-center justify-center transition-all duration-300 group-hover:scale-110 shadow-sm">
-                          <FeatureIcon type={feature.icon} />
-                        </div>
-                      </div>
-
-                      <div>
-                        <h3 className="text-base font-bold text-[#0f172a] mb-2">{feature.title}</h3>
-                        <p className="text-gray-600 text-sm leading-relaxed font-normal">{feature.description}</p>
+                    <div className="mb-4">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#00E1FF]/10 to-[#0055FF]/10 text-[#0055FF] group-hover:bg-gradient-to-r group-hover:from-[#00E1FF] group-hover:to-[#0055FF] group-hover:text-white flex items-center justify-center transition-all duration-300 group-hover:scale-110 shadow-sm">
+                        <FeatureIcon type={feature.icon} />
                       </div>
                     </div>
-                  ))}
-                </div>
-              </>
-            )}
+
+                    <div>
+                      <h3 className="text-base font-bold text-[#0f172a] mb-2">{feature.title}</h3>
+                      <p className="text-gray-600 text-sm leading-relaxed font-normal">{feature.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+
           </div>
         </section>
 
@@ -3194,10 +3263,6 @@ export default function ServicePage() {
           <UiUxEngagementsSection />
         )}
 
-        {/* Custom Software Services Section - Only for Custom Software Development */}
-        {slug === "custom-software-development" && (
-          <CustomSoftwareServicesSection />
-        )}
 
         {/* E-commerce Services Section - Only for E-commerce Solutions */}
         {slug === "ecommerce-solutions" && (
@@ -3667,10 +3732,10 @@ export default function ServicePage() {
                       <div className="w-16 h-1 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full mb-6" />
                       <div className="space-y-4 text-gray-600 text-sm sm:text-base leading-relaxed">
                         <p>
-                          Most affordable SEO services cut corners — thin content, low-quality backlinks, and cookie-cutter audits. We don't. Our local SEO services in Toronto and across Canada are built on three pillars: <strong className="text-[#0f172a]">technical excellence</strong>, <strong className="text-[#0f172a]">hyper-local content</strong>, and <strong className="text-[#0f172a]">authoritative link earning</strong>.
+                          Most affordable SEO services cut corners — thin content, low-quality backlinks, and cookie-cutter audits. We don&apos;t. Our local SEO services in Toronto and across Canada are built on three pillars: <strong className="text-[#0f172a]">technical excellence</strong>, <strong className="text-[#0f172a]">hyper-local content</strong>, and <strong className="text-[#0f172a]">authoritative link earning</strong>.
                         </p>
                         <p>
-                          When someone in Toronto searches "local SEO services near me," your business should be the first thing they see. We make that happen through Google Business Profile optimization, structured data markup, local citation building, and neighbourhood-level keyword targeting — the kind of work that moves the needle.
+                          When someone in Toronto searches &quot;local SEO services near me,&quot; your business should be the first thing they see. We make that happen through Google Business Profile optimization, structured data markup, local citation building, and neighbourhood-level keyword targeting — the kind of work that moves the needle.
                         </p>
                       </div>
                     </div>
@@ -3898,7 +3963,7 @@ export default function ServicePage() {
                   <div className="w-24 h-1 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full mb-8" />
 
                   <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6">
-                    Managing taxes and accounting isn't just about numbers — it's about making confident financial decisions. At VynTech Solutions, our certified accounting professionals provide accurate, transparent, and deadline-driven financial services tailored for Canadian businesses of every size.
+                    Managing taxes and accounting isn&apos;t just about numbers — it&apos;s about making confident financial decisions. At VynTech Solutions, our certified accounting professionals provide accurate, transparent, and deadline-driven financial services tailored for Canadian businesses of every size.
                   </p>
 
                   <h3 className="text-base sm:text-lg font-bold text-[#0f172a] mb-2">

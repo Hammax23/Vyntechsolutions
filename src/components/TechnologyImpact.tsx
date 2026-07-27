@@ -130,7 +130,7 @@ export default function TechnologyImpact() {
             </h2>
             
             <p className="text-base sm:text-lg text-gray-600 leading-relaxed mb-8 max-w-[500px]">
-              We don't just build software we build outcomes. Every project is guided by one question: Does this genuinely move your business forward? That focus is what turns technology into growth, and growth into lasting success.
+              We don&apos;t just build software we build outcomes. Every project is guided by one question: Does this genuinely move your business forward? That focus is what turns technology into growth, and growth into lasting success.
             </p>
 
             <Link
