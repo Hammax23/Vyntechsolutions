@@ -25,12 +25,20 @@ type SeoBits = {
 function asSeo(raw: unknown): SeoBits {
   if (!raw || typeof raw !== "object") return {};
   const s = raw as Record<string, unknown>;
+  const canonical =
+    (typeof s.canonicalURL === "string" && s.canonicalURL) ||
+    (typeof s.canonical === "string" && s.canonical) ||
+    undefined;
+  const focusKeyword =
+    (typeof s.focusKeyword === "string" && s.focusKeyword) ||
+    (typeof s.keywords === "string" && s.keywords.split(",")[0]?.trim()) ||
+    undefined;
   return {
     metaTitle: typeof s.metaTitle === "string" ? s.metaTitle : undefined,
     metaDescription: typeof s.metaDescription === "string" ? s.metaDescription : undefined,
-    canonical: typeof s.canonical === "string" ? s.canonical : undefined,
+    canonical: typeof canonical === "string" ? canonical : undefined,
     indexable: typeof s.indexable === "boolean" ? s.indexable : undefined,
-    focusKeyword: typeof s.focusKeyword === "string" ? s.focusKeyword : undefined,
+    focusKeyword: typeof focusKeyword === "string" ? focusKeyword : undefined,
   };
 }
 

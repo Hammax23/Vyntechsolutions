@@ -36,6 +36,7 @@ yarn-error.log*
 /cms/build
 /cms/dist
 /cms/.strapi
+/cms/.strapi-updater.json
 /cms/public/uploads/*
 !/cms/public/uploads/.gitkeep
 

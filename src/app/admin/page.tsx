@@ -11,6 +11,13 @@ const OfferLetterSection = dynamic(() => import("@/components/admin/OfferLetterS
   ),
 });
 
+const InvoiceSection = dynamic(() => import("@/components/admin/InvoiceSection"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-64 text-white/40 text-sm">Loading company expenses...</div>
+  ),
+});
+
 interface QuoteSubmission {
   id: string;
   fullName: string;
@@ -111,7 +118,7 @@ export default function AdminPage() {
   const [selectedSubmission, setSelectedSubmission] = useState<QuoteSubmission | null>(null);
   const [activeTab, setActiveTab] = useState<"all" | "new" | "in_progress" | "completed">("all");
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeSection, setActiveSection] = useState<"quotes" | "projects" | "careers" | "offer_letters">("quotes");
+  const [activeSection, setActiveSection] = useState<"quotes" | "projects" | "careers" | "offer_letters" | "invoices">("quotes");
   const [projects, setProjects] = useState<Project[]>([]);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [projectTab, setProjectTab] = useState<"overview" | "tasks" | "timeline" | "notes" | "activity">("overview");
@@ -829,6 +836,12 @@ export default function AdminPage() {
             </svg>
             {sidebarOpen && <span className="text-sm font-medium">Offer Letters</span>}
           </button>
+          <button onClick={() => { setActiveSection("invoices"); setSelectedSubmission(null); setSelectedProject(null); setSelectedPosition(null); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeSection === "invoices" ? "bg-[#0055FF]/20 border-l-2 border-[#00B4FF] text-white" : "text-white/50 hover:text-white hover:bg-white/5"}`}>
+            <svg className={`w-5 h-5 ${activeSection === "invoices" ? "text-[#00B4FF]" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            {sidebarOpen && <span className="text-sm font-medium">Company Expenses</span>}
+          </button>
         </nav>
 
         <div className="p-3 border-t border-white/5">
@@ -860,7 +873,9 @@ export default function AdminPage() {
                       ? "Project Manager"
                       : activeSection === "careers"
                         ? "Careers"
-                        : "Offer Letters"}
+                        : activeSection === "offer_letters"
+                          ? "Offer Letters"
+                          : "Company Expenses"}
                 </h2>
                 <p className="text-white/40 text-xs">
                   {activeSection === "quotes"
@@ -869,7 +884,9 @@ export default function AdminPage() {
                       ? "Enterprise project management"
                       : activeSection === "careers"
                         ? "Manage job openings"
-                        : "Generate client & internal quotation PDFs"}
+                        : activeSection === "offer_letters"
+                          ? "Generate client & internal quotation PDFs"
+                          : "Salary slips & internal expense vouchers"}
                 </p>
               </div>
             </div>
@@ -1621,6 +1638,9 @@ export default function AdminPage() {
 
           {activeSection === "offer_letters" && (
             <OfferLetterSection sidebarOpen={sidebarOpen} />
+          )}
+          {activeSection === "invoices" && (
+            <InvoiceSection sidebarOpen={sidebarOpen} />
           )}
         </div>
       </main>

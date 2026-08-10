@@ -101,6 +101,30 @@ export interface SharedNavLink extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedOpenGraph extends Struct.ComponentSchema {
+  collectionName: 'components_shared_open_graphs';
+  info: {
+    description: 'Social share preview (Facebook / LinkedIn / X)';
+    displayName: 'Open Graph';
+    icon: 'project-diagram';
+  };
+  attributes: {
+    ogDescription: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    ogImage: Schema.Attribute.Media<'images'>;
+    ogTitle: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 70;
+      }>;
+    ogType: Schema.Attribute.String;
+    ogUrl: Schema.Attribute.String;
+  };
+}
+
 export interface SharedProcessStep extends Struct.ComponentSchema {
   collectionName: 'components_shared_process_steps';
   info: {
@@ -115,16 +139,30 @@ export interface SharedProcessStep extends Struct.ComponentSchema {
 export interface SharedSeo extends Struct.ComponentSchema {
   collectionName: 'components_shared_seos';
   info: {
-    description: 'Page/entry SEO metadata';
+    description: 'Page SEO metadata with SERP & social preview support';
     displayName: 'SEO';
+    icon: 'search';
   };
   attributes: {
     canonical: Schema.Attribute.String;
+    canonicalURL: Schema.Attribute.String;
     focusKeyword: Schema.Attribute.String;
     indexable: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
-    metaDescription: Schema.Attribute.Text;
-    metaTitle: Schema.Attribute.String;
+    keywords: Schema.Attribute.Text;
+    metaDescription: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 160;
+      }>;
+    metaImage: Schema.Attribute.Media<'images'>;
+    metaRobots: Schema.Attribute.String;
+    metaTitle: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 60;
+      }>;
+    metaViewport: Schema.Attribute.String;
     ogImage: Schema.Attribute.Media<'images'>;
+    openGraph: Schema.Attribute.Component<'shared.open-graph', false>;
+    structuredData: Schema.Attribute.JSON;
   };
 }
 
@@ -150,6 +188,7 @@ declare module '@strapi/strapi' {
       'shared.link-group': SharedLinkGroup;
       'shared.named-item': SharedNamedItem;
       'shared.nav-link': SharedNavLink;
+      'shared.open-graph': SharedOpenGraph;
       'shared.process-step': SharedProcessStep;
       'shared.seo': SharedSeo;
       'shared.stat': SharedStat;

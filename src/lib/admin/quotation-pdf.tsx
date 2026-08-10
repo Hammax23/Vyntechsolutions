@@ -1,5 +1,6 @@
 import React from "react";
 import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
+import fs from "fs";
 import path from "path";
 import type { QuotationData, ScopeSection } from "./quotation-types";
 import { calculateQuotationTotals, formatCad } from "./quotation-types";
@@ -13,8 +14,16 @@ const LINE = "#E2E8F0";
 const SOFT = "#F8FAFC";
 const RED = "#B91C1C";
 const WHITE = "#FFFFFF";
+const COMPANY_EMAIL = "info@vyntechsolutions.ca";
+const COMPANY_WEB = "www.vyntechsolutions.ca";
 
-const logo = path.join(process.cwd(), "public", "logo.png");
+function loadLogoSrc(): string {
+  const logoPath = path.join(process.cwd(), "public", "logo.png");
+  const base64 = fs.readFileSync(logoPath).toString("base64");
+  return `data:image/png;base64,${base64}`;
+}
+
+const logoSrc = loadLogoSrc();
 const VALIDITY_DAYS = 15;
 
 const s = StyleSheet.create({
@@ -35,7 +44,17 @@ const s = StyleSheet.create({
     marginBottom: 10,
   },
   brandBlock: { flexDirection: "row", alignItems: "center" },
-  logo: { width: 26, height: 26, marginRight: 8 },
+  logoWrap: {
+    width: 36,
+    height: 36,
+    marginRight: 10,
+    backgroundColor: "#030014",
+    borderRadius: 6,
+    padding: 4,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  logo: { width: 28, height: 28 },
   brandName: {
     fontSize: 12,
     fontFamily: "Helvetica-Bold",
@@ -278,7 +297,9 @@ function OfferPage({ data, variant }: { data: QuotationData; variant: "client" |
       <View style={s.header}>
         <View style={s.brandBlock}>
           {/* eslint-disable-next-line jsx-a11y/alt-text */}
-          <Image src={logo} style={s.logo} />
+          <View style={s.logoWrap}>
+            <Image src={logoSrc} style={s.logo} />
+          </View>
           <View>
             <Text style={s.brandName}>VYNTECH SOLUTIONS</Text>
             <Text style={s.brandTag}>Digital Product Engineering</Text>
@@ -287,8 +308,8 @@ function OfferPage({ data, variant }: { data: QuotationData; variant: "client" |
         <View>
           <Text style={s.contact}>VynTech Solutions Inc.</Text>
           <Text style={s.contact}>Canada · Lahore Delivery Center</Text>
-          <Text style={s.contact}>hello@vyntechsolutions.ca</Text>
-          <Text style={s.contact}>www.vyntechsolutions.ca</Text>
+          <Text style={s.contact}>{COMPANY_EMAIL}</Text>
+          <Text style={s.contact}>{COMPANY_WEB}</Text>
         </View>
       </View>
       <View style={s.accentBar} />

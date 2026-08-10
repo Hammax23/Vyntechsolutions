@@ -78,7 +78,8 @@ export default function LetsTalkBusiness() {
   const hideWidgets =
     pathname?.startsWith("/admin") ||
     pathname?.startsWith("/seopanel") ||
-    pathname?.startsWith("/quote");
+    pathname?.startsWith("/quote") ||
+    pathname?.startsWith("/verify");
 
   // Listen for custom event to open the panel
   useEffect(() => {

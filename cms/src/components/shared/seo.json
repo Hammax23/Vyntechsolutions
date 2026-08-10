@@ -2,15 +2,58 @@
   "collectionName": "components_shared_seos",
   "info": {
     "displayName": "SEO",
-    "description": "Page/entry SEO metadata"
+    "description": "Page SEO metadata with SERP & social preview support",
+    "icon": "search"
   },
   "options": {},
   "attributes": {
-    "metaTitle": { "type": "string" },
-    "metaDescription": { "type": "text" },
-    "focusKeyword": { "type": "string" },
-    "canonical": { "type": "string" },
-    "ogImage": { "type": "media", "multiple": false, "allowedTypes": ["images"] },
-    "indexable": { "type": "boolean", "default": true }
+    "metaTitle": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "metaDescription": {
+      "type": "text",
+      "maxLength": 160
+    },
+    "metaImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "openGraph": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.open-graph"
+    },
+    "keywords": {
+      "type": "text"
+    },
+    "focusKeyword": {
+      "type": "string"
+    },
+    "metaRobots": {
+      "type": "string"
+    },
+    "metaViewport": {
+      "type": "string"
+    },
+    "canonicalURL": {
+      "type": "string"
+    },
+    "canonical": {
+      "type": "string"
+    },
+    "indexable": {
+      "type": "boolean",
+      "default": true
+    },
+    "structuredData": {
+      "type": "json"
+    },
+    "ogImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    }
   }
 }
