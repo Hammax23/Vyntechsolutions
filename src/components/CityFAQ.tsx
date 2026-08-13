@@ -38,62 +38,58 @@ export default function CityFAQ({ formattedCity, serviceTitle }: CityFAQProps) {
   ];
 
   return (
-    <section className="w-full bg-white py-16 lg:py-24 border-t border-gray-100">
-      <div className="max-w-[800px] mx-auto px-4 sm:px-6">
-        
-        {/* Header */}
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-gradient-to-r from-[#00E1FF]/10 to-[#0055FF]/10 text-[#0055FF] font-semibold text-sm mb-6 tracking-wide border border-[#00E1FF]/30">
-            GOT QUESTIONS?
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-4">
-            Frequently Asked <span className="bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text">Questions</span>
+    <section className="w-full bg-white py-16 md:py-24 border-t border-slate-100">
+      <div className="max-w-[760px] mx-auto px-5 sm:px-6">
+        <div className="text-center mb-12 md:mb-14">
+          <p className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[#0055FF] mb-3">
+            FAQ
+          </p>
+          <h2 className="text-[28px] sm:text-4xl font-semibold tracking-tight text-[#0f172a] mb-3">
+            Frequently asked questions
           </h2>
-          <p className="text-gray-600 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+          <p className="text-slate-500 text-[15px] sm:text-base max-w-xl mx-auto leading-relaxed">
             Everything you need to know about our {serviceTitle} services in {formattedCity}.
           </p>
         </div>
 
-        {/* Accordion */}
-        <div className="space-y-3">
+        <div className="border-t border-slate-200">
           {faqData.map((faq, index) => {
             const isOpen = openIndex === index;
             return (
-              <div 
-                key={index} 
-                className={`border rounded-xl transition-all duration-300 overflow-hidden ${
-                  isOpen ? "border-[#0055FF] bg-white shadow-md shadow-[#0055FF]/5" : "border-gray-100 bg-gray-50/50 hover:bg-gray-50 hover:border-gray-200"
-                }`}
-              >
+              <div key={index} className="border-b border-slate-200">
                 <button
+                  type="button"
                   onClick={() => toggleAccordion(index)}
-                  className="w-full flex items-center justify-between px-5 py-4 text-left focus:outline-none"
+                  aria-expanded={isOpen}
+                  className="w-full flex items-start justify-between gap-6 py-5 text-left group"
                 >
-                  <span className={`font-bold text-sm sm:text-base transition-colors ${
-                    isOpen ? "text-[#0055FF]" : "text-[#1a1a2e]"
-                  }`}>
+                  <span
+                    className={`text-[15px] sm:text-base font-medium leading-snug transition-colors ${
+                      isOpen ? "text-[#0f172a]" : "text-slate-800 group-hover:text-[#0055FF]"
+                    }`}
+                  >
                     {faq.question}
                   </span>
-                  <div className={`ml-4 shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
-                    isOpen ? "bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-white shadow-sm" : "bg-gray-100 text-gray-500 group-hover:bg-gray-200"
-                  }`}>
-                    <svg 
-                      className={`w-5 h-5 transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"}`} 
-                      fill="none" 
-                      viewBox="0 0 24 24" 
-                      stroke="currentColor" 
-                      strokeWidth={2}
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </div>
+                  <span
+                    className={`mt-0.5 shrink-0 w-5 h-5 relative ${
+                      isOpen ? "text-[#0055FF]" : "text-slate-400 group-hover:text-[#0055FF]"
+                    }`}
+                    aria-hidden
+                  >
+                    <span className="absolute left-1/2 top-1/2 h-[1.5px] w-3 -translate-x-1/2 -translate-y-1/2 bg-current rounded-full" />
+                    <span
+                      className={`absolute left-1/2 top-1/2 h-3 w-[1.5px] -translate-x-1/2 -translate-y-1/2 bg-current rounded-full transition-transform duration-200 ${
+                        isOpen ? "scale-y-0" : "scale-y-100"
+                      }`}
+                    />
+                  </span>
                 </button>
-                <div 
-                  className={`px-5 overflow-hidden transition-all duration-300 ease-in-out ${
-                    isOpen ? "max-h-[500px] opacity-100 pb-5" : "max-h-0 opacity-0 pb-0"
+                <div
+                  className={`overflow-hidden transition-all duration-300 ease-out ${
+                    isOpen ? "max-h-[420px] opacity-100 pb-5" : "max-h-0 opacity-0"
                   }`}
                 >
-                  <p className="text-gray-600 leading-relaxed text-sm">
+                  <p className="text-slate-500 text-[14px] sm:text-[15px] leading-relaxed pr-8">
                     {faq.answer}
                   </p>
                 </div>
@@ -101,7 +97,6 @@ export default function CityFAQ({ formattedCity, serviceTitle }: CityFAQProps) {
             );
           })}
         </div>
-
       </div>
     </section>
   );

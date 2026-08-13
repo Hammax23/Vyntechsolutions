@@ -1,146 +1,100 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 
-type TechCategory = "FRONTEND" | "BACKEND" | "DATABASE" | "INFRA AND DEVOPS" | "DESIGN";
+type TechCategory = "Frontend" | "Backend" | "Database" | "Infrastructure" | "Design";
 
 const technologies: Record<TechCategory, { name: string; logo: string }[]> = {
-  "FRONTEND": [
+  Frontend: [
     { name: "React", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
     { name: "Next.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" },
     { name: "Vue.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg" },
     { name: "TypeScript", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
     { name: "JavaScript", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
     { name: "Tailwind", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg" },
-    { name: "Bootstrap", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg" },
   ],
-  "BACKEND": [
+  Backend: [
     { name: "Node.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
     { name: "Express", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg" },
     { name: "Laravel", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-original.svg" },
-    { name: "PHP", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg" },
     { name: "Python", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
-    { name: "Flask", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg" },
     { name: "GraphQL", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg" },
+    { name: "PHP", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg" },
   ],
-  "DATABASE": [
+  Database: [
     { name: "PostgreSQL", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" },
     { name: "MongoDB", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" },
     { name: "Redis", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" },
     { name: "Firebase", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg" },
   ],
-  "INFRA AND DEVOPS": [
+  Infrastructure: [
     { name: "AWS", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" },
     { name: "Azure", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg" },
     { name: "Docker", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" },
     { name: "Kubernetes", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg" },
     { name: "Git", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" },
   ],
-  "DESIGN": [
+  Design: [
     { name: "Figma", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" },
+    { name: "Adobe XD", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/xd/xd-plain.svg" },
+    { name: "Illustrator", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/illustrator/illustrator-plain.svg" },
   ],
 };
 
-const categories: TechCategory[] = [
-  "FRONTEND",
-  "BACKEND",
-  "DATABASE",
-  "INFRA AND DEVOPS",
-  "DESIGN",
-];
-
+const categories = Object.keys(technologies) as TechCategory[];
 
 export default function TechnologyStack() {
-  const [activeTab, setActiveTab] = useState<TechCategory>("FRONTEND");
+  const [activeTab, setActiveTab] = useState<TechCategory>("Frontend");
 
   return (
-    <section className="w-full bg-[#050B14] py-20 relative overflow-hidden">
-      {/* Grid dotted background */}
-      <div 
-        className="absolute inset-0 opacity-20 pointer-events-none" 
-        style={{
-          backgroundImage: "radial-gradient(#4b5563 1px, transparent 1px)",
-          backgroundSize: "32px 32px"
-        }}
-      />
-      
-      {/* Bottom glowing accent */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
-
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 relative z-10 flex flex-col items-center">
-        
-        {/* Header */}
-        <div className="text-center mb-16 max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
-            Technology Stack
+    <section className="w-full bg-white py-16 md:py-24 border-t border-slate-100">
+      <div className="max-w-[960px] mx-auto px-5 sm:px-6">
+        <div className="text-center mb-10 md:mb-12">
+          <p className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[#0055FF] mb-3">
+            Stack
+          </p>
+          <h2 className="text-[28px] sm:text-4xl font-semibold tracking-tight text-[#0f172a] mb-3">
+            Technology we ship with
           </h2>
-          <p className="text-gray-400 text-sm md:text-base leading-relaxed">
-            We work with a wide range of modern, cutting-edge technologies. From programming languages and frameworks to databases, cloud platforms, and testing environments, our flexible tech stack ensures applications remain scalable, secure, and high-performing as businesses grow.
+          <p className="text-slate-500 text-[15px] sm:text-base max-w-lg mx-auto leading-relaxed">
+            Production tools we use every week — not a logo dump of everything that exists.
           </p>
         </div>
 
-        {/* Content Layout */}
-        <div className="w-full flex flex-col md:flex-row gap-8 lg:gap-12">
-          
-          {/* Sidebar Tabs */}
-          <div className="w-full md:w-64 shrink-0 flex flex-row md:flex-col gap-3 overflow-x-auto md:overflow-visible pb-4 md:pb-0 scrollbar-none">
-            {categories.map((category) => {
-              const isActive = activeTab === category;
-              return (
-                <button
-                  key={category}
-                  onClick={() => setActiveTab(category)}
-                  className={`flex-shrink-0 text-left px-5 py-3.5 rounded-2xl text-xs sm:text-sm font-bold tracking-wider flex items-center gap-3 transition-all duration-300 ${
-                    isActive 
-                      ? "bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-white shadow-lg shadow-[#00E1FF]/25" 
-                      : "bg-transparent text-white/50 hover:text-white hover:bg-white/5"
-                  }`}
-                >
-                  <span className={`w-2 h-2 rounded-full flex-shrink-0 ${isActive ? "bg-white" : "bg-white/30"}`} />
-                  {category}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Cards Grid */}
-          <div className="flex-1">
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-              {technologies[activeTab].map((tech, idx) => (
-                <div 
-                  key={`${activeTab}-${tech.name}-${idx}`}
-                  className="bg-[#121826] border border-white/5 hover:border-white/20 rounded-2xl p-6 flex flex-col items-center justify-center gap-4 transition-all duration-300 hover:-translate-y-1 shadow-lg group"
-                  style={{
-                    animation: `fadeIn 0.4s ease-out ${idx * 0.05}s both`
-                  }}
-                >
-                  <div className="w-12 h-12 relative flex items-center justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={tech.logo}
-                      alt={tech.name}
-                      className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
-                    />
-                  </div>
-                  <span className="text-white text-xs font-semibold tracking-wide text-center">
-                    {tech.name}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
+        <div className="flex flex-wrap justify-center gap-1 sm:gap-2 mb-10">
+          {categories.map((category) => {
+            const isActive = activeTab === category;
+            return (
+              <button
+                key={category}
+                type="button"
+                onClick={() => setActiveTab(category)}
+                className={`px-3.5 sm:px-4 py-2 text-[13px] sm:text-sm font-medium rounded-full transition-colors ${
+                  isActive
+                    ? "bg-[#0f172a] text-white"
+                    : "text-slate-500 hover:text-[#0f172a] hover:bg-slate-100"
+                }`}
+              >
+                {category}
+              </button>
+            );
+          })}
         </div>
 
+        <div className="flex flex-wrap justify-center gap-x-10 gap-y-8 sm:gap-x-12">
+          {technologies[activeTab].map((tech) => (
+            <div key={`${activeTab}-${tech.name}`} className="flex flex-col items-center gap-2.5 w-[72px] sm:w-[80px]">
+              <div className="w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={tech.logo} alt="" className="max-h-full max-w-full object-contain" />
+              </div>
+              <span className="text-[12px] sm:text-[13px] text-slate-600 font-medium text-center leading-tight">
+                {tech.name}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
-
-      <style jsx global>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </section>
   );
 }

@@ -39,18 +39,18 @@ export default async function RootLayout({
     ...(orgProfile?.email || globalSeo?.email
       ? { email: String(orgProfile?.email || globalSeo?.email) }
       : {}),
-    ...(orgProfile?.phone || globalSeo?.phone
-      ? { telephone: String(orgProfile?.phone || globalSeo?.phone) }
-      : {}),
+    // ...(orgProfile?.phone || globalSeo?.phone
+    //   ? { telephone: String(orgProfile?.phone || globalSeo?.phone) }
+    //   : {}),
     ...(orgProfile?.sameAs ? { sameAs: orgProfile.sameAs } : {}),
   };
 
   const liveLocalSchema = {
     ...localBusinessSchema,
     ...(orgProfile?.name ? { name: orgProfile.name } : {}),
-    ...(orgProfile?.phone || globalSeo?.phone
-      ? { telephone: String(orgProfile?.phone || globalSeo?.phone) }
-      : {}),
+    // ...(orgProfile?.phone || globalSeo?.phone
+    //   ? { telephone: String(orgProfile?.phone || globalSeo?.phone) }
+    //   : {}),
     ...(orgProfile?.email || globalSeo?.email
       ? { email: String(orgProfile?.email || globalSeo?.email) }
       : {}),

@@ -3,20 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 
-// Technology partner logos (official full-color brand logos)
-const techPartners = [
-  { name: "Google Cloud", url: "https://cloud.google.com", logo: "https://www.vectorlogo.zone/logos/google_cloud/google_cloud-icon.svg" },
-  { name: "Amazon Web Services", url: "https://aws.amazon.com", logo: "https://www.vectorlogo.zone/logos/amazon_aws/amazon_aws-icon.svg" },
-  { name: "Microsoft Azure", url: "https://azure.microsoft.com", logo: "https://www.vectorlogo.zone/logos/microsoft_azure/microsoft_azure-icon.svg" },
-  { name: "Oracle", url: "https://www.oracle.com", logo: "https://www.vectorlogo.zone/logos/oracle/oracle-icon.svg" },
-  { name: "IBM", url: "https://www.ibm.com", logo: "https://www.vectorlogo.zone/logos/ibm/ibm-icon.svg" },
-  { name: "Docker", url: "https://www.docker.com", logo: "https://www.vectorlogo.zone/logos/docker/docker-icon.svg" },
-  { name: "Kubernetes", url: "https://kubernetes.io", logo: "https://www.vectorlogo.zone/logos/kubernetes/kubernetes-icon.svg" },
-  { name: "Cloudflare", url: "https://www.cloudflare.com", logo: "https://www.vectorlogo.zone/logos/cloudflare/cloudflare-icon.svg" },
-  { name: "GitHub", url: "https://github.com", logo: "https://www.vectorlogo.zone/logos/github/github-icon.svg" },
-  { name: "Salesforce", url: "https://www.salesforce.com", logo: "https://www.vectorlogo.zone/logos/salesforce/salesforce-icon.svg" },
-];
-
 const industries = [
   {
     id: 1,
@@ -240,35 +226,6 @@ export default function IndustriesImpact() {
                 index={index + leftColumn.length} 
                 isLeft={false}
               />
-            ))}
-          </div>
-        </div>
-
-        {/* Technology Partners */}
-        <div className={`mt-20 pt-12 border-t border-gray-200 transition-all duration-700 delay-500 ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-        }`}>
-          <p className="text-xs text-gray-400 tracking-widest uppercase mb-8 text-center">
-            Technology Partners
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-7 sm:gap-x-10 md:gap-x-12">
-            {techPartners.map((partner) => (
-              <a
-                key={partner.name}
-                href={partner.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                title={partner.name}
-                className="grayscale opacity-50 hover:grayscale-0 hover:opacity-100 hover:scale-110 transition-all duration-300"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={partner.logo}
-                  alt={partner.name}
-                  className="h-9 w-auto object-contain"
-                  loading="lazy"
-                />
-              </a>
             ))}
           </div>
         </div>

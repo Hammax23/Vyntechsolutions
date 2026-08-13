@@ -5,7 +5,7 @@
     "defaultTitle": "VynTech Solutions | Building Digital Excellence for Canadian Businesses",
     "titleTemplate": "%s | VynTech Solutions - Canadian Digital Agency",
     "defaultDescription": "VynTech Solutions is Canada's leading digital agency specializing in custom web development, mobile apps, UI/UX design, and enterprise software solutions. Serving businesses across Toronto, Vancouver, Montreal & nationwide.",
-    "phone": "+1-416-893-5779",
+    "phone": "",
     "email": "info@vyntechsolutions.ca",
     "locale": "en_CA"
   },
@@ -2539,7 +2539,7 @@
   },
   "organizationProfile": {
     "name": "VynTech Solutions",
-    "phone": "+1-416-893-5779",
+    "phone": "",
     "email": "info@vyntechsolutions.ca",
     "geoLatitude": "43.6532",
     "geoLongitude": "-79.3832",

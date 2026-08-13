@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import Image from "next/image";
 
 const GoogleRankingPromo = dynamic(() => import("@/components/GoogleRankingPromo"), {
   ssr: false,
@@ -11,30 +10,6 @@ const GoogleRankingPromo = dynamic(() => import("@/components/GoogleRankingPromo
     <div className="w-[248px] xl:w-[268px] h-[168px] rounded-xl bg-white/80 border border-white/90 animate-pulse" aria-hidden />
   ),
 });
-
-// Tech stack logos
-const techStacks = [
-  { id: 1, name: "React", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
-  { id: 2, name: "Next.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" },
-  { id: 3, name: "Vue.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg" },
-  { id: 4, name: "Angular", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg" },
-  { id: 5, name: "TypeScript", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
-  { id: 6, name: "Node.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
-  { id: 7, name: "Python", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
-  { id: 8, name: "Java", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" },
-  { id: 9, name: "AWS", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-plain-wordmark.svg" },
-  { id: 10, name: "Azure", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg" },
-  { id: 11, name: "Google Cloud", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg" },
-  { id: 12, name: "Docker", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" },
-  { id: 13, name: "MongoDB", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" },
-  { id: 14, name: "PostgreSQL", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" },
-  { id: 15, name: "Kubernetes", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg" },
-  { id: 16, name: "Git", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" },
-  { id: 17, name: "GraphQL", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg" },
-  { id: 18, name: "Figma", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" },
-  { id: 19, name: "TailwindCSS", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg" },
-  { id: 20, name: "Flutter", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg" },
-];
 
 // SVG Icons for services
 const ServiceIcons = {
@@ -188,10 +163,7 @@ export default function OurServices() {
 
   const sectionRef = useRef<HTMLElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
-  const techScrollRef = useRef<HTMLDivElement>(null);
 
-  // Duplicate logos for infinite scroll
-  const duplicatedStacks = [...techStacks, ...techStacks];
   const useFancyHeading = heading === "Our Services";
 
   useEffect(() => {
@@ -264,29 +236,6 @@ export default function OurServices() {
       cardsObserver.disconnect();
     };
   }, []);
-
-  // Auto-scroll effect for tech stack
-  useEffect(() => {
-    if (!isVisible) return;
-
-    const scrollContainer = techScrollRef.current;
-    if (!scrollContainer) return;
-
-    let scrollPosition = 0;
-    const scrollSpeed = 1;
-
-    const animate = () => {
-      scrollPosition += scrollSpeed;
-      const halfWidth = scrollContainer.scrollWidth / 2;
-      if (scrollPosition >= halfWidth) {
-        scrollPosition = 0;
-      }
-      scrollContainer.scrollLeft = scrollPosition;
-    };
-
-    const interval = setInterval(animate, 30);
-    return () => clearInterval(interval);
-  }, [isVisible]);
 
   return (
     <section
@@ -463,47 +412,6 @@ export default function OurServices() {
                 </div>
               </Link>
             ))}
-          </div>
-        </div>
-
-        {/* Tech Stack Carousel */}
-        <div className="mt-10 sm:mt-12 md:mt-14 lg:mt-16">
-          <div
-            className={`relative transition-all duration-700 delay-500 ${isVisible ? "opacity-100" : "opacity-0"
-              }`}
-          >
-            {/* Gradient Overlays */}
-            <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 md:w-32 bg-gradient-to-r from-[#e8f4f8] to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 md:w-32 bg-gradient-to-l from-[#e8f4f8] to-transparent z-10 pointer-events-none" />
-
-            {/* Scrolling Container */}
-            <div
-              ref={techScrollRef}
-              className="flex gap-12 sm:gap-16 md:gap-20 overflow-x-hidden pt-2"
-            >
-              {duplicatedStacks.map((tech, index) => (
-                <div
-                  key={`${tech.id}-${index}`}
-                  className="flex-shrink-0"
-                >
-                  <div className="flex flex-col items-center gap-1">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 relative flex items-center justify-center">
-                      <Image
-                        src={tech.logo}
-                        alt={tech.name}
-                        width={48}
-                        height={48}
-                        className="w-full h-full object-contain"
-                        unoptimized
-                      />
-                    </div>
-                    <span className="text-xs text-gray-600 font-medium whitespace-nowrap">
-                      {tech.name}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </div>

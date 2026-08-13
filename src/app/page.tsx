@@ -5,7 +5,7 @@ import OurServices from "@/components/OurServices";
 import IndustriesImpact from "@/components/IndustriesImpact";
 import TechnologyImpact from "@/components/TechnologyImpact";
 import TechnologyStack from "@/components/TechnologyStack";
-
+import HowWeWork from "@/components/HowWeWork";
 import FeaturedInsights from "@/components/FeaturedInsights";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
@@ -14,7 +14,6 @@ import { getCmsFaqs } from "@/lib/cms/content";
 
 export default async function Home() {
   const allFaqs = await getCmsFaqs();
-  // We can filter faqs if needed, for example to show 'global' or 'home' faqs.
   const homeFaqs = allFaqs.filter(faq => faq.page === 'global' || faq.page === 'home');
 
   return (
@@ -24,10 +23,10 @@ export default async function Home() {
       <LogoCarousel />
       <OurServices />
       <TechnologyImpact />
-      
-      <TechnologyStack />
-      <FeaturedInsights />
       <IndustriesImpact />
+      <TechnologyStack />
+      <HowWeWork />
+      <FeaturedInsights />
       <FAQ faqs={homeFaqs} />
       <Footer />
     </main>
