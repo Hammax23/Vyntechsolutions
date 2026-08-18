@@ -348,7 +348,7 @@ export default function CityServicePage() {
                   {service.title} for {formattedCity} Businesses
                 </h2>
                 <p className="text-lg text-gray-600 leading-relaxed mb-12 font-light">
-                  {formattedCity} is a highly competitive digital market — with hundreds of thousands of businesses all fighting for the same Google searches. A generic digital presence won&apos;t cut it here. VynTech Solutions builds custom, conversion-focused {service.title.toLowerCase()} campaigns for {formattedCity} businesses that are engineered to rank, load fast, and turn visitors into paying customers. We understand the {formattedCity} market deeply. Our strategies are tailored to local neighbourhoods and business verticals — so you&apos;re not just getting traffic, you&apos;re getting the right traffic. With five-star reviews and clients across every major industry, we&apos;re the agency that {formattedCity} businesses trust to grow online.
+                  {formattedCity} is a highly competitive digital market, with hundreds of thousands of businesses all fighting for the same Google searches. A generic digital presence won&apos;t cut it here. VynTech Solutions builds custom, conversion-focused {service.title.toLowerCase()} campaigns for {formattedCity} businesses that are engineered to rank, load fast, and turn visitors into paying customers. We understand the {formattedCity} market deeply. Our strategies are tailored to local neighbourhoods and business verticals, so you&apos;re not just getting traffic, you&apos;re getting the right traffic. With five-star reviews and clients across every major industry, we&apos;re the agency that {formattedCity} businesses trust to grow online.
                 </p>
 
                 <h3 className="text-xl font-bold text-[#0d1117] mb-6">
@@ -387,7 +387,7 @@ export default function CityServicePage() {
                       `${formattedCity}'s leading ${service.title.toLowerCase()} agency`,
                       `Custom strategies engineered to dominate the ${formattedCity} market`,
                       `Local market expertise and dedicated support`,
-                      `Mobile-first approach — capturing local smartphone searches`
+                      `Mobile-first approach, capturing local smartphone searches`
                     ].map((item, idx) => (
                       <li key={idx} className="flex items-start gap-4">
                         <div className="w-6 h-6 rounded-full bg-[#0055FF] flex items-center justify-center shrink-0 mt-0.5">
@@ -404,7 +404,7 @@ export default function CityServicePage() {
                     <svg className="w-5 h-5 text-[#00E1FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    Mon-Fri: 9:00 AM – 6:00 PM EST
+                    Mon to Fri: 9:00 AM to 6:00 PM EST
                   </div>
 
                   <button 

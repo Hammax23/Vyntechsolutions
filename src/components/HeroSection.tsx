@@ -16,9 +16,10 @@ type HeroSlide = {
 };
 
 const DEFAULT_HERO_MEDIA: HeroMediaItem[] = [
+  { type: "video", src: "/hero-tech-city.mp4", mobileSrc: "/hero-tech-city.mp4" },
   { type: "video", src: "/cover1.mp4", mobileSrc: "/cover1-mobile.mp4" },
   { type: "image", src: "/cover3.png" },
-  { type: "image", src: "/cover2.png" },
+  { type: "video", src: "/your-tech-partner.mp4", mobileSrc: "/your-tech-partner.mp4" },
 ];
 
 // Duration for images (in milliseconds)
@@ -26,20 +27,23 @@ const IMAGE_DISPLAY_DURATION = 6000;
 
 const DEFAULT_SLIDES: HeroSlide[] = [
   {
+    heading: "Let's Build\nSomething Extraordinary",
+    subtext:
+      "As a trusted web development company, VynTech Solutions helps 100+ businesses transform their digital presence. We build websites, apps, and platforms engineered to scale and multiply your growth by 10x.",
+  },
+  {
     heading: "Build Faster.\nScale Smarter.",
-    subtext: "From MVPs to enterprise platforms — we turn your vision into market-ready products in weeks, not months.",
+    subtext:
+      "VynTech turns your idea into a market-ready product in weeks, not months. From MVPs to enterprise platforms, we build with speed, precision, and quality, never compromising.",
+  },
+  {
+    heading: "Enterprise Solutions.\nStartup Speed.",
+    subtext:
+      "AI, Cloud, Mobile, and Web. VynTech delivers full-stack expertise under one roof. Enterprise-grade reliability, startup agility, zero compromises. We power your next big idea, from day one.",
   },
   {
     heading: "Your Tech Partner\nfor Growth",
     subtext: "Stop hiring. Start building. Get a dedicated development team that delivers results from day one.",
-  },
-  {
-    heading: "Enterprise Solutions.\nStartup Speed.",
-    subtext: "AI, Cloud, Mobile & Web — full-stack expertise to power your next big idea. No compromises.",
-  },
-  {
-    heading: "Let's Build\nSomething Extraordinary",
-    subtext: "Join 100+ businesses who chose VynTech to transform their digital presence and 10x their growth.",
   },
 ];
 
@@ -76,15 +80,6 @@ export default function HeroSection() {
       .then((data) => {
         const heroSlides = data?.homepage?.heroSlides;
         if (!Array.isArray(heroSlides) || heroSlides.length === 0) return;
-
-        // We pull the slides from the CMS to ensure they are fully dynamic
-        setSlides(
-          heroSlides.map((s: { heading?: string; subtext?: string }) => ({
-            heading: String(s.heading || "").replace(/\\n/g, "\n"),
-            subtext: String(s.subtext || ""),
-          }))
-        );
-        setCurrentSlide(0);
 
         const withMedia = heroSlides.filter(
           (s: { mediaUrl?: string }) => typeof s.mediaUrl === "string" && s.mediaUrl.trim()
@@ -224,6 +219,11 @@ export default function HeroSection() {
   };
 
   const activeSlide = slides[currentSlide] ?? slides[0];
+  const hideHeroText =
+    currentMedia?.type === "video" &&
+    (currentMedia.src.includes("your-tech-partner") ||
+      currentMedia.src.toLowerCase().includes("your%20tech%20partner") ||
+      currentMedia.src.toLowerCase().includes("your tech partner"));
 
   return (
     <section className="relative w-full min-h-screen overflow-hidden flex flex-col justify-center">
@@ -292,8 +292,8 @@ export default function HeroSection() {
           )
         )}
 
-      {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-black/30 z-[3]" />
+      {/* Dark Overlay, lighter when branded video already has on-screen text */}
+      <div className={`absolute inset-0 z-[3] transition-colors duration-500 ${hideHeroText ? "bg-black/10" : "bg-black/30"}`} />
 
       {/* Content */}
       <div className="relative z-[10] w-full flex-1 flex items-center justify-center text-center pt-24 md:pt-32 pb-12">
@@ -301,37 +301,43 @@ export default function HeroSection() {
           <div className="max-w-4xl mx-auto flex flex-col items-center">
             {/* Text Container with fixed minimum height to prevent button from jumping */}
             <div className="min-h-[350px] sm:min-h-[300px] md:min-h-[280px] lg:min-h-[320px] w-full flex flex-col items-center justify-start pt-4 md:pt-0">
-              {/* Heading */}
-              <motion.h1
-                key={`heading-${currentSlide}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                className="text-white text-5xl md:text-6xl lg:text-7xl font-light leading-tight mb-6"
-              >
-                {activeSlide.heading.split("\n").map((line, index) => (
-                  <span key={index} className="block">
-                    {line}
-                  </span>
-                ))}
-              </motion.h1>
+              {!hideHeroText && (
+                <>
+                  {/* Heading */}
+                  <motion.h1
+                    key={`heading-${currentSlide}`}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className="text-white text-5xl md:text-6xl lg:text-7xl font-light leading-tight mb-6"
+                  >
+                    {activeSlide.heading.split("\n").map((line, index) => (
+                      <span key={index} className="block">
+                        {line}
+                      </span>
+                    ))}
+                  </motion.h1>
 
-              {/* Subtext */}
-              <motion.p
-                key={`subtext-${currentSlide}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-                className="text-white/90 text-lg md:text-xl font-light mb-8 max-w-2xl mx-auto"
-              >
-                {activeSlide.subtext}
-              </motion.p>
+                  {/* Subtext */}
+                  <motion.p
+                    key={`subtext-${currentSlide}`}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+                    className="text-white/90 text-lg md:text-xl font-light mb-8 max-w-2xl mx-auto"
+                  >
+                    {activeSlide.subtext}
+                  </motion.p>
+                </>
+              )}
             </div>
 
             {/* CTA Button */}
             <button
               onClick={() => window.dispatchEvent(new CustomEvent("openLetsTalkBusiness"))}
-              className="inline-flex items-center justify-center gap-2 border border-white text-white px-8 py-3 text-sm font-light tracking-wider hover:bg-white hover:text-black transition-all duration-300"
+              className={`inline-flex items-center justify-center gap-2 border border-white text-white px-8 py-3 text-sm font-light tracking-wider hover:bg-white hover:text-black transition-all duration-300 ${
+                hideHeroText ? "mt-16 md:mt-24" : "mt-2 md:mt-4"
+              }`}
             >
               GET FREE CONSULTATION
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

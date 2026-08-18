@@ -72,7 +72,7 @@ export async function strapiFetch<T>({
   }
 }
 
-/** Strapi 5 returns flat entities; Strapi 4 uses attributes — support both */
+/** Strapi 5 returns flat entities; Strapi 4 uses attributes, support both */
 function flattenStrapiEntity(item: unknown): Record<string, unknown> {
   if (!item || typeof item !== "object") return {};
   const anyItem = item as Record<string, unknown>;

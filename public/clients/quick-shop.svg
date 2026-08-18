@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 188 48" fill="none">
+  <rect x="2" y="2" width="44" height="44" rx="14" fill="#3730A3"/>
+  <path fill="#E0E7FF" d="M26.5 12L16 26.2h8.2L21.4 36 32 21.6h-8.4z"/>
+  <text x="56" y="22" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="800" fill="#3730A3">Quick</text>
+  <text x="56" y="37" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="600" letter-spacing="2.4" fill="#4F46E5">SHOP</text>
+</svg>

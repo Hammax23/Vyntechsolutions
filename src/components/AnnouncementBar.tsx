@@ -50,7 +50,7 @@ export default function AnnouncementBar() {
             {" "}
             <span className="font-bold">SEO Packages</span>
             {" "}
-            <span className="hidden md:inline">— Starting from $799/mo</span>
+            <span className="hidden md:inline">Starting from $799/mo</span>
           </span>
           <Link
             href="/services/seo-digital-marketing#packages"

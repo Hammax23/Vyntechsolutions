@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 196 48" fill="none">
+  <rect x="2" y="2" width="44" height="44" rx="12" fill="#0F766E"/>
+  <path stroke="#ECFDF8" stroke-width="2.2" fill="none" d="M16 20h16l-1.4 14H17.4z"/>
+  <path stroke="#ECFDF8" stroke-width="2.2" fill="none" d="M20 20v-3a4 4 0 0 1 8 0v3"/>
+  <text x="56" y="22" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="800" fill="#0F766E">ShopBC</text>
+  <text x="56" y="36" font-family="Arial, Helvetica, sans-serif" font-size="9" letter-spacing="2.8" fill="#5B8A84">ONLINE</text>
+</svg>

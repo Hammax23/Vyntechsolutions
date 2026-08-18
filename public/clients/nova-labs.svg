@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 48" fill="none">
+  <rect x="2" y="2" width="44" height="44" rx="10" fill="#312E81"/>
+  <circle cx="24" cy="24" r="9" fill="none" stroke="#C7D2FE" stroke-width="2.4"/>
+  <path fill="#A5B4FC" d="M24 15l2.4 6.4H33l-5.4 4 2.1 6.4L24 28.2 18.3 32l2.1-6.4-5.4-4h6.6z"/>
+  <text x="56" y="22" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="800" fill="#312E81">Nova</text>
+  <text x="56" y="36" font-family="Arial, Helvetica, sans-serif" font-size="10" letter-spacing="3.2" fill="#4338CA">LABS</text>
+</svg>

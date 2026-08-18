@@ -6,7 +6,7 @@ export const defaultSEO: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
     default: "VynTech Solutions | Building Digital Excellence for Canadian Businesses",
-    template: "%s | VynTech Solutions - Canadian Digital Agency",
+    template: "%s | VynTech Solutions, Canadian Digital Agency",
   },
   description:
     "VynTech Solutions is Canada's leading digital agency specializing in custom web development, mobile apps, UI/UX design, and enterprise software solutions. Serving businesses across Toronto, Vancouver, Montreal & nationwide.",
@@ -24,6 +24,9 @@ export const defaultSEO: Metadata = {
     "digital transformation Canada",
     "ecommerce development Canada",
     "React Next.js development",
+    "Next.js developers Toronto",
+    "Shopify development Canada",
+    "React Native app development Toronto",
     "full stack development services",
     "cloud solutions AWS Azure",
     "AI ML development Canada",
@@ -81,7 +84,7 @@ export const defaultSEO: Metadata = {
         url: `${siteUrl}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: "VynTech Solutions - Canadian Digital Agency",
+        alt: "VynTech Solutions, Canadian Digital Agency",
         type: "image/png",
       },
     ],
@@ -288,42 +291,82 @@ export const faqSchema = {
   mainEntity: [
     {
       "@type": "Question",
-      name: "What services does VynTech Solutions offer?",
+      name: "What other services do you provide?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "VynTech Solutions offers comprehensive digital services including custom web development, mobile app development (iOS & Android), UI/UX design, cloud solutions, AI/ML development, e-commerce solutions, and enterprise software development. We serve businesses across Canada including Toronto, Vancouver, and Montreal.",
+        text: "Beyond web development, we offer mobile app development, UI/UX design, SEO, custom software, cloud solutions, and ongoing maintenance.",
       },
     },
     {
       "@type": "Question",
-      name: "How much does web development cost in Canada?",
+      name: "Do you provide customized website design services?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Web development costs vary based on project complexity. Simple websites start from $5,000 CAD, while custom web applications range from $15,000 to $100,000+ CAD. Contact VynTech Solutions for a free consultation and accurate quote for your specific requirements.",
+        text: "Yes, every website is built from scratch around your brand and goals, no generic templates.",
       },
     },
     {
       "@type": "Question",
-      name: "How long does it take to build a website?",
+      name: "Are you an e-commerce website development company?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Timeline depends on project scope. A simple website takes 2-4 weeks, while complex web applications may take 3-6 months. We follow agile methodologies with regular updates and transparent communication throughout the development process.",
+        text: "Yes, we build e-commerce platforms on Shopify, WooCommerce, and custom stacks, from catalogs to payment integration.",
       },
     },
     {
       "@type": "Question",
-      name: "Do you work with startups and enterprises?",
+      name: "Do you offer small business website development?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Yes! VynTech Solutions works with businesses of all sizes - from early-stage startups launching their first MVP to established enterprises modernizing their digital infrastructure. We tailor our approach to match your business needs and budget.",
+        text: "Absolutely. We build websites for businesses of every size, including budget-friendly options for small businesses.",
       },
     },
     {
       "@type": "Question",
-      name: "What technologies do you use?",
+      name: "What makes you one of the best website development companies in Toronto?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "We use modern, scalable technologies including React, Next.js, Node.js, Python, TypeScript, PostgreSQL, MongoDB, AWS, Azure, Google Cloud, React Native, Flutter, and more. We choose the best tech stack based on your project requirements.",
+        text: "Transparent communication, strong technical expertise, and results, 500+ websites delivered with a 98% client satisfaction rate.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Where can I learn more about your company and team?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Visit our About Us page to learn our mission, values, and story.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Can I track the progress of my new website project?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes, you'll get a dedicated project manager and regular updates throughout development.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Which e-commerce technology platforms do you work with?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "We work with Shopify, WooCommerce, Magento, and custom-coded solutions.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How do I find a professional web design company in Toronto?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Look for a proven track record, transparent pricing, and real client results, all core to how we work.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Can you handle a complex migration without disrupting our business?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes, we plan and test carefully, scheduling deployment during low-traffic windows to keep your business running smoothly.",
       },
     },
   ],
@@ -340,6 +383,28 @@ export const generateBreadcrumbSchema = (items: { name: string; url: string }[])
     item: item.url,
   })),
 });
+
+export const techStackSchema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "VynTech Solutions technology stack",
+  description:
+    "Programming languages, frameworks, cloud platforms, and design tools VynTech uses for web development, mobile apps, AI, cloud, UI/UX, and ecommerce in Canada.",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "React" },
+    { "@type": "ListItem", position: 2, name: "Next.js" },
+    { "@type": "ListItem", position: 3, name: "TypeScript" },
+    { "@type": "ListItem", position: 4, name: "Node.js" },
+    { "@type": "ListItem", position: 5, name: "React Native" },
+    { "@type": "ListItem", position: 6, name: "Python" },
+    { "@type": "ListItem", position: 7, name: "AWS" },
+    { "@type": "ListItem", position: 8, name: "PostgreSQL" },
+    { "@type": "ListItem", position: 9, name: "Shopify" },
+    { "@type": "ListItem", position: 10, name: "Figma" },
+    { "@type": "ListItem", position: 11, name: "Google Search Console" },
+    { "@type": "ListItem", position: 12, name: "GA4" },
+  ],
+};
 
 // Software Application Schema (for showcasing expertise)
 export const softwareAppSchema = {
@@ -438,22 +503,22 @@ export const pageSEO = {
       "Transform your business with Canada's leading digital agency. Custom web development, mobile apps, UI/UX design & enterprise solutions. Serving Toronto, Vancouver, Montreal & nationwide.",
   },
   about: {
-    title: "About Us - Our Story & Mission",
+    title: "About Us, Our Story & Mission",
     description:
-      "Discover VynTech Solutions - Canada's trusted digital partner since 2020. Learn about our team, values, and commitment to delivering exceptional web solutions for Canadian businesses.",
+      "Discover VynTech Solutions, Canada's trusted digital partner since 2020. Learn about our team, values, and commitment to delivering exceptional web solutions for Canadian businesses.",
   },
   services: {
-    title: "Our Services - Web Development, Mobile Apps & More",
+    title: "Our Services, Web Development, Mobile Apps & More",
     description:
       "Explore our comprehensive digital services: custom web development, mobile app development, UI/UX design, cloud solutions, and enterprise software. Tailored for Canadian businesses.",
   },
   careers: {
-    title: "Careers - Join Our Team",
+    title: "Careers, Join Our Team",
     description:
       "Join Canada's fastest-growing digital agency. Explore exciting career opportunities in web development, design, and technology at VynTech Solutions.",
   },
   blog: {
-    title: "Blog - Insights & Industry Trends",
+    title: "Blog, Insights & Industry Trends",
     description:
       "Stay updated with the latest in web development, digital trends, and technology insights from VynTech Solutions' expert team in Canada.",
   },
@@ -463,7 +528,7 @@ export const pageSEO = {
       "Specialized digital solutions for healthcare, fintech, retail, real estate, and more. Industry-specific expertise for Canadian businesses.",
   },
   contact: {
-    title: "Contact Us - Let's Build Together",
+    title: "Contact Us, Let's Build Together",
     description:
       "Ready to transform your digital presence? Contact VynTech Solutions for a free consultation. Serving businesses across Canada with tailored web solutions.",
   },

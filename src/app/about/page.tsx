@@ -288,7 +288,7 @@ export default function AboutPage() {
                   <div className="flex flex-col gap-4 relative z-10">
                     {[
                       { title: "Web Design & Development", subtitle: "500+ custom websites delivered for businesses like yours", icon: "💻" },
-                      { title: "SEO & Digital Marketing", subtitle: "300% average traffic growth — real results you can measure", icon: "📈" },
+                      { title: "SEO & Digital Marketing", subtitle: "300% average traffic growth, real results you can measure", icon: "📈" },
                       { title: "UI/UX", subtitle: "Branding trusted by 100+ Canadian businesses", icon: "🎨" },
                       { title: "AI & ML", subtitle: "Automation strategies built to save you hours, every week.", icon: "🤖" },
                     ].map((stat, i) => (

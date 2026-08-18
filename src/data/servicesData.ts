@@ -31,7 +31,7 @@ export const servicesData: Record<string, ServiceData> = {
     "subtitle": "Website Design and Development Services Built to Perform",
     "description": "As a trusted web development company, VynTech Solutions designs and engineers websites and applications that don't just look good they drive real business results. From first click to final conversion, we build digital experiences your customers trust and your business can scale on.",
     "heroImage": "/services/web-dev.jpg",
-    "overview": "We build websites and web apps using modern frameworks like React, Next.js, and Node.js. Whether you need a company website, a customer portal, an admin dashboard, or a full SaaS product — we write clean, maintainable code that works reliably. No bloated templates, no unnecessary complexity.",
+    "overview": "We build websites and web apps using modern frameworks like React, Next.js, and Node.js. Whether you need a company website, a customer portal, an admin dashboard, or a full SaaS product, we write clean, maintainable code that works reliably. No bloated templates, no unnecessary complexity.",
     "features": [
       {
         "title": "Business Websites",
@@ -40,7 +40,7 @@ export const servicesData: Record<string, ServiceData> = {
       },
       {
         "title": "Web Applications",
-        "description": "Dashboards, portals, booking systems, internal tools — any web-based software your business needs.",
+        "description": "Dashboards, portals, booking systems, internal tools, any web-based software your business needs.",
         "icon": "mobile"
       },
       {
@@ -50,7 +50,7 @@ export const servicesData: Record<string, ServiceData> = {
       },
       {
         "title": "Database Design",
-        "description": "PostgreSQL, MongoDB, MySQL — proper schema design, indexing, and query optimization.",
+        "description": "PostgreSQL, MongoDB, MySQL, proper schema design, indexing, and query optimization.",
         "icon": "speed"
       }
     ],
@@ -71,7 +71,7 @@ export const servicesData: Record<string, ServiceData> = {
       },
       {
         "step": "Planning",
-        "description": "Technical approach, timeline, and milestones — you know what to expect."
+        "description": "Technical approach, timeline, and milestones, you know what to expect."
       },
       {
         "step": "Development",
@@ -155,7 +155,7 @@ export const servicesData: Record<string, ServiceData> = {
     "subtitle": "iOS & Android Apps",
     "description": "Native and cross-platform mobile apps for iOS and Android. We handle design, development, testing, and app store submission.",
     "heroImage": "/services/mobile-dev.jpg",
-    "overview": "We build mobile apps using React Native, Flutter, or native Swift/Kotlin — depending on what makes sense for your project. Most clients choose cross-platform to save time and budget while still getting a quality app on both platforms. We also handle the app store submission process.",
+    "overview": "We build mobile apps using React Native, Flutter, or native Swift/Kotlin, depending on what makes sense for your project. Most clients choose cross-platform to save time and budget while still getting a quality app on both platforms. We also handle the app store submission process.",
     "features": [
       {
         "title": "iOS Apps",
@@ -174,7 +174,7 @@ export const servicesData: Record<string, ServiceData> = {
       },
       {
         "title": "Backend & APIs",
-        "description": "Your app needs a server? We build that too — user auth, data storage, push notifications, payments.",
+        "description": "Your app needs a server? We build that too, user auth, data storage, push notifications, payments.",
         "icon": "store"
       }
     ],
@@ -255,11 +255,11 @@ export const servicesData: Record<string, ServiceData> = {
     "subtitle": "AWS, Azure & Cloud Infrastructure",
     "description": "Cloud setup, migration, and management. We help you move to the cloud or optimize what you already have.",
     "heroImage": "/services/cloud.jpg",
-    "overview": "We work with AWS, Google Cloud, and Azure. Whether you are moving from on-premise servers, setting up a new infrastructure, or trying to reduce your monthly cloud bill — we can help. We focus on practical solutions: reliable hosting, proper security, automated backups, and costs that make sense.",
+    "overview": "We work with AWS, Google Cloud, and Azure. Whether you are moving from on-premise servers, setting up a new infrastructure, or trying to reduce your monthly cloud bill, we can help. We focus on practical solutions: reliable hosting, proper security, automated backups, and costs that make sense.",
     "features": [
       {
         "title": "Cloud Setup",
-        "description": "New cloud infrastructure from scratch — servers, databases, storage, networking, all configured properly.",
+        "description": "New cloud infrastructure from scratch, servers, databases, storage, networking, all configured properly.",
         "icon": "migrate"
       },
       {
@@ -274,7 +274,7 @@ export const servicesData: Record<string, ServiceData> = {
       },
       {
         "title": "DevOps Setup",
-        "description": "CI/CD pipelines, Docker, Kubernetes — automated deployments so your team ships faster.",
+        "description": "CI/CD pipelines, Docker, Kubernetes, automated deployments so your team ships faster.",
         "icon": "multicloud"
       }
     ],
@@ -353,9 +353,9 @@ export const servicesData: Record<string, ServiceData> = {
   "ai-ml-solutions": {
     "title": "AI/ML Solutions",
     "subtitle": "AI Integration & Automation",
-    "description": "Practical AI solutions — chatbots, automation, data analysis, and integrating AI APIs into your existing systems.",
+    "description": "Practical AI solutions, chatbots, automation, data analysis, and integrating AI APIs into your existing systems.",
     "heroImage": "/services/ai-ml.jpg",
-    "overview": "We help businesses use AI where it actually makes sense. This includes building chatbots, integrating OpenAI/GPT into your apps, automating repetitive tasks, and analyzing data to find useful patterns. We are not here to sell you on AI hype — we focus on practical applications that save time or improve your product.",
+    "overview": "We help businesses use AI where it actually makes sense. This includes building chatbots, integrating OpenAI/GPT into your apps, automating repetitive tasks, and analyzing data to find useful patterns. We are not here to sell you on AI hype, we focus on practical applications that save time or improve your product.",
     "features": [
       {
         "title": "Chatbots & Assistants",
@@ -374,7 +374,7 @@ export const servicesData: Record<string, ServiceData> = {
       },
       {
         "title": "Data Analysis",
-        "description": "Make sense of your data — trends, predictions, anomaly detection. Dashboards you can actually use.",
+        "description": "Make sense of your data, trends, predictions, anomaly detection. Dashboards you can actually use.",
         "icon": "analytics"
       }
     ],
@@ -464,12 +464,12 @@ export const servicesData: Record<string, ServiceData> = {
       },
       {
         "title": "Docker & Containers",
-        "description": "Package your app properly so it runs the same everywhere — local, staging, production.",
+        "description": "Package your app properly so it runs the same everywhere, local, staging, production.",
         "icon": "iac"
       },
       {
         "title": "Infrastructure Setup",
-        "description": "Terraform, CloudFormation — your infrastructure defined in code, version controlled.",
+        "description": "Terraform, CloudFormation, your infrastructure defined in code, version controlled.",
         "icon": "container"
       },
       {
@@ -546,7 +546,7 @@ export const servicesData: Record<string, ServiceData> = {
       {
         "title": "Multi-Environment",
         "industry": "Agency",
-        "result": "Staging, QA, Production — all automated"
+        "result": "Staging, QA, Production, all automated"
       }
     ]
   },
@@ -555,7 +555,7 @@ export const servicesData: Record<string, ServiceData> = {
     "subtitle": "App & Website Design",
     "description": "User interface design for websites, mobile apps, and web applications. Figma designs your developers can actually build.",
     "heroImage": "/services/design.jpg",
-    "overview": "We design interfaces that look good and work well. This means wireframes to figure out the structure, then full visual designs in Figma. We hand off organized files with proper components, spacing, and specs — not messy artboards that leave developers guessing. We can also redesign existing apps that need a refresh.",
+    "overview": "We design interfaces that look good and work well. This means wireframes to figure out the structure, then full visual designs in Figma. We hand off organized files with proper components, spacing, and specs, not messy artboards that leave developers guessing. We can also redesign existing apps that need a refresh.",
     "features": [
       {
         "title": "Website Design",
@@ -574,7 +574,7 @@ export const servicesData: Record<string, ServiceData> = {
       },
       {
         "title": "Design Systems",
-        "description": "Reusable components, color palettes, typography — keeps your product consistent as it grows.",
+        "description": "Reusable components, color palettes, typography, keeps your product consistent as it grows.",
         "icon": "prototype"
       }
     ],
@@ -699,11 +699,11 @@ export const servicesData: Record<string, ServiceData> = {
       },
       {
         "step": "Design",
-        "description": "Store design — homepage, product pages, cart, checkout."
+        "description": "Store design, homepage, product pages, cart, checkout."
       },
       {
         "step": "Setup",
-        "description": "Products, categories, payments, shipping, taxes — all configured."
+        "description": "Products, categories, payments, shipping, taxes, all configured."
       },
       {
         "step": "Testing",
@@ -755,7 +755,7 @@ export const servicesData: Record<string, ServiceData> = {
     "subtitle": "Business Software & Internal Tools",
     "description": "Custom software built for your specific workflow. When off-the-shelf tools do not fit, we build what you need.",
     "heroImage": "/services/custom.jpg",
-    "overview": "Sometimes you need software that does exactly what your business requires — not a generic tool you have to work around. We build custom internal tools, admin panels, workflow automation systems, and business applications. You own the code, and it works the way your business works.",
+    "overview": "Sometimes you need software that does exactly what your business requires, not a generic tool you have to work around. We build custom internal tools, admin panels, workflow automation systems, and business applications. You own the code, and it works the way your business works.",
     "features": [
       {
         "title": "Internal Tools",
@@ -769,7 +769,7 @@ export const servicesData: Record<string, ServiceData> = {
       },
       {
         "title": "System Integration",
-        "description": "Connect your existing tools — CRM, accounting, inventory — so data flows automatically.",
+        "description": "Connect your existing tools, CRM, accounting, inventory, so data flows automatically.",
         "icon": "modernize"
       },
       {
@@ -841,7 +841,7 @@ export const servicesData: Record<string, ServiceData> = {
       {
         "title": "HR Portal",
         "industry": "Services",
-        "result": "Leave requests, timesheets, employee directory — all in one place"
+        "result": "Leave requests, timesheets, employee directory, all in one place"
       },
       {
         "title": "Booking System",
@@ -853,9 +853,9 @@ export const servicesData: Record<string, ServiceData> = {
   "seo-digital-marketing": {
     "title": "SEO/Digital Marketing",
     "subtitle": "SEO & Online Marketing",
-    "description": "Get found on Google. Technical SEO fixes, content that ranks, and marketing that brings real leads — not vanity metrics.",
+    "description": "Get found on Google. Technical SEO fixes, content that ranks, and marketing that brings real leads, not vanity metrics.",
     "heroImage": "/services/seo.jpg",
-    "overview": "We help businesses show up when people search for what they offer. This includes fixing technical SEO issues, optimizing existing pages, creating content that targets relevant keywords, and running Google/Meta ads when paid traffic makes sense. We focus on results you can measure — rankings, traffic, leads — not just reports.",
+    "overview": "We help businesses show up when people search for what they offer. This includes fixing technical SEO issues, optimizing existing pages, creating content that targets relevant keywords, and running Google/Meta ads when paid traffic makes sense. We focus on results you can measure, rankings, traffic, leads, not just reports.",
     "features": [
       {
         "title": "Technical SEO",
@@ -895,7 +895,7 @@ export const servicesData: Record<string, ServiceData> = {
       },
       {
         "step": "Quick Wins",
-        "description": "Fix obvious issues first — broken links, missing tags, slow pages."
+        "description": "Fix obvious issues first, broken links, missing tags, slow pages."
       },
       {
         "step": "Keyword Plan",
@@ -955,7 +955,7 @@ export const servicesData: Record<string, ServiceData> = {
     "subtitle": "Ongoing Support & Maintenance",
     "description": "Keep your website or app running. Bug fixes, updates, security patches, and someone to call when things break.",
     "heroImage": "/services/support.jpg",
-    "overview": "You have a website or app that needs ongoing care — updates, bug fixes, security patches, small changes. We offer monthly retainer plans so you have developers available when you need them. No need to hire full-time staff for work that is only needed sometimes. We also take over projects built by other teams if you need new support.",
+    "overview": "You have a website or app that needs ongoing care, updates, bug fixes, security patches, small changes. We offer monthly retainer plans so you have developers available when you need them. No need to hire full-time staff for work that is only needed sometimes. We also take over projects built by other teams if you need new support.",
     "features": [
       {
         "title": "Bug Fixes",
@@ -974,7 +974,7 @@ export const servicesData: Record<string, ServiceData> = {
       },
       {
         "title": "Monitoring",
-        "description": "We set up alerts so we know when your site goes down — often before you do.",
+        "description": "We set up alerts so we know when your site goes down, often before you do.",
         "icon": "support"
       }
     ],
@@ -1053,9 +1053,9 @@ export const servicesData: Record<string, ServiceData> = {
   "tax-accounting": {
     "title": "Tax & Accounting Services",
     "subtitle": "Financial & Tax Solutions",
-    "description": "Comprehensive tax planning, accounting, and financial services for businesses and individuals. From tax filing to CFO services — we handle your numbers.",
+    "description": "Comprehensive tax planning, accounting, and financial services for businesses and individuals. From tax filing to CFO services, we handle your numbers.",
     "heroImage": "/services/tax.jpg",
-    "overview": "We provide end-to-end financial services including tax preparation, bookkeeping, financial planning, and CFO advisory. Whether you're a startup needing incorporation help, a growing business requiring financial forecasting, or an established company looking for tax optimization — our team of certified professionals delivers accurate, compliant, and strategic financial guidance.",
+    "overview": "We provide end-to-end financial services including tax preparation, bookkeeping, financial planning, and CFO advisory. Whether you're a startup needing incorporation help, a growing business requiring financial forecasting, or an established company looking for tax optimization, our team of certified professionals delivers accurate, compliant, and strategic financial guidance.",
     "features": [
       {
         "title": "Comprehensive Tax & Accounting",

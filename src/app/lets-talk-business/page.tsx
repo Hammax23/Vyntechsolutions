@@ -20,10 +20,10 @@ const DEFAULT_SERVICES = [
 
 const DEFAULT_BUDGET_RANGES = [
   "Less than $10,000",
-  "$10,000 - $25,000",
-  "$25,000 - $50,000",
-  "$50,000 - $100,000",
-  "$100,000 - $250,000",
+  "$10,000 to $25,000",
+  "$25,000 to $50,000",
+  "$50,000 to $100,000",
+  "$100,000 to $250,000",
   "$250,000+"
 ];
 
@@ -493,12 +493,12 @@ export default function LetsTalkBusinessPage() {
                   <h3 className="text-lg font-semibold text-[#1a1a2e] mb-4">Office Hours</h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Monday - Friday</span>
-                      <span className="font-medium text-[#1a1a2e]">9:00 AM - 6:00 PM</span>
+                      <span className="text-gray-600">Monday to Friday</span>
+                      <span className="font-medium text-[#1a1a2e]">9:00 AM to 6:00 PM</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Saturday</span>
-                      <span className="font-medium text-[#1a1a2e]">10:00 AM - 4:00 PM</span>
+                      <span className="font-medium text-[#1a1a2e]">10:00 AM to 4:00 PM</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Sunday</span>

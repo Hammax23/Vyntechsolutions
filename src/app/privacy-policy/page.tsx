@@ -19,7 +19,7 @@ function PrivacyFallback() {
         <div className="space-y-3 text-white/70">
           <p><strong className="text-white">Information you provide:</strong> Name, email, phone number, company name when you contact us or request a quote.</p>
           <p><strong className="text-white">Automatic data:</strong> IP address, browser type, pages visited, and cookies for website functionality and analytics.</p>
-          <p><strong className="text-white">Payment info:</strong> Processed securely through Stripe - we never store your card details.</p>
+          <p><strong className="text-white">Payment info:</strong> Processed securely through Stripe, we never store your card details.</p>
         </div>
       </div>
       <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
@@ -28,7 +28,7 @@ function PrivacyFallback() {
           <li>Respond to your inquiries and provide our services</li>
           <li>Send project updates, invoices, and important notices</li>
           <li>Improve our website and services</li>
-          <li>Send marketing emails (only with your consent - you can unsubscribe anytime)</li>
+          <li>Send marketing emails (only with your consent, you can unsubscribe anytime)</li>
         </ul>
       </div>
       <div className="bg-white/5 border border-white/10 rounded-2xl p-6">

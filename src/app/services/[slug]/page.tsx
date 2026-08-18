@@ -8,6 +8,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import TechStack from "@/components/TechStack";
 import FAQ from "@/components/FAQ";
+import HowWeWork from "@/components/HowWeWork";
 import { servicesData, type ServiceData } from "@/data/servicesData";
 
 // Services Data
@@ -94,142 +95,6 @@ const FeatureIcon = ({ type }: { type: string }) => {
     <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d={pathD} />
     </svg>
-  );
-};
-
-// Step icons for process
-const STEP_ICONS: { [key: string]: JSX.Element } = {
-  0: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />,
-  1: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z" />,
-  2: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />,
-  3: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />,
-  4: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />,
-};
-
-// Interactive Process Steps Component - Joined Card with Animation
-const ProcessSteps = ({ steps }: { steps: Array<{ step: string; description: string }> }) => {
-  const [activeStep, setActiveStep] = useState(0);
-  const [animating, setAnimating] = useState(false);
-
-  const handleStepClick = (i: number) => {
-    if (i === activeStep) return;
-    setAnimating(true);
-    setTimeout(() => {
-      setActiveStep(i);
-      setAnimating(false);
-    }, 180);
-  };
-
-  return (
-    <>
-      {/* Mobile Top-to-Bottom Vertical Stack (< md) */}
-      <div className="flex md:hidden flex-col gap-3 max-w-md mx-auto px-2">
-        {steps.map((step, i) => {
-          const isActive = i === activeStep;
-          return (
-            <div
-              key={i}
-              className={`rounded-2xl border transition-all duration-300 overflow-hidden ${isActive
-                ? "bg-white border-[#0055FF]/40 shadow-xl"
-                : "bg-white/80 border-gray-100 hover:border-gray-200 shadow-sm"
-                }`}
-            >
-              <button
-                onClick={() => handleStepClick(i)}
-                className="w-full p-4 flex items-center justify-between text-left cursor-pointer group"
-              >
-                <div className="flex items-center gap-3.5">
-                  <div
-                    className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-base transition-colors ${isActive
-                      ? "bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-white shadow-md shadow-[#00E1FF]/20"
-                      : "bg-gray-100 text-gray-400 group-hover:text-[#00E1FF]"
-                      }`}
-                  >
-                    {step.step.charAt(0).toUpperCase()}
-                  </div>
-                  <div>
-                    <span className="text-base font-bold text-[#1a1a2e]">
-                      {step.step}
-                    </span>
-                  </div>
-                </div>
-
-                <div
-                  className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 ${isActive
-                    ? "bg-[#0055FF] text-white rotate-180"
-                    : "bg-gray-100 text-gray-400 group-hover:bg-gray-200"
-                    }`}
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                  </svg>
-                </div>
-              </button>
-
-              {isActive && (
-                <div className="px-4 pb-4 pt-1 text-gray-600 text-xs leading-relaxed border-t border-gray-100 mt-1">
-                  {step.description}
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Desktop Horizontal Joined Step Selector (>= md) */}
-      <div className="hidden md:flex flex-row justify-center gap-3 items-stretch min-h-[140px] px-2">
-        {steps.map((step, i) => {
-          const isActive = i === activeStep;
-          return (
-            <div key={i} className="flex flex-row flex-shrink-0">
-              {/* Step tile */}
-              <div
-                onClick={() => handleStepClick(i)}
-                className={`
-                  cursor-pointer transition-all duration-300 flex flex-col items-center justify-between p-4
-                  w-28
-                  ${isActive
-                    ? "bg-gradient-to-r from-[#00E1FF] to-[#0055FF] shadow-xl shadow-[#00E1FF]/20 rounded-l-2xl rounded-r-none"
-                    : "bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-[#00E1FF]/30 rounded-2xl group"
-                  }
-                `}
-              >
-                {/* Icon */}
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isActive ? "bg-white" : "bg-gray-50"}`}>
-                  <svg
-                    className={`w-5 h-5 transition-colors ${isActive ? "text-[#0055FF]" : "text-gray-400 group-hover:text-[#00E1FF]"}`}
-                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                  >
-                    {STEP_ICONS[i] || STEP_ICONS[0]}
-                  </svg>
-                </div>
-                {/* Letter */}
-                <span className={`text-5xl font-black leading-none select-none mt-2 transition-colors ${isActive ? "text-white" : "text-gray-200 group-hover:text-[#00E1FF]/40"}`}>
-                  {step.step.charAt(0).toUpperCase()}
-                </span>
-              </div>
-
-              {/* Joined content panel — only for active step */}
-              {isActive && (
-                <div
-                  className={`
-                    bg-white rounded-r-2xl shadow-xl
-                    border-t border-b border-r border-gray-100
-                    flex flex-col justify-center px-6 py-5
-                    min-w-[220px] max-w-[380px]
-                    transition-all duration-300
-                    ${animating ? "opacity-0 translate-x-2" : "opacity-100 translate-x-0"}
-                  `}
-                >
-                  <h3 className="text-[#1a1a2e] font-bold text-xl mb-2">{step.step}</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed">{step.description}</p>
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-    </>
   );
 };
 
@@ -1605,7 +1470,7 @@ const EcommerceServicesSection = () => {
               `}
               style={{ transitionDelay: visible ? `${i * 90}ms` : "0ms" }}
             >
-              {/* Left accent border — grows on hover */}
+              {/* Left accent border, grows on hover */}
               <div className="absolute left-0 top-4 bottom-4 w-0.5 bg-gradient-to-b from-[#00E1FF] to-[#0055FF] rounded-full scale-y-0 group-hover:scale-y-100 transition-transform duration-500 origin-top" />
 
               {/* Top shimmer on hover */}
@@ -1629,7 +1494,7 @@ const EcommerceServicesSection = () => {
                 {item.desc}
               </p>
 
-              {/* Learn More link — slides in on hover */}
+              {/* Learn More link, slides in on hover */}
               <div className="relative z-10 mt-5 overflow-hidden h-5">
                 <div className="flex items-center gap-1.5 translate-y-6 group-hover:translate-y-0 transition-transform duration-300">
                   <span className="text-xs font-bold bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text">Learn More</span>
@@ -1739,7 +1604,7 @@ const UiUxEngagementsSection = () => {
                 {/* Shimmer gradient on hover */}
                 <div className="absolute inset-0 bg-gradient-to-br from-[#00E1FF]/0 to-[#0055FF]/0 group-hover:from-[#00E1FF]/5 group-hover:to-[#0055FF]/8 transition-all duration-500 rounded-2xl" />
 
-                {/* Top accent bar — grows in on hover */}
+                {/* Top accent bar, grows in on hover */}
                 <div className="absolute top-0 left-0 h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-t-2xl transition-all duration-500" />
 
                 {/* Number badge */}
@@ -1756,7 +1621,7 @@ const UiUxEngagementsSection = () => {
                   {item.description}
                 </p>
 
-                {/* Bottom arrow — slides in on hover */}
+                {/* Bottom arrow, slides in on hover */}
                 <div className="relative z-10 mt-5 flex items-center gap-1.5 overflow-hidden">
                   <span className="text-xs font-semibold text-[#0055FF] translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300 opacity-0 group-hover:opacity-100">
                     Learn more
@@ -2781,7 +2646,7 @@ const TaxAccountingHeroGraphic = () => {
         {/* Shadow under coins */}
         <ellipse cx="130" cy="365" rx="52" ry="12" fill="#0f172a" opacity="0.10" />
 
-        {/* Coin stack — bottom to top */}
+        {/* Coin stack, bottom to top */}
         {[0, 1, 2, 3, 4].map((i) => (
           <g key={i} transform={`translate(0, ${-i * 14})`}>
             {/* Coin rim (dark side) */}
@@ -3031,15 +2896,15 @@ export default function ServicePage() {
                           <div className="space-y-1 flex-1">
                             <div className="bg-indigo-600 text-white rounded-lg p-1.5 text-[8px]">
                               <div className="font-bold">Mobile App Design</div>
-                              <div className="opacity-80 text-[7px]">9:00 AM - 10:00 AM</div>
+                              <div className="opacity-80 text-[7px]">9:00 AM to 10:00 AM</div>
                             </div>
                             <div className="bg-purple-600 text-white rounded-lg p-1.5 text-[8px]">
                               <div className="font-bold">Software Testing</div>
-                              <div className="opacity-80 text-[7px]">10:00 AM - 12:00 PM</div>
+                              <div className="opacity-80 text-[7px]">10:00 AM to 12:00 PM</div>
                             </div>
                             <div className="bg-blue-600 text-white rounded-lg p-1.5 text-[8px]">
                               <div className="font-bold">Web Development</div>
-                              <div className="opacity-80 text-[7px]">1:00 PM - 2:00 PM</div>
+                              <div className="opacity-80 text-[7px]">1:00 PM to 2:00 PM</div>
                             </div>
                           </div>
                         </div>
@@ -3214,7 +3079,7 @@ export default function ServicePage() {
                 {service.subtitle}
               </h2>
               <p className="text-gray-600 text-lg leading-relaxed">
-                {service.overviewTagline || "We focus on understanding your business goals first, then build solutions that actually solve problems — not just look good on paper. Every project gets dedicated attention, clear communication, and a team that takes ownership of delivering results on time."}
+                {service.overviewTagline || "We focus on understanding your business goals first, then build solutions that actually solve problems, not just look good on paper. Every project gets dedicated attention, clear communication, and a team that takes ownership of delivering results on time."}
               </p>
             </div>
 
@@ -3684,35 +3549,8 @@ export default function ServicePage() {
         )}
 
 
-        {/* Process Section - Interactive Step Selector */}
-        {service.process && service.process.length > 0 && (
-          <section className="py-20 bg-[#eef0f8]">
-            <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
-              {/* Header */}
-              <div className="text-center mb-10 max-w-4xl mx-auto px-2">
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#1a1a2e] mb-4 leading-tight">
-                  {service.processHeading || `Our ${service.title} Process: Discover to Scale`}
-                </h2>
-                {service.processDescription ? (
-                  <p
-                    className="text-gray-600 max-w-2xl mx-auto text-xs sm:text-sm md:text-base leading-relaxed"
-                    dangerouslySetInnerHTML={{ __html: service.processDescription }}
-                  />
-                ) : (
-                  <p className="text-gray-600 max-w-2xl mx-auto text-xs sm:text-sm md:text-base leading-relaxed">
-                    Our {service.title.toLowerCase()} services follow a proven{" "}
-                    <strong className="text-[#1a1a2e]">five-phase process</strong> —{" "}
-                    {service.process.slice(0, 5).map(s => s.step).join(", ")} — so every project is structured,
-                    measurable, and built to grow safely after go-live.
-                  </p>
-                )}
-              </div>
-
-              {/* Interactive Step Selector */}
-              <ProcessSteps steps={service.process} />
-            </div>
-          </section>
-        )}
+        {/* How We Work, same oval process as homepage */}
+        {service.process && service.process.length > 0 && <HowWeWork />}
 
         {/* Local SEO Services Section - Only for SEO/Digital Marketing */}
         {slug === "seo-digital-marketing" && (
@@ -3732,10 +3570,10 @@ export default function ServicePage() {
                       <div className="w-16 h-1 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full mb-6" />
                       <div className="space-y-4 text-gray-600 text-sm sm:text-base leading-relaxed">
                         <p>
-                          Most affordable SEO services cut corners — thin content, low-quality backlinks, and cookie-cutter audits. We don&apos;t. Our local SEO services in Toronto and across Canada are built on three pillars: <strong className="text-[#0f172a]">technical excellence</strong>, <strong className="text-[#0f172a]">hyper-local content</strong>, and <strong className="text-[#0f172a]">authoritative link earning</strong>.
+                          Most affordable SEO services cut corners, thin content, low-quality backlinks, and cookie-cutter audits. We don&apos;t. Our local SEO services in Toronto and across Canada are built on three pillars: <strong className="text-[#0f172a]">technical excellence</strong>, <strong className="text-[#0f172a]">hyper-local content</strong>, and <strong className="text-[#0f172a]">authoritative link earning</strong>.
                         </p>
                         <p>
-                          When someone in Toronto searches &quot;local SEO services near me,&quot; your business should be the first thing they see. We make that happen through Google Business Profile optimization, structured data markup, local citation building, and neighbourhood-level keyword targeting — the kind of work that moves the needle.
+                          When someone in Toronto searches &quot;local SEO services near me,&quot; your business should be the first thing they see. We make that happen through Google Business Profile optimization, structured data markup, local citation building, and neighbourhood-level keyword targeting, the kind of work that moves the needle.
                         </p>
                       </div>
                     </div>
@@ -3818,7 +3656,7 @@ export default function ServicePage() {
                       Ready to Grow Your Organic Traffic?
                     </h3>
                     <p className="text-gray-600 text-sm leading-relaxed font-light">
-                      Every SEO engagement is scoped to your market, goals, and competition. Get a free strategy call and custom quote — no contracts, no lock-in.
+                      Every SEO engagement is scoped to your market, goals, and competition. Get a free strategy call and custom quote, no contracts, no lock-in.
                     </p>
                   </div>
 
@@ -3946,7 +3784,7 @@ export default function ServicePage() {
           );
         })()}
 
-        {/* Why Choose Us — Tax & Accounting (custom version) */}
+        {/* Why Choose Us, Tax & Accounting (custom version) */}
         {slug === "tax-accounting" && (
           <section className="py-20 bg-[#f8fafc]">
             <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12">
@@ -3963,7 +3801,7 @@ export default function ServicePage() {
                   <div className="w-24 h-1 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full mb-8" />
 
                   <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6">
-                    Managing taxes and accounting isn&apos;t just about numbers — it&apos;s about making confident financial decisions. At VynTech Solutions, our certified accounting professionals provide accurate, transparent, and deadline-driven financial services tailored for Canadian businesses of every size.
+                    Managing taxes and accounting isn&apos;t just about numbers, it&apos;s about making confident financial decisions. At VynTech Solutions, our certified accounting professionals provide accurate, transparent, and deadline-driven financial services tailored for Canadian businesses of every size.
                   </p>
 
                   <h3 className="text-base sm:text-lg font-bold text-[#0f172a] mb-2">
@@ -3978,7 +3816,7 @@ export default function ServicePage() {
                 <div className="lg:col-span-7">
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3.5 sm:gap-5">
 
-                    {/* Card 1 — CRA Compliance */}
+                    {/* Card 1, CRA Compliance */}
                     <div className="bg-white rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-lg hover:border-[#00E1FF]/40 transition-all duration-300 min-h-[130px] sm:min-h-[160px] border border-gray-100 group">
                       <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#0f172a] group-hover:text-[#00E1FF] transition-colors mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
@@ -3986,7 +3824,7 @@ export default function ServicePage() {
                       <span className="text-[#0f172a] font-semibold text-[11px] sm:text-xs md:text-sm leading-snug">CRA Compliant<br />Filings</span>
                     </div>
 
-                    {/* Card 2 — Certified Professionals */}
+                    {/* Card 2, Certified Professionals */}
                     <div className="bg-white rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-lg hover:border-[#00E1FF]/40 transition-all duration-300 min-h-[130px] sm:min-h-[160px] border border-gray-100 group">
                       <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#0f172a] group-hover:text-[#00E1FF] transition-colors mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
@@ -3994,7 +3832,7 @@ export default function ServicePage() {
                       <span className="text-[#0f172a] font-semibold text-[11px] sm:text-xs md:text-sm leading-snug">Certified<br />Accountants</span>
                     </div>
 
-                    {/* Card 3 — On-Time Deadlines */}
+                    {/* Card 3, On-Time Deadlines */}
                     <div className="bg-white rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-lg hover:border-[#00E1FF]/40 transition-all duration-300 min-h-[130px] sm:min-h-[160px] border border-gray-100 group">
                       <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#0f172a] group-hover:text-[#00E1FF] transition-colors mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -4002,7 +3840,7 @@ export default function ServicePage() {
                       <span className="text-[#0f172a] font-semibold text-[11px] sm:text-xs md:text-sm leading-snug">On-Time<br />Deadlines</span>
                     </div>
 
-                    {/* Card 4 — Tax Savings */}
+                    {/* Card 4, Tax Savings */}
                     <div className="bg-white rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-lg hover:border-[#00E1FF]/40 transition-all duration-300 min-h-[130px] sm:min-h-[160px] border border-gray-100 group">
                       <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#0f172a] group-hover:text-[#00E1FF] transition-colors mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -4010,7 +3848,7 @@ export default function ServicePage() {
                       <span className="text-[#0f172a] font-semibold text-[11px] sm:text-xs md:text-sm leading-snug">Maximum Tax<br />Savings</span>
                     </div>
 
-                    {/* Card 5 — Transparent Pricing */}
+                    {/* Card 5, Transparent Pricing */}
                     <div className="bg-white rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-lg hover:border-[#00E1FF]/40 transition-all duration-300 min-h-[130px] sm:min-h-[160px] border border-gray-100 group">
                       <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#0f172a] group-hover:text-[#00E1FF] transition-colors mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m-9-6l2-2 2 2 4-4" />
@@ -4018,7 +3856,7 @@ export default function ServicePage() {
                       <span className="text-[#0f172a] font-semibold text-[11px] sm:text-xs md:text-sm leading-snug">Transparent<br />Pricing</span>
                     </div>
 
-                    {/* Card 6 — Year-Round Support */}
+                    {/* Card 6, Year-Round Support */}
                     <div className="bg-white rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-lg hover:border-[#00E1FF]/40 transition-all duration-300 min-h-[130px] sm:min-h-[160px] border border-gray-100 group">
                       <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#0f172a] group-hover:text-[#00E1FF] transition-colors mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M16.712 4.33a9.027 9.027 0 011.652 1.306c.51.51.944 1.064 1.306 1.652M16.712 4.33l-3.448 4.138m3.448-4.138a9.014 9.014 0 00-9.424 0M19.67 7.288l-4.138 3.448m4.138-3.448a9.014 9.014 0 010 9.424m-4.138-5.976a3.736 3.736 0 00-.88-1.388 3.737 3.737 0 00-1.388-.88m2.268 2.268a3.765 3.765 0 010 2.528m-2.268-4.796a3.765 3.765 0 00-2.528 0m4.796 4.796c-.181.506-.475.982-.88 1.388a3.736 3.736 0 01-1.388.88m2.268-2.268l4.138 3.448m0 0a9.027 9.027 0 01-1.306 1.652c-.51.51-1.064.944-1.652 1.306m0 0l-3.448-4.138m3.448 4.138a9.014 9.014 0 01-9.424 0m5.976-4.138a3.765 3.765 0 01-2.528 0m0 0a3.736 3.736 0 01-1.388-.88 3.737 3.737 0 01-.88-1.388m2.268 2.268L7.288 19.67m0 0a9.024 9.024 0 01-1.652-1.306 9.027 9.027 0 01-1.306-1.652m0 0l4.138-3.448M4.33 16.712a9.014 9.014 0 010-9.424m4.138 5.976a3.765 3.765 0 010-2.528m0 0c.181-.506.475-.982.88-1.388a3.736 3.736 0 011.388-.88m-2.268 2.268L4.33 7.288m6.406 1.18L7.288 4.33m0 0a9.024 9.024 0 00-1.652 1.306A9.025 9.025 0 004.33 7.288" />

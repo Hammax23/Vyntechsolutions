@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 204 48" fill="none">
+  <circle cx="24" cy="24" r="22" fill="#9D174D"/>
+  <path fill="#FBCFE8" d="M24 14c4 3.2 6 7 6 10.4 0 4.4-2.6 8-6 9.6-3.4-1.6-6-5.2-6-9.6 0-3.4 2-7.2 6-10.4z"/>
+  <circle cx="24" cy="22" r="3" fill="#9D174D"/>
+  <text x="54" y="22" font-family="Georgia, 'Times New Roman', serif" font-size="16" font-style="italic" fill="#9D174D">Pacific</text>
+  <text x="54" y="36" font-family="Arial, Helvetica, sans-serif" font-size="10" letter-spacing="2.6" fill="#BE185D">BLOOM</text>
+</svg>

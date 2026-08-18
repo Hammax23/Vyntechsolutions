@@ -69,7 +69,7 @@ export default function GoogleRankingPromo({ compact = false }: GoogleRankingPro
     <Link
       href="/services/seo-digital-marketing"
       className={`group block seo-ranking-float ${compact ? "w-full max-w-[300px] mx-auto" : "w-[248px] xl:w-[268px]"}`}
-      aria-label="Get your website Google ranking — SEO and digital marketing services"
+      aria-label="Get your website Google ranking, SEO and digital marketing services"
     >
       <div className="relative">
         <div className="absolute -inset-2 rounded-2xl bg-gradient-to-br from-[#4285F4]/15 to-[#34A853]/10 blur-lg opacity-60 group-hover:opacity-90 transition-opacity" />

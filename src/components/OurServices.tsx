@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import Image from "next/image";
 
 const GoogleRankingPromo = dynamic(() => import("@/components/GoogleRankingPromo"), {
   ssr: false,
@@ -11,140 +12,76 @@ const GoogleRankingPromo = dynamic(() => import("@/components/GoogleRankingPromo
   ),
 });
 
-// SVG Icons for services
-const ServiceIcons = {
-  web: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
-    </svg>
-  ),
-  mobile: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
-    </svg>
-  ),
-  cloud: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z" />
-    </svg>
-  ),
-  ai: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
-    </svg>
-  ),
-  devops: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12a7.5 7.5 0 0015 0m-15 0a7.5 7.5 0 1115 0m-15 0H3m16.5 0H21m-1.5 0H12m-8.457 3.077l1.41-.513m14.095-5.13l1.41-.513M5.106 17.785l1.15-.964m11.49-9.642l1.149-.964M7.501 19.795l.75-1.3m7.5-12.99l.75-1.3m-6.063 16.658l.26-1.477m2.605-14.772l.26-1.477m0 17.726l-.26-1.477M10.698 4.614l-.26-1.477M16.5 19.794l-.75-1.299M7.5 4.205L6.75 2.906m9.944 18.08l-1.15-.964M5.106 6.214l-1.15-.964m17.99 5.13l-1.41-.513M5.954 15.436l-1.41-.514" />
-    </svg>
-  ),
-  uiux: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" />
-    </svg>
-  ),
-  ecommerce: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
-    </svg>
-  ),
-  custom: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
-    </svg>
-  ),
-  seo: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
-    </svg>
-  ),
-  support: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-full h-full">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" />
-    </svg>
-  ),
-};
-
 const serviceCards = [
   {
-    title: "Web Development",
-    description: "Modern, responsive websites built with cutting-edge technologies for optimal performance.",
-    href: "/services/web-development",
-    icon: "web",
-    gradient: "from-blue-500 to-indigo-600",
-    lightGradient: "from-blue-50 to-indigo-50",
+    title: "Generative AI",
+    description:
+      "We put AI on the jobs your team already does, drafts, support replies, reports, so it saves hours this month, not in a pitch deck.",
+    href: "/services/ai-ml-solutions",
+    art: "/services/ribbons/ribbon-1.webp",
   },
   {
     title: "Mobile App Development",
-    description: "Native & cross-platform mobile applications for iOS and Android platforms.",
+    description:
+      "iOS and Android apps that feel quick on a real phone. We ship, get them on the stores, and stay on for the updates after launch.",
     href: "/services/mobile-app-development",
-    icon: "mobile",
-    gradient: "from-purple-500 to-pink-600",
-    lightGradient: "from-purple-50 to-pink-50",
+    art: "/services/ribbons/ribbon-2.webp",
   },
   {
-    title: "Cloud Solutions",
-    description: "Scalable cloud infrastructure on AWS, Azure & GCP for enterprise workloads.",
-    href: "/services/cloud-solutions",
-    icon: "cloud",
-    gradient: "from-cyan-500 to-blue-600",
-    lightGradient: "from-cyan-50 to-blue-50",
-  },
-  {
-    title: "AI/ML Solutions",
-    description: "Intelligent automation & machine learning models to transform your business.",
-    href: "/services/ai-ml-solutions",
-    icon: "ai",
-    gradient: "from-violet-500 to-purple-600",
-    lightGradient: "from-violet-50 to-purple-50",
-  },
-  {
-    title: "DevOps & CI/CD",
-    description: "Streamlined deployment pipelines and infrastructure automation at scale.",
+    title: "DevOps",
+    description:
+      "Pipelines, servers, and deploys set up so a release is a normal Tuesday, not a late night scramble hoping nothing breaks.",
     href: "/services/devops-cicd",
-    icon: "devops",
-    gradient: "from-orange-500 to-red-600",
-    lightGradient: "from-orange-50 to-red-50",
+    art: "/services/ribbons/ribbon-3.webp",
   },
   {
     title: "UI/UX Design",
-    description: "User-centered design that creates engaging digital experiences.",
+    description:
+      "We sit with how your customers actually click through, then design screens that make the next step obvious. Fewer dead ends, less bounce.",
     href: "/services/ui-ux-design",
-    icon: "uiux",
-    gradient: "from-pink-500 to-rose-600",
-    lightGradient: "from-pink-50 to-rose-50",
+    art: "/services/ribbons/ribbon-4.webp",
   },
   {
-    title: "E-commerce Solutions",
-    description: "End-to-end online store development with secure payment integrations.",
-    href: "/services/ecommerce-solutions",
-    icon: "ecommerce",
-    gradient: "from-emerald-500 to-teal-600",
-    lightGradient: "from-emerald-50 to-teal-50",
+    title: "Web Development",
+    description:
+      "Sites and web apps in React and Next.js, fast, easy to edit, built to rank. No bloated templates that look fine until you try to grow.",
+    href: "/services/web-development",
+    art: "/services/ribbons/ribbon-5.webp",
   },
   {
-    title: "Custom Software",
-    description: "Bespoke software solutions tailored to your unique business requirements.",
+    title: "Custom Software Development",
+    description:
+      "Tools written around how your team already works. If you're living in spreadsheets or fighting a clunky system, we replace that.",
     href: "/services/custom-software-development",
-    icon: "custom",
-    gradient: "from-slate-600 to-gray-700",
-    lightGradient: "from-slate-50 to-gray-100",
+    art: "/services/ribbons/ribbon-6.webp",
+  },
+  {
+    title: "Cloud Solutions",
+    description:
+      "AWS, Azure, or Google Cloud, we move you over, lock it down, and keep an eye on the bill so you're not paying for idle servers.",
+    href: "/services/cloud-solutions",
+    art: "/services/ribbons/ribbon-7.webp",
+  },
+  {
+    title: "Ecommerce Solutions",
+    description:
+      "Online stores with checkout, payments, and stock that hold up when it's busy. Shopify or custom, whichever fits the catalogue you have.",
+    href: "/services/ecommerce-solutions",
+    art: "/services/ribbons/ribbon-8.webp",
   },
   {
     title: "SEO & Digital Marketing",
-    description: "Data-driven strategies to boost visibility and drive qualified leads.",
+    description:
+      "We fix the pages Google actually cares about, titles, content, speed, links, so the right searches start showing your site, not a vanity report.",
     href: "/services/seo-digital-marketing",
-    icon: "seo",
-    gradient: "from-amber-500 to-orange-600",
-    lightGradient: "from-amber-50 to-orange-50",
+    art: "/services/ribbons/ribbon-9.webp",
   },
   {
     title: "Maintenance & Support",
-    description: "24/7 technical support and proactive maintenance for your systems.",
+    description:
+      "Updates, backups, and a real person when something's down. We watch the site so you don't find out from a customer.",
     href: "/services/maintenance-support",
-    icon: "support",
-    gradient: "from-teal-500 to-cyan-600",
-    lightGradient: "from-teal-50 to-cyan-50",
+    art: "/services/ribbons/ribbon-10.webp",
   },
 ];
 
@@ -153,6 +90,13 @@ const DEFAULT_SERVICES_BODY =
 
 type ServiceCard = (typeof serviceCards)[number];
 
+function withoutWordDash(text: string) {
+  return text
+    .replace(/\b[Ee]-commerce\b/g, "Ecommerce")
+    .replace(/\b[Ee]-learning\b/g, "Elearning")
+    .replace(/(\w)-(\w)/g, "$1 $2");
+}
+
 export default function OurServices() {
   const [isVisible, setIsVisible] = useState(false);
   const [cardsVisible, setCardsVisible] = useState(false);
@@ -160,9 +104,30 @@ export default function OurServices() {
   const [subheading, setSubheading] = useState("Transforming Modern Businesses");
   const [body, setBody] = useState(DEFAULT_SERVICES_BODY);
   const [cards, setCards] = useState<ServiceCard[]>(serviceCards);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(true);
 
   const sectionRef = useRef<HTMLElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const sliderRef = useRef({
+    x: 0,
+    vx: 0,
+    min: 0,
+    max: 0,
+    dragging: false,
+    moved: false,
+    pointerId: -1,
+    lastX: 0,
+    lastT: 0,
+    startX: 0,
+    startY: 0,
+    startTranslate: 0,
+    axis: "" as "" | "x" | "y",
+    raf: 0,
+    snapping: false,
+  });
 
   const useFancyHeading = heading === "Our Services";
 
@@ -193,12 +158,10 @@ export default function OurServices() {
               serviceCards.find((c) => c.href.includes(`/${s.slug}`)) ||
               serviceCards[i % serviceCards.length];
             return {
-              title: String(s.title || fallback.title),
-              description: String(s.description || fallback.description),
+              title: withoutWordDash(String(s.title || fallback.title)),
+              description: withoutWordDash(fallback.description),
               href: `/services/${s.slug}`,
-              icon: fallback.icon,
-              gradient: fallback.gradient,
-              lightGradient: fallback.lightGradient,
+              art: fallback.art,
             };
           })
         );
@@ -237,10 +200,245 @@ export default function OurServices() {
     };
   }, []);
 
+  const updateScrollButtons = () => {
+    const s = sliderRef.current;
+    const prev = s.x < -8;
+    const next = s.x > s.max + 8;
+    setCanScrollPrev((v) => (v === prev ? v : prev));
+    setCanScrollNext((v) => (v === next ? v : next));
+  };
+
+  const getCardStep = () => {
+    const track = trackRef.current;
+    const card = track?.querySelector("a");
+    if (!(card instanceof HTMLElement) || !track) return 354;
+    const gap = parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap) || 24;
+    return card.offsetWidth + gap;
+  };
+
+  const scrollByCard = (direction: -1 | 1) => {
+    const s = sliderRef.current;
+    const target = s.x - direction * getCardStep();
+    s.vx = 0;
+    s.snapping = true;
+    animateSliderTo(target);
+  };
+
+  const applySlider = () => {
+    const track = trackRef.current;
+    if (!track) return;
+    track.style.transform = `translate3d(${sliderRef.current.x}px,0,0)`;
+  };
+
+  const clampSlider = (value: number, rubber = false) => {
+    const s = sliderRef.current;
+    if (!rubber) return Math.min(s.min, Math.max(s.max, value));
+    if (value > s.min) return s.min + (value - s.min) * 0.22;
+    if (value < s.max) return s.max + (value - s.max) * 0.22;
+    return value;
+  };
+
+  const animateSliderTo = (target: number, duration = 520) => {
+    const s = sliderRef.current;
+    const from = s.x;
+    const to = clampSlider(target, false);
+    const start = performance.now();
+    cancelAnimationFrame(s.raf);
+
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - t, 3);
+      s.x = from + (to - from) * eased;
+      applySlider();
+      if (t < 1) {
+        s.raf = requestAnimationFrame(tick);
+      } else {
+        s.snapping = false;
+        s.vx = 0;
+        updateScrollButtons();
+      }
+    };
+    s.raf = requestAnimationFrame(tick);
+  };
+
+  const snapSlider = () => {
+    const s = sliderRef.current;
+    const step = getCardStep();
+    const snapped = Math.round(s.x / step) * step;
+    s.snapping = true;
+    animateSliderTo(snapped, 480);
+  };
+
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    const track = trackRef.current;
+    if (!viewport || !track) return;
+
+    const s = sliderRef.current;
+
+    const measure = () => {
+      if (s.dragging) return;
+      s.min = 0;
+      s.max = Math.min(0, viewport.clientWidth - track.scrollWidth);
+      s.x = clampSlider(s.x, false);
+      applySlider();
+      updateScrollButtons();
+    };
+
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(viewport);
+
+    const stopRaf = () => {
+      cancelAnimationFrame(s.raf);
+      s.raf = 0;
+    };
+
+    const setDragMode = (on: boolean) => {
+      viewport.classList.toggle("is-dragging", on);
+      track.style.pointerEvents = on ? "none" : "";
+      viewport.style.cursor = on ? "grabbing" : "grab";
+    };
+
+    const runInertia = () => {
+      stopRaf();
+      const tick = () => {
+        s.vx *= 0.94;
+        s.x += s.vx;
+        if (s.x > s.min) {
+          s.x = s.min;
+          s.vx = 0;
+        } else if (s.x < s.max) {
+          s.x = s.max;
+          s.vx = 0;
+        }
+        applySlider();
+        if (Math.abs(s.vx) > 0.45) {
+          s.raf = requestAnimationFrame(tick);
+        } else {
+          snapSlider();
+        }
+      };
+      s.raf = requestAnimationFrame(tick);
+    };
+
+    const onPointerDown = (e: PointerEvent) => {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      stopRaf();
+      s.dragging = true;
+      s.moved = false;
+      s.snapping = false;
+      s.axis = e.pointerType === "mouse" ? "x" : "";
+      s.vx = 0;
+      s.pointerId = e.pointerId;
+      s.lastX = e.clientX;
+      s.lastT = performance.now();
+      s.startX = e.clientX;
+      s.startY = e.clientY;
+      s.startTranslate = s.x;
+      if (e.pointerType === "mouse") {
+        viewport.setPointerCapture(e.pointerId);
+        setDragMode(true);
+      }
+    };
+
+    const onPointerMove = (e: PointerEvent) => {
+      if (!s.dragging || s.pointerId !== e.pointerId) return;
+
+      const dx = e.clientX - s.startX;
+      const dy = e.clientY - s.startY;
+
+      if (!s.axis) {
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+        s.axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+        if (s.axis === "x") {
+          viewport.setPointerCapture(e.pointerId);
+          setDragMode(true);
+        }
+      }
+
+      if (s.axis !== "x") return;
+
+      const now = performance.now();
+      const frameDx = e.clientX - s.lastX;
+      const dt = Math.max(8, now - s.lastT);
+      s.vx = frameDx * (16.67 / dt);
+      s.lastX = e.clientX;
+      s.lastT = now;
+      if (Math.abs(dx) > 4) s.moved = true;
+      s.x = clampSlider(s.startTranslate + dx, false);
+      applySlider();
+      e.preventDefault();
+    };
+
+    const endDrag = (e: PointerEvent) => {
+      if (s.pointerId !== e.pointerId) return;
+      const wasHorizontal = s.axis === "x";
+      s.dragging = false;
+      s.axis = "";
+      setDragMode(false);
+      if (viewport.hasPointerCapture(e.pointerId)) {
+        viewport.releasePointerCapture(e.pointerId);
+      }
+      updateScrollButtons();
+      if (!wasHorizontal) return;
+      if (Math.abs(s.vx) > 0.8) runInertia();
+      else snapSlider();
+    };
+
+    const onClickCapture = (e: MouseEvent) => {
+      if (!s.moved) return;
+      e.preventDefault();
+      e.stopPropagation();
+      s.moved = false;
+    };
+
+    const onDragStart = (e: DragEvent) => e.preventDefault();
+
+    let wheelSnapTimer = 0;
+    const onWheelSmooth = (e: WheelEvent) => {
+      if (track.scrollWidth <= viewport.clientWidth) return;
+      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (delta === 0) return;
+      e.preventDefault();
+      stopRaf();
+      s.snapping = false;
+      s.vx = 0;
+      s.x = clampSlider(s.x - delta, true);
+      applySlider();
+      updateScrollButtons();
+      window.clearTimeout(wheelSnapTimer);
+      wheelSnapTimer = window.setTimeout(() => {
+        if (!s.dragging) snapSlider();
+      }, 80);
+    };
+
+    viewport.addEventListener("pointerdown", onPointerDown);
+    viewport.addEventListener("pointermove", onPointerMove, { passive: false });
+    viewport.addEventListener("pointerup", endDrag);
+    viewport.addEventListener("pointercancel", endDrag);
+    viewport.addEventListener("click", onClickCapture, true);
+    viewport.addEventListener("dragstart", onDragStart);
+    viewport.addEventListener("wheel", onWheelSmooth, { passive: false });
+
+    return () => {
+      stopRaf();
+      window.clearTimeout(wheelSnapTimer);
+      ro.disconnect();
+      viewport.removeEventListener("pointerdown", onPointerDown);
+      viewport.removeEventListener("pointermove", onPointerMove);
+      viewport.removeEventListener("pointerup", endDrag);
+      viewport.removeEventListener("pointercancel", endDrag);
+      viewport.removeEventListener("click", onClickCapture, true);
+      viewport.removeEventListener("dragstart", onDragStart);
+      viewport.removeEventListener("wheel", onWheelSmooth);
+    };
+  }, [cards]);
+
   return (
     <section
       ref={sectionRef}
-      className={`w-full bg-gradient-to-br from-[#e8f4f8] via-[#f0f0f0] to-[#e8f0f4] py-16 sm:py-20 md:py-24 lg:py-28 transition-all duration-1000 overflow-hidden ${isVisible ? "opacity-100" : "opacity-0"
+      className={`w-full bg-gradient-to-br from-[#e8f4f8] via-[#f0f0f0] to-[#e8f0f4] py-16 sm:py-20 md:py-24 lg:py-28 transition-all duration-1000 ${isVisible ? "opacity-100" : "opacity-0"
         }`}
     >
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-12 lg:px-20">
@@ -342,8 +540,9 @@ export default function OurServices() {
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Enterprise Service Cards - Modern Grid */}
+      <div className="relative w-full min-w-0">
         <div
           ref={cardsRef}
           className={`transition-all duration-1000 delay-300 ${cardsVisible
@@ -351,67 +550,102 @@ export default function OurServices() {
             : "opacity-0 translate-y-8"
             }`}
         >
-          {/* Grid - 5 columns on desktop, responsive on smaller screens */}
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-5 lg:gap-6">
+          <button
+            type="button"
+            aria-label="Previous services"
+            onClick={() => scrollByCard(-1)}
+            disabled={!canScrollPrev}
+            className="absolute left-2 sm:left-4 top-[calc(50%+8px)] z-20 hidden sm:flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-black shadow-[0_8px_24px_rgba(40,30,80,0.16)] transition enabled:hover:bg-white disabled:pointer-events-none disabled:opacity-0"
+          >
+            <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" aria-hidden>
+              <path d="M10 3 5 8l5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            aria-label="Next services"
+            onClick={() => scrollByCard(1)}
+            disabled={!canScrollNext}
+            className="absolute right-2 sm:right-4 top-[calc(50%+8px)] z-20 hidden sm:flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-black shadow-[0_8px_24px_rgba(40,30,80,0.16)] transition enabled:hover:bg-white disabled:pointer-events-none disabled:opacity-0"
+          >
+            <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" aria-hidden>
+              <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+          <div
+            ref={viewportRef}
+            className="overflow-hidden cursor-grab pt-4 pb-8 [&.is-dragging_a]:pointer-events-none [&.is-dragging_a]:translate-y-0 [&.is-dragging_a]:transition-none"
+            style={{ touchAction: "pan-y" }}
+          >
+            <div
+              ref={trackRef}
+              role="region"
+              aria-label="Our services"
+              className="flex w-max flex-nowrap gap-8 sm:gap-10 lg:gap-12 px-4 sm:px-6 md:px-8 lg:px-10 select-none [backface-visibility:hidden]"
+              style={{ willChange: "transform" }}
+            >
             {cards.map((card, index) => (
               <Link
-                key={index}
+                key={`${card.href}-${index}`}
                 href={card.href}
-                className="group relative"
-                style={{
-                  animationDelay: `${index * 80}ms`
-                }}
+                draggable={false}
+                onDragStart={(e) => e.preventDefault()}
+                className="group relative isolate flex h-[380px] w-[300px] sm:h-[400px] sm:w-[340px] lg:h-[410px] lg:w-[372px] xl:h-[420px] xl:w-[400px] flex-none flex-col overflow-hidden bg-white shadow-[0_8px_28px_rgba(80,70,140,0.08)] transition-[box-shadow,transform] duration-300 hover:-translate-y-1 hover:shadow-[0_22px_55px_rgba(70,50,140,0.28)]"
+                style={{ borderRadius: "22px 22px 0 0" }}
               >
-                {/* Card Container */}
-                <div className="relative h-full bg-white rounded-2xl p-5 sm:p-6 border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
-                  {/* Gradient accent line at top */}
-                  <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${card.gradient} transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500`} />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 transition-opacity duration-500 group-hover:opacity-0">
+                  <Image
+                    src={card.art}
+                    alt=""
+                    width={900}
+                    height={320}
+                    sizes="400px"
+                    className="h-auto w-full"
+                    draggable={false}
+                  />
+                </div>
 
-                  {/* Background gradient on hover */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${card.lightGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                <div className="pointer-events-none absolute inset-0 z-[1] opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                  <Image
+                    src="/services/ribbons/card-hover-mesh.webp"
+                    alt=""
+                    fill
+                    sizes="400px"
+                    className="object-cover object-center"
+                    draggable={false}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-b from-[#3b2a6a]/55 via-[#4c3a86]/20 to-transparent" />
+                </div>
 
-                  {/* Content */}
-                  <div className="relative z-10">
-                    {/* Icon */}
-                    <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br ${card.gradient} p-3 text-white mb-4 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
-                      {ServiceIcons[card.icon as keyof typeof ServiceIcons]}
-                    </div>
-
-                    {/* Title */}
-                    <h4 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 group-hover:text-gray-800 transition-colors leading-tight">
-                      {card.title}
-                    </h4>
-
-                    {/* Description */}
-                    <p className="text-sm text-gray-500 leading-relaxed line-clamp-2 group-hover:text-gray-600 transition-colors">
-                      {card.description}
-                    </p>
-
-                    {/* Arrow indicator */}
-                    <div className="mt-4 flex items-center text-sm font-medium">
-                      <span className={`bg-gradient-to-r ${card.gradient} bg-clip-text text-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 transform -translate-x-2 group-hover:translate-x-0`}>
-                        Learn more
-                      </span>
-                      <svg
-                        className={`w-4 h-4 ml-1 opacity-0 group-hover:opacity-100 transition-all duration-300 transform -translate-x-4 group-hover:translate-x-0`}
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="url(#arrow-gradient)"
-                        strokeWidth="2"
-                      >
-                        <defs>
-                          <linearGradient id="arrow-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stopColor="#3B82F6" />
-                            <stop offset="100%" stopColor="#8B5CF6" />
-                          </linearGradient>
-                        </defs>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                      </svg>
-                    </div>
-                  </div>
+                <div className="relative z-10 flex h-full flex-col px-7 sm:px-8 pt-8 sm:pt-9 pb-8 text-left bg-gradient-to-b from-white via-white/95 to-transparent group-hover:from-transparent group-hover:via-transparent">
+                  <h4
+                    className="text-[1.5rem] sm:text-[1.7rem] font-medium leading-snug tracking-tight text-black transition-colors duration-500 group-hover:text-white"
+                  >
+                    {card.title}
+                  </h4>
+                  <p
+                    className="mt-4 text-[15px] sm:text-base leading-[1.7] text-black/90 transition-colors duration-500 group-hover:text-white"
+                  >
+                    {card.description}
+                  </p>
+                  <span
+                    className="mt-6 inline-flex items-center gap-2 text-[13px] font-bold tracking-[0.08em] uppercase text-black transition-colors duration-500 group-hover:text-white"
+                  >
+                    Learn More
+                    <svg
+                      aria-hidden
+                      viewBox="0 0 16 16"
+                      className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1"
+                      fill="none"
+                    >
+                      <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
                 </div>
               </Link>
             ))}
+            <div className="w-2 flex-none sm:w-4" aria-hidden />
+            </div>
           </div>
         </div>
       </div>

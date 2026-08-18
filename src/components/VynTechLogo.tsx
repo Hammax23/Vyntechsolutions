@@ -21,25 +21,17 @@ export default function VynTechLogo({ className = "", onClick, darkText = false 
           alt="VynTech Solutions"
           width={44}
           height={44}
-          className="w-full h-full object-contain"
+          className={`w-full h-full object-contain ${darkText ? "brightness-0" : ""}`}
           priority
         />
       </div>
 
-      <div className="flex items-center gap-1.5 lg:gap-2 -translate-y-0.5">
-        <span
-          className={`text-[1.4rem] lg:text-[1.85rem] tracking-[0.01em] leading-none font-light lowercase ${darkText ? 'text-[#1a1a2e]' : 'text-white'}`}
-          style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}
-        >
-          vyntech
-        </span>
-        <span
-          className="text-[1.4rem] lg:text-[1.85rem] tracking-[0.01em] leading-none font-light lowercase bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text"
-          style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}
-        >
-          sol
-        </span>
-      </div>
+      <span
+        className={`-translate-y-0.5 text-[1.4rem] lg:text-[1.85rem] tracking-[0.01em] leading-none font-light lowercase ${darkText ? "text-black" : "text-white"}`}
+        style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}
+      >
+        vyntech
+      </span>
     </div>
   );
 }

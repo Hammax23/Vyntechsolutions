@@ -3,7 +3,7 @@
     "siteName": "VynTech Solutions",
     "siteUrl": "https://vyntechsolutions.ca",
     "defaultTitle": "VynTech Solutions | Building Digital Excellence for Canadian Businesses",
-    "titleTemplate": "%s | VynTech Solutions - Canadian Digital Agency",
+    "titleTemplate": "%s | VynTech Solutions, Canadian Digital Agency",
     "defaultDescription": "VynTech Solutions is Canada's leading digital agency specializing in custom web development, mobile apps, UI/UX design, and enterprise software solutions. Serving businesses across Toronto, Vancouver, Montreal & nationwide.",
     "phone": "",
     "email": "info@vyntechsolutions.ca",
@@ -58,34 +58,64 @@
   ],
   "faqs": [
     {
-      "question": "What services does VynTech Solutions offer?",
-      "answer": "VynTech Solutions offers comprehensive digital services including custom web development, mobile app development (iOS & Android), UI/UX design, cloud solutions, AI/ML development, e-commerce solutions, and enterprise software development. We serve businesses across Canada including Toronto, Vancouver, and Montreal.",
+      "question": "What other services do you provide?",
+      "answer": "Beyond web development, we offer mobile app development, UI/UX design, SEO, custom software, cloud solutions, and ongoing maintenance.",
       "order": 1,
-      "page": "global"
+      "page": "home"
     },
     {
-      "question": "How much does web development cost in Canada?",
-      "answer": "Web development costs vary based on project complexity. Simple websites start from $5,000 CAD, while custom web applications range from $15,000 to $100,000+ CAD. Contact VynTech Solutions for a free consultation and accurate quote for your specific requirements.",
+      "question": "Do you provide customized website design services?",
+      "answer": "Yes, every website is built from scratch around your brand and goals, no generic templates.",
       "order": 2,
-      "page": "global"
+      "page": "home"
     },
     {
-      "question": "How long does it take to build a website?",
-      "answer": "Timeline depends on project scope. A simple website takes 2-4 weeks, while complex web applications may take 3-6 months. We follow agile methodologies with regular updates and transparent communication throughout the development process.",
+      "question": "Are you an e-commerce website development company?",
+      "answer": "Yes, we build e-commerce platforms on Shopify, WooCommerce, and custom stacks, from catalogs to payment integration.",
       "order": 3,
-      "page": "global"
+      "page": "home"
     },
     {
-      "question": "Do you work with startups and enterprises?",
-      "answer": "Yes! VynTech Solutions works with businesses of all sizes - from early-stage startups launching their first MVP to established enterprises modernizing their digital infrastructure. We tailor our approach to match your business needs and budget.",
+      "question": "Do you offer small business website development?",
+      "answer": "Absolutely. We build websites for businesses of every size, including budget-friendly options for small businesses.",
       "order": 4,
-      "page": "global"
+      "page": "home"
     },
     {
-      "question": "What technologies do you use?",
-      "answer": "We use modern, scalable technologies including React, Next.js, Node.js, Python, TypeScript, PostgreSQL, MongoDB, AWS, Azure, Google Cloud, React Native, Flutter, and more. We choose the best tech stack based on your project requirements.",
+      "question": "What makes you one of the best website development companies in Toronto?",
+      "answer": "Transparent communication, strong technical expertise, and results, 500+ websites delivered with a 98% client satisfaction rate.",
       "order": 5,
-      "page": "global"
+      "page": "home"
+    },
+    {
+      "question": "Where can I learn more about your company and team?",
+      "answer": "Visit our About Us page to learn our mission, values, and story.",
+      "order": 6,
+      "page": "home"
+    },
+    {
+      "question": "Can I track the progress of my new website project?",
+      "answer": "Yes, you'll get a dedicated project manager and regular updates throughout development.",
+      "order": 7,
+      "page": "home"
+    },
+    {
+      "question": "Which e-commerce technology platforms do you work with?",
+      "answer": "We work with Shopify, WooCommerce, Magento, and custom-coded solutions.",
+      "order": 8,
+      "page": "home"
+    },
+    {
+      "question": "How do I find a professional web design company in Toronto?",
+      "answer": "Look for a proven track record, transparent pricing, and real client results, all core to how we work.",
+      "order": 9,
+      "page": "home"
+    },
+    {
+      "question": "Can you handle a complex migration without disrupting our business?",
+      "answer": "Yes, we plan and test carefully, scheduling deployment during low-traffic windows to keep your business running smoothly.",
+      "order": 10,
+      "page": "home"
     }
   ],
   "categories": [
@@ -112,7 +142,7 @@
       "slug": "why-custom-software-beats-off-the-shelf",
       "metaDescription": "Discover why businesses choose custom software development over ready-made solutions. Learn about ROI, scalability, and competitive advantages.",
       "excerpt": "Off-the-shelf software seems cheaper upfront, but custom solutions often deliver better ROI. Here's when to build vs buy.",
-      "content": "\n## The Build vs Buy Decision\n\nEvery business faces this choice: buy existing software or build something custom. The answer depends on your specific needs, but here's what most people get wrong.\n\n### When Off-the-Shelf Works\n\nReady-made software makes sense when:\n- Your needs are generic (email, basic accounting, project management)\n- You're a small team with standard workflows\n- Budget is extremely limited and time-sensitive\n\n### When Custom Software Wins\n\nCustom development becomes the better choice when:\n\n**1. Your Process Is Your Advantage**\n\nIf your business does something differently than competitors—and that difference matters—generic software forces you to change your process. Custom software adapts to you.\n\n**2. Integration Requirements**\n\nMost businesses run 10+ software tools. Off-the-shelf products rarely talk to each other well. Custom software can connect everything into one workflow.\n\n**3. Scaling Costs**\n\nSaaS pricing usually scales with users or usage. At some point, monthly fees exceed what custom development would cost—and you'd own the result.\n\n**4. Data Ownership**\n\nWith custom software, your data stays on your servers. You control security, backups, and compliance. No vendor lock-in.\n\n### Real Cost Comparison\n\nA typical SaaS tool costs $50-200/user/month. For a 50-person company:\n- SaaS: $30,000-120,000/year, ongoing forever\n- Custom: $80,000-150,000 one-time, plus maintenance\n\nBy year three, custom often costs less. By year five, significantly less.\n\n### The Right Approach\n\nStart with off-the-shelf for non-critical functions. Invest in custom development for core business processes where software directly impacts revenue or efficiency.\n\nMost successful companies use both—they just know which is which.\n    ",
+      "content": "\n## The Build vs Buy Decision\n\nEvery business faces this choice: buy existing software or build something custom. The answer depends on your specific needs, but here's what most people get wrong.\n\n### When Off-the-Shelf Works\n\nReady-made software makes sense when:\n- Your needs are generic (email, basic accounting, project management)\n- You're a small team with standard workflows\n- Budget is extremely limited and time-sensitive\n\n### When Custom Software Wins\n\nCustom development becomes the better choice when:\n\n**1. Your Process Is Your Advantage**\n\nIf your business does something differently than competitors, and that difference matters, generic software forces you to change your process. Custom software adapts to you.\n\n**2. Integration Requirements**\n\nMost businesses run 10+ software tools. Off-the-shelf products rarely talk to each other well. Custom software can connect everything into one workflow.\n\n**3. Scaling Costs**\n\nSaaS pricing usually scales with users or usage. At some point, monthly fees exceed what custom development would cost, and you'd own the result.\n\n**4. Data Ownership**\n\nWith custom software, your data stays on your servers. You control security, backups, and compliance. No vendor lock-in.\n\n### Real Cost Comparison\n\nA typical SaaS tool costs $50-200/user/month. For a 50-person company:\n- SaaS: $30,000-120,000/year, ongoing forever\n- Custom: $80,000-150,000 one-time, plus maintenance\n\nBy year three, custom often costs less. By year five, significantly less.\n\n### The Right Approach\n\nStart with off-the-shelf for non-critical functions. Invest in custom development for core business processes where software directly impacts revenue or efficiency.\n\nMost successful companies use both, they just know which is which.\n    ",
       "tags": [
         "custom software",
         "software development",
@@ -134,8 +164,8 @@
       "title": "Web App vs Mobile App: Which Should You Build First?",
       "slug": "web-app-vs-mobile-app-which-to-build-first",
       "metaDescription": "Web app or mobile app first? Compare development costs, user reach, and maintenance to make the right choice for your startup or business.",
-      "excerpt": "Startups often debate web vs mobile. The answer is usually simpler than you think—and it's not always mobile first.",
-      "content": "\n## The Platform Decision\n\n\"Should we build a mobile app or web app first?\" We hear this from almost every startup. Here's how to decide.\n\n### Start With Web (Usually)\n\nFor most B2B products and many B2C products, web should come first:\n\n**Faster Development**\nWeb apps typically take 30-50% less time to build than native mobile apps. One codebase works everywhere.\n\n**Easier Updates**\nPush changes instantly. No app store approval process. Fix bugs in minutes, not days.\n\n**Better for Validation**\nTest your idea faster. Pivot without rebuilding everything. Users can try without downloading anything.\n\n**SEO Benefits**\nWeb apps get indexed by search engines. Free organic traffic. Mobile apps don't.\n\n### Start With Mobile When...\n\nMobile-first makes sense in specific cases:\n\n- Camera/GPS/sensors are core features\n- Offline functionality is essential\n- Push notifications drive engagement\n- Your audience lives on mobile (certain consumer apps)\n\n### The Progressive Web App Middle Ground\n\nPWAs give you mobile app features (offline, push notifications, home screen icon) with web app benefits. For many products, this is the right first step.\n\n### Our Recommendation\n\n1. Build a responsive web app first\n2. Validate your core product\n3. Add PWA features\n4. Build native mobile only when you have proven demand\n\nThis approach minimizes risk and maximizes learning speed. You can always build mobile later—but you can't get back the money spent on a mobile app nobody uses.\n\n### Cost Comparison\n\n- Web app: $40,000-100,000\n- iOS app: $50,000-150,000\n- Android app: $50,000-150,000\n- PWA: $50,000-120,000\n\nBuilding web first lets you validate before tripling your investment.\n    ",
+      "excerpt": "Startups often debate web vs mobile. The answer is usually simpler than you think, and it's not always mobile first.",
+      "content": "\n## The Platform Decision\n\n\"Should we build a mobile app or web app first?\" We hear this from almost every startup. Here's how to decide.\n\n### Start With Web (Usually)\n\nFor most B2B products and many B2C products, web should come first:\n\n**Faster Development**\nWeb apps typically take 30-50% less time to build than native mobile apps. One codebase works everywhere.\n\n**Easier Updates**\nPush changes instantly. No app store approval process. Fix bugs in minutes, not days.\n\n**Better for Validation**\nTest your idea faster. Pivot without rebuilding everything. Users can try without downloading anything.\n\n**SEO Benefits**\nWeb apps get indexed by search engines. Free organic traffic. Mobile apps don't.\n\n### Start With Mobile When...\n\nMobile-first makes sense in specific cases:\n\n- Camera/GPS/sensors are core features\n- Offline functionality is essential\n- Push notifications drive engagement\n- Your audience lives on mobile (certain consumer apps)\n\n### The Progressive Web App Middle Ground\n\nPWAs give you mobile app features (offline, push notifications, home screen icon) with web app benefits. For many products, this is the right first step.\n\n### Our Recommendation\n\n1. Build a responsive web app first\n2. Validate your core product\n3. Add PWA features\n4. Build native mobile only when you have proven demand\n\nThis approach minimizes risk and maximizes learning speed. You can always build mobile later, but you can't get back the money spent on a mobile app nobody uses.\n\n### Cost Comparison\n\n- Web app: $40,000-100,000\n- iOS app: $50,000-150,000\n- Android app: $50,000-150,000\n- PWA: $50,000-120,000\n\nBuilding web first lets you validate before tripling your investment.\n    ",
       "tags": [
         "web development",
         "mobile app development",
@@ -158,7 +188,7 @@
       "slug": "how-to-choose-tech-stack-for-startup",
       "metaDescription": "Learn how to select the best technology stack for your startup. Compare React, Node.js, Python, and other technologies for different use cases.",
       "excerpt": "Your tech stack affects development speed, hiring, and scalability. Here's how to choose without overengineering.",
-      "content": "\n## Choosing Your Tech Stack\n\nThe tech stack decision paralyzes many founders. Here's the practical approach.\n\n### The Only Rule That Matters\n\n**Use what your team knows.**\n\nA great developer using familiar tools will outperform a great developer learning new tools. Speed matters more than theoretical perfection.\n\n### If You're Starting Fresh\n\nFor most web applications in 2024:\n\n**Frontend:**\n- React or Next.js (largest ecosystem, easiest hiring)\n- TypeScript (catches bugs, better developer experience)\n- Tailwind CSS (fast styling, consistent design)\n\n**Backend:**\n- Node.js for JavaScript teams\n- Python/Django for data-heavy apps\n- Go for high-performance requirements\n\n**Database:**\n- PostgreSQL (handles 90% of use cases well)\n- MongoDB only if you truly have unstructured data\n\n**Infrastructure:**\n- Vercel or Netlify for frontend\n- AWS or Google Cloud for backend\n- Start simple, optimize later\n\n### Common Mistakes\n\n**1. Overengineering**\nYou don't need Kubernetes on day one. You don't need microservices for an MVP. Start simple.\n\n**2. Chasing Trends**\nThat new framework might be exciting, but can you hire developers who know it? Will it exist in 3 years?\n\n**3. Premature Optimization**\nBuild for 1,000 users first. Scale when you actually have scaling problems.\n\n### Our Standard Stack\n\nFor most client projects, we use:\n- Next.js (React framework)\n- TypeScript\n- PostgreSQL\n- Tailwind CSS\n- Vercel or AWS\n\nThis stack is boring—and that's the point. Boring technology is reliable, well-documented, and easy to maintain.\n\n### When to Deviate\n\nConsider alternatives when:\n- Your app has specific performance requirements (games, real-time trading)\n- You're building in a specialized domain (ML, blockchain)\n- Your team has deep expertise in something else\n\nOtherwise, go with proven tools and focus on building your product.\n    ",
+      "content": "\n## Choosing Your Tech Stack\n\nThe tech stack decision paralyzes many founders. Here's the practical approach.\n\n### The Only Rule That Matters\n\n**Use what your team knows.**\n\nA great developer using familiar tools will outperform a great developer learning new tools. Speed matters more than theoretical perfection.\n\n### If You're Starting Fresh\n\nFor most web applications in 2024:\n\n**Frontend:**\n- React or Next.js (largest ecosystem, easiest hiring)\n- TypeScript (catches bugs, better developer experience)\n- Tailwind CSS (fast styling, consistent design)\n\n**Backend:**\n- Node.js for JavaScript teams\n- Python/Django for data-heavy apps\n- Go for high-performance requirements\n\n**Database:**\n- PostgreSQL (handles 90% of use cases well)\n- MongoDB only if you truly have unstructured data\n\n**Infrastructure:**\n- Vercel or Netlify for frontend\n- AWS or Google Cloud for backend\n- Start simple, optimize later\n\n### Common Mistakes\n\n**1. Overengineering**\nYou don't need Kubernetes on day one. You don't need microservices for an MVP. Start simple.\n\n**2. Chasing Trends**\nThat new framework might be exciting, but can you hire developers who know it? Will it exist in 3 years?\n\n**3. Premature Optimization**\nBuild for 1,000 users first. Scale when you actually have scaling problems.\n\n### Our Standard Stack\n\nFor most client projects, we use:\n- Next.js (React framework)\n- TypeScript\n- PostgreSQL\n- Tailwind CSS\n- Vercel or AWS\n\nThis stack is boring, and that's the point. Boring technology is reliable, well-documented, and easy to maintain.\n\n### When to Deviate\n\nConsider alternatives when:\n- Your app has specific performance requirements (games, real-time trading)\n- You're building in a specialized domain (ML, blockchain)\n- Your team has deep expertise in something else\n\nOtherwise, go with proven tools and focus on building your product.\n    ",
       "tags": [
         "tech stack",
         "startup development",
@@ -205,7 +235,7 @@
       "slug": "api-integration-guide-for-business-owners",
       "metaDescription": "Understand API integrations without the technical jargon. Learn how connecting your business tools saves time and reduces errors.",
       "excerpt": "APIs connect your business tools. Here's what that means for your operations and how to think about integration projects.",
-      "content": "\n## APIs Explained Simply\n\nYour business probably runs on multiple software tools that don't talk to each other. APIs fix that.\n\n### What's an API?\n\nAPI stands for Application Programming Interface. Think of it as a translator that lets different software systems share information automatically.\n\n**Without API:**\nYou manually export data from System A, reformat it, and import it into System B. Every day. Forever.\n\n**With API:**\nSystem A automatically sends data to System B whenever something changes. No manual work.\n\n### Real Examples\n\n**CRM + Email Marketing**\nWhen a new customer signs up in your CRM, they're automatically added to your email list with the right tags.\n\n**E-commerce + Accounting**\nEvery sale automatically creates an invoice in your accounting software. No manual entry.\n\n**HR System + Payroll**\nTime-off requests approved in HR flow directly to payroll calculations.\n\n### Why Integrate?\n\n**Save Time**\nManual data entry takes hours. APIs work in seconds.\n\n**Reduce Errors**\nHumans make typos. APIs don't.\n\n**Real-Time Data**\nMake decisions based on current information, not yesterday's export.\n\n**Scale Operations**\nHandle 10x the volume without hiring 10x the staff.\n\n### Integration Options\n\n**1. Native Integrations**\nMany tools have built-in connections. Check if your software already supports this.\n\n**2. Zapier/Make**\nNo-code tools that connect 5,000+ apps. Good for simple workflows.\n\n**3. Custom Integration**\nBuilt specifically for your needs. More powerful, more expensive.\n\n### What to Expect\n\n**Timeline:** 2-8 weeks depending on complexity\n**Cost:** $5,000-50,000 for custom integrations\n\n### Questions to Ask\n\nBefore starting an integration project:\n1. What data needs to move between systems?\n2. How often does it need to sync?\n3. What happens when something fails?\n4. Who maintains it long-term?\n\nIntegration projects pay for themselves quickly—usually within 6-12 months through time savings alone.\n    ",
+      "content": "\n## APIs Explained Simply\n\nYour business probably runs on multiple software tools that don't talk to each other. APIs fix that.\n\n### What's an API?\n\nAPI stands for Application Programming Interface. Think of it as a translator that lets different software systems share information automatically.\n\n**Without API:**\nYou manually export data from System A, reformat it, and import it into System B. Every day. Forever.\n\n**With API:**\nSystem A automatically sends data to System B whenever something changes. No manual work.\n\n### Real Examples\n\n**CRM + Email Marketing**\nWhen a new customer signs up in your CRM, they're automatically added to your email list with the right tags.\n\n**E-commerce + Accounting**\nEvery sale automatically creates an invoice in your accounting software. No manual entry.\n\n**HR System + Payroll**\nTime-off requests approved in HR flow directly to payroll calculations.\n\n### Why Integrate?\n\n**Save Time**\nManual data entry takes hours. APIs work in seconds.\n\n**Reduce Errors**\nHumans make typos. APIs don't.\n\n**Real-Time Data**\nMake decisions based on current information, not yesterday's export.\n\n**Scale Operations**\nHandle 10x the volume without hiring 10x the staff.\n\n### Integration Options\n\n**1. Native Integrations**\nMany tools have built-in connections. Check if your software already supports this.\n\n**2. Zapier/Make**\nNo-code tools that connect 5,000+ apps. Good for simple workflows.\n\n**3. Custom Integration**\nBuilt specifically for your needs. More powerful, more expensive.\n\n### What to Expect\n\n**Timeline:** 2-8 weeks depending on complexity\n**Cost:** $5,000-50,000 for custom integrations\n\n### Questions to Ask\n\nBefore starting an integration project:\n1. What data needs to move between systems?\n2. How often does it need to sync?\n3. What happens when something fails?\n4. Who maintains it long-term?\n\nIntegration projects pay for themselves quickly, usually within 6-12 months through time savings alone.\n    ",
       "tags": [
         "API integration",
         "business automation",
@@ -252,9 +282,9 @@
     {
       "title": "Web Development",
       "subtitle": "Websites & Web Applications",
-      "description": "From business websites to complex web applications — we handle frontend, backend, databases, and everything in between.",
+      "description": "From business websites to complex web applications, we handle frontend, backend, databases, and everything in between.",
       "heroImage": "/services/web-dev.jpg",
-      "overview": "We build websites and web apps using modern frameworks like React, Next.js, and Node.js. Whether you need a company website, a customer portal, an admin dashboard, or a full SaaS product — we write clean, maintainable code that works reliably. No bloated templates, no unnecessary complexity.",
+      "overview": "We build websites and web apps using modern frameworks like React, Next.js, and Node.js. Whether you need a company website, a customer portal, an admin dashboard, or a full SaaS product, we write clean, maintainable code that works reliably. No bloated templates, no unnecessary complexity.",
       "features": [
         {
           "title": "Business Websites",
@@ -263,7 +293,7 @@
         },
         {
           "title": "Web Applications",
-          "description": "Dashboards, portals, booking systems, internal tools — any web-based software your business needs.",
+          "description": "Dashboards, portals, booking systems, internal tools, any web-based software your business needs.",
           "icon": "mobile"
         },
         {
@@ -273,7 +303,7 @@
         },
         {
           "title": "Database Design",
-          "description": "PostgreSQL, MongoDB, MySQL — proper schema design, indexing, and query optimization.",
+          "description": "PostgreSQL, MongoDB, MySQL, proper schema design, indexing, and query optimization.",
           "icon": "speed"
         }
       ],
@@ -294,7 +324,7 @@
         },
         {
           "step": "Planning",
-          "description": "Technical approach, timeline, and milestones — you know what to expect."
+          "description": "Technical approach, timeline, and milestones, you know what to expect."
         },
         {
           "step": "Development",
@@ -352,7 +382,7 @@
       "order": 0,
       "seo": {
         "metaTitle": "Web Development | VynTech Solutions",
-        "metaDescription": "From business websites to complex web applications — we handle frontend, backend, databases, and everything in between.",
+        "metaDescription": "From business websites to complex web applications, we handle frontend, backend, databases, and everything in between.",
         "indexable": true
       }
     },
@@ -361,7 +391,7 @@
       "subtitle": "iOS & Android Apps",
       "description": "Native and cross-platform mobile apps for iOS and Android. We handle design, development, testing, and app store submission.",
       "heroImage": "/services/mobile-dev.jpg",
-      "overview": "We build mobile apps using React Native, Flutter, or native Swift/Kotlin — depending on what makes sense for your project. Most clients choose cross-platform to save time and budget while still getting a quality app on both platforms. We also handle the app store submission process.",
+      "overview": "We build mobile apps using React Native, Flutter, or native Swift/Kotlin, depending on what makes sense for your project. Most clients choose cross-platform to save time and budget while still getting a quality app on both platforms. We also handle the app store submission process.",
       "features": [
         {
           "title": "iOS Apps",
@@ -380,7 +410,7 @@
         },
         {
           "title": "Backend & APIs",
-          "description": "Your app needs a server? We build that too — user auth, data storage, push notifications, payments.",
+          "description": "Your app needs a server? We build that too, user auth, data storage, push notifications, payments.",
           "icon": "store"
         }
       ],
@@ -468,11 +498,11 @@
       "subtitle": "AWS, Azure & Cloud Infrastructure",
       "description": "Cloud setup, migration, and management. We help you move to the cloud or optimize what you already have.",
       "heroImage": "/services/cloud.jpg",
-      "overview": "We work with AWS, Google Cloud, and Azure. Whether you are moving from on-premise servers, setting up a new infrastructure, or trying to reduce your monthly cloud bill — we can help. We focus on practical solutions: reliable hosting, proper security, automated backups, and costs that make sense.",
+      "overview": "We work with AWS, Google Cloud, and Azure. Whether you are moving from on-premise servers, setting up a new infrastructure, or trying to reduce your monthly cloud bill, we can help. We focus on practical solutions: reliable hosting, proper security, automated backups, and costs that make sense.",
       "features": [
         {
           "title": "Cloud Setup",
-          "description": "New cloud infrastructure from scratch — servers, databases, storage, networking, all configured properly.",
+          "description": "New cloud infrastructure from scratch, servers, databases, storage, networking, all configured properly.",
           "icon": "migrate"
         },
         {
@@ -487,7 +517,7 @@
         },
         {
           "title": "DevOps Setup",
-          "description": "CI/CD pipelines, Docker, Kubernetes — automated deployments so your team ships faster.",
+          "description": "CI/CD pipelines, Docker, Kubernetes, automated deployments so your team ships faster.",
           "icon": "multicloud"
         }
       ],
@@ -573,9 +603,9 @@
     {
       "title": "AI/ML Solutions",
       "subtitle": "AI Integration & Automation",
-      "description": "Practical AI solutions — chatbots, automation, data analysis, and integrating AI APIs into your existing systems.",
+      "description": "Practical AI solutions, chatbots, automation, data analysis, and integrating AI APIs into your existing systems.",
       "heroImage": "/services/ai-ml.jpg",
-      "overview": "We help businesses use AI where it actually makes sense. This includes building chatbots, integrating OpenAI/GPT into your apps, automating repetitive tasks, and analyzing data to find useful patterns. We are not here to sell you on AI hype — we focus on practical applications that save time or improve your product.",
+      "overview": "We help businesses use AI where it actually makes sense. This includes building chatbots, integrating OpenAI/GPT into your apps, automating repetitive tasks, and analyzing data to find useful patterns. We are not here to sell you on AI hype, we focus on practical applications that save time or improve your product.",
       "features": [
         {
           "title": "Chatbots & Assistants",
@@ -594,7 +624,7 @@
         },
         {
           "title": "Data Analysis",
-          "description": "Make sense of your data — trends, predictions, anomaly detection. Dashboards you can actually use.",
+          "description": "Make sense of your data, trends, predictions, anomaly detection. Dashboards you can actually use.",
           "icon": "analytics"
         }
       ],
@@ -673,7 +703,7 @@
       "order": 3,
       "seo": {
         "metaTitle": "AI/ML Solutions | VynTech Solutions",
-        "metaDescription": "Practical AI solutions — chatbots, automation, data analysis, and integrating AI APIs into your existing systems.",
+        "metaDescription": "Practical AI solutions, chatbots, automation, data analysis, and integrating AI APIs into your existing systems.",
         "indexable": true
       }
     },
@@ -691,12 +721,12 @@
         },
         {
           "title": "Docker & Containers",
-          "description": "Package your app properly so it runs the same everywhere — local, staging, production.",
+          "description": "Package your app properly so it runs the same everywhere, local, staging, production.",
           "icon": "iac"
         },
         {
           "title": "Infrastructure Setup",
-          "description": "Terraform, CloudFormation — your infrastructure defined in code, version controlled.",
+          "description": "Terraform, CloudFormation, your infrastructure defined in code, version controlled.",
           "icon": "container"
         },
         {
@@ -773,7 +803,7 @@
         {
           "title": "Multi-Environment",
           "industry": "Agency",
-          "result": "Staging, QA, Production — all automated"
+          "result": "Staging, QA, Production, all automated"
         }
       ],
       "slug": "devops-cicd",
@@ -789,7 +819,7 @@
       "subtitle": "App & Website Design",
       "description": "User interface design for websites, mobile apps, and web applications. Figma designs your developers can actually build.",
       "heroImage": "/services/design.jpg",
-      "overview": "We design interfaces that look good and work well. This means wireframes to figure out the structure, then full visual designs in Figma. We hand off organized files with proper components, spacing, and specs — not messy artboards that leave developers guessing. We can also redesign existing apps that need a refresh.",
+      "overview": "We design interfaces that look good and work well. This means wireframes to figure out the structure, then full visual designs in Figma. We hand off organized files with proper components, spacing, and specs, not messy artboards that leave developers guessing. We can also redesign existing apps that need a refresh.",
       "features": [
         {
           "title": "Website Design",
@@ -808,7 +838,7 @@
         },
         {
           "title": "Design Systems",
-          "description": "Reusable components, color palettes, typography — keeps your product consistent as it grows.",
+          "description": "Reusable components, color palettes, typography, keeps your product consistent as it grows.",
           "icon": "prototype"
         }
       ],
@@ -940,11 +970,11 @@
         },
         {
           "step": "Design",
-          "description": "Store design — homepage, product pages, cart, checkout."
+          "description": "Store design, homepage, product pages, cart, checkout."
         },
         {
           "step": "Setup",
-          "description": "Products, categories, payments, shipping, taxes — all configured."
+          "description": "Products, categories, payments, shipping, taxes, all configured."
         },
         {
           "step": "Testing",
@@ -1003,7 +1033,7 @@
       "subtitle": "Business Software & Internal Tools",
       "description": "Custom software built for your specific workflow. When off-the-shelf tools do not fit, we build what you need.",
       "heroImage": "/services/custom.jpg",
-      "overview": "Sometimes you need software that does exactly what your business requires — not a generic tool you have to work around. We build custom internal tools, admin panels, workflow automation systems, and business applications. You own the code, and it works the way your business works.",
+      "overview": "Sometimes you need software that does exactly what your business requires, not a generic tool you have to work around. We build custom internal tools, admin panels, workflow automation systems, and business applications. You own the code, and it works the way your business works.",
       "features": [
         {
           "title": "Internal Tools",
@@ -1017,7 +1047,7 @@
         },
         {
           "title": "System Integration",
-          "description": "Connect your existing tools — CRM, accounting, inventory — so data flows automatically.",
+          "description": "Connect your existing tools, CRM, accounting, inventory, so data flows automatically.",
           "icon": "modernize"
         },
         {
@@ -1089,7 +1119,7 @@
         {
           "title": "HR Portal",
           "industry": "Services",
-          "result": "Leave requests, timesheets, employee directory — all in one place"
+          "result": "Leave requests, timesheets, employee directory, all in one place"
         },
         {
           "title": "Booking System",
@@ -1108,9 +1138,9 @@
     {
       "title": "SEO/Digital Marketing",
       "subtitle": "SEO & Online Marketing",
-      "description": "Get found on Google. Technical SEO fixes, content that ranks, and marketing that brings real leads — not vanity metrics.",
+      "description": "Get found on Google. Technical SEO fixes, content that ranks, and marketing that brings real leads, not vanity metrics.",
       "heroImage": "/services/seo.jpg",
-      "overview": "We help businesses show up when people search for what they offer. This includes fixing technical SEO issues, optimizing existing pages, creating content that targets relevant keywords, and running Google/Meta ads when paid traffic makes sense. We focus on results you can measure — rankings, traffic, leads — not just reports.",
+      "overview": "We help businesses show up when people search for what they offer. This includes fixing technical SEO issues, optimizing existing pages, creating content that targets relevant keywords, and running Google/Meta ads when paid traffic makes sense. We focus on results you can measure, rankings, traffic, leads, not just reports.",
       "features": [
         {
           "title": "Technical SEO",
@@ -1150,7 +1180,7 @@
         },
         {
           "step": "Quick Wins",
-          "description": "Fix obvious issues first — broken links, missing tags, slow pages."
+          "description": "Fix obvious issues first, broken links, missing tags, slow pages."
         },
         {
           "step": "Keyword Plan",
@@ -1208,7 +1238,7 @@
       "order": 8,
       "seo": {
         "metaTitle": "SEO/Digital Marketing | VynTech Solutions",
-        "metaDescription": "Get found on Google. Technical SEO fixes, content that ranks, and marketing that brings real leads — not vanity metrics.",
+        "metaDescription": "Get found on Google. Technical SEO fixes, content that ranks, and marketing that brings real leads, not vanity metrics.",
         "indexable": true
       }
     },
@@ -1217,7 +1247,7 @@
       "subtitle": "Ongoing Support & Maintenance",
       "description": "Keep your website or app running. Bug fixes, updates, security patches, and someone to call when things break.",
       "heroImage": "/services/support.jpg",
-      "overview": "You have a website or app that needs ongoing care — updates, bug fixes, security patches, small changes. We offer monthly retainer plans so you have developers available when you need them. No need to hire full-time staff for work that is only needed sometimes. We also take over projects built by other teams if you need new support.",
+      "overview": "You have a website or app that needs ongoing care, updates, bug fixes, security patches, small changes. We offer monthly retainer plans so you have developers available when you need them. No need to hire full-time staff for work that is only needed sometimes. We also take over projects built by other teams if you need new support.",
       "features": [
         {
           "title": "Bug Fixes",
@@ -1236,7 +1266,7 @@
         },
         {
           "title": "Monitoring",
-          "description": "We set up alerts so we know when your site goes down — often before you do.",
+          "description": "We set up alerts so we know when your site goes down, often before you do.",
           "icon": "support"
         }
       ],
@@ -1322,9 +1352,9 @@
     {
       "title": "Tax & Accounting Services",
       "subtitle": "Financial & Tax Solutions",
-      "description": "Comprehensive tax planning, accounting, and financial services for businesses and individuals. From tax filing to CFO services — we handle your numbers.",
+      "description": "Comprehensive tax planning, accounting, and financial services for businesses and individuals. From tax filing to CFO services, we handle your numbers.",
       "heroImage": "/services/tax.jpg",
-      "overview": "We provide end-to-end financial services including tax preparation, bookkeeping, financial planning, and CFO advisory. Whether you're a startup needing incorporation help, a growing business requiring financial forecasting, or an established company looking for tax optimization — our team of certified professionals delivers accurate, compliant, and strategic financial guidance.",
+      "overview": "We provide end-to-end financial services including tax preparation, bookkeeping, financial planning, and CFO advisory. Whether you're a startup needing incorporation help, a growing business requiring financial forecasting, or an established company looking for tax optimization, our team of certified professionals delivers accurate, compliant, and strategic financial guidance.",
       "features": [
         {
           "title": "Comprehensive Tax & Accounting",
@@ -1437,7 +1467,7 @@
       "order": 10,
       "seo": {
         "metaTitle": "Tax & Accounting Services | VynTech Solutions",
-        "metaDescription": "Comprehensive tax planning, accounting, and financial services for businesses and individuals. From tax filing to CFO services — we handle your numbers.",
+        "metaDescription": "Comprehensive tax planning, accounting, and financial services for businesses and individuals. From tax filing to CFO services, we handle your numbers.",
         "indexable": true
       }
     }
@@ -2394,26 +2424,26 @@
     "industriesHeading": "Industries We Serve",
     "heroSlides": [
       {
-        "heading": "Build Faster.\nScale Smarter.",
-        "subtext": "From MVPs to enterprise platforms — we turn your vision into market-ready products in weeks, not months.",
+        "heading": "Let's Build\nSomething Extraordinary",
+        "subtext": "As a trusted web development company, VynTech Solutions helps 100+ businesses transform their digital presence. We build websites, apps, and platforms engineered to scale and multiply your growth by 10x.",
         "mediaUrl": "/cover1.mp4",
         "mediaType": "video"
       },
       {
-        "heading": "Your Tech Partner\nfor Growth",
-        "subtext": "Stop hiring. Start building. Get a dedicated development team that delivers results from day one.",
+        "heading": "Build Faster.\nScale Smarter.",
+        "subtext": "VynTech turns your idea into a market-ready product in weeks, not months. From MVPs to enterprise platforms, we build with speed, precision, and quality, never compromising.",
         "mediaUrl": "/cover3.png",
         "mediaType": "image"
       },
       {
         "heading": "Enterprise Solutions.\nStartup Speed.",
-        "subtext": "AI, Cloud, Mobile & Web — full-stack expertise to power your next big idea. No compromises.",
+        "subtext": "AI, Cloud, Mobile, and Web. VynTech delivers full-stack expertise under one roof. Enterprise-grade reliability, startup agility, zero compromises. We power your next big idea, from day one.",
         "mediaUrl": "/cover2.png",
         "mediaType": "image"
       },
       {
-        "heading": "Let's Build\nSomething Extraordinary",
-        "subtext": "Join 100+ businesses who chose VynTech to transform their digital presence and 10x their growth.",
+        "heading": "Your Tech Partner\nfor Growth",
+        "subtext": "Stop hiring. Start building. Get a dedicated development team that delivers results from day one.",
         "mediaUrl": "/cover3.png",
         "mediaType": "image"
       }
@@ -2456,18 +2486,30 @@
     ]
   },
   "clientLogos": [
-    { "name": "Maple Harvest Foods", "order": 1 },
-    { "name": "True North Realty", "order": 2 },
-    { "name": "ShopBC Online", "order": 3 },
-    { "name": "Prairie Farms", "order": 4 },
-    { "name": "Calgary Homes", "order": 5 },
-    { "name": "Fresh Market", "order": 6 },
-    { "name": "CanadaCart", "order": 7 },
-    { "name": "Ontario Bites", "order": 8 },
-    { "name": "Edmonton Properties", "order": 9 },
-    { "name": "West Coast Eats", "order": 10 },
-    { "name": "Vancouver Realtors", "order": 11 },
-    { "name": "QuickShop", "order": 12 }
+    { "name": "Maple Harvest Foods", "order": 1, "logoUrl": "/clients/maple-harvest-foods.svg" },
+    { "name": "True North Realty", "order": 2, "logoUrl": "/clients/true-north-realty.svg" },
+    { "name": "ShopBC Online", "order": 3, "logoUrl": "/clients/shopbc-online.svg" },
+    { "name": "Prairie Farms", "order": 4, "logoUrl": "/clients/prairie-farms.svg" },
+    { "name": "Calgary Homes", "order": 5, "logoUrl": "/clients/calgary-homes.svg" },
+    { "name": "Fresh Market", "order": 6, "logoUrl": "/clients/fresh-market.svg" },
+    { "name": "CanadaCart", "order": 7, "logoUrl": "/clients/canadacart.svg" },
+    { "name": "Ontario Bites", "order": 8, "logoUrl": "/clients/ontario-bites.svg" },
+    { "name": "Edmonton Properties", "order": 9, "logoUrl": "/clients/edmonton-properties.svg" },
+    { "name": "West Coast Eats", "order": 10, "logoUrl": "/clients/west-coast-eats.svg" },
+    { "name": "Vancouver Realtors", "order": 11, "logoUrl": "/clients/vancouver-realtors.svg" },
+    { "name": "Quick Shop", "order": 12, "logoUrl": "/clients/quick-shop.svg" },
+    { "name": "Northern Grind Coffee", "order": 13, "logoUrl": "/clients/northern-grind-coffee.svg" },
+    { "name": "Snowline Hotels", "order": 14, "logoUrl": "/clients/snowline-hotels.svg" },
+    { "name": "Great Lakes Logistics", "order": 15, "logoUrl": "/clients/great-lakes-logistics.svg" },
+    { "name": "Peak Fitness", "order": 16, "logoUrl": "/clients/peak-fitness.svg" },
+    { "name": "Harbour & Co", "order": 17, "logoUrl": "/clients/harbour-and-co.svg" },
+    { "name": "Atlantic Dental", "order": 18, "logoUrl": "/clients/atlantic-dental.svg" },
+    { "name": "Rideau Markets", "order": 19, "logoUrl": "/clients/rideau-markets.svg" },
+    { "name": "Muskoka Lodge", "order": 20, "logoUrl": "/clients/muskoka-lodge.svg" },
+    { "name": "Nova Labs", "order": 21, "logoUrl": "/clients/nova-labs.svg" },
+    { "name": "Pacific Bloom", "order": 22, "logoUrl": "/clients/pacific-bloom.svg" },
+    { "name": "Yukon Outfitters", "order": 23, "logoUrl": "/clients/yukon-outfitters.svg" },
+    { "name": "Ottawa Legal", "order": 24, "logoUrl": "/clients/ottawa-legal.svg" }
   ],
   "promos": [
     {
@@ -2531,9 +2573,9 @@
     ],
     "budgetOptions": [
       "Under $10,000",
-      "$10,000 – $25,000",
-      "$25,000 – $50,000",
-      "$50,000 – $100,000",
+      "$10,000 to $25,000",
+      "$25,000 to $50,000",
+      "$50,000 to $100,000",
       "$100,000+"
     ]
   },
@@ -2554,7 +2596,7 @@
       "heroBody": "VynTech Solutions is a full-service software development company helping businesses transform ideas into powerful digital products.",
       "sections": {
         "missionHeading": "Empowering Businesses Through Innovative Technology",
-        "missionBody": "We believe every business deserves access to world-class software. Our mission is to bridge the gap between visionary ideas and technical execution — delivering solutions that are not just functional, but transformative.",
+        "missionBody": "We believe every business deserves access to world-class software. Our mission is to bridge the gap between visionary ideas and technical execution, delivering solutions that are not just functional, but transformative.",
         "missionBody2": "Whether you're a startup validating your first MVP or an enterprise modernizing legacy systems, we bring the same level of dedication, expertise, and passion to every project."
       }
     },
@@ -2570,7 +2612,7 @@
       "title": "Privacy Policy",
       "slug": "privacy-policy",
       "lastUpdated": "2026-03-27",
-      "body": "<p>VynTech Solutions (\"we\", \"us\", \"our\") respects your privacy. This policy explains how we collect and use your information when you use vyntechsolutions.ca or our services. We comply with PIPEDA and Canadian privacy laws.</p><h2>What We Collect</h2><p><strong>Information you provide:</strong> Name, email, phone number, company name when you contact us or request a quote.</p><p><strong>Automatic data:</strong> IP address, browser type, pages visited, and cookies for website functionality and analytics.</p><p><strong>Payment info:</strong> Processed securely through Stripe — we never store your card details.</p><h2>How We Use Your Information</h2><ul><li>Respond to your inquiries and provide our services</li><li>Send project updates, invoices, and important notices</li><li>Improve our website and services</li><li>Send marketing emails (only with your consent — you can unsubscribe anytime)</li></ul><h2>Information Sharing</h2><p><strong>We do not sell your data.</strong> We only share with service providers (hosting, email, payments, analytics) and when required by law.</p><h2>Your Rights</h2><p>Email us at info@vyntechsolutions.ca to access, correct, or delete your data.</p><h2>Contact Us</h2><p><strong>VynTech Solutions</strong><br/>Email: info@vyntechsolutions.ca<br/>Location: Toronto, Ontario, Canada</p>"
+      "body": "<p>VynTech Solutions (\"we\", \"us\", \"our\") respects your privacy. This policy explains how we collect and use your information when you use vyntechsolutions.ca or our services. We comply with PIPEDA and Canadian privacy laws.</p><h2>What We Collect</h2><p><strong>Information you provide:</strong> Name, email, phone number, company name when you contact us or request a quote.</p><p><strong>Automatic data:</strong> IP address, browser type, pages visited, and cookies for website functionality and analytics.</p><p><strong>Payment info:</strong> Processed securely through Stripe, we never store your card details.</p><h2>How We Use Your Information</h2><ul><li>Respond to your inquiries and provide our services</li><li>Send project updates, invoices, and important notices</li><li>Improve our website and services</li><li>Send marketing emails (only with your consent, you can unsubscribe anytime)</li></ul><h2>Information Sharing</h2><p><strong>We do not sell your data.</strong> We only share with service providers (hosting, email, payments, analytics) and when required by law.</p><h2>Your Rights</h2><p>Email us at info@vyntechsolutions.ca to access, correct, or delete your data.</p><h2>Contact Us</h2><p><strong>VynTech Solutions</strong><br/>Email: info@vyntechsolutions.ca<br/>Location: Toronto, Ontario, Canada</p>"
     },
     {
       "title": "Terms and Conditions",

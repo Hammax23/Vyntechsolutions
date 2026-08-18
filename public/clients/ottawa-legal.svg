@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 196 48" fill="none">
+  <rect x="2" y="2" width="44" height="44" rx="6" fill="#1C1917"/>
+  <path fill="#E7E5E4" d="M15 32V18h4v14h-4zM21 32V14h6v18h-6zM29 32V20h4v12h-4z"/>
+  <path fill="#A8A29E" d="M14 32h20v3H14z"/>
+  <text x="56" y="22" font-family="Georgia, 'Times New Roman', serif" font-size="16" font-weight="600" fill="#1C1917">Ottawa</text>
+  <text x="56" y="36" font-family="Arial, Helvetica, sans-serif" font-size="9" letter-spacing="3.4" fill="#57534E">LEGAL</text>
+</svg>

@@ -7,8 +7,8 @@ import TimedCTAPopup from "@/components/TimedCTAPopup";
 import CookieConsent from "@/components/CookieConsent";
 import ConditionalTawkChat from "@/components/ConditionalTawkChat";
 // import FloatingSEOButton from "@/components/FloatingSEOButton";
-import { organizationSchema, localBusinessSchema, websiteSchema, servicesSchema, faqSchema, reviewSchema, howToSchema } from "@/lib/seo.config";
-import { getCmsFaqs, getCmsOrganizationProfile, getCmsGlobalSeo } from "@/lib/cms/content";
+import { organizationSchema, localBusinessSchema, websiteSchema, servicesSchema, faqSchema, reviewSchema, howToSchema, techStackSchema } from "@/lib/seo.config";
+import { getCmsOrganizationProfile, getCmsGlobalSeo } from "@/lib/cms/content";
 import { rootMetadataFromCms } from "@/lib/cms/metadata";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -27,7 +27,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cmsFaqs = await getCmsFaqs();
   const [orgProfile, globalSeo] = await Promise.all([
     getCmsOrganizationProfile(),
     getCmsGlobalSeo(),
@@ -65,18 +64,7 @@ export default async function RootLayout({
       : {}),
   };
 
-  const liveFaqSchema =
-    cmsFaqs.length > 0
-      ? {
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: cmsFaqs.map((f) => ({
-            "@type": "Question",
-            name: f.question,
-            acceptedAnswer: { "@type": "Answer", text: f.answer },
-          })),
-        }
-      : faqSchema;
+  const liveFaqSchema = faqSchema;
 
   return (
     <html lang="en-CA">
@@ -140,6 +128,12 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(howToSchema),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(techStackSchema),
           }}
         />
       </head>

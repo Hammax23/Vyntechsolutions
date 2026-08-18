@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 236 48" fill="none">
+  <rect x="2" y="2" width="44" height="44" rx="8" fill="#14532D"/>
+  <path fill="#DCFCE7" d="M10 32l8-12 6 7 8-11 8 16H10z"/>
+  <path fill="#86EFAC" d="M10 34h28v4H10z"/>
+  <text x="56" y="22" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700" fill="#14532D">Vancouver</text>
+  <text x="56" y="36" font-family="Arial, Helvetica, sans-serif" font-size="9" letter-spacing="3" fill="#3F6B50">REALTORS</text>
+</svg>

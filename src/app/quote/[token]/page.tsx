@@ -278,13 +278,13 @@ export default function ClientQuotePage({ params }: { params: { token: string } 
               <h2 className="text-xs font-bold tracking-wide text-[#0F2A5F]">PAYMENT SCHEDULE</h2>
               <div>
                 <p className="font-semibold text-[#1B4F9C] text-xs mb-0.5">
-                  Milestone 1 — {quote.depositPercent}% Kickoff
+                  Milestone 1, {quote.depositPercent}% Kickoff
                 </p>
                 <p>{formatCad(totals.deposit)} CAD upon acceptance</p>
               </div>
               <div>
                 <p className="font-semibold text-[#1B4F9C] text-xs mb-0.5">
-                  Milestone 2 — {100 - quote.depositPercent}% Delivery
+                  Milestone 2, {100 - quote.depositPercent}% Delivery
                 </p>
                 <p>{formatCad(totals.balance)} CAD prior to go-live</p>
               </div>
@@ -326,7 +326,7 @@ export default function ClientQuotePage({ params }: { params: { token: string } 
         )}
 
         <p className="text-center text-[11px] text-slate-400 pb-6">
-          Confidential — VynTech Solutions Inc. · {quote.quoteNumber}
+          Confidential, VynTech Solutions Inc. · {quote.quoteNumber}
         </p>
       </main>
     </div>

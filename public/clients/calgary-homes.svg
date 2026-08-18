@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 204 48" fill="none">
+  <rect x="2" y="2" width="44" height="44" rx="6" fill="#334155"/>
+  <path fill="#F8FAFC" d="M10 30l7-8 5 5 9-12 7 8v11H10z"/>
+  <path fill="#94A3B8" d="M24 22l9 11H15z"/>
+  <text x="56" y="22" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" fill="#334155">Calgary</text>
+  <text x="56" y="36" font-family="Arial, Helvetica, sans-serif" font-size="9" letter-spacing="3.6" fill="#64748B">HOMES</text>
+</svg>

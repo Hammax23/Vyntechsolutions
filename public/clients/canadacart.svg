@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 196 48" fill="none">
+  <rect x="2" y="2" width="44" height="44" rx="10" fill="#9F1239"/>
+  <path stroke="#FFF1F2" stroke-width="2.2" fill="none" stroke-linejoin="round" d="M14 16h4l3.2 12h12.4l3-8H20"/>
+  <circle cx="23" cy="33.5" r="2.1" fill="#FFF1F2"/>
+  <circle cx="32.5" cy="33.5" r="2.1" fill="#FFF1F2"/>
+  <text x="56" y="30" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="800" fill="#9F1239">CanadaCart</text>
+</svg>

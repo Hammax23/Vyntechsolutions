@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 48" fill="none">
+  <rect x="2" y="2" width="44" height="44" rx="8" fill="#3F6212"/>
+  <path fill="#ECFCCB" d="M16 30l8-16 8 16H16z"/>
+  <path fill="#A3E635" d="M14 30h20v4H14z"/>
+  <text x="56" y="22" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700" fill="#3F6212">Yukon</text>
+  <text x="56" y="36" font-family="Arial, Helvetica, sans-serif" font-size="9" letter-spacing="1.8" fill="#4D7C0F">OUTFITTERS</text>
+</svg>

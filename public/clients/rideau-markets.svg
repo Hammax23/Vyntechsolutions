@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 204 48" fill="none">
+  <rect x="2" y="2" width="44" height="44" rx="8" fill="#7C2D12"/>
+  <path fill="#FED7AA" d="M14 30c2.4-6 5.6-10 10-12 4.4 2 7.6 6 10 12H14z"/>
+  <path fill="#FDBA74" d="M18 22h12v3H18z"/>
+  <text x="56" y="22" font-family="Georgia, 'Times New Roman', serif" font-size="16" font-weight="600" fill="#7C2D12">Rideau</text>
+  <text x="56" y="36" font-family="Arial, Helvetica, sans-serif" font-size="9" letter-spacing="3.2" fill="#9A3412">MARKETS</text>
+</svg>

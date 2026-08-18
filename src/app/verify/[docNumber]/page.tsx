@@ -105,7 +105,7 @@ export default function VerifyDocumentPage({ params }: { params: { docNumber: st
             </span>
             <div>
               <p className="text-emerald-800 font-semibold text-sm">Verified authentic document</p>
-              <p className="text-emerald-700/80 text-xs">Issued from VynTech admin system — not a personal copy</p>
+              <p className="text-emerald-700/80 text-xs">Issued from VynTech admin system, not a personal copy</p>
             </div>
           </div>
 
