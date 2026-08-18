@@ -18,7 +18,6 @@ type HeroSlide = {
 const DEFAULT_HERO_MEDIA: HeroMediaItem[] = [
   { type: "video", src: "/hero-tech-city.mp4", mobileSrc: "/hero-tech-city.mp4" },
   { type: "video", src: "/cover1.mp4", mobileSrc: "/cover1-mobile.mp4" },
-  { type: "image", src: "/cover3.png" },
   { type: "video", src: "/your-tech-partner.mp4", mobileSrc: "/your-tech-partner.mp4" },
 ];
 
@@ -54,8 +53,7 @@ const getIsMobile = () => {
 };
 
 export default function HeroSection() {
-  const [heroMedia, setHeroMedia] = useState<HeroMediaItem[]>(DEFAULT_HERO_MEDIA);
-  const [slides, setSlides] = useState<HeroSlide[]>(DEFAULT_SLIDES);
+  const [slides] = useState<HeroSlide[]>(DEFAULT_SLIDES);
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
@@ -63,42 +61,13 @@ export default function HeroSection() {
   const [mediaLoaded, setMediaLoaded] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const imageTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const heroMedia = DEFAULT_HERO_MEDIA;
   const heroMediaLengthRef = useRef(heroMedia.length);
   const slidesLengthRef = useRef(slides.length);
 
   useEffect(() => {
-    heroMediaLengthRef.current = heroMedia.length;
-  }, [heroMedia.length]);
-
-  useEffect(() => {
     slidesLengthRef.current = slides.length;
   }, [slides.length]);
-
-  useEffect(() => {
-    fetch("/api/cms/content?type=homepage")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        const heroSlides = data?.homepage?.heroSlides;
-        if (!Array.isArray(heroSlides) || heroSlides.length === 0) return;
-
-        const withMedia = heroSlides.filter(
-          (s: { mediaUrl?: string }) => typeof s.mediaUrl === "string" && s.mediaUrl.trim()
-        );
-        if (withMedia.length > 0) {
-          setHeroMedia(
-            withMedia.map((s: { mediaUrl?: string; mediaType?: string }) => {
-              const src = String(s.mediaUrl);
-              const type = s.mediaType === "video" ? "video" : "image";
-              return type === "video"
-                ? { type: "video" as const, src, mobileSrc: src }
-                : { type: "image" as const, src };
-            })
-          );
-          setCurrentMediaIndex(0);
-        }
-      })
-      .catch(() => { });
-  }, []);
 
   const currentMedia = heroMedia[currentMediaIndex] ?? heroMedia[0];
 

@@ -196,8 +196,8 @@ export default function TechnologyStack() {
           >
             Technology stack
           </h2>
-          <p className="text-[15px] text-slate-500 max-w-xl mx-auto leading-relaxed">
-            What we keep in the repo. Not a complete list of everything on the internet.
+          <p className="text-[15px] text-slate-500 max-w-2xl mx-auto leading-relaxed">
+            React, Next.js, Node.js, and cloud platforms we use to build websites, mobile apps, and custom software for every business.
           </p>
         </div>
 

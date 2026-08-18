@@ -2426,26 +2426,26 @@
       {
         "heading": "Let's Build\nSomething Extraordinary",
         "subtext": "As a trusted web development company, VynTech Solutions helps 100+ businesses transform their digital presence. We build websites, apps, and platforms engineered to scale and multiply your growth by 10x.",
-        "mediaUrl": "/cover1.mp4",
+        "mediaUrl": "/hero-tech-city.mp4",
         "mediaType": "video"
       },
       {
         "heading": "Build Faster.\nScale Smarter.",
         "subtext": "VynTech turns your idea into a market-ready product in weeks, not months. From MVPs to enterprise platforms, we build with speed, precision, and quality, never compromising.",
-        "mediaUrl": "/cover3.png",
-        "mediaType": "image"
+        "mediaUrl": "/cover1.mp4",
+        "mediaType": "video"
       },
       {
         "heading": "Enterprise Solutions.\nStartup Speed.",
         "subtext": "AI, Cloud, Mobile, and Web. VynTech delivers full-stack expertise under one roof. Enterprise-grade reliability, startup agility, zero compromises. We power your next big idea, from day one.",
-        "mediaUrl": "/cover2.png",
-        "mediaType": "image"
+        "mediaUrl": "/your-tech-partner.mp4",
+        "mediaType": "video"
       },
       {
         "heading": "Your Tech Partner\nfor Growth",
         "subtext": "Stop hiring. Start building. Get a dedicated development team that delivers results from day one.",
-        "mediaUrl": "/cover3.png",
-        "mediaType": "image"
+        "mediaUrl": "/your-tech-partner.mp4",
+        "mediaType": "video"
       }
     ]
   },
