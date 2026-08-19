@@ -60,10 +60,10 @@ const benefits = [
 ];
 
 const stats = [
-  { value: "1000+", label: "Projects Delivered" },
-  { value: "98%", label: "Client Satisfaction" },
-  { value: "50+", label: "Countries Served" },
-  { value: "15+", label: "Years Experience" }
+  { value: "50+", label: "Projects Delivered" },
+  { value: "40+", label: "Happy Clients" },
+  { value: "4+", label: "Countries Served" },
+  { value: "12+", label: "Years Experience" }
 ];
 
 function resolveServiceLabels(

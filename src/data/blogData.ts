@@ -213,7 +213,7 @@ Otherwise, go with proven tools and focus on building your product.
     slug: "mvp-development-how-long-and-how-much",
     title: "MVP Development: Realistic Timelines and Costs in 2024",
     metaDescription: "Get realistic MVP development costs and timelines. Learn what affects pricing and how to budget for your minimum viable product.",
-    excerpt: "How long does an MVP take? What does it cost? Here are real numbers based on hundreds of projects.",
+    excerpt: "How long does an MVP take? What does it cost? Here are real numbers based on 50+ projects.",
     category: "Business",
     tags: ["MVP development", "startup costs", "software budgeting", "product development"],
     author: "VynTech Solutions Team",

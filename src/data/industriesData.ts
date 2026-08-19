@@ -43,7 +43,7 @@ export const industriesData: Record<string, IndustryData> = {
     subtitle: "Secure & Scalable Financial Technology Solutions",
     description: "The financial services industry demands precision, security, and innovation. We deliver cutting-edge fintech solutions that help banks, insurance companies, and financial institutions modernize their operations, enhance customer experiences, and maintain regulatory compliance.",
     heroStats: [
-      { value: "100+", label: "Fintech Projects" },
+      { value: "50+", label: "Fintech Projects" },
       { value: "PCI DSS", label: "Compliant" },
       { value: "$500M+", label: "Transactions Processed" },
       { value: "99.99%", label: "Uptime" }
@@ -71,7 +71,7 @@ export const industriesData: Record<string, IndustryData> = {
     subtitle: "Transform Retail with Seamless Digital Experiences",
     description: "The retail landscape is evolving rapidly. We help retailers and e-commerce businesses create compelling shopping experiences, optimize operations, and drive growth through innovative technology solutions that connect with customers across all channels.",
     heroStats: [
-      { value: "200+", label: "E-commerce Projects" },
+      { value: "50+", label: "E-commerce Projects" },
       { value: "$1B+", label: "GMV Processed" },
       { value: "35%", label: "Avg. Conversion Lift" },
       { value: "99.9%", label: "Uptime" }
@@ -99,7 +99,7 @@ export const industriesData: Record<string, IndustryData> = {
     subtitle: "Transforming Education Through Technology",
     description: "Education is undergoing a digital revolution. We help educational institutions, EdTech startups, and corporate training programs create engaging learning experiences that empower students and educators with innovative technology solutions.",
     heroStats: [
-      { value: "100+", label: "EdTech Projects" },
+      { value: "50+", label: "EdTech Projects" },
       { value: "5M+", label: "Students Reached" },
       { value: "50+", label: "Institutions Served" },
       { value: "40%", label: "Engagement Increase" }
@@ -127,7 +127,7 @@ export const industriesData: Record<string, IndustryData> = {
     subtitle: "Digital Solutions for Modern Real Estate",
     description: "The real estate industry is embracing digital transformation. We help real estate companies, property managers, and proptech startups leverage technology to streamline operations, enhance customer experiences, and drive growth in a competitive market.",
     heroStats: [
-      { value: "75+", label: "PropTech Projects" },
+      { value: "50+", label: "PropTech Projects" },
       { value: "$2B+", label: "Properties Managed" },
       { value: "30%", label: "Efficiency Gain" },
       { value: "24/7", label: "Support" }
@@ -155,7 +155,7 @@ export const industriesData: Record<string, IndustryData> = {
     subtitle: "Intelligent Solutions for Supply Chain Excellence",
     description: "The logistics industry demands efficiency, visibility, and reliability. We deliver technology solutions that optimize supply chain operations, improve fleet management, and provide real-time visibility across your entire logistics network.",
     heroStats: [
-      { value: "80+", label: "Logistics Projects" },
+      { value: "50+", label: "Logistics Projects" },
       { value: "1M+", label: "Shipments Tracked" },
       { value: "25%", label: "Cost Reduction" },
       { value: "99.9%", label: "Accuracy" }
@@ -183,7 +183,7 @@ export const industriesData: Record<string, IndustryData> = {
     subtitle: "Engaging Digital Experiences for Modern Audiences",
     description: "The entertainment and media industry is being transformed by digital technology. We help media companies, streaming platforms, and content creators deliver engaging experiences that captivate audiences and drive content monetization.",
     heroStats: [
-      { value: "60+", label: "Media Projects" },
+      { value: "50+", label: "Media Projects" },
       { value: "10M+", label: "Users Served" },
       { value: "4K/HDR", label: "Streaming Quality" },
       { value: "99.99%", label: "Uptime" }
@@ -239,7 +239,7 @@ export const industriesData: Record<string, IndustryData> = {
     subtitle: "Elevating Guest Experiences Through Technology",
     description: "The hospitality and travel industry thrives on exceptional experiences. We help hotels, restaurants, airlines, and travel companies leverage technology to delight guests, streamline operations, and drive revenue growth.",
     heroStats: [
-      { value: "70+", label: "Hospitality Projects" },
+      { value: "50+", label: "Hospitality Projects" },
       { value: "5M+", label: "Bookings Processed" },
       { value: "40%", label: "Revenue Increase" },
       { value: "4.8★", label: "Avg. Guest Rating" }

@@ -26,7 +26,7 @@ export const HOME_FAQS = [
   {
     question: "What makes you one of the best website development companies in Toronto?",
     answer:
-      "Transparent communication, strong technical expertise, and results, 500+ websites delivered with a 98% client satisfaction rate.",
+      "Transparent communication, strong technical expertise, and results, 50+ projects delivered.",
   },
   {
     question: "Where can I learn more about your company and team?",

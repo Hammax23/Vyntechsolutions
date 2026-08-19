@@ -83,7 +83,7 @@
     },
     {
       "question": "What makes you one of the best website development companies in Toronto?",
-      "answer": "Transparent communication, strong technical expertise, and results, 500+ websites delivered with a 98% client satisfaction rate.",
+      "answer": "Transparent communication, strong technical expertise, and results, 50+ projects delivered.",
       "order": 5,
       "page": "home"
     },
@@ -211,7 +211,7 @@
       "title": "MVP Development: Realistic Timelines and Costs in 2024",
       "slug": "mvp-development-how-long-and-how-much",
       "metaDescription": "Get realistic MVP development costs and timelines. Learn what affects pricing and how to budget for your minimum viable product.",
-      "excerpt": "How long does an MVP take? What does it cost? Here are real numbers based on hundreds of projects.",
+      "excerpt": "How long does an MVP take? What does it cost? Here are real numbers based on 50+ projects.",
       "content": "\n## MVP Development Reality Check\n\nEveryone wants to know: \"How much will my app cost?\" Here's the honest answer.\n\n### What's an MVP?\n\nA Minimum Viable Product is the simplest version that delivers core value. It's not:\n- A prototype (that's just a demo)\n- A complete product (that comes later)\n- A proof of concept (that's for internal validation)\n\nAn MVP is something real users can actually use.\n\n### Realistic Timelines\n\n**Simple MVP (8-12 weeks)**\n- 5-10 screens\n- Basic user authentication\n- Core functionality only\n- Simple database\n- One platform (web or mobile)\n\n**Medium MVP (12-20 weeks)**\n- 10-20 screens\n- User roles and permissions\n- Third-party integrations\n- Payment processing\n- Admin dashboard\n\n**Complex MVP (20-30 weeks)**\n- 20+ screens\n- Real-time features\n- Complex business logic\n- Multiple integrations\n- Advanced security requirements\n\n### Realistic Costs\n\nBased on North American development rates:\n\n- Simple MVP: $40,000-80,000\n- Medium MVP: $80,000-150,000\n- Complex MVP: $150,000-300,000\n\nOffshore development costs 40-60% less but often takes longer and requires more management.\n\n### What Affects Cost\n\n**Scope (biggest factor)**\nEvery feature adds weeks. Ruthlessly cut features for your first version.\n\n**Design Requirements**\nCustom design costs more than templates. For MVPs, start simple.\n\n**Technical Complexity**\nReal-time features, complex algorithms, and third-party integrations all add cost.\n\n**Team Location**\nNorth American developers: $150-250/hour\nEastern European: $50-100/hour\nSouth Asian: $25-50/hour\n\n### How to Budget\n\n1. Define your core use case (one sentence)\n2. List only features that use case requires\n3. Get 3 quotes from development teams\n4. Add 30% buffer for unexpected issues\n5. Plan for post-launch iteration\n\n### Common Mistake\n\nBuilding too much before validating. Spend 60% of your budget on version 1, save 40% for improvements based on real user feedback.\n    ",
       "tags": [
         "MVP development",
@@ -345,15 +345,15 @@
       ],
       "stats": [
         {
-          "value": "200+",
+          "value": "50+",
           "label": "Projects Completed"
         },
         {
-          "value": "8+",
+          "value": "12+",
           "label": "Years in Business"
         },
         {
-          "value": "50+",
+          "value": "40+",
           "label": "Active Clients"
         },
         {
@@ -452,7 +452,7 @@
       ],
       "stats": [
         {
-          "value": "80+",
+          "value": "50+",
           "label": "Apps Built"
         },
         {
@@ -880,7 +880,7 @@
       ],
       "stats": [
         {
-          "value": "150+",
+          "value": "50+",
           "label": "Projects Designed"
         },
         {
@@ -987,7 +987,7 @@
       ],
       "stats": [
         {
-          "value": "100+",
+          "value": "50+",
           "label": "Stores Built"
         },
         {
@@ -1094,7 +1094,7 @@
       ],
       "stats": [
         {
-          "value": "70+",
+          "value": "50+",
           "label": "Custom Systems"
         },
         {
@@ -1201,7 +1201,7 @@
       ],
       "stats": [
         {
-          "value": "50+",
+          "value": "40+",
           "label": "SEO Clients"
         },
         {
@@ -1430,7 +1430,7 @@
       ],
       "stats": [
         {
-          "value": "500+",
+          "value": "40+",
           "label": "Clients Served"
         },
         {
@@ -1438,7 +1438,7 @@
           "label": "Tax Savings"
         },
         {
-          "value": "15+",
+          "value": "12+",
           "label": "Years Experience"
         },
         {
@@ -1573,7 +1573,7 @@
       "description": "The financial services industry demands precision, security, and innovation. We deliver cutting-edge fintech solutions that help banks, insurance companies, and financial institutions modernize their operations, enhance customer experiences, and maintain regulatory compliance.",
       "heroStats": [
         {
-          "value": "100+",
+          "value": "50+",
           "label": "Fintech Projects"
         },
         {
@@ -1667,7 +1667,7 @@
       "description": "The retail landscape is evolving rapidly. We help retailers and e-commerce businesses create compelling shopping experiences, optimize operations, and drive growth through innovative technology solutions that connect with customers across all channels.",
       "heroStats": [
         {
-          "value": "200+",
+          "value": "50+",
           "label": "E-commerce Projects"
         },
         {
@@ -1761,7 +1761,7 @@
       "description": "Education is undergoing a digital revolution. We help educational institutions, EdTech startups, and corporate training programs create engaging learning experiences that empower students and educators with innovative technology solutions.",
       "heroStats": [
         {
-          "value": "100+",
+          "value": "50+",
           "label": "EdTech Projects"
         },
         {
@@ -1855,7 +1855,7 @@
       "description": "The real estate industry is embracing digital transformation. We help real estate companies, property managers, and proptech startups leverage technology to streamline operations, enhance customer experiences, and drive growth in a competitive market.",
       "heroStats": [
         {
-          "value": "75+",
+          "value": "50+",
           "label": "PropTech Projects"
         },
         {
@@ -1949,7 +1949,7 @@
       "description": "The logistics industry demands efficiency, visibility, and reliability. We deliver technology solutions that optimize supply chain operations, improve fleet management, and provide real-time visibility across your entire logistics network.",
       "heroStats": [
         {
-          "value": "80+",
+          "value": "50+",
           "label": "Logistics Projects"
         },
         {
@@ -2043,7 +2043,7 @@
       "description": "The entertainment and media industry is being transformed by digital technology. We help media companies, streaming platforms, and content creators deliver engaging experiences that captivate audiences and drive content monetization.",
       "heroStats": [
         {
-          "value": "60+",
+          "value": "50+",
           "label": "Media Projects"
         },
         {
@@ -2231,7 +2231,7 @@
       "description": "The hospitality and travel industry thrives on exceptional experiences. We help hotels, restaurants, airlines, and travel companies leverage technology to delight guests, streamline operations, and drive revenue growth.",
       "heroStats": [
         {
-          "value": "70+",
+          "value": "50+",
           "label": "Hospitality Projects"
         },
         {
@@ -2425,7 +2425,7 @@
     "heroSlides": [
       {
         "heading": "Let's Build\nSomething Extraordinary",
-        "subtext": "As a trusted web development company, VynTech Solutions helps 100+ businesses transform their digital presence. We build websites, apps, and platforms engineered to scale and multiply your growth by 10x.",
+        "subtext": "As a trusted web development company, VynTech Solutions helps 40+ businesses transform their digital presence. We build websites, apps, and platforms engineered to scale and multiply your growth by 10x.",
         "mediaUrl": "/hero-tech-city.mp4",
         "mediaType": "video"
       },

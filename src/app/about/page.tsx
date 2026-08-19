@@ -287,9 +287,9 @@ export default function AboutPage() {
 
                   <div className="flex flex-col gap-4 relative z-10">
                     {[
-                      { title: "Web Design & Development", subtitle: "500+ custom websites delivered for businesses like yours", icon: "💻" },
+                      { title: "Web Design & Development", subtitle: "50+ custom websites delivered for businesses like yours", icon: "💻" },
                       { title: "SEO & Digital Marketing", subtitle: "300% average traffic growth, real results you can measure", icon: "📈" },
-                      { title: "UI/UX", subtitle: "Branding trusted by 100+ Canadian businesses", icon: "🎨" },
+                      { title: "UI/UX", subtitle: "Branding trusted by 40+ businesses", icon: "🎨" },
                       { title: "AI & ML", subtitle: "Automation strategies built to save you hours, every week.", icon: "🤖" },
                     ].map((stat, i) => (
                       <div key={i} className="flex items-center gap-5 bg-white p-6 rounded-2xl border border-gray-100 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1)] transition-shadow cursor-default">
@@ -343,7 +343,7 @@ export default function AboutPage() {
                     How We Bring Ideas to Life
                   </h2>
                   <p className="text-gray-600 max-w-2xl mx-auto">
-                    A proven methodology refined over hundreds of successful projects.
+                    A proven methodology refined over 50+ successful projects.
                   </p>
                 </div>
 

@@ -120,7 +120,7 @@ function mapService(entry: Record<string, unknown>, fallbackSlug?: string, local
     processHeading: isPopulated(entry.processHeading) ? String(entry.processHeading) : localFallback?.processHeading,
     processDescription: isPopulated(entry.processDescription) ? String(entry.processDescription) : localFallback?.processDescription,
     process: isArrayPopulated(entry.process) ? (entry.process as CmsService["process"]) : (localFallback?.process || []),
-    stats: isArrayPopulated(entry.stats) ? (entry.stats as CmsService["stats"]) : (localFallback?.stats || []),
+    stats: isArrayPopulated(localFallback?.stats) ? localFallback!.stats : (isArrayPopulated(entry.stats) ? (entry.stats as CmsService["stats"]) : []),
     caseStudies: isArrayPopulated(entry.caseStudies) ? (entry.caseStudies as CmsService["caseStudies"]) : (localFallback?.caseStudies || []),
     seo: (entry.seo as Record<string, unknown>) || localFallback?.seo,
     // Why Choose Us
@@ -133,7 +133,9 @@ function mapService(entry: Record<string, unknown>, fallbackSlug?: string, local
       : localFallback?.whyChooseUsCards,
     // How We Deliver
     deliveryHeading: isPopulated(entry.deliveryHeading) ? String(entry.deliveryHeading) : localFallback?.deliveryHeading,
-    deliveryDescription: isPopulated(entry.deliveryDescription) ? String(entry.deliveryDescription) : localFallback?.deliveryDescription,
+    deliveryDescription: isPopulated(localFallback?.deliveryDescription)
+      ? localFallback!.deliveryDescription
+      : (isPopulated(entry.deliveryDescription) ? String(entry.deliveryDescription) : undefined),
     deliverySteps: isArrayPopulated(entry.deliverySteps)
       ? (entry.deliverySteps as { title: string; content: string }[])
       : localFallback?.deliverySteps,
@@ -210,14 +212,20 @@ export type CmsIndustry = {
   seo?: Record<string, unknown>;
 };
 
-function mapIndustry(entry: Record<string, unknown>, fallbackSlug?: string): CmsIndustry {
+function mapIndustry(
+  entry: Record<string, unknown>,
+  fallbackSlug?: string,
+  localFallback?: Omit<CmsIndustry, "slug">
+): CmsIndustry {
   return {
     slug: String(entry.slug || fallbackSlug || ""),
     title: String(entry.title || ""),
     subtitle: String(entry.subtitle || ""),
     description: String(entry.description || ""),
     heroImage: typeof entry.hero === "object" && entry.hero !== null ? String((entry.hero as any).url || "") : String(entry.hero || ""),
-    heroStats: Array.isArray(entry.heroStats) ? (entry.heroStats as CmsIndustry["heroStats"]) : [],
+    heroStats: Array.isArray(localFallback?.heroStats) && localFallback.heroStats.length
+      ? localFallback.heroStats
+      : (Array.isArray(entry.heroStats) ? (entry.heroStats as CmsIndustry["heroStats"]) : []),
     challenges: Array.isArray(entry.challenges)
       ? (entry.challenges as CmsIndustry["challenges"])
       : [],
@@ -245,7 +253,10 @@ export async function getCmsIndustries(
     tags: ["strapi", "industries"],
   });
 
-  const list = unwrapList(res).map((e) => mapIndustry(e));
+  const list = unwrapList(res).map((e) => {
+    const slug = String(e.slug || "");
+    return mapIndustry(e, slug, fallback[slug]);
+  });
   if (list.length) return list;
   return Object.entries(fallback).map(([slug, data]) => ({ slug, ...data }));
 }
@@ -269,7 +280,7 @@ export async function getCmsIndustry(
   });
 
   const entry = unwrapList(res)[0];
-  if (entry) return mapIndustry(entry, slug);
+  if (entry) return mapIndustry(entry, slug, fallback[slug]);
   const local = fallback[slug];
   return local ? { slug, ...local } : null;
 }

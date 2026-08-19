@@ -6,7 +6,7 @@ import Link from "next/link";
 const stats = [
   { id: 1, number: "12", suffix: "+", label: "Years of industry experience" },
   { id: 2, number: "50", suffix: "+", label: "Projects successfully delivered" },
-  { id: 3, number: "8", suffix: "+", label: "Countries served worldwide" },
+  { id: 3, number: "4", suffix: "+", label: "Countries served worldwide" },
   { id: 4, number: "40", suffix: "+", label: "Happy clients & partners" },
 ];
 

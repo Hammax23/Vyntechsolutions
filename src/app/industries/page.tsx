@@ -240,19 +240,19 @@ export default function IndustriesPage() {
           <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               <div className="text-center">
-                <div className="text-4xl sm:text-5xl font-bold text-[#0d9488] mb-2">10+</div>
-                <div className="text-white/60">Industries Served</div>
+                <div className="text-4xl sm:text-5xl font-bold text-[#0d9488] mb-2">4+</div>
+                <div className="text-white/60">Countries Served</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl sm:text-5xl font-bold text-[#0d9488] mb-2">500+</div>
+                <div className="text-4xl sm:text-5xl font-bold text-[#0d9488] mb-2">50+</div>
                 <div className="text-white/60">Projects Delivered</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl sm:text-5xl font-bold text-[#0d9488] mb-2">98%</div>
-                <div className="text-white/60">Client Satisfaction</div>
+                <div className="text-4xl sm:text-5xl font-bold text-[#0d9488] mb-2">40+</div>
+                <div className="text-white/60">Happy Clients</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl sm:text-5xl font-bold text-[#0d9488] mb-2">15+</div>
+                <div className="text-4xl sm:text-5xl font-bold text-[#0d9488] mb-2">12+</div>
                 <div className="text-white/60">Years Experience</div>
               </div>
             </div>

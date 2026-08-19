@@ -277,8 +277,8 @@ export default function ServicesPage() {
               
               <div className="space-y-6">
                 {[
-                  { title: "Expert Team", description: "500+ certified professionals across all technology domains" },
-                  { title: "Proven Track Record", description: "1000+ successful projects delivered globally" },
+                  { title: "Expert Team", description: "A focused team across web, mobile, and cloud" },
+                  { title: "Proven Track Record", description: "50+ successful projects delivered" },
                   { title: "Agile Approach", description: "Flexible methodologies adapted to your needs" },
                   { title: "24/7 Support", description: "Round-the-clock assistance for your peace of mind" }
                 ].map((item, index) => (
@@ -299,10 +299,10 @@ export default function ServicesPage() {
 
             <div className="grid grid-cols-2 gap-6">
               {[
-                { value: "15+", label: "Years Experience" },
-                { value: "1000+", label: "Projects Delivered" },
-                { value: "500+", label: "Expert Team" },
-                { value: "98%", label: "Client Satisfaction" }
+                { value: "12+", label: "Years Experience" },
+                { value: "50+", label: "Projects Delivered" },
+                { value: "4+", label: "Countries Served" },
+                { value: "40+", label: "Happy Clients" }
               ].map((stat, index) => (
                 <div
                   key={index}

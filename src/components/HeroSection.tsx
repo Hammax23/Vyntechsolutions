@@ -28,7 +28,7 @@ const DEFAULT_SLIDES: HeroSlide[] = [
   {
     heading: "Let's Build\nSomething Extraordinary",
     subtext:
-      "As a trusted web development company, VynTech Solutions helps 100+ businesses transform their digital presence. We build websites, apps, and platforms engineered to scale and multiply your growth by 10x.",
+      "As a trusted web development company, VynTech Solutions helps 40+ businesses transform their digital presence. We build websites, apps, and platforms engineered to scale and multiply your growth by 10x.",
   },
   {
     heading: "Build Faster.\nScale Smarter.",
@@ -328,8 +328,7 @@ export default function HeroSection() {
                   transition={{ duration: 0.5, delay: 0.8 }}
                   className="flex flex-col items-center justify-center px-2 sm:px-4"
                 >
-                  <span className="text-3xl md:text-4xl font-light text-white mb-2">12+</span>
-                  <span className="text-[10px] md:text-xs font-medium tracking-[0.2em] text-white/50 uppercase">YEARS EXPERIENCE</span>
+                  <span className="text-3xl md:text-4xl font-light text-white">Build</span>
                 </motion.div>
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -337,8 +336,7 @@ export default function HeroSection() {
                   transition={{ duration: 0.5, delay: 1.0 }}
                   className="flex flex-col items-center justify-center px-2 sm:px-4"
                 >
-                  <span className="text-3xl md:text-4xl font-light text-white mb-2">50+</span>
-                  <span className="text-[10px] md:text-xs font-medium tracking-[0.2em] text-white/50 uppercase">PROJECTS DELIVERED</span>
+                  <span className="text-3xl md:text-4xl font-light text-white">Innovate</span>
                 </motion.div>
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -346,8 +344,7 @@ export default function HeroSection() {
                   transition={{ duration: 0.5, delay: 1.2 }}
                   className="flex flex-col items-center justify-center px-2 sm:px-4"
                 >
-                  <span className="text-3xl md:text-4xl font-light text-white mb-2">98%</span>
-                  <span className="text-[10px] md:text-xs font-medium tracking-[0.2em] text-white/50 uppercase">CLIENT SATISFACTION</span>
+                  <span className="text-3xl md:text-4xl font-light text-white">Scale</span>
                 </motion.div>
               </div>
             </motion.div>

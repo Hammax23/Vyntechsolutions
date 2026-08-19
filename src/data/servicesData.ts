@@ -92,15 +92,15 @@ export const servicesData: Record<string, ServiceData> = {
     ],
     "stats": [
       {
-        "value": "200+",
+        "value": "50+",
         "label": "Projects Completed"
       },
       {
-        "value": "8+",
+        "value": "12+",
         "label": "Years in Business"
       },
       {
-        "value": "50+",
+        "value": "40+",
         "label": "Active Clients"
       },
       {
@@ -126,7 +126,7 @@ export const servicesData: Record<string, ServiceData> = {
       }
     ],
     "deliveryHeading": "How We Deliver Web Application Development Services",
-    "deliveryDescription": "Web application development only pays off when the product is fast, secure, easy to use, and built to scale. At VynTech Solutions, our delivery model is structured, outcome-oriented, and refined across hundreds of web and product engagements.\\n\\nWe work in clear phases so discovery is thorough, build quality is high, and launches are predictable. Scope, timelines, architecture, and support are defined upfront, which removes ambiguity and gives stakeholders full visibility from day one.\\n\\nBy pairing human-centric UI/UX design with product-grade engineering, we move your business from fragile websites to a web application that performs, converts, and compounds value release after release.",
+    "deliveryDescription": "Web application development only pays off when the product is fast, secure, easy to use, and built to scale. At VynTech Solutions, our delivery model is structured, outcome-oriented, and refined across 50+ web and product engagements.\\n\\nWe work in clear phases so discovery is thorough, build quality is high, and launches are predictable. Scope, timelines, architecture, and support are defined upfront, which removes ambiguity and gives stakeholders full visibility from day one.\\n\\nBy pairing human-centric UI/UX design with product-grade engineering, we move your business from fragile websites to a web application that performs, converts, and compounds value release after release.",
     "deliverySteps": [
       {
         "title": "Discovery & Product Strategy",
@@ -216,7 +216,7 @@ export const servicesData: Record<string, ServiceData> = {
     ],
     "stats": [
       {
-        "value": "80+",
+        "value": "50+",
         "label": "Apps Built"
       },
       {
@@ -616,7 +616,7 @@ export const servicesData: Record<string, ServiceData> = {
     ],
     "stats": [
       {
-        "value": "150+",
+        "value": "50+",
         "label": "Projects Designed"
       },
       {
@@ -716,7 +716,7 @@ export const servicesData: Record<string, ServiceData> = {
     ],
     "stats": [
       {
-        "value": "100+",
+        "value": "50+",
         "label": "Stores Built"
       },
       {
@@ -816,7 +816,7 @@ export const servicesData: Record<string, ServiceData> = {
     ],
     "stats": [
       {
-        "value": "70+",
+        "value": "50+",
         "label": "Custom Systems"
       },
       {
@@ -916,7 +916,7 @@ export const servicesData: Record<string, ServiceData> = {
     ],
     "stats": [
       {
-        "value": "50+",
+        "value": "40+",
         "label": "SEO Clients"
       },
       {
@@ -1131,7 +1131,7 @@ export const servicesData: Record<string, ServiceData> = {
     ],
     "stats": [
       {
-        "value": "500+",
+        "value": "40+",
         "label": "Clients Served"
       },
       {
@@ -1139,7 +1139,7 @@ export const servicesData: Record<string, ServiceData> = {
         "label": "Tax Savings"
       },
       {
-        "value": "15+",
+        "value": "12+",
         "label": "Years Experience"
       },
       {

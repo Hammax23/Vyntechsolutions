@@ -326,7 +326,7 @@ export const faqSchema = {
       name: "What makes you one of the best website development companies in Toronto?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Transparent communication, strong technical expertise, and results, 500+ websites delivered with a 98% client satisfaction rate.",
+        text: "Transparent communication, strong technical expertise, and results, 50+ projects delivered.",
       },
     },
     {
