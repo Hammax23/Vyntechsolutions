@@ -207,7 +207,14 @@ export default function IndustriesImpact() {
         if (hp?.industriesHeading) setHeading(String(hp.industriesHeading));
         if (hp?.industriesSubheading) setEyebrow(String(hp.industriesSubheading));
         const list = industriesData?.industries as
-          | { slug?: string; title?: string; name?: string; description?: string; shortDescription?: string }[]
+          | {
+              slug?: string;
+              title?: string;
+              name?: string;
+              subtitle?: string;
+              description?: string;
+              shortDescription?: string;
+            }[]
           | undefined;
         if (list?.length) {
           const bySlug = new Map(industries.map((i) => [i.slug, i]));
