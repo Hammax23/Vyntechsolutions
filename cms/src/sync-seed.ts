@@ -7,7 +7,8 @@
  * Or once:
  *   CMS_SYNC_SEED=true node -e "require('dotenv').config(); ..."  (prefer restart develop with env)
  *
- * Prefer: set CMS_SYNC_SEED=true once in cms/.env, restart Strapi, then remove the flag.
+ * Prefer: set CMS_SYNC_SEED=true once in cms/.env (develop only), restart Strapi, then remove the flag.
+ * Production (NODE_ENV=production) never runs seed/sync from bootstrap.
  */
 import type { Core } from "@strapi/strapi";
 import fs from "fs";
@@ -96,6 +97,10 @@ function mergeForced(
 }
 
 export async function syncSeedIfRequested(strapi: Core.Strapi) {
+  if (process.env.NODE_ENV === "production") {
+    strapi.log.info("Production: CMS_SYNC_SEED ignored");
+    return;
+  }
   if (process.env.CMS_SYNC_SEED !== "true") return;
 
   const seedPath = path.join(process.cwd(), "data", "seed.json");
