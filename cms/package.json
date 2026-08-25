@@ -14,7 +14,7 @@
     "seed": "node ./scripts/seed-from-fallback.mjs"
   },
   "dependencies": {
-    "@google-analytics/data": "^7.0.0",
+    "@google-analytics/data": "^5.1.0",
     "@strapi-community/plugin-seo": "^2.1.1",
     "@strapi/plugin-users-permissions": "5.12.6",
     "@strapi/strapi": "5.12.6",

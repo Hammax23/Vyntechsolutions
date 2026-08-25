@@ -6,7 +6,6 @@ import TimedCTAPopup from "@/components/TimedCTAPopup";
 import CookieConsent from "@/components/CookieConsent";
 import ConditionalTawkChat from "@/components/ConditionalTawkChat";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
-import AnnouncementBar from "@/components/AnnouncementBar";
 import { organizationSchema, localBusinessSchema, websiteSchema, servicesSchema, reviewSchema, techStackSchema } from "@/lib/seo.config";
 import { getCmsOrganizationProfile, getCmsGlobalSeo } from "@/lib/cms/content";
 import { rootMetadataFromCms } from "@/lib/cms/metadata";
@@ -130,7 +129,6 @@ export default async function RootLayout({
         />
       </head>
       <body className={`${inter.className} ${oswald.variable}`}>
-        <AnnouncementBar />
         {children}
         <LetsTalkBusiness />
         <TimedCTAPopup />
