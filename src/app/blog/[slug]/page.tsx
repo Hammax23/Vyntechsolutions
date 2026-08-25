@@ -153,7 +153,7 @@ export default function BlogPostPage() {
                 </p>
               </div>
               <Link
-                href="/#get-in-touch"
+                href="/lets-talk-business"
                 className="inline-flex items-center justify-center gap-2 bg-[#262b3f] hover:bg-[#0055FF] text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 whitespace-nowrap"
               >
                 Get in Touch

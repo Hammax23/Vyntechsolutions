@@ -83,7 +83,8 @@ Strapi is your full editorial CMS. After changes, click **Publish** (Draft & Pub
 - Always **Publish** after saving drafts.
 - Prefer editing existing entries over recreating (keeds IDs/slugs stable).
 - Do not delete Global SEO, Navigation, Homepage, or Form Config single types.
-- CRM (`/admin`) and SEO ops panel (`/seopanel`) stay outside Strapi (quotes, keywords, backlinks).
+- CRM (`/admin`) stays outside Strapi (quotes, projects, invoices).
+- Live SEO is managed **only in Strapi** (Global SEO, Page SEO, and each Service / Industry / Blog SEO component).
 
 ---
 

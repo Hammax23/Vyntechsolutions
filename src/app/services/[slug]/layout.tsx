@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { metadataForService } from "@/lib/cms/metadata";
+import CmsStructuredData from "@/components/CmsStructuredData";
 
 export async function generateMetadata({
   params,
@@ -9,6 +10,17 @@ export async function generateMetadata({
   return metadataForService(params.slug);
 }
 
-export default function ServiceSlugLayout({ children }: { children: React.ReactNode }) {
-  return children;
+export default function ServiceSlugLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: { slug: string };
+}) {
+  return (
+    <>
+      <CmsStructuredData serviceSlug={params.slug} />
+      {children}
+    </>
+  );
 }

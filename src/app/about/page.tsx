@@ -11,6 +11,13 @@ type AboutSections = {
   missionHeading?: string;
   missionBody?: string;
   missionBody2?: string;
+  valuesEyebrow?: string;
+  valuesHeading?: string;
+  values?: { title: string; description: string }[];
+  processEyebrow?: string;
+  processHeading?: string;
+  processIntro?: string;
+  process?: { number?: string; title: string; description: string }[];
   [key: string]: unknown;
 };
 
@@ -219,7 +226,8 @@ export default function AboutPage() {
                 </h1>
 
                 <p className="text-lg text-white/60 mb-8 leading-relaxed">
-                  VynTech Solutions is a full-service software development company helping businesses across Canada transform bold ideas into powerful, scalable digital products built with precision, speed, and long-term growth in mind.
+                  {heroBody ||
+                    "VynTech Solutions is a full-service software development company helping businesses across Canada transform bold ideas into powerful, scalable digital products built with precision, speed, and long-term growth in mind."}
                 </p>
 
                 <button
@@ -254,7 +262,9 @@ export default function AboutPage() {
                     <span className="inline-block text-sm font-semibold bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text tracking-wider uppercase mb-4">Our Mission</span>
                     <h2 className="text-3xl sm:text-4xl font-bold text-[#1a1a2e] mb-6 leading-tight">
                       {(() => {
-                        const heading = "Empowering Your Business Through Innovative Technology";
+                        const heading =
+                          sections?.missionHeading ||
+                          "Empowering Your Business Through Innovative Technology";
                         const words = heading.split(" ");
                         if (words.length > 2) {
                           const lastTwo = words.splice(-2).join(" ");
@@ -269,10 +279,12 @@ export default function AboutPage() {
                       })()}
                     </h2>
                     <p className="text-gray-600 text-lg leading-relaxed mb-6">
-                      You deserve more than just a service provider you deserve a partner invested in your success. At VynTech Solutions, we bridge the gap between your vision and technical execution, delivering software that&apos;s not just functional but transformative for your business.
+                      {sections?.missionBody ||
+                        "You deserve more than just a service provider you deserve a partner invested in your success. At VynTech Solutions, we bridge the gap between your vision and technical execution, delivering software that's not just functional but transformative for your business."}
                     </p>
                     <p className="text-gray-600 leading-relaxed mb-10">
-                      Whether you&apos;re a startup validating your first MVP or an enterprise modernizing legacy systems, we bring the same dedication, expertise, and passion to every project we take on because your growth is our priority.
+                      {sections?.missionBody2 ||
+                        "Whether you're a startup validating your first MVP or an enterprise modernizing legacy systems, we bring the same dedication, expertise, and passion to every project we take on because your growth is our priority."}
                     </p>
                     <button
                       onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
@@ -311,14 +323,23 @@ export default function AboutPage() {
             <section className="py-24 bg-[#0a0a14]">
               <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
                 <div className="text-center mb-16">
-                  <span className="inline-block text-sm font-semibold bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text tracking-widest uppercase mb-4">What Drives Us</span>
+                  <span className="inline-block text-sm font-semibold bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text tracking-widest uppercase mb-4">
+                    {sections?.valuesEyebrow || "What Drives Us"}
+                  </span>
                   <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
-                    Our Core Values
+                    {sections?.valuesHeading || "Our Core Values"}
                   </h2>
                 </div>
 
                 <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {values.map((value, index) => (
+                  {(sections?.values?.length
+                    ? sections.values.map((v, i) => ({
+                        ...v,
+                        icon: values[i % values.length].icon,
+                        gradient: values[i % values.length].gradient,
+                      }))
+                    : values
+                  ).map((value, index) => (
                     <div
                       key={index}
                       className="bg-[#1a1a2e] rounded-2xl p-8 border border-white/5 hover:border-white/10 transition-all duration-300"
@@ -338,19 +359,28 @@ export default function AboutPage() {
             <section className="py-24 bg-white">
               <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
                 <div className="text-center mb-16">
-                  <span className="inline-block text-sm font-semibold bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text tracking-wider uppercase mb-4">Our Process</span>
+                  <span className="inline-block text-sm font-semibold bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text tracking-wider uppercase mb-4">
+                    {sections?.processEyebrow || "Our Process"}
+                  </span>
                   <h2 className="text-3xl sm:text-4xl font-bold text-[#1a1a2e] mb-4">
-                    How We Bring Ideas to Life
+                    {sections?.processHeading || "How We Bring Ideas to Life"}
                   </h2>
                   <p className="text-gray-600 max-w-2xl mx-auto">
-                    A proven methodology refined over 50+ successful projects.
+                    {sections?.processIntro || "A proven methodology refined over 50+ successful projects."}
                   </p>
                 </div>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                  {processSteps.map((step, index) => (
+                  {(sections?.process?.length
+                    ? sections.process.map((step, i) => ({
+                        number: step.number || String(i + 1).padStart(2, "0"),
+                        title: step.title,
+                        description: step.description,
+                      }))
+                    : processSteps
+                  ).map((step, index, arr) => (
                     <div key={index} className="relative">
-                      {index < processSteps.length - 1 && (
+                      {index < arr.length - 1 && (
                         <div className="hidden lg:block absolute top-8 left-full w-full h-[2px] bg-gradient-to-r from-[#00E1FF]/30 to-transparent -translate-x-4" />
                       )}
                       <div className="relative bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border border-gray-100">

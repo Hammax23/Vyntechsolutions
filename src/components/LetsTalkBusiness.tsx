@@ -3,65 +3,33 @@
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-
-const DEFAULT_REGIONS = [
-  "Select Region",
-  "North America",
-  "Europe",
-  "Asia Pacific",
-  "Middle East",
-  "Africa",
-  "South America",
-];
-
-const DEFAULT_SERVICES = [
-  "Web Development",
-  "Custom Software Development",
-  "Mobile App Development",
-  "Cloud Solutions",
-  "AI/ML Solutions",
-  "DevOps & CI/CD",
-  "UI/UX Design",
-  "E-commerce Solutions",
-  "SEO/Digital Marketing",
-  "Maintenance & Support",
-  "Tax & Accounting",
-];
-
-const DEFAULT_HEAR_ABOUT = [
-  "Google Search",
-  "Social Media",
-  "Referral",
-  "Event/Conference",
-  "Advertisement",
-  "Other",
-];
-
-function resolveServiceLabels(
-  configServices: string[],
-  cmsServices: { slug?: string; title?: string }[]
-): string[] {
-  const bySlug = new Map(
-    cmsServices
-      .filter((s) => s.slug)
-      .map((s) => [String(s.slug), String(s.title || s.slug)])
-  );
-  return configServices.map((item) => {
-    if (item.includes("-")) {
-      return bySlug.get(item) || item;
-    }
-    return item;
-  });
-}
+import {
+  COMPANY_EMAIL,
+  COMPANY_PHONE_DISPLAY,
+  COMPANY_PHONE_TEL,
+  resolveCompanyEmail,
+  resolveCompanyPhoneDisplay,
+  resolveCompanyPhoneTel,
+} from "@/lib/company";
+import {
+  DEFAULT_FORM_REGIONS,
+  DEFAULT_FORM_SERVICES,
+  DEFAULT_HEAR_ABOUT,
+  applyFormConfigServices,
+  withSelectPrefix,
+} from "@/lib/form-options";
 
 export default function LetsTalkBusiness() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  const [regions, setRegions] = useState<string[]>(DEFAULT_REGIONS);
-  const [services, setServices] = useState<string[]>(DEFAULT_SERVICES);
+  const [regions, setRegions] = useState<string[]>(DEFAULT_FORM_REGIONS);
+  const [services, setServices] = useState<string[]>(DEFAULT_FORM_SERVICES);
   const [hearAboutOptions, setHearAboutOptions] = useState<string[]>(DEFAULT_HEAR_ABOUT);
+  const [contactEmail, setContactEmail] = useState(COMPANY_EMAIL);
+  const [contactPhoneDisplay, setContactPhoneDisplay] = useState(COMPANY_PHONE_DISPLAY);
+  const [contactPhoneTel, setContactPhoneTel] = useState(COMPANY_PHONE_TEL);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -77,7 +45,6 @@ export default function LetsTalkBusiness() {
 
   const hideWidgets =
     pathname?.startsWith("/admin") ||
-    pathname?.startsWith("/seopanel") ||
     pathname?.startsWith("/quote") ||
     pathname?.startsWith("/verify");
 
@@ -95,33 +62,28 @@ export default function LetsTalkBusiness() {
     Promise.all([
       fetch("/api/cms/content?type=form-config").then((r) => (r.ok ? r.json() : null)),
       fetch("/api/cms/services").then((r) => (r.ok ? r.json() : null)),
+      fetch("/api/cms/content?type=organization").then((r) => (r.ok ? r.json() : null)),
     ])
-      .then(([formDataRes, servicesRes]) => {
+      .then(([formDataRes, servicesRes, orgRes]) => {
         if (cancelled) return;
         const formConfig = formDataRes?.formConfig as Record<string, unknown> | undefined;
         const cmsServices = (servicesRes?.services || []) as { slug?: string; title?: string }[];
+        const org = orgRes?.organization as Record<string, unknown> | undefined;
 
-        if (Array.isArray(formConfig?.services) && formConfig.services.length) {
-          const labels = resolveServiceLabels(
-            formConfig.services.map(String),
-            cmsServices
-          );
-          if (labels.length) setServices(labels);
-        } else if (cmsServices.length) {
-          setServices(
-            cmsServices.map((s) => String(s.title || s.slug || "")).filter(Boolean)
-          );
-        }
+        setServices(applyFormConfigServices(formConfig, cmsServices));
 
         if (Array.isArray(formConfig?.regions) && formConfig.regions.length) {
-          const list = formConfig.regions.map(String);
-          setRegions(
-            list[0]?.toLowerCase().includes("select") ? list : ["Select Region", ...list]
-          );
+          setRegions(withSelectPrefix(formConfig.regions.map(String)));
         }
 
         if (Array.isArray(formConfig?.hearAbout) && formConfig.hearAbout.length) {
           setHearAboutOptions(formConfig.hearAbout.map(String));
+        }
+
+        if (org?.email) setContactEmail(resolveCompanyEmail(String(org.email)));
+        if (org?.phone) {
+          setContactPhoneDisplay(resolveCompanyPhoneDisplay(String(org.phone)));
+          setContactPhoneTel(resolveCompanyPhoneTel(String(org.phone)));
         }
       })
       .catch(() => {});
@@ -244,25 +206,25 @@ export default function LetsTalkBusiness() {
           
           {/* Contact Info - Simple inline */}
           <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-            <a 
-              href="mailto:info@vyntechsolutions.ca"
+            <a
+              href={`mailto:${contactEmail}`}
               className="inline-flex items-center gap-2 text-gray-600 hover:text-[#0055FF] transition-colors"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
               </svg>
-              info@vyntechsolutions.ca
+              {contactEmail}
             </a>
-            {/* <span className="text-gray-300">|</span>
-            <a 
-              href="tel:+14168935779"
+            <span className="text-gray-300">|</span>
+            <a
+              href={`tel:${contactPhoneTel}`}
               className="inline-flex items-center gap-2 text-gray-600 hover:text-[#0055FF] transition-colors"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
               </svg>
-              +1 (416) 893-5779
-            </a> */}
+              {contactPhoneDisplay}
+            </a>
           </div>
         </div>
 

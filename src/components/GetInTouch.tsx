@@ -1,47 +1,24 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
 import Image from "next/image";
-
-const services = [
-  "Web Development",
-  "Custom Software Development",
-  "Mobile App Development",
-  "Cloud Solutions",
-  "AI/ML Solutions",
-  "DevOps & CI/CD",
-  "UI/UX Design",
-  "E-commerce Solutions",
-  "SEO/Digital Marketing",
-  "Maintenance & Support",
-  "Tax & Accounting",
-];
-
-const regions = [
-  "Select Region",
-  "North America",
-  "South America",
-  "Europe",
-  "Asia Pacific",
-  "Middle East",
-  "Africa",
-];
-
-const hearAboutUs = [
-  "Please Select",
-  "Google Search",
-  "Social Media",
-  "Referral",
-  "Event/Conference",
-  "Advertisement",
-  "Other",
-];
+import {
+  DEFAULT_FORM_REGIONS,
+  DEFAULT_FORM_SERVICES,
+  DEFAULT_HEAR_ABOUT,
+  applyFormConfigServices,
+  withSelectPrefix,
+} from "@/lib/form-options";
 
 export default function GetInTouch() {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [services, setServices] = useState<string[]>(DEFAULT_FORM_SERVICES);
+  const [regions, setRegions] = useState<string[]>(DEFAULT_FORM_REGIONS);
+  const [hearAboutOptions, setHearAboutOptions] = useState<string[]>(DEFAULT_HEAR_ABOUT);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -72,6 +49,33 @@ export default function GetInTouch() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    let cancelled = false;
+    Promise.all([
+      fetch("/api/cms/content?type=form-config").then((r) => (r.ok ? r.json() : null)),
+      fetch("/api/cms/services").then((r) => (r.ok ? r.json() : null)),
+    ])
+      .then(([formDataRes, servicesRes]) => {
+        if (cancelled) return;
+        const formConfig = formDataRes?.formConfig as Record<string, unknown> | undefined;
+        const cmsServices = (servicesRes?.services || []) as { slug?: string; title?: string }[];
+
+        setServices(applyFormConfigServices(formConfig, cmsServices));
+
+        if (Array.isArray(formConfig?.regions) && formConfig.regions.length) {
+          setRegions(withSelectPrefix(formConfig.regions.map(String)));
+        }
+
+        if (Array.isArray(formConfig?.hearAbout) && formConfig.hearAbout.length) {
+          setHearAboutOptions(formConfig.hearAbout.map(String));
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const handleServiceToggle = (service: string) => {
     setSelectedServices((prev) =>
       prev.includes(service)
@@ -87,13 +91,54 @@ export default function GetInTouch() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ ...formData, services: selectedServices });
+    setIsSubmitting(true);
+    setSubmitStatus("idle");
+
+    try {
+      const response = await fetch("/api/send-quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          email: formData.email,
+          phone: formData.phone ? `+1 ${formData.phone}` : "",
+          companyName: formData.companyName,
+          companyUrl: formData.companyUrl,
+          region: formData.region,
+          services: selectedServices,
+          projectDetails: formData.projectDetails,
+          hearAbout: formData.hearAbout,
+        }),
+      });
+
+      if (response.ok) {
+        setSubmitStatus("success");
+        setFormData({
+          fullName: "",
+          email: "",
+          phone: "",
+          companyName: "",
+          companyUrl: "",
+          region: "",
+          projectDetails: "",
+          hearAbout: "",
+        });
+        setSelectedServices([]);
+      } else {
+        setSubmitStatus("error");
+      }
+    } catch {
+      setSubmitStatus("error");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <section
+      id="get-in-touch"
       ref={sectionRef}
       className="w-full bg-[#f8f9fa] py-16 sm:py-20 md:py-24 lg:py-28 relative overflow-hidden"
     >
@@ -228,6 +273,28 @@ export default function GetInTouch() {
                 />
               </div>
 
+              {/* Region */}
+              <div>
+                <label className="block text-xs text-gray-500 mb-1">Region*</label>
+                <select
+                  name="region"
+                  value={formData.region}
+                  onChange={handleInputChange}
+                  className="w-full border border-gray-300 rounded-md p-3 focus:border-[#0d9488] focus:outline-none transition-colors bg-white appearance-none cursor-pointer text-gray-900"
+                  required
+                >
+                  {regions.map((region) => (
+                    <option
+                      key={region}
+                      value={region === "Select Region" ? "" : region}
+                      className="text-gray-900 bg-white"
+                    >
+                      {region}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               {/* Services Checkboxes */}
               <div>
                 <label className="block text-xs text-gray-500 mb-3">Services you are looking for*</label>
@@ -288,8 +355,9 @@ export default function GetInTouch() {
                   onChange={handleInputChange}
                   className="w-full border border-gray-300 rounded-md p-3 focus:border-[#0d9488] focus:outline-none transition-colors bg-white appearance-none cursor-pointer text-gray-900"
                 >
-                  {hearAboutUs.map((option) => (
-                    <option key={option} value={option === "Please Select" ? "" : option} className="text-gray-900 bg-white">
+                  <option value="" className="text-gray-900 bg-white">Please Select</option>
+                  {hearAboutOptions.map((option) => (
+                    <option key={option} value={option} className="text-gray-900 bg-white">
                       {option}
                     </option>
                   ))}
@@ -315,10 +383,17 @@ export default function GetInTouch() {
               {/* Submit Button */}
               <button
                 type="submit"
-                className="bg-gradient-to-r from-[#0055FF] via-[#00B4FF] to-[#00E1FF] hover:opacity-90 text-white font-semibold py-3 px-8 rounded-md transition-all duration-300 shadow-md hover:shadow-lg"
+                disabled={isSubmitting || selectedServices.length === 0}
+                className="bg-gradient-to-r from-[#0055FF] via-[#00B4FF] to-[#00E1FF] hover:opacity-90 text-white font-semibold py-3 px-8 rounded-md transition-all duration-300 shadow-md hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Submit
+                {isSubmitting ? "Submitting…" : "Submit"}
               </button>
+              {submitStatus === "success" && (
+                <p className="text-sm text-green-600">Thanks — we&apos;ll be in touch shortly.</p>
+              )}
+              {submitStatus === "error" && (
+                <p className="text-sm text-red-600">Something went wrong. Please try again.</p>
+              )}
             </form>
           </div>
 

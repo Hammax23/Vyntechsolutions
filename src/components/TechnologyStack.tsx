@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const D = "https://cdn.jsdelivr.net/gh/devicons/devicon/icons";
 const S = "https://cdn.simpleicons.org";
@@ -175,9 +175,62 @@ function ToolLogo({ tool }: { tool: Tool }) {
   );
 }
 
+const LOGO_BY_NAME: Record<string, string> = Object.fromEntries(
+  tabs.flatMap((tab) => tab.tools.filter((t) => t.logo).map((t) => [t.name.toLowerCase(), t.logo as string]))
+);
+
+function resolveTool(name: string): Tool {
+  const logo = LOGO_BY_NAME[name.toLowerCase()];
+  return logo ? { name, logo } : { name };
+}
+
 export default function TechnologyStack() {
+  const [stackTabs, setStackTabs] = useState(tabs);
   const [active, setActive] = useState(tabs[0].id);
-  const current = tabs.find((c) => c.id === active) ?? tabs[0];
+  const [eyebrow, setEyebrow] = useState("Tech stack");
+  const [heading, setHeading] = useState("Technology stack");
+  const [body, setBody] = useState(
+    "React, Next.js, Node.js, and cloud platforms we use to build websites, mobile apps, and custom software for every business."
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/cms/content?type=homepage")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (cancelled) return;
+        const hp = data?.homepage as Record<string, unknown> | undefined;
+        if (!hp) return;
+        if (hp.techStackEyebrow) setEyebrow(String(hp.techStackEyebrow));
+        if (hp.techStackHeading) setHeading(String(hp.techStackHeading));
+        if (hp.techStackBody) setBody(String(hp.techStackBody));
+        const cmsStack = hp.techStack as
+          | { id?: string; label?: string; tools?: string[] }[]
+          | undefined;
+        if (Array.isArray(cmsStack) && cmsStack.length) {
+          const next = cmsStack
+            .filter((t) => t.label && Array.isArray(t.tools) && t.tools.length)
+            .map((t, i) => ({
+              id: String(t.id || `tab-${i}`),
+              label: String(t.label),
+              tools: t.tools!.map((name) => resolveTool(String(name))),
+            }));
+          if (next.length) {
+            setStackTabs(next);
+            setActive(next[0].id);
+          }
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const current = useMemo(
+    () => stackTabs.find((c) => c.id === active) ?? stackTabs[0],
+    [stackTabs, active]
+  );
 
   return (
     <section
@@ -188,17 +241,15 @@ export default function TechnologyStack() {
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
         <div className="text-center mb-10 md:mb-12">
           <p className="text-[11px] font-semibold tracking-[0.22em] uppercase text-[#0055FF] mb-3">
-            Tech stack
+            {eyebrow}
           </p>
           <h2
             id="tech-stack-heading"
             className="text-[28px] sm:text-[2.15rem] font-semibold text-[#111827] mb-3"
           >
-            Technology stack
+            {heading}
           </h2>
-          <p className="text-[15px] text-slate-500 max-w-2xl mx-auto leading-relaxed">
-            React, Next.js, Node.js, and cloud platforms we use to build websites, mobile apps, and custom software for every business.
-          </p>
+          <p className="text-[15px] text-slate-500 max-w-2xl mx-auto leading-relaxed">{body}</p>
         </div>
 
         <div
@@ -206,7 +257,7 @@ export default function TechnologyStack() {
           aria-label="Stack categories"
           className="flex flex-wrap justify-center gap-x-8 sm:gap-x-10 md:gap-x-12 gap-y-1 mb-8 md:mb-10 border-b border-slate-200"
         >
-          {tabs.map((tab) => {
+          {stackTabs.map((tab) => {
             const isActive = tab.id === active;
             return (
               <button

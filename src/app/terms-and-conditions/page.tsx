@@ -53,7 +53,7 @@ export default function TermsAndConditionsPage() {
         if (!page) return;
         if (page.title) setTitle(String(page.title));
         if (page.lastUpdated) setLastUpdated(String(page.lastUpdated));
-        if (page.body && !String(page.body).includes('See live')) {
+        if (page.body) {
           setBody(String(page.body));
         }
       })

@@ -11,6 +11,7 @@ import {
   getCmsOrganizationProfile,
   getCmsStaticPage,
   getCmsLegalPage,
+  getCmsBlogCategories,
 } from "@/lib/cms/content";
 
 export async function GET(req: Request) {
@@ -19,7 +20,9 @@ export async function GET(req: Request) {
 
   switch (type) {
     case "faqs":
-      return NextResponse.json({ faqs: await getCmsFaqs() });
+      return NextResponse.json({
+        faqs: await getCmsFaqs(searchParams.get("page") || undefined),
+      });
     case "global-seo":
       return NextResponse.json({ globalSeo: await getCmsGlobalSeo() });
     case "homepage":
@@ -38,6 +41,8 @@ export async function GET(req: Request) {
       return NextResponse.json({ logos: await getCmsClientLogos() });
     case "organization":
       return NextResponse.json({ organization: await getCmsOrganizationProfile() });
+    case "blog-categories":
+      return NextResponse.json({ categories: await getCmsBlogCategories() });
     case "static-page": {
       const slug = searchParams.get("slug");
       if (!slug) return NextResponse.json({ error: "slug required" }, { status: 400 });
@@ -62,6 +67,7 @@ export async function GET(req: Request) {
             "jobs",
             "client-logos",
             "organization",
+            "blog-categories",
             "static-page",
             "legal-page",
           ],

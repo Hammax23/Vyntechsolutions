@@ -4,7 +4,8 @@
   "info": {
     "singularName": "service",
     "pluralName": "services",
-    "displayName": "Service"
+    "displayName": "01. Services",
+    "description": "Service pages: web, mobile, SEO, cloud, and more"
   },
   "options": {
     "draftAndPublish": true

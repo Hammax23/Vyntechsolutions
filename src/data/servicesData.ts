@@ -66,28 +66,28 @@ export const servicesData: Record<string, ServiceData> = {
     ],
     "process": [
       {
-        "step": "Requirements",
-        "description": "We discuss what you need, who will use it, and what problems it should solve."
+        "step": "Discovery & Planning",
+        "description": "We map your goals, audience, and pages, then lock scope, timeline, and success metrics before design starts."
       },
       {
-        "step": "Planning",
-        "description": "Technical approach, timeline, and milestones, you know what to expect."
+        "step": "UX & Visual Design",
+        "description": "Wireframes and polished UI so the site looks right and converts, reviewed with you before we write code."
       },
       {
         "step": "Development",
-        "description": "We build in iterations. You see progress weekly, not after months."
+        "description": "We build in React and Next.js with clean, SEO-ready structure. You see progress in weekly demos, not months later."
       },
       {
-        "step": "Testing",
-        "description": "We test across browsers and devices. Bugs get fixed before launch."
+        "step": "QA & Performance",
+        "description": "Cross-browser and device testing, speed checks, and bug fixes so launch feels solid, not rushed."
       },
       {
-        "step": "Deployment",
-        "description": "We set up hosting, domains, SSL, and get your site live."
+        "step": "Launch",
+        "description": "Hosting, domain, SSL, and go-live handled carefully so your site is live without drama or downtime."
       },
       {
-        "step": "Handover",
-        "description": "Documentation, training if needed, and support for any issues."
+        "step": "Support & Growth",
+        "description": "Training, documentation, and ongoing tweaks so the site stays fast, secure, and easy to update."
       }
     ],
     "stats": [
@@ -190,28 +190,28 @@ export const servicesData: Record<string, ServiceData> = {
     ],
     "process": [
       {
-        "step": "Concept",
-        "description": "We define what the app does, who uses it, and the core features for v1."
+        "step": "Product Discovery",
+        "description": "We define who the app is for, the must-have features for v1, and a realistic path to App Store and Play Store."
       },
       {
-        "step": "Design",
-        "description": "Wireframes first, then full UI designs. You approve before we code."
+        "step": "UI/UX Design",
+        "description": "Wireframes first, then full mobile screens. You approve the flow on a prototype before development begins."
       },
       {
-        "step": "Development",
-        "description": "We build the app with regular builds for you to test on your phone."
+        "step": "App Development",
+        "description": "Native or cross-platform builds with regular test installs on your phone so feedback stays early and clear."
       },
       {
-        "step": "Testing",
-        "description": "Bug fixing, performance testing, and testing on real devices."
+        "step": "Device QA",
+        "description": "Real-device testing for speed, crashes, and edge cases across iOS and Android before submission."
       },
       {
-        "step": "Launch",
-        "description": "We handle App Store and Google Play submission and approval."
+        "step": "Store Launch",
+        "description": "We handle App Store and Google Play listing, assets, review notes, and approval follow-up."
       },
       {
-        "step": "Updates",
-        "description": "Bug fixes, OS updates, and new features as needed."
+        "step": "Updates & Care",
+        "description": "OS updates, bug fixes, and feature releases so the app stays current after launch day."
       }
     ],
     "stats": [
@@ -290,28 +290,28 @@ export const servicesData: Record<string, ServiceData> = {
     ],
     "process": [
       {
-        "step": "Audit",
-        "description": "We look at your current setup (or requirements) and identify what needs to be done."
+        "step": "Cloud Assessment",
+        "description": "We review your current stack or requirements and identify risks, cost drivers, and the right cloud fit."
       },
       {
-        "step": "Planning",
-        "description": "Architecture design, cost estimates, and migration plan if applicable."
+        "step": "Architecture Design",
+        "description": "Clear architecture, cost estimates, security baseline, and a migration plan if you are moving workloads."
       },
       {
-        "step": "Setup",
-        "description": "We configure the infrastructure, security groups, databases, and monitoring."
+        "step": "Infrastructure Setup",
+        "description": "We configure servers, networks, databases, IAM, and monitoring with production-ready defaults."
       },
       {
-        "step": "Migration",
-        "description": "Data and application migration with testing at each step."
+        "step": "Migration & Cutover",
+        "description": "Data and apps move in stages with rollback options so downtime stays short and controlled."
       },
       {
-        "step": "Testing",
-        "description": "Load testing, security checks, and failover testing."
+        "step": "Validation",
+        "description": "Load, security, and failover checks confirm the environment holds under real traffic."
       },
       {
-        "step": "Handover",
-        "description": "Documentation and training for your team to manage day-to-day."
+        "step": "Ops Handover",
+        "description": "Runbooks, access, and team training so your staff can manage day-to-day with confidence."
       }
     ],
     "stats": [
@@ -390,28 +390,28 @@ export const servicesData: Record<string, ServiceData> = {
     ],
     "process": [
       {
-        "step": "Problem Definition",
-        "description": "What are you trying to automate or improve? We define the actual use case."
+        "step": "Use-Case Definition",
+        "description": "We pin down the business problem, success metrics, and where AI genuinely saves time or improves outcomes."
       },
       {
-        "step": "Feasibility",
-        "description": "Is AI the right solution? Sometimes simpler approaches work better."
+        "step": "Feasibility Check",
+        "description": "We validate data, model options, and ROI. If a simpler automation wins, we say so upfront."
       },
       {
         "step": "Prototype",
-        "description": "We build a quick proof-of-concept so you can see if it works for your needs."
+        "description": "A working proof of concept you can try with real samples before committing to full build."
       },
       {
-        "step": "Development",
-        "description": "Full implementation with proper error handling and edge cases."
+        "step": "Build & Guardrails",
+        "description": "Production implementation with error handling, prompts, limits, and privacy controls baked in."
       },
       {
-        "step": "Integration",
-        "description": "Connect it to your existing systems, databases, and workflows."
+        "step": "System Integration",
+        "description": "We connect the solution to your apps, CRMs, and workflows so it fits how your team already works."
       },
       {
-        "step": "Monitoring",
-        "description": "Track usage, accuracy, and costs. Adjust as needed."
+        "step": "Monitor & Improve",
+        "description": "Usage, accuracy, and cost tracking with ongoing tuning as your data and needs evolve."
       }
     ],
     "stats": [
@@ -490,28 +490,28 @@ export const servicesData: Record<string, ServiceData> = {
     ],
     "process": [
       {
-        "step": "Current State",
-        "description": "How do you deploy now? What is painful? What breaks often?"
+        "step": "Delivery Audit",
+        "description": "We map how you ship today, what breaks often, and where releases slow your team down."
       },
       {
-        "step": "Design",
-        "description": "We design the pipeline and infrastructure based on your actual needs."
+        "step": "Pipeline Design",
+        "description": "CI/CD, environments, and infrastructure designed around your stack, not a generic template."
       },
       {
-        "step": "Setup",
-        "description": "Configure CI/CD, containers, hosting, and monitoring tools."
+        "step": "Automation Setup",
+        "description": "Pipelines, containers, and infra-as-code configured so builds and deploys become routine."
       },
       {
-        "step": "Migration",
-        "description": "Move your existing apps to the new setup with minimal disruption."
+        "step": "Safe Migration",
+        "description": "Existing apps move onto the new flow with staged rollouts and clear rollback paths."
       },
       {
-        "step": "Documentation",
-        "description": "Your team needs to understand it. We write clear docs."
+        "step": "Observability",
+        "description": "Alerts, logs, and dashboards so issues surface before customers feel them."
       },
       {
-        "step": "Training",
-        "description": "We show your devs how to use and maintain the new setup."
+        "step": "Team Enablement",
+        "description": "Docs and hands-on training so your developers own the pipeline with confidence."
       }
     ],
     "stats": [
@@ -590,28 +590,28 @@ export const servicesData: Record<string, ServiceData> = {
     ],
     "process": [
       {
-        "step": "Brief",
-        "description": "What does the app/site need to do? Who uses it? Any brand guidelines?"
+        "step": "Design Brief",
+        "description": "We gather goals, users, brand rules, and constraints so the design solves a real product problem."
       },
       {
         "step": "Wireframes",
-        "description": "Rough layouts to nail down structure and flow before we polish visuals."
+        "description": "Low-fidelity layouts lock structure and flow before visual polish, saving costly rework later."
       },
       {
         "step": "Visual Design",
-        "description": "Full designs with real content, proper spacing, and your brand style."
+        "description": "High-fidelity screens with your brand, real content, and clear hierarchy across key journeys."
       },
       {
-        "step": "Prototype",
-        "description": "Clickable prototype so you can test the flow before development."
+        "step": "Interactive Prototype",
+        "description": "Clickable flows you can test with stakeholders before a single line of code is written."
       },
       {
-        "step": "Revisions",
-        "description": "We refine based on your feedback. Usually 2-3 rounds."
+        "step": "Iteration",
+        "description": "Focused revision rounds based on feedback until the experience feels clear and on-brand."
       },
       {
-        "step": "Handoff",
-        "description": "Organized Figma file with components, specs, and assets for devs."
+        "step": "Dev Handoff",
+        "description": "Organized Figma files, components, and specs so engineering builds exactly what was approved."
       }
     ],
     "stats": [
@@ -690,28 +690,28 @@ export const servicesData: Record<string, ServiceData> = {
     ],
     "process": [
       {
-        "step": "Requirements",
-        "description": "What are you selling? How many products? Any special requirements?"
+        "step": "Store Discovery",
+        "description": "We clarify catalog size, payments, shipping rules, and the growth goals your store must support."
       },
       {
         "step": "Platform Choice",
-        "description": "We recommend Shopify, WooCommerce, or custom based on your needs."
+        "description": "Shopify, WooCommerce, or custom, recommended based on operations, budget, and how you sell."
       },
       {
-        "step": "Design",
-        "description": "Store design, homepage, product pages, cart, checkout."
+        "step": "Store Design",
+        "description": "Homepage, product pages, cart, and checkout designed to feel trustworthy and convert under load."
       },
       {
-        "step": "Setup",
-        "description": "Products, categories, payments, shipping, taxes, all configured."
+        "step": "Build & Configure",
+        "description": "Products, taxes, gateways, and shipping wired correctly so orders flow without manual workarounds."
       },
       {
-        "step": "Testing",
-        "description": "Test orders, payment flows, edge cases before going live."
+        "step": "Checkout QA",
+        "description": "Test orders, payment edge cases, and mobile checkout before a single real customer pays."
       },
       {
-        "step": "Launch",
-        "description": "Go live, monitor for issues, fix anything that comes up."
+        "step": "Go Live",
+        "description": "Launch with monitoring so issues are caught early and the store stays stable on busy days."
       }
     ],
     "stats": [
@@ -790,28 +790,28 @@ export const servicesData: Record<string, ServiceData> = {
     ],
     "process": [
       {
-        "step": "Discovery",
-        "description": "We learn your current workflow. What works? What does not? What is manual?"
+        "step": "Workflow Discovery",
+        "description": "We learn how your team works today, what is manual, and where software can remove friction."
       },
       {
-        "step": "Scope",
-        "description": "Define exactly what the software needs to do. No scope creep."
+        "step": "Scope Definition",
+        "description": "Clear features, roles, and boundaries so the build stays focused and on budget."
       },
       {
-        "step": "Design",
-        "description": "Database structure, user interface, how it fits with existing systems."
+        "step": "System Design",
+        "description": "Data model, interfaces, and integrations planned around your existing tools and processes."
       },
       {
-        "step": "Build",
-        "description": "Iterative development. You see progress and can give feedback regularly."
+        "step": "Iterative Build",
+        "description": "Working slices delivered regularly so you can steer the product while it is still taking shape."
       },
       {
-        "step": "Test",
-        "description": "We test with real scenarios. You test before it goes live."
+        "step": "UAT & Hardening",
+        "description": "Real scenarios, security checks, and your team's sign-off before anything hits production."
       },
       {
-        "step": "Deploy",
-        "description": "We handle hosting, training, and support for the first few months."
+        "step": "Deploy & Train",
+        "description": "Go-live, admin training, and early support so adoption sticks after day one."
       }
     ],
     "stats": [
@@ -890,28 +890,28 @@ export const servicesData: Record<string, ServiceData> = {
     ],
     "process": [
       {
-        "step": "Audit",
-        "description": "We check your site for SEO issues and see where you stand vs competitors."
+        "step": "SEO Audit",
+        "description": "Technical health, rankings, and competitor gaps reviewed so we know exactly where to start."
       },
       {
         "step": "Quick Wins",
-        "description": "Fix obvious issues first, broken links, missing tags, slow pages."
+        "description": "Broken links, missing tags, and speed issues fixed first for early measurable lift."
       },
       {
-        "step": "Keyword Plan",
-        "description": "What should you rank for? We find keywords with traffic and intent."
+        "step": "Keyword Strategy",
+        "description": "Keywords chosen for real search intent and business value, not vanity volume."
       },
       {
-        "step": "Optimization",
-        "description": "Update existing pages, create new content, build authority."
+        "step": "On-Page & Content",
+        "description": "Pages and content optimized so Google understands what you offer and who it is for."
       },
       {
-        "step": "Tracking",
-        "description": "Set up proper tracking so you know what is working."
+        "step": "Tracking Setup",
+        "description": "Analytics and Search Console configured so progress is visible in leads, not just rankings."
       },
       {
-        "step": "Monthly Work",
-        "description": "Ongoing optimization, new content, link building, reporting."
+        "step": "Ongoing Growth",
+        "description": "Monthly optimization, new content, and reporting that keeps momentum compounding."
       }
     ],
     "stats": [
@@ -990,28 +990,28 @@ export const servicesData: Record<string, ServiceData> = {
     ],
     "process": [
       {
-        "step": "Handover",
-        "description": "You give us access. We review the codebase and document how things work."
+        "step": "Access & Review",
+        "description": "We take access, review the codebase and hosting, and document how your system actually runs."
       },
       {
         "step": "Retainer Setup",
-        "description": "We agree on hours per month and priority levels for requests."
+        "description": "Hours, priorities, and response times agreed upfront so support is predictable, not reactive chaos."
       },
       {
-        "step": "Request System",
-        "description": "You submit requests via email or Slack. We track everything."
+        "step": "Request Channel",
+        "description": "A simple intake via email or Slack with tracking, so nothing gets lost between conversations."
       },
       {
-        "step": "Regular Work",
-        "description": "We handle updates, fixes, and improvements each month."
+        "step": "Ongoing Care",
+        "description": "Updates, backups, security patches, and fixes handled on a steady monthly cadence."
       },
       {
-        "step": "Reporting",
-        "description": "Monthly summary of what we did and any recommendations."
+        "step": "Monthly Reporting",
+        "description": "A clear summary of what we shipped, what we watched, and what we recommend next."
       },
       {
-        "step": "Availability",
-        "description": "Need something urgent? We are reachable. Response times defined upfront."
+        "step": "Priority Response",
+        "description": "Urgent issues get defined SLAs so someone real is reachable when something is down."
       }
     ],
     "stats": [
@@ -1105,28 +1105,28 @@ export const servicesData: Record<string, ServiceData> = {
     ],
     "process": [
       {
-        "step": "Consultation",
-        "description": "We review your current financial situation and understand your goals."
+        "step": "Financial Consultation",
+        "description": "We review your current books, tax position, and goals so advice starts from your real numbers."
       },
       {
-        "step": "Assessment",
-        "description": "Analyze your books, identify issues, and find optimization opportunities."
+        "step": "Books Assessment",
+        "description": "Gaps, risks, and cleanup opportunities identified before filing or planning decisions."
       },
       {
-        "step": "Strategy",
-        "description": "Develop a tailored tax and financial strategy for your situation."
+        "step": "Tax Strategy",
+        "description": "A practical plan for filings, deductions, and timing tailored to your business structure."
       },
       {
         "step": "Implementation",
-        "description": "Set up systems, file returns, and execute the financial plan."
+        "description": "Returns filed, systems set up, and the plan put into motion with clear deadlines."
       },
       {
-        "step": "Monitoring",
-        "description": "Ongoing review and adjustments as regulations and your business change."
+        "step": "Ongoing Monitoring",
+        "description": "Rules and your business change, we adjust so compliance and savings stay aligned."
       },
       {
-        "step": "Reporting",
-        "description": "Regular financial reports and tax summaries so you always know where you stand."
+        "step": "Clear Reporting",
+        "description": "Regular summaries so you always know where cash, tax, and obligations stand."
       }
     ],
     "stats": [

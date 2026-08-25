@@ -2,20 +2,62 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+type Promo = {
+  heading?: string;
+  body?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  active?: boolean;
+};
+
+const FALLBACK: Promo = {
+  heading: "SEO Packages",
+  body: "From $799/mo",
+  ctaLabel: "View Packages",
+  ctaHref: "/services/seo-digital-marketing#packages",
+};
 
 export default function AnnouncementBar() {
-  const [isVisible, setIsVisible] = useState(true);
+  const pathname = usePathname();
+  const [isVisible, setIsVisible] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [promo, setPromo] = useState<Promo | null>(null);
+
+  const hideWidgets =
+    pathname?.startsWith("/admin") ||
+    pathname?.startsWith("/quote") ||
+    pathname?.startsWith("/verify");
 
   useEffect(() => {
-    // Check if user has dismissed the bar in this session
+    if (hideWidgets) return;
     const dismissed = sessionStorage.getItem("announcementDismissed");
-    if (dismissed) {
-      setIsVisible(false);
-    }
-    // Start animation after mount
-    setTimeout(() => setIsAnimating(true), 100);
-  }, []);
+    if (dismissed) return;
+
+    let cancelled = false;
+    fetch("/api/cms/content?type=promos&slot=announcement-bar")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (cancelled) return;
+        const list = (data?.promos || []) as Promo[];
+        const active = list.find((p) => p.active !== false) || list[0];
+        if (!active && !FALLBACK.heading) return;
+        setPromo(active || FALLBACK);
+        setIsVisible(true);
+        setTimeout(() => setIsAnimating(true), 100);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setPromo(FALLBACK);
+        setIsVisible(true);
+        setTimeout(() => setIsAnimating(true), 100);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [hideWidgets]);
 
   const handleDismiss = () => {
     setIsAnimating(false);
@@ -25,7 +67,12 @@ export default function AnnouncementBar() {
     }, 300);
   };
 
-  if (!isVisible) return null;
+  if (hideWidgets || !isVisible || !promo) return null;
+
+  const href = promo.ctaHref || FALLBACK.ctaHref!;
+  const label = promo.ctaLabel || FALLBACK.ctaLabel!;
+  const heading = promo.heading || FALLBACK.heading!;
+  const body = promo.body || FALLBACK.body!;
 
   return (
     <div
@@ -34,33 +81,27 @@ export default function AnnouncementBar() {
       }`}
     >
       <div className="max-w-[1400px] mx-auto px-4 py-2.5 flex items-center justify-center gap-4 relative">
-        {/* Sparkle Animation */}
-        <div className="absolute left-4 hidden sm:flex items-center gap-1">
-          <span className="animate-pulse">✨</span>
-        </div>
-
-        {/* Main Content */}
         <div className="flex items-center gap-2 sm:gap-4 text-white text-sm sm:text-base">
-          <span className="hidden sm:inline-block bg-white/20 px-2 py-0.5 rounded text-xs font-bold animate-pulse">
+          <span className="hidden sm:inline-block bg-white/20 px-2 py-0.5 rounded text-xs font-bold">
             LIMITED OFFER
           </span>
           <span className="font-medium text-center">
-            <span className="hidden sm:inline">🚀 Boost Your Rankings with Our</span>
-            <span className="sm:hidden">🚀</span>
-            {" "}
-            <span className="font-bold">SEO Packages</span>
-            {" "}
-            <span className="hidden md:inline">Starting from $799/mo</span>
+            <span className="font-bold">{heading}</span>
+            {body ? (
+              <>
+                {" "}
+                <span className="hidden md:inline">{body}</span>
+              </>
+            ) : null}
           </span>
           <Link
-            href="/services/seo-digital-marketing#packages"
+            href={href}
             className="bg-white text-[#0055FF] px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold hover:bg-white/90 transition-all duration-300 hover:scale-105 whitespace-nowrap"
           >
-            View Packages
+            {label}
           </Link>
         </div>
 
-        {/* Close Button */}
         <button
           onClick={handleDismiss}
           className="absolute right-2 sm:right-4 text-white/80 hover:text-white transition-colors p-1"

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { metadataForIndustry } from "@/lib/cms/metadata";
+import CmsStructuredData from "@/components/CmsStructuredData";
 
 export async function generateMetadata({
   params,
@@ -9,6 +10,17 @@ export async function generateMetadata({
   return metadataForIndustry(params.slug);
 }
 
-export default function IndustrySlugLayout({ children }: { children: React.ReactNode }) {
-  return children;
+export default function IndustrySlugLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: { slug: string };
+}) {
+  return (
+    <>
+      <CmsStructuredData industrySlug={params.slug} />
+      {children}
+    </>
+  );
 }

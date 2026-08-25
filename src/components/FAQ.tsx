@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const HOME_FAQS = [
   {
@@ -55,12 +55,47 @@ export const HOME_FAQS = [
 
 export default function FAQ({ faqs }: { faqs?: { question: string; answer: string }[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [cmsFaqs, setCmsFaqs] = useState<{ question: string; answer: string }[]>([]);
+  const [eyebrow, setEyebrow] = useState("FAQ");
+  const [heading, setHeading] = useState("Frequently asked questions");
+  const [intro, setIntro] = useState(
+    "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+    Promise.all([
+      fetch("/api/cms/content?type=homepage").then((r) => (r.ok ? r.json() : null)),
+      faqs?.length
+        ? Promise.resolve(null)
+        : fetch("/api/cms/content?type=faqs&page=home").then((r) => (r.ok ? r.json() : null)),
+    ])
+      .then(([homeData, faqData]) => {
+        if (cancelled) return;
+        const hp = homeData?.homepage as Record<string, unknown> | undefined;
+        if (hp?.faqEyebrow) setEyebrow(String(hp.faqEyebrow));
+        if (hp?.faqHeading) setHeading(String(hp.faqHeading));
+        if (hp?.faqIntro) setIntro(String(hp.faqIntro));
+        const list = faqData?.faqs as { question?: string; answer?: string }[] | undefined;
+        if (list?.length) {
+          setCmsFaqs(
+            list
+              .filter((f) => f.question && f.answer)
+              .map((f) => ({ question: String(f.question), answer: String(f.answer) }))
+          );
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [faqs]);
 
   const toggleAccordion = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-  const displayFaqs = faqs && faqs.length > 0 ? faqs : HOME_FAQS;
+  const displayFaqs = faqs && faqs.length > 0 ? faqs : cmsFaqs.length ? cmsFaqs : HOME_FAQS;
 
   if (!displayFaqs || displayFaqs.length === 0) return null;
 
@@ -119,13 +154,13 @@ export default function FAQ({ faqs }: { faqs?: { question: string; answer: strin
       <div className="max-w-[1600px] mx-auto px-5 sm:px-6 md:px-10 lg:px-14">
         <div className="text-center mb-12 md:mb-14">
           <p className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[#0055FF] mb-3">
-            FAQ
+            {eyebrow}
           </p>
           <h2 className="text-[28px] sm:text-4xl font-semibold tracking-tight text-[#0f172a] mb-3">
-            Frequently asked questions
+            {heading}
           </h2>
           <p className="text-slate-500 text-[15px] sm:text-base max-w-xl mx-auto leading-relaxed">
-            Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.
+            {intro}
           </p>
         </div>
 

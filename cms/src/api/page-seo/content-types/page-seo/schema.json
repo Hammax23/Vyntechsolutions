@@ -4,12 +4,25 @@
   "info": {
     "singularName": "page-seo",
     "pluralName": "page-seos",
-    "displayName": "Page SEO"
+    "displayName": "11. Page SEO",
+    "description": "Per-route SEO overrides"
   },
-  "options": { "draftAndPublish": true },
+  "options": {
+    "draftAndPublish": true
+  },
   "attributes": {
-    "path": { "type": "string", "required": true, "unique": true },
-    "h1": { "type": "string" },
-    "seo": { "type": "component", "repeatable": false, "component": "shared.seo" }
+    "path": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "h1": {
+      "type": "string"
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo"
+    }
   }
 }

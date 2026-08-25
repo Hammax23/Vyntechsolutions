@@ -13,6 +13,7 @@ type HeroMediaItem = {
 type HeroSlide = {
   heading: string;
   subtext: string;
+  media?: HeroMediaItem;
 };
 
 const DEFAULT_HERO_MEDIA: HeroMediaItem[] = [
@@ -20,6 +21,9 @@ const DEFAULT_HERO_MEDIA: HeroMediaItem[] = [
   { type: "video", src: "/cover1.mp4", mobileSrc: "/cover1-mobile.mp4" },
   { type: "video", src: "/your-tech-partner.mp4", mobileSrc: "/your-tech-partner.mp4" },
 ];
+
+const DEFAULT_WORDS = ["Build", "Innovate", "Scale"];
+const DEFAULT_CTA = "GET FREE CONSULTATION";
 
 // Duration for images (in milliseconds)
 const IMAGE_DISPLAY_DURATION = 6000;
@@ -53,7 +57,10 @@ const getIsMobile = () => {
 };
 
 export default function HeroSection() {
-  const [slides] = useState<HeroSlide[]>(DEFAULT_SLIDES);
+  const [slides, setSlides] = useState<HeroSlide[]>(DEFAULT_SLIDES);
+  const [heroMedia, setHeroMedia] = useState<HeroMediaItem[]>(DEFAULT_HERO_MEDIA);
+  const [heroWords, setHeroWords] = useState<string[]>(DEFAULT_WORDS);
+  const [ctaLabel, setCtaLabel] = useState(DEFAULT_CTA);
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
@@ -61,13 +68,54 @@ export default function HeroSection() {
   const [mediaLoaded, setMediaLoaded] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const imageTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const heroMedia = DEFAULT_HERO_MEDIA;
   const heroMediaLengthRef = useRef(heroMedia.length);
   const slidesLengthRef = useRef(slides.length);
 
   useEffect(() => {
+    let cancelled = false;
+    fetch("/api/cms/content?type=homepage")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (cancelled) return;
+        const hp = data?.homepage as Record<string, unknown> | undefined;
+        if (!hp) return;
+        const cmsSlides = hp.heroSlides as
+          | { heading?: string; subtext?: string; mediaUrl?: string; mediaType?: string }[]
+          | undefined;
+        if (cmsSlides?.length) {
+          setSlides(
+            cmsSlides.map((s, i) => ({
+              heading: String(s.heading || DEFAULT_SLIDES[i % DEFAULT_SLIDES.length].heading),
+              subtext: String(s.subtext || DEFAULT_SLIDES[i % DEFAULT_SLIDES.length].subtext),
+            }))
+          );
+          setHeroMedia(
+            cmsSlides.map((s, i) => {
+              const fallback = DEFAULT_HERO_MEDIA[i % DEFAULT_HERO_MEDIA.length];
+              const src = String(s.mediaUrl || fallback.src);
+              const type = s.mediaType === "image" ? "image" : "video";
+              return { type, src, mobileSrc: src };
+            })
+          );
+        }
+        if (Array.isArray(hp.heroWords) && hp.heroWords.length) {
+          setHeroWords(hp.heroWords.map((w) => String(w)));
+        }
+        if (hp.heroCtaLabel) setCtaLabel(String(hp.heroCtaLabel));
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
     slidesLengthRef.current = slides.length;
   }, [slides.length]);
+
+  useEffect(() => {
+    heroMediaLengthRef.current = heroMedia.length;
+  }, [heroMedia.length]);
 
   const currentMedia = heroMedia[currentMediaIndex] ?? heroMedia[0];
 
@@ -308,7 +356,7 @@ export default function HeroSection() {
                 hideHeroText ? "mt-16 md:mt-24" : "mt-2 md:mt-4"
               }`}
             >
-              GET FREE CONSULTATION
+              {ctaLabel}
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
@@ -322,30 +370,17 @@ export default function HeroSection() {
               className="hidden md:block w-full mt-16 pt-10 border-t border-white/10 max-w-3xl mx-auto"
             >
               <div className="grid grid-cols-3 divide-x divide-white/10 text-center">
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.8 }}
-                  className="flex flex-col items-center justify-center px-2 sm:px-4"
-                >
-                  <span className="text-3xl md:text-4xl font-light text-white">Build</span>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 1.0 }}
-                  className="flex flex-col items-center justify-center px-2 sm:px-4"
-                >
-                  <span className="text-3xl md:text-4xl font-light text-white">Innovate</span>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 1.2 }}
-                  className="flex flex-col items-center justify-center px-2 sm:px-4"
-                >
-                  <span className="text-3xl md:text-4xl font-light text-white">Scale</span>
-                </motion.div>
+                {heroWords.slice(0, 3).map((word, index) => (
+                  <motion.div
+                    key={word}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, delay: 0.8 + index * 0.2 }}
+                    className="flex flex-col items-center justify-center px-2 sm:px-4"
+                  >
+                    <span className="text-xl md:text-2xl font-light tracking-[0.08em] text-white">{word}</span>
+                  </motion.div>
+                ))}
               </div>
             </motion.div>
           </div>

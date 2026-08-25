@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { COMPANY_PHONE_E164 } from "@/lib/company";
 
 const siteUrl = "https://vyntechsolutions.ca";
 
@@ -68,7 +69,6 @@ export const defaultSEO: Metadata = {
     canonical: siteUrl,
     languages: {
       "en-CA": siteUrl,
-      "fr-CA": `${siteUrl}/fr`,
     },
   },
   openGraph: {
@@ -121,9 +121,7 @@ export const defaultSEO: Metadata = {
     other: [{ rel: "manifest", url: "/favicon/site.webmanifest" }],
   },
   verification: {
-    google: "your-google-verification-code",
-    // yandex: "your-yandex-verification-code",
-    // bing: "your-bing-verification-code",
+    // Set in Strapi Global SEO → googleSiteVerification / bingSiteVerification
   },
   category: "technology",
 };
@@ -153,7 +151,7 @@ export const organizationSchema = {
   contactPoint: [
     {
       "@type": "ContactPoint",
-      // telephone: "+1-416-893-5779",
+      telephone: COMPANY_PHONE_E164,
       contactType: "customer service",
       email: "info@vyntechsolutions.ca",
       areaServed: "CA",
@@ -188,7 +186,7 @@ export const localBusinessSchema = {
   name: "VynTech Solutions",
   image: `${siteUrl}/favicon/android-chrome-512x512.png`,
   url: siteUrl,
-  // telephone: "+1-416-893-5779",
+  telephone: COMPANY_PHONE_E164,
   email: "info@vyntechsolutions.ca",
   priceRange: "$$",
   address: {
@@ -215,20 +213,12 @@ export const localBusinessSchema = {
   },
 };
 
-// Structured Data - WebSite with SearchAction
+// Structured Data - WebSite (SearchAction omitted until a public /search route exists)
 export const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "VynTech Solutions",
   url: siteUrl,
-  potentialAction: {
-    "@type": "SearchAction",
-    target: {
-      "@type": "EntryPoint",
-      urlTemplate: `${siteUrl}/search?q={search_term_string}`,
-    },
-    "query-input": "required name=search_term_string",
-  },
 };
 
 // Services Schema

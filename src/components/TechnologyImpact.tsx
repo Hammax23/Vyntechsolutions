@@ -3,12 +3,20 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 
-const stats = [
+type ImpactStat = { id: number; number: string; suffix: string; label: string };
+
+const DEFAULT_STATS: ImpactStat[] = [
   { id: 1, number: "12", suffix: "+", label: "Years of industry experience" },
   { id: 2, number: "50", suffix: "+", label: "Projects successfully delivered" },
   { id: 3, number: "4", suffix: "+", label: "Countries served worldwide" },
   { id: 4, number: "40", suffix: "+", label: "Happy clients & partners" },
 ];
+
+function parseStatValue(raw: string): { number: string; suffix: string } {
+  const m = String(raw || "").trim().match(/^(\d+(?:\.\d+)?)(.*)$/);
+  if (!m) return { number: "0", suffix: String(raw || "") };
+  return { number: m[1], suffix: m[2] || "" };
+}
 
 function useCountUp(end: number, duration = 2000, start = false) {
   const [count, setCount] = useState(0);
@@ -34,11 +42,11 @@ function StatCell({
   index,
   isVisible,
 }: {
-  stat: (typeof stats)[0];
+  stat: ImpactStat;
   index: number;
   isVisible: boolean;
 }) {
-  const count = useCountUp(parseInt(stat.number), 1800, isVisible);
+  const count = useCountUp(parseInt(stat.number, 10) || 0, 1800, isVisible);
 
   return (
     <div
@@ -63,7 +71,49 @@ function StatCell({
 
 export default function TechnologyImpact() {
   const [isVisible, setIsVisible] = useState(false);
+  const [eyebrow, setEyebrow] = useState("Proven delivery");
+  const [heading, setHeading] = useState("Turning technology into\nreal business impact");
+  const [body, setBody] = useState(
+    "We don't just build software we build outcomes. Every project is guided by one question: Does this genuinely move your business forward? That focus is what turns technology into growth, and growth into lasting success."
+  );
+  const [ctaLabel, setCtaLabel] = useState("About VynTech");
+  const [ctaHref, setCtaHref] = useState("/about");
+  const [stats, setStats] = useState<ImpactStat[]>(DEFAULT_STATS);
   const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/cms/content?type=homepage")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (cancelled) return;
+        const hp = data?.homepage as Record<string, unknown> | undefined;
+        if (!hp) return;
+        if (hp.impactEyebrow) setEyebrow(String(hp.impactEyebrow));
+        if (hp.impactHeading) setHeading(String(hp.impactHeading));
+        if (hp.impactBody) setBody(String(hp.impactBody));
+        if (hp.impactCtaLabel) setCtaLabel(String(hp.impactCtaLabel));
+        if (hp.impactCtaHref) setCtaHref(String(hp.impactCtaHref));
+        const cmsStats = hp.impactStats as { value?: string; label?: string }[] | undefined;
+        if (cmsStats?.length) {
+          setStats(
+            cmsStats.map((s, i) => {
+              const parsed = parseStatValue(String(s.value || "0"));
+              return {
+                id: i + 1,
+                number: parsed.number,
+                suffix: parsed.suffix,
+                label: String(s.label || DEFAULT_STATS[i % DEFAULT_STATS.length].label),
+              };
+            })
+          );
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -77,6 +127,8 @@ export default function TechnologyImpact() {
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
+
+  const headingLines = heading.split("\n");
 
   return (
     <section ref={sectionRef} className="relative w-full overflow-hidden bg-[#07101C]">
@@ -99,23 +151,25 @@ export default function TechnologyImpact() {
         >
           <div className="max-w-[640px]">
             <p className="text-[11px] font-semibold tracking-[0.22em] uppercase text-[#7EB6FF] mb-4">
-              Proven delivery
+              {eyebrow}
             </p>
             <h2 className="text-[28px] sm:text-4xl md:text-[2.85rem] font-semibold tracking-tight text-white leading-[1.12]">
-              Turning technology into
-              <br className="hidden sm:block" /> real business impact
+              {headingLines.map((line, i) => (
+                <span key={i}>
+                  {i > 0 ? <br className="hidden sm:block" /> : null}
+                  {line}
+                </span>
+              ))}
             </h2>
           </div>
 
           <div className="max-w-[440px] lg:pb-1">
-            <p className="text-[15px] sm:text-base text-slate-400 leading-relaxed mb-7">
-              We don&apos;t just build software we build outcomes. Every project is guided by one question: Does this genuinely move your business forward? That focus is what turns technology into growth, and growth into lasting success.
-            </p>
+            <p className="text-[15px] sm:text-base text-slate-400 leading-relaxed mb-7">{body}</p>
             <Link
-              href="/about"
+              href={ctaHref}
               className="inline-flex items-center gap-2 border border-white/20 text-white px-6 py-2.5 text-[12px] font-medium tracking-[0.14em] uppercase hover:bg-white hover:text-[#07101C] transition-colors duration-300"
             >
-              About VynTech
+              {ctaLabel}
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>

@@ -159,7 +159,7 @@ export default function OurServices() {
               serviceCards[i % serviceCards.length];
             return {
               title: withoutWordDash(String(s.title || fallback.title)),
-              description: withoutWordDash(fallback.description),
+              description: withoutWordDash(String(s.description || fallback.description)),
               href: `/services/${s.slug}`,
               art: fallback.art,
             };
@@ -400,6 +400,13 @@ export default function OurServices() {
       if (track.scrollWidth <= viewport.clientWidth) return;
       const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
       if (delta === 0) return;
+
+      // At the last card, release downward scroll to the page.
+      // At the first card, release upward scroll to the page.
+      const atEnd = s.x <= s.max + 1;
+      const atStart = s.x >= s.min - 1;
+      if ((delta > 0 && atEnd) || (delta < 0 && atStart)) return;
+
       e.preventDefault();
       stopRaf();
       s.snapping = false;

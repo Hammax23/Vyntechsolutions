@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { renderInvoicePdf } from "@/lib/admin/render-invoice-pdf";
 import type { InvoiceData } from "@/lib/admin/invoice-types";
-import { SITE_URL } from "@/lib/seopanel/constants";
+import { SITE_URL } from "@/lib/company";
 
 export async function POST(request: NextRequest) {
   try {

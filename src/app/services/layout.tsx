@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { metadataFromPath } from "@/lib/cms/metadata";
+import CmsStructuredData from "@/components/CmsStructuredData";
 
 export async function generateMetadata(): Promise<Metadata> {
   return metadataFromPath("/services", {
@@ -10,5 +11,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function ServicesLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <>
+      <CmsStructuredData path="/services" />
+      {children}
+    </>
+  );
 }

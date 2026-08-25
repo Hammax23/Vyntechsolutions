@@ -4,20 +4,49 @@
   "info": {
     "singularName": "organization-profile",
     "pluralName": "organization-profiles",
-    "displayName": "Organization Profile"
+    "displayName": "03. Organization Profile",
+    "description": "Company name, phone, email, and business details"
   },
-  "options": { "draftAndPublish": true },
+  "options": {
+    "draftAndPublish": true
+  },
   "attributes": {
-    "name": { "type": "string", "default": "VynTech Solutions" },
-    "foundingDate": { "type": "date" },
-    "phone": { "type": "string" },
-    "email": { "type": "string" },
-    "address": { "type": "text" },
-    "geoLatitude": { "type": "string" },
-    "geoLongitude": { "type": "string" },
-    "sameAs": { "type": "json" },
-    "ratingValue": { "type": "decimal" },
-    "reviewCount": { "type": "integer" },
-    "openingHours": { "type": "json" }
+    "name": {
+      "type": "string",
+      "default": "VynTech Solutions"
+    },
+    "foundingDate": {
+      "type": "date"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "tagline": {
+      "type": "text"
+    },
+    "address": {
+      "type": "text"
+    },
+    "geoLatitude": {
+      "type": "string"
+    },
+    "geoLongitude": {
+      "type": "string"
+    },
+    "sameAs": {
+      "type": "json"
+    },
+    "ratingValue": {
+      "type": "decimal"
+    },
+    "reviewCount": {
+      "type": "integer"
+    },
+    "openingHours": {
+      "type": "json"
+    }
   }
 }

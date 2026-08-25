@@ -271,7 +271,7 @@ export default function IndustriesPage() {
                   Let&apos;s discuss how our industry expertise and technology solutions can help drive your business forward.
                 </p>
                 <Link
-                  href="/#get-in-touch"
+                  href="/lets-talk-business"
                   className="inline-flex items-center gap-2 bg-[#0d9488] hover:bg-[#0f766e] text-white px-8 py-4 rounded-lg font-medium transition-all duration-300"
                 >
                   Let&apos;s Talk Business

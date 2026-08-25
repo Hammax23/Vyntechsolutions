@@ -1,6 +1,7 @@
 import type { Core } from "@strapi/strapi";
 import fs from "fs";
 import path from "path";
+import { syncSeedIfRequested } from "./sync-seed";
 
 const PUBLIC_ACTIONS = [
   "api::global-seo.global-seo.find",
@@ -177,6 +178,13 @@ async function seedIfEmpty(strapi: Core.Strapi) {
     });
   }
 
+  for (const job of seed.jobOpenings || []) {
+    await strapi.documents("api::job-opening.job-opening").create({
+      data: job,
+      status: "published",
+    });
+  }
+
   strapi.log.info("CMS seed complete");
 }
 
@@ -192,6 +200,7 @@ export default {
 
     try {
       await seedIfEmpty(strapi);
+      await syncSeedIfRequested(strapi);
     } catch (err) {
       strapi.log.warn(`CMS seed failed: ${err}`);
     }

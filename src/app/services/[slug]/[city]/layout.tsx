@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { servicesData } from "@/data/servicesData";
 
+const SITE_URL = "https://vyntechsolutions.ca";
+
 export async function generateMetadata({
   params,
 }: {
@@ -11,25 +13,34 @@ export async function generateMetadata({
     .split("-")
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");
+  const path = `/services/${params.slug}/${params.city}`;
+  const canonical = `${SITE_URL}${path}`;
 
   if (!service) {
     return {
       title: "Service Not Found",
+      robots: { index: false, follow: false },
     };
   }
 
+  const title = `${service.title} Services in ${formattedCity} | VynTech Solutions`;
+  const description = `Leading ${service.title.toLowerCase()} services in ${formattedCity}. We help businesses grow with custom digital solutions tailored to the local market.`;
+
   return {
-    title: `${service.title} Services in ${formattedCity} | VynTech Solutions`,
-    description: `Leading ${service.title.toLowerCase()} services in ${formattedCity}. We help businesses grow with custom digital solutions tailored to the local market.`,
-    alternates: {
-      canonical: `https://vyntechsolutions.com/services/${params.slug}/${params.city}`,
-    },
+    title,
+    description,
+    alternates: { canonical },
     openGraph: {
       title: `${service.title} in ${formattedCity} | VynTech Solutions`,
       description: `Get top-tier ${service.title.toLowerCase()} services in ${formattedCity}.`,
-      url: `https://vyntechsolutions.com/services/${params.slug}/${params.city}`,
+      url: canonical,
       siteName: "VynTech Solutions",
       type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
     },
   };
 }

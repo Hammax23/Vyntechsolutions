@@ -108,6 +108,14 @@ export default function ServicesPage() {
   const [isVisible, setIsVisible] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [list, setList] = useState(services);
+  const [promoHeading, setPromoHeading] = useState(
+    "Ready to Transform Your Business?"
+  );
+  const [promoBody, setPromoBody] = useState(
+    "Let's discuss how our services can help you achieve your goals and drive real results."
+  );
+  const [promoCtaLabel, setPromoCtaLabel] = useState("Get in Touch");
+  const [promoCtaHref, setPromoCtaHref] = useState("/lets-talk-business");
 
   useEffect(() => {
     setIsVisible(true);
@@ -145,7 +153,37 @@ export default function ServicesPage() {
         );
       })
       .catch(() => {});
+
+    fetch("/api/cms/content?type=promos&slot=services-promo")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        const promo = data?.promos?.[0] as
+          | {
+              heading?: string;
+              body?: string;
+              ctaLabel?: string;
+              ctaHref?: string;
+            }
+          | undefined;
+        if (!promo) return;
+        if (promo.heading) setPromoHeading(String(promo.heading));
+        if (promo.body) setPromoBody(String(promo.body));
+        if (promo.ctaLabel) setPromoCtaLabel(String(promo.ctaLabel));
+        if (promo.ctaHref) setPromoCtaHref(String(promo.ctaHref));
+      })
+      .catch(() => {});
   }, []);
+
+  // Split heading so the last word can keep the existing gradient treatment when using the default copy.
+  const promoHeadingParts = (() => {
+    const trimmed = promoHeading.trim();
+    const lastSpace = trimmed.lastIndexOf(" ");
+    if (lastSpace <= 0) return { lead: trimmed, accent: "" };
+    return {
+      lead: trimmed.slice(0, lastSpace),
+      accent: trimmed.slice(lastSpace + 1),
+    };
+  })();
 
   return (
     <>
@@ -322,26 +360,33 @@ export default function ServicesPage() {
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
-              Ready to Transform Your <span className="bg-gradient-to-r from-[#0055FF] via-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text">Business</span>?
+              {promoHeadingParts.accent ? (
+                <>
+                  {promoHeadingParts.lead}{" "}
+                  <span className="bg-gradient-to-r from-[#0055FF] via-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text">
+                    {promoHeadingParts.accent}
+                  </span>
+                </>
+              ) : (
+                promoHeading
+              )}
             </h2>
-            <p className="text-white/70 text-lg mb-10">
-              Let&apos;s discuss how our services can help you achieve your goals and drive real results.
-            </p>
+            <p className="text-white/70 text-lg mb-10">{promoBody}</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="/#get-in-touch"
+                href={promoCtaHref || "/lets-talk-business"}
                 className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#0055FF] via-[#00B4FF] to-[#00E1FF] hover:opacity-90 text-white px-8 py-4 rounded-lg font-medium transition-all duration-300 hover:shadow-lg hover:shadow-[#00B4FF]/30"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
-                Get in Touch
+                {promoCtaLabel}
               </Link>
               <Link
-                href="/"
+                href="/lets-talk-business"
                 className="inline-flex items-center justify-center gap-2 border border-white/30 hover:border-white/50 text-white px-8 py-4 rounded-lg font-medium transition-all duration-300 hover:bg-white/5"
               >
-                Back to Home
+                Get in Touch
               </Link>
             </div>
           </div>

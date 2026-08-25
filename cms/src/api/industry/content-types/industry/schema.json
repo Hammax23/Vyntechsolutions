@@ -4,8 +4,8 @@
   "info": {
     "singularName": "industry",
     "pluralName": "industries",
-    "displayName": "Industry",
-    "description": ""
+    "displayName": "02. Industries",
+    "description": "Industry pages and vertical content"
   },
   "options": {
     "draftAndPublish": true

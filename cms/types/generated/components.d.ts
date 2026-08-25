@@ -110,13 +110,11 @@ export interface SharedOpenGraph extends Struct.ComponentSchema {
   };
   attributes: {
     ogDescription: Schema.Attribute.String &
-      Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 200;
       }>;
     ogImage: Schema.Attribute.Media<'images'>;
     ogTitle: Schema.Attribute.String &
-      Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 70;
       }>;

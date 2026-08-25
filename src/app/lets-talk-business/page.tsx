@@ -4,37 +4,21 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-
-const DEFAULT_SERVICES = [
-  "Web Development",
-  "Mobile App Development",
-  "Cloud Solutions",
-  "AI/ML Solutions",
-  "DevOps & CI/CD",
-  "UI/UX Design",
-  "E-commerce Solutions",
-  "Custom Software",
-  "Digital Marketing",
-  "Maintenance & Support"
-];
-
-const DEFAULT_BUDGET_RANGES = [
-  "Less than $10,000",
-  "$10,000 to $25,000",
-  "$25,000 to $50,000",
-  "$50,000 to $100,000",
-  "$100,000 to $250,000",
-  "$250,000+"
-];
-
-const timelineOptions = [
-  "ASAP",
-  "Within 1 month",
-  "1-3 months",
-  "3-6 months",
-  "6+ months",
-  "Not sure yet"
-];
+import {
+  COMPANY_EMAIL,
+  COMPANY_PHONE_DISPLAY,
+  COMPANY_PHONE_TEL,
+  resolveCompanyEmail,
+  resolveCompanyPhoneDisplay,
+  resolveCompanyPhoneTel,
+} from "@/lib/company";
+import {
+  DEFAULT_BUDGET_OPTIONS,
+  DEFAULT_FORM_SERVICES,
+  DEFAULT_HEAR_ABOUT,
+  DEFAULT_TIMELINE_OPTIONS,
+  applyFormConfigServices,
+} from "@/lib/form-options";
 
 const benefits = [
   {
@@ -66,23 +50,6 @@ const stats = [
   { value: "12+", label: "Years Experience" }
 ];
 
-function resolveServiceLabels(
-  configServices: string[],
-  cmsServices: { slug?: string; title?: string }[]
-): string[] {
-  const bySlug = new Map(
-    cmsServices
-      .filter((s) => s.slug)
-      .map((s) => [String(s.slug), String(s.title || s.slug)])
-  );
-  return configServices.map((item) => {
-    if (item.includes("-")) {
-      return bySlug.get(item) || item;
-    }
-    return item;
-  });
-}
-
 const BenefitIcon = ({ type }: { type: string }) => {
   const icons: { [key: string]: JSX.Element } = {
     clock: <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />,
@@ -100,8 +67,13 @@ const BenefitIcon = ({ type }: { type: string }) => {
 
 export default function LetsTalkBusinessPage() {
   const [isVisible, setIsVisible] = useState(false);
-  const [services, setServices] = useState<string[]>(DEFAULT_SERVICES);
-  const [budgetRanges, setBudgetRanges] = useState<string[]>(DEFAULT_BUDGET_RANGES);
+  const [services, setServices] = useState<string[]>(DEFAULT_FORM_SERVICES);
+  const [budgetRanges, setBudgetRanges] = useState<string[]>(DEFAULT_BUDGET_OPTIONS);
+  const [timelineOptions, setTimelineOptions] = useState<string[]>(DEFAULT_TIMELINE_OPTIONS);
+  const [hearAboutOptions, setHearAboutOptions] = useState<string[]>(DEFAULT_HEAR_ABOUT);
+  const [contactEmail, setContactEmail] = useState(COMPANY_EMAIL);
+  const [contactPhoneDisplay, setContactPhoneDisplay] = useState(COMPANY_PHONE_DISPLAY);
+  const [contactPhoneTel, setContactPhoneTel] = useState(COMPANY_PHONE_TEL);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -124,26 +96,29 @@ export default function LetsTalkBusinessPage() {
     Promise.all([
       fetch("/api/cms/content?type=form-config").then((r) => (r.ok ? r.json() : null)),
       fetch("/api/cms/services").then((r) => (r.ok ? r.json() : null)),
+      fetch("/api/cms/content?type=organization").then((r) => (r.ok ? r.json() : null)),
     ])
-      .then(([formDataRes, servicesRes]) => {
+      .then(([formDataRes, servicesRes, orgRes]) => {
         if (cancelled) return;
         const formConfig = formDataRes?.formConfig as Record<string, unknown> | undefined;
         const cmsServices = (servicesRes?.services || []) as { slug?: string; title?: string }[];
+        const org = orgRes?.organization as Record<string, unknown> | undefined;
 
-        if (Array.isArray(formConfig?.services) && formConfig.services.length) {
-          const labels = resolveServiceLabels(
-            formConfig.services.map(String),
-            cmsServices
-          );
-          if (labels.length) setServices(labels);
-        } else if (cmsServices.length) {
-          setServices(
-            cmsServices.map((s) => String(s.title || s.slug || "")).filter(Boolean)
-          );
-        }
+        setServices(applyFormConfigServices(formConfig, cmsServices));
 
         if (Array.isArray(formConfig?.budgetOptions) && formConfig.budgetOptions.length) {
           setBudgetRanges(formConfig.budgetOptions.map(String));
+        }
+        if (Array.isArray(formConfig?.timelineOptions) && formConfig.timelineOptions.length) {
+          setTimelineOptions(formConfig.timelineOptions.map(String));
+        }
+        if (Array.isArray(formConfig?.hearAbout) && formConfig.hearAbout.length) {
+          setHearAboutOptions(formConfig.hearAbout.map(String));
+        }
+        if (org?.email) setContactEmail(resolveCompanyEmail(String(org.email)));
+        if (org?.phone) {
+          setContactPhoneDisplay(resolveCompanyPhoneDisplay(String(org.phone)));
+          setContactPhoneTel(resolveCompanyPhoneTel(String(org.phone)));
         }
       })
       .catch(() => {});
@@ -159,10 +134,29 @@ export default function LetsTalkBusinessPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsSubmitting(false);
-    setSubmitted(true);
+    try {
+      const response = await fetch("/api/send-quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: `${formData.firstName} ${formData.lastName}`.trim(),
+          email: formData.email,
+          phone: formData.phone,
+          companyName: formData.company,
+          jobTitle: formData.jobTitle,
+          services: formData.service ? [formData.service] : [],
+          budget: formData.budget,
+          timeline: formData.timeline,
+          projectDetails: formData.projectDetails,
+          hearAbout: formData.howDidYouHear,
+        }),
+      });
+      if (response.ok) setSubmitted(true);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -368,14 +362,19 @@ export default function LetsTalkBusinessPage() {
                           </div>
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">How did you hear about us?</label>
-                            <input
-                              type="text"
+                            <select
                               name="howDidYouHear"
                               value={formData.howDidYouHear}
                               onChange={handleChange}
-                              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#262b3f] focus:ring-2 focus:ring-[#262b3f]/20 transition-all"
-                              placeholder="Google, Referral, LinkedIn, etc."
-                            />
+                              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:border-[#262b3f] focus:ring-2 focus:ring-[#262b3f]/20 transition-all bg-white"
+                            >
+                              <option value="">Select an option</option>
+                              {hearAboutOptions.map((option) => (
+                                <option key={option} value={option}>
+                                  {option}
+                                </option>
+                              ))}
+                            </select>
                           </div>
                         </div>
                       </div>
@@ -463,7 +462,7 @@ export default function LetsTalkBusinessPage() {
                 <div className={`bg-white rounded-3xl border border-gray-100 shadow-lg p-8 transition-all duration-700 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
                   <h3 className="text-xl font-semibold text-[#1a1a2e] mb-6">Prefer to Talk?</h3>
                   <div className="space-y-4">
-                    <a href="mailto:hello@vyntechsolutions.ca" className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-[#262b3f]/5 transition-colors group">
+                    <a href={`mailto:${contactEmail}`} className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-[#262b3f]/5 transition-colors group">
                       <div className="w-10 h-10 bg-[#262b3f]/10 rounded-lg flex items-center justify-center text-[#262b3f] group-hover:bg-[#262b3f] group-hover:text-white transition-all">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -471,20 +470,20 @@ export default function LetsTalkBusinessPage() {
                       </div>
                       <div>
                         <div className="text-sm text-gray-500">Email Us</div>
-                        <div className="font-medium text-[#1a1a2e]">info@vyntechsolutions.ca</div>
+                        <div className="font-medium text-[#1a1a2e]">{contactEmail}</div>
                       </div>
                     </a>
-                    {/* <a href="tel:+14168935779" className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-[#262b3f]/5 transition-colors group">
+                    <a href={`tel:${contactPhoneTel}`} className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-[#262b3f]/5 transition-colors group">
                       <div className="w-10 h-10 bg-[#262b3f]/10 rounded-lg flex items-center justify-center text-[#262b3f] group-hover:bg-[#262b3f] group-hover:text-white transition-all">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                         </svg>
                       </div>
                       <div>
-                        <div className="text-sm text-gray-500">Call Us</div>
-                        <div className="font-medium text-[#1a1a2e]">+1 (416) 893-5779</div>
+                        <div className="text-sm text-gray-500">Toll Free</div>
+                        <div className="font-medium text-[#1a1a2e]">{contactPhoneDisplay}</div>
                       </div>
-                    </a> */}
+                    </a>
                   </div>
                 </div>
 

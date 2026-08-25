@@ -4,22 +4,91 @@
   "info": {
     "singularName": "homepage",
     "pluralName": "homepages",
-    "displayName": "Homepage"
+    "displayName": "01. Homepage",
+    "description": "Main homepage hero, services intro, and impact content"
   },
-  "options": { "draftAndPublish": true },
+  "options": {
+    "draftAndPublish": true
+  },
   "attributes": {
-    "heroSlides": { "type": "component", "repeatable": true, "component": "home.hero-slide" },
-    "servicesHeading": { "type": "string" },
-    "servicesSubheading": { "type": "string" },
-    "servicesBody": { "type": "text" },
-    "impactHeading": { "type": "string" },
-    "impactBody": { "type": "text" },
-    "impactStats": { "type": "component", "repeatable": true, "component": "shared.stat" },
-    "impactCtaLabel": { "type": "string" },
-    "impactCtaHref": { "type": "string" },
-    "insightsHeading": { "type": "string" },
-    "industriesHeading": { "type": "string" },
-    "partnersHeading": { "type": "string", "default": "Technology Partners" },
-    "seo": { "type": "component", "repeatable": false, "component": "shared.seo" }
+    "heroSlides": {
+      "type": "component",
+      "repeatable": true,
+      "component": "home.hero-slide"
+    },
+    "heroCtaLabel": {
+      "type": "string"
+    },
+    "heroWords": {
+      "type": "json"
+    },
+    "servicesHeading": {
+      "type": "string"
+    },
+    "servicesSubheading": {
+      "type": "string"
+    },
+    "servicesBody": {
+      "type": "text"
+    },
+    "impactEyebrow": {
+      "type": "string"
+    },
+    "impactHeading": {
+      "type": "string"
+    },
+    "impactBody": {
+      "type": "text"
+    },
+    "impactStats": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.stat"
+    },
+    "impactCtaLabel": {
+      "type": "string"
+    },
+    "impactCtaHref": {
+      "type": "string"
+    },
+    "insightsHeading": {
+      "type": "string"
+    },
+    "industriesHeading": {
+      "type": "string"
+    },
+    "industriesSubheading": {
+      "type": "string"
+    },
+    "partnersHeading": {
+      "type": "string",
+      "default": "Technology Partners"
+    },
+    "faqEyebrow": {
+      "type": "string"
+    },
+    "faqHeading": {
+      "type": "string"
+    },
+    "faqIntro": {
+      "type": "text"
+    },
+    "techStackEyebrow": {
+      "type": "string"
+    },
+    "techStackHeading": {
+      "type": "string"
+    },
+    "techStackBody": {
+      "type": "text"
+    },
+    "techStack": {
+      "type": "json"
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo"
+    }
   }
 }

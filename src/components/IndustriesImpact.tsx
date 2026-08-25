@@ -7,8 +7,9 @@ import Image from "next/image";
 const industries = [
   {
     id: 1,
+    slug: "healthcare",
     name: "Healthcare",
-    href: "/contact?industry=healthcare",
+    href: "/industries/healthcare",
     image: "https://images.unsplash.com/photo-1666214280557-f1b5022eb634?auto=format&fit=crop&w=1600&q=80",
     line: "Clinic systems and patient apps that staff can open without a training day.",
     icon: (
@@ -19,8 +20,9 @@ const industries = [
   },
   {
     id: 2,
+    slug: "finance-banking",
     name: "Finance & Banking",
-    href: "/contact?industry=finance-banking",
+    href: "/industries/finance-banking",
     image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80",
     line: "Ledgers, portals, and dashboards where the numbers have to be right the first time.",
     icon: (
@@ -31,8 +33,9 @@ const industries = [
   },
   {
     id: 3,
+    slug: "ecommerce-retail",
     name: "E-commerce & Retail",
-    href: "/contact?industry=ecommerce-retail",
+    href: "/industries/ecommerce-retail",
     image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1600&q=80",
     line: "Catalogues, checkout, and stock that still work when the store is busy.",
     icon: (
@@ -43,8 +46,9 @@ const industries = [
   },
   {
     id: 4,
+    slug: "education-elearning",
     name: "Education & E-learning",
-    href: "/contact?industry=education-elearning",
+    href: "/industries/education-elearning",
     image: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1600&q=80",
     line: "Course platforms and school portals students can actually finish a lesson on.",
     icon: (
@@ -57,8 +61,9 @@ const industries = [
   },
   {
     id: 5,
+    slug: "real-estate",
     name: "Real Estate",
-    href: "/contact?industry=real-estate",
+    href: "/industries/real-estate",
     image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80",
     line: "Listings, viewings, and agent tools without the 2004 website feel.",
     icon: (
@@ -69,8 +74,9 @@ const industries = [
   },
   {
     id: 6,
+    slug: "logistics-transportation",
     name: "Logistics & Transportation",
-    href: "/contact?industry=logistics-transportation",
+    href: "/industries/logistics-transportation",
     image: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1600&q=80",
     line: "Tracking, dispatch, and warehouse screens built for people on the floor.",
     icon: (
@@ -82,8 +88,9 @@ const industries = [
   },
   {
     id: 7,
+    slug: "entertainment-media",
     name: "Entertainment & Media",
-    href: "/contact?industry=entertainment-media",
+    href: "/industries/entertainment-media",
     image: "https://images.unsplash.com/photo-1574267432553-4b4628081c31?auto=format&fit=crop&w=1600&q=80",
     line: "Streaming, booking, and content sites that stay smooth on a phone.",
     icon: (
@@ -95,8 +102,9 @@ const industries = [
   },
   {
     id: 8,
+    slug: "manufacturing",
     name: "Manufacturing",
-    href: "/contact?industry=manufacturing",
+    href: "/industries/manufacturing",
     image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1600&q=80",
     line: "Shop-floor software that talks to the machines you already paid for.",
     icon: (
@@ -107,8 +115,9 @@ const industries = [
   },
   {
     id: 9,
+    slug: "hospitality-travel",
     name: "Hospitality & Travel",
-    href: "/contact?industry=hospitality-travel",
+    href: "/industries/hospitality-travel",
     image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1600&q=80",
     line: "Bookings, rooms, and guest apps that the front desk will keep using.",
     icon: (
@@ -119,8 +128,9 @@ const industries = [
   },
   {
     id: 10,
+    slug: "telecommunications",
     name: "Telecommunications",
-    href: "/contact?industry=telecommunications",
+    href: "/industries/telecommunications",
     image: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1600&q=80",
     line: "Network ops and customer portals that stay up when the traffic spikes.",
     icon: (
@@ -131,21 +141,22 @@ const industries = [
   },
 ];
 
+type IndustryItem = (typeof industries)[number];
+
 const CYCLE_MS = 3400;
-const COUNT = industries.length;
 const ITEM_GAP = 72;
 
-function wrapOffset(index: number, position: number) {
+function wrapOffset(index: number, position: number, count: number) {
   let d = index - position;
-  const half = COUNT / 2;
-  while (d > half) d -= COUNT;
-  while (d < -half) d += COUNT;
+  const half = count / 2;
+  while (d > half) d -= count;
+  while (d < -half) d += count;
   return d;
 }
 
-function shortestDelta(from: number, to: number) {
-  let d = ((to - from) % COUNT + COUNT) % COUNT;
-  if (d > COUNT / 2) d -= COUNT;
+function shortestDelta(from: number, to: number, count: number) {
+  let d = ((to - from) % count + count) % count;
+  if (d > count / 2) d -= count;
   return d;
 }
 
@@ -154,9 +165,13 @@ export default function IndustriesImpact() {
   const [position, setPosition] = useState(0);
   const [paused, setPaused] = useState(false);
   const [dragging, setDragging] = useState(false);
+  const [eyebrow, setEyebrow] = useState("Industries we serve");
+  const [heading, setHeading] = useState("Transforming Industries, Empowering Growth");
+  const [items, setItems] = useState<IndustryItem[]>(industries);
   const sectionRef = useRef<HTMLElement>(null);
   const reelRef = useRef<HTMLDivElement>(null);
   const positionRef = useRef(0);
+  const count = items.length;
   const dragRef = useRef({
     active: false,
     startY: 0,
@@ -166,19 +181,59 @@ export default function IndustriesImpact() {
   });
   positionRef.current = position;
 
-  const active = ((Math.round(position) % COUNT) + COUNT) % COUNT;
-  const current = industries[active];
+  const active = count ? ((Math.round(position) % count) + count) % count : 0;
+  const current = items[active] || items[0];
 
   const goTo = (index: number) => {
     setPosition((p) => {
-      const from = ((Math.round(p) % COUNT) + COUNT) % COUNT;
-      return p + shortestDelta(from, index);
+      const from = ((Math.round(p) % count) + count) % count;
+      return p + shortestDelta(from, index, count);
     });
   };
 
   const snap = () => {
     setPosition((p) => Math.round(p));
   };
+
+  useEffect(() => {
+    let cancelled = false;
+    Promise.all([
+      fetch("/api/cms/content?type=homepage").then((r) => (r.ok ? r.json() : null)),
+      fetch("/api/cms/industries").then((r) => (r.ok ? r.json() : null)),
+    ])
+      .then(([homeData, industriesData]) => {
+        if (cancelled) return;
+        const hp = homeData?.homepage as Record<string, unknown> | undefined;
+        if (hp?.industriesHeading) setHeading(String(hp.industriesHeading));
+        if (hp?.industriesSubheading) setEyebrow(String(hp.industriesSubheading));
+        const list = industriesData?.industries as
+          | { slug?: string; title?: string; name?: string; description?: string; shortDescription?: string }[]
+          | undefined;
+        if (list?.length) {
+          const bySlug = new Map(industries.map((i) => [i.slug, i]));
+          const mapped = list
+            .filter((i) => i.slug)
+            .map((i, idx) => {
+              const local = bySlug.get(String(i.slug)) || industries[idx % industries.length];
+              const name = String(i.title || i.name || local.name);
+              const line = String(i.subtitle || i.shortDescription || i.description || local.line);
+              return {
+                ...local,
+                id: idx + 1,
+                slug: String(i.slug),
+                name,
+                line,
+                href: `/industries/${i.slug}`,
+              };
+            });
+          if (mapped.length) setItems(mapped);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -288,10 +343,10 @@ export default function IndustriesImpact() {
           }`}
         >
           <p className="text-[11px] font-semibold tracking-[0.22em] uppercase text-[#0055FF] mb-3">
-            Industries we serve
+            {eyebrow}
           </p>
           <h2 className="whitespace-nowrap font-semibold tracking-tight text-[#1a1a2e] leading-[1.15] text-[clamp(1.05rem,4.1vw,2.6rem)]">
-            Transforming Industries, Empowering Growth
+            {heading}
           </h2>
         </div>
 
@@ -314,8 +369,8 @@ export default function IndustriesImpact() {
               }}
             >
               <div className="absolute inset-0" style={{ transformStyle: "preserve-3d" }}>
-                {industries.map((industry, index) => {
-                  const offset = wrapOffset(index, position);
+                {items.map((industry, index) => {
+                  const offset = wrapOffset(index, position, count);
                   const hidden = Math.abs(offset) > 2.2;
                   const isActive = Math.abs(offset) < 0.5;
                   return (
@@ -379,7 +434,7 @@ export default function IndustriesImpact() {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
             }`}
           >
-            {industries.map((industry, index) => (
+            {items.map((industry, index) => (
               <div
                 key={industry.id}
                 className={`absolute inset-0 transition-opacity duration-700 ease-out ${

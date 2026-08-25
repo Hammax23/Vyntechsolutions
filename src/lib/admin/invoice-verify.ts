@@ -1,4 +1,4 @@
-import { SITE_URL } from "@/lib/seopanel/constants";
+import { SITE_URL } from "@/lib/company";
 
 /** Public verification URL for company expense / salary documents (always production site by default). */
 export function getDocumentVerifyUrl(documentNumber: string, origin?: string): string {

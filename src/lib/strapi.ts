@@ -47,7 +47,7 @@ export async function strapiFetch<T>({
   path,
   query,
   tags = ["strapi"],
-  revalidate = 60,
+  revalidate = 0,
 }: FetchOptions): Promise<T | null> {
   const url = `${getStrapiURL(path)}${buildQuery(query)}`;
 

@@ -4,13 +4,27 @@
   "info": {
     "singularName": "form-config",
     "pluralName": "form-configs",
-    "displayName": "Form Config"
+    "displayName": "05. Form Config",
+    "description": "Quote form services, budgets, regions, and timelines"
   },
-  "options": { "draftAndPublish": true },
+  "options": {
+    "draftAndPublish": true
+  },
   "attributes": {
-    "services": { "type": "json" },
-    "regions": { "type": "json" },
-    "hearAbout": { "type": "json" },
-    "budgetOptions": { "type": "json" }
+    "services": {
+      "type": "json"
+    },
+    "regions": {
+      "type": "json"
+    },
+    "hearAbout": {
+      "type": "json"
+    },
+    "budgetOptions": {
+      "type": "json"
+    },
+    "timelineOptions": {
+      "type": "json"
+    }
   }
 }

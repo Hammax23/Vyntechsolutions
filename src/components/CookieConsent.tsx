@@ -46,6 +46,12 @@ export default function CookieConsent() {
   const [isVisible, setIsVisible] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [showCustomize, setShowCustomize] = useState(false);
+  const [cookieTitle, setCookieTitle] = useState("We value your privacy");
+  const [cookieBody, setCookieBody] = useState(
+    'We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.'
+  );
+  const [acceptLabel, setAcceptLabel] = useState("Accept All");
+  const [customizeLabel, setCustomizeLabel] = useState("Customize");
   const [preferences, setPreferences] = useState<CookiePreferences>({
     essential: true,
     analytics: false,
@@ -64,6 +70,25 @@ export default function CookieConsent() {
     }
   }, []);
 
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/cms/content?type=global-seo")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (cancelled) return;
+        const seo = data?.globalSeo as Record<string, unknown> | undefined;
+        if (!seo) return;
+        if (seo.cookieTitle) setCookieTitle(String(seo.cookieTitle));
+        if (seo.cookieBody) setCookieBody(String(seo.cookieBody));
+        if (seo.cookieAcceptLabel) setAcceptLabel(String(seo.cookieAcceptLabel));
+        if (seo.cookieCustomizeLabel) setCustomizeLabel(String(seo.cookieCustomizeLabel));
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const handleClose = () => {
     setIsAnimating(false);
     setTimeout(() => setIsVisible(false), 300);
@@ -77,6 +102,7 @@ export default function CookieConsent() {
       functional: true,
     };
     localStorage.setItem("cookieConsent", JSON.stringify(allAccepted));
+    window.dispatchEvent(new Event("cookieConsentUpdated"));
     handleClose();
   };
 
@@ -88,11 +114,13 @@ export default function CookieConsent() {
       functional: false,
     };
     localStorage.setItem("cookieConsent", JSON.stringify(essentialOnly));
+    window.dispatchEvent(new Event("cookieConsentUpdated"));
     handleClose();
   };
 
   const handleSavePreferences = () => {
     localStorage.setItem("cookieConsent", JSON.stringify(preferences));
+    window.dispatchEvent(new Event("cookieConsentUpdated"));
     setShowCustomize(false);
     handleClose();
   };
@@ -133,11 +161,10 @@ export default function CookieConsent() {
                 
                 <div className="flex-1 min-w-0">
                   <h3 className="text-white font-semibold text-[15px] tracking-tight mb-1.5">
-                    We value your privacy
+                    {cookieTitle}
                   </h3>
                   <p className="text-gray-400 text-[13px] leading-relaxed">
-                    We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. 
-                    <span className="hidden sm:inline"> By clicking &quot;Accept All&quot;, you consent to our use of cookies.</span>
+                    {cookieBody}
                   </p>
                 </div>
               </div>
@@ -153,7 +180,7 @@ export default function CookieConsent() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
-                    Customize
+                    {customizeLabel}
                   </span>
                 </button>
                 <button
@@ -166,7 +193,7 @@ export default function CookieConsent() {
                   onClick={handleAcceptAll}
                   className="px-6 py-2.5 text-[13px] font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl border border-blue-400/20 hover:from-blue-400 hover:to-blue-500 transition-all duration-200 shadow-lg shadow-blue-500/20"
                 >
-                  Accept All
+                    {acceptLabel}
                 </button>
               </div>
             </div>
@@ -291,7 +318,7 @@ export default function CookieConsent() {
                   onClick={handleAcceptAll}
                   className="flex-1 px-5 py-3 text-[14px] font-medium text-white bg-white/10 rounded-xl border border-white/10 hover:bg-white/15 transition-all"
                 >
-                  Accept All
+                    {acceptLabel}
                 </button>
                 <button
                   onClick={handleSavePreferences}

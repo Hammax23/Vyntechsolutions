@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { metadataForBlog } from "@/lib/cms/metadata";
+import CmsStructuredData from "@/components/CmsStructuredData";
 
 export async function generateMetadata({
   params,
@@ -9,6 +10,17 @@ export async function generateMetadata({
   return metadataForBlog(params.slug);
 }
 
-export default function BlogSlugLayout({ children }: { children: React.ReactNode }) {
-  return children;
+export default function BlogSlugLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: { slug: string };
+}) {
+  return (
+    <>
+      <CmsStructuredData blogSlug={params.slug} />
+      {children}
+    </>
+  );
 }

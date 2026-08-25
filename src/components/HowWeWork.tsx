@@ -1,6 +1,12 @@
 "use client";
 
-const steps = [
+export type HowWeWorkStep = {
+  number?: number;
+  title: string;
+  description: string;
+};
+
+const DEFAULT_STEPS: HowWeWorkStep[] = [
   {
     number: 1,
     title: "Discovery & Planning",
@@ -69,12 +75,38 @@ function StepCopy({
   );
 }
 
-export default function HowWeWork() {
+function normalizeSteps(
+  steps?: { step?: string; title?: string; description: string }[] | HowWeWorkStep[] | null
+): HowWeWorkStep[] {
+  if (!steps?.length) return DEFAULT_STEPS;
+  const mapped = steps.slice(0, 6).map((step, index) => ({
+    number: index + 1,
+    title:
+      ("title" in step && step.title
+        ? step.title
+        : "step" in step && step.step
+          ? step.step
+          : `Step ${index + 1}`) || `Step ${index + 1}`,
+    description: step.description,
+  }));
+  if (mapped.length >= 6) return mapped;
+  return [...mapped, ...DEFAULT_STEPS.slice(mapped.length)];
+}
+
+export default function HowWeWork({
+  steps: stepsProp,
+  heading = "How We Work",
+}: {
+  steps?: { step?: string; title?: string; description: string }[] | HowWeWorkStep[] | null;
+  heading?: string;
+} = {}) {
+  const steps = normalizeSteps(stepsProp);
+
   return (
     <section className="w-full bg-white py-16 md:py-24 overflow-hidden">
       <div className="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-10">
         <h2 className="text-center text-3xl sm:text-4xl md:text-[42px] font-bold tracking-tight text-[#0a0a0a] mb-10 md:mb-14">
-          How We Work
+          {heading}
         </h2>
 
         {/* Mobile */}

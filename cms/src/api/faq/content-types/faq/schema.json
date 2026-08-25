@@ -4,13 +4,28 @@
   "info": {
     "singularName": "faq",
     "pluralName": "faqs",
-    "displayName": "FAQ"
+    "displayName": "05. FAQs",
+    "description": "Frequently asked questions"
   },
-  "options": { "draftAndPublish": true },
+  "options": {
+    "draftAndPublish": true
+  },
   "attributes": {
-    "question": { "type": "string", "required": true },
-    "answer": { "type": "text", "required": true },
-    "order": { "type": "integer", "default": 0 },
-    "page": { "type": "string", "default": "global" }
+    "question": {
+      "type": "string",
+      "required": true
+    },
+    "answer": {
+      "type": "text",
+      "required": true
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    },
+    "page": {
+      "type": "string",
+      "default": "global"
+    }
   }
 }

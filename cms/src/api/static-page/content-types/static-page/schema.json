@@ -4,8 +4,8 @@
   "info": {
     "singularName": "static-page",
     "pluralName": "static-pages",
-    "displayName": "Static Page",
-    "description": ""
+    "displayName": "08. Static Pages",
+    "description": "About, careers, and other fixed pages"
   },
   "options": {
     "draftAndPublish": true

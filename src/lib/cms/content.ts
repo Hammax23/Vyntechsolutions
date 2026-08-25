@@ -1,7 +1,14 @@
 import { blogPosts, getPostBySlug as getLocalPost, type BlogPost } from "@/data/blogData";
 import { strapiFetch, unwrapList, unwrapSingle, type StrapiListResponse, type StrapiSingleResponse } from "@/lib/strapi";
 
-export type CmsBlogPost = BlogPost & { featured?: boolean };
+/** Deep-populate shared.seo (media + openGraph) for metadata wiring. */
+const SEO_POPULATE: Record<string, string> = {
+  "populate[seo][populate][0]": "metaImage",
+  "populate[seo][populate][1]": "ogImage",
+  "populate[seo][populate][openGraph][populate][0]": "ogImage",
+};
+
+export type CmsBlogPost = BlogPost & { featured?: boolean; seo?: Record<string, unknown> };
 
 function mapBlog(entry: Record<string, unknown>): CmsBlogPost {
   const categoryRel = entry.category as { name?: string } | string | null | undefined;
@@ -23,9 +30,15 @@ function mapBlog(entry: Record<string, unknown>): CmsBlogPost {
     tags: Array.isArray(entry.tags) ? (entry.tags as string[]) : [],
     author: String(entry.author || "VynTech Solutions Team"),
     readTime: String(entry.readTime || "5 min"),
-    image: String(entry.image || ""),
+    image: String(
+      entry.image ||
+      (typeof entry.cover === "object" && entry.cover !== null
+        ? (entry.cover as { url?: string }).url || ""
+        : "")
+    ),
     content: String(entry.content || ""),
     featured: Boolean(entry.featured),
+    seo: (entry.seo as Record<string, unknown>) || undefined,
   };
 }
 
@@ -34,7 +47,8 @@ export async function getCmsBlogPosts(): Promise<CmsBlogPost[]> {
     path: "/api/blog-posts",
     query: {
       "populate[0]": "category",
-      "populate[1]": "seo",
+      "populate[1]": "cover",
+      ...SEO_POPULATE,
       "sort": "publishedAt:desc",
       "pagination[pageSize]": 100,
     },
@@ -51,7 +65,8 @@ export async function getCmsBlogPost(slug: string): Promise<CmsBlogPost | null> 
     query: {
       "filters[slug][$eq]": slug,
       "populate[0]": "category",
-      "populate[1]": "seo",
+      "populate[1]": "cover",
+      ...SEO_POPULATE,
       "pagination[pageSize]": 1,
     },
     tags: ["strapi", "blog", `blog-${slug}`],
@@ -120,7 +135,7 @@ function mapService(entry: Record<string, unknown>, fallbackSlug?: string, local
     processHeading: isPopulated(entry.processHeading) ? String(entry.processHeading) : localFallback?.processHeading,
     processDescription: isPopulated(entry.processDescription) ? String(entry.processDescription) : localFallback?.processDescription,
     process: isArrayPopulated(entry.process) ? (entry.process as CmsService["process"]) : (localFallback?.process || []),
-    stats: isArrayPopulated(localFallback?.stats) ? localFallback!.stats : (isArrayPopulated(entry.stats) ? (entry.stats as CmsService["stats"]) : []),
+    stats: isArrayPopulated(entry.stats) ? (entry.stats as CmsService["stats"]) : (localFallback?.stats || []),
     caseStudies: isArrayPopulated(entry.caseStudies) ? (entry.caseStudies as CmsService["caseStudies"]) : (localFallback?.caseStudies || []),
     seo: (entry.seo as Record<string, unknown>) || localFallback?.seo,
     // Why Choose Us
@@ -133,9 +148,7 @@ function mapService(entry: Record<string, unknown>, fallbackSlug?: string, local
       : localFallback?.whyChooseUsCards,
     // How We Deliver
     deliveryHeading: isPopulated(entry.deliveryHeading) ? String(entry.deliveryHeading) : localFallback?.deliveryHeading,
-    deliveryDescription: isPopulated(localFallback?.deliveryDescription)
-      ? localFallback!.deliveryDescription
-      : (isPopulated(entry.deliveryDescription) ? String(entry.deliveryDescription) : undefined),
+    deliveryDescription: isPopulated(entry.deliveryDescription) ? String(entry.deliveryDescription) : localFallback?.deliveryDescription,
     deliverySteps: isArrayPopulated(entry.deliverySteps)
       ? (entry.deliverySteps as { title: string; content: string }[])
       : localFallback?.deliverySteps,
@@ -154,7 +167,10 @@ export async function getCmsServices(fallback: Record<string, Omit<CmsService, "
       "populate[1]": "process",
       "populate[2]": "stats",
       "populate[3]": "caseStudies",
-      "populate[4]": "seo",
+      "populate[4]": "whyChooseUsCards",
+      "populate[5]": "deliverySteps",
+      "populate[6]": "faqs",
+      ...SEO_POPULATE,
       "sort": "order:asc",
       "pagination[pageSize]": 100,
     },
@@ -183,10 +199,10 @@ export async function getCmsService(
       "populate[1]": "process",
       "populate[2]": "stats",
       "populate[3]": "caseStudies",
-      "populate[4]": "seo",
-      "populate[5]": "whyChooseUsCards",
-      "populate[6]": "deliverySteps",
-      "populate[7]": "faqs",
+      "populate[4]": "whyChooseUsCards",
+      "populate[5]": "deliverySteps",
+      "populate[6]": "faqs",
+      ...SEO_POPULATE,
       "pagination[pageSize]": 1,
     },
     tags: ["strapi", "services", `service-${slug}`],
@@ -217,22 +233,32 @@ function mapIndustry(
   fallbackSlug?: string,
   localFallback?: Omit<CmsIndustry, "slug">
 ): CmsIndustry {
+  const isPopulated = (val: unknown) => val !== null && val !== undefined && val !== "";
+  const heroObj = entry.hero && typeof entry.hero === "object" ? (entry.hero as { url?: string }) : null;
+  const heroUrl = heroObj?.url || (isPopulated(entry.hero) && typeof entry.hero === "string" ? String(entry.hero) : "");
+
   return {
     slug: String(entry.slug || fallbackSlug || ""),
-    title: String(entry.title || ""),
-    subtitle: String(entry.subtitle || ""),
-    description: String(entry.description || ""),
-    heroImage: typeof entry.hero === "object" && entry.hero !== null ? String((entry.hero as any).url || "") : String(entry.hero || ""),
-    heroStats: Array.isArray(localFallback?.heroStats) && localFallback.heroStats.length
-      ? localFallback.heroStats
-      : (Array.isArray(entry.heroStats) ? (entry.heroStats as CmsIndustry["heroStats"]) : []),
-    challenges: Array.isArray(entry.challenges)
+    title: isPopulated(entry.title) ? String(entry.title) : (localFallback?.title || ""),
+    subtitle: isPopulated(entry.subtitle) ? String(entry.subtitle) : (localFallback?.subtitle || ""),
+    description: isPopulated(entry.description) ? String(entry.description) : (localFallback?.description || ""),
+    heroImage: heroUrl || localFallback?.heroImage || "",
+    heroStats: Array.isArray(entry.heroStats) && entry.heroStats.length
+      ? (entry.heroStats as CmsIndustry["heroStats"])
+      : (localFallback?.heroStats || []),
+    challenges: Array.isArray(entry.challenges) && entry.challenges.length
       ? (entry.challenges as CmsIndustry["challenges"])
-      : [],
-    services: Array.isArray(entry.services) ? (entry.services as CmsIndustry["services"]) : [],
-    technologies: Array.isArray(entry.technologies) ? (entry.technologies as string[]) : [],
-    highlights: Array.isArray(entry.highlights) ? (entry.highlights as string[]) : undefined,
-    seo: (entry.seo as Record<string, unknown>) || undefined,
+      : (localFallback?.challenges || []),
+    services: Array.isArray(entry.services) && entry.services.length
+      ? (entry.services as CmsIndustry["services"])
+      : (localFallback?.services || []),
+    technologies: Array.isArray(entry.technologies) && entry.technologies.length
+      ? (entry.technologies as string[])
+      : (localFallback?.technologies || []),
+    highlights: Array.isArray(entry.highlights) && entry.highlights.length
+      ? (entry.highlights as string[])
+      : localFallback?.highlights,
+    seo: (entry.seo as Record<string, unknown>) || localFallback?.seo,
   };
 }
 
@@ -245,8 +271,8 @@ export async function getCmsIndustries(
       "populate[0]": "heroStats",
       "populate[1]": "challenges",
       "populate[2]": "services",
-      "populate[3]": "seo",
-      "populate[4]": "hero",
+      "populate[3]": "hero",
+      ...SEO_POPULATE,
       "sort": "order:asc",
       "pagination[pageSize]": 100,
     },
@@ -272,8 +298,8 @@ export async function getCmsIndustry(
       "populate[0]": "heroStats",
       "populate[1]": "challenges",
       "populate[2]": "services",
-      "populate[3]": "seo",
-      "populate[4]": "hero",
+      "populate[3]": "hero",
+      ...SEO_POPULATE,
       "pagination[pageSize]": 1,
     },
     tags: ["strapi", "industries", `industry-${slug}`],
@@ -287,14 +313,17 @@ export async function getCmsIndustry(
 
 export type CmsFaq = { question: string; answer: string; order: number; page?: string };
 
-export async function getCmsFaqs(): Promise<CmsFaq[]> {
+async function fetchCmsFaqs(page?: string): Promise<CmsFaq[]> {
+  const query: Record<string, string | number> = {
+    sort: "order:asc",
+    "pagination[pageSize]": 50,
+  };
+  if (page) query["filters[page][$eq]"] = page;
+
   const res = await strapiFetch<StrapiListResponse<Record<string, unknown>>>({
     path: "/api/faqs",
-    query: {
-      sort: "order:asc",
-      "pagination[pageSize]": 50,
-    },
-    tags: ["strapi", "faqs"],
+    query,
+    tags: ["strapi", "faqs", page ? `faqs-${page}` : "faqs-all"],
   });
 
   return unwrapList(res).map((e) => ({
@@ -303,6 +332,15 @@ export async function getCmsFaqs(): Promise<CmsFaq[]> {
     order: Number(e.order || 0),
     page: String(e.page || "global"),
   }));
+}
+
+export async function getCmsFaqs(page?: string): Promise<CmsFaq[]> {
+  const list = await fetchCmsFaqs(page);
+  // If a page filter returned nothing, fall back once without page (non-recursive).
+  if (page && !list.length) {
+    return fetchCmsFaqs();
+  }
+  return list;
 }
 
 export async function getCmsGlobalSeo(): Promise<Record<string, unknown> | null> {
@@ -319,7 +357,7 @@ export async function getCmsPageSeo(path: string): Promise<Record<string, unknow
     path: "/api/page-seos",
     query: {
       "filters[path][$eq]": path,
-      "populate[0]": "seo",
+      ...SEO_POPULATE,
       "pagination[pageSize]": 1,
     },
     tags: ["strapi", "page-seo", `page-seo-${path}`],
@@ -333,11 +371,28 @@ export async function getCmsHomepage(): Promise<Record<string, unknown> | null> 
     query: {
       "populate[0]": "heroSlides",
       "populate[1]": "impactStats",
-      "populate[2]": "seo",
+      ...SEO_POPULATE,
     },
     tags: ["strapi", "homepage"],
   });
   return unwrapSingle(res);
+}
+
+export async function getCmsBlogCategories(): Promise<{ name: string; slug?: string }[]> {
+  const res = await strapiFetch<StrapiListResponse<Record<string, unknown>>>({
+    path: "/api/blog-categories",
+    query: {
+      sort: "name:asc",
+      "pagination[pageSize]": 50,
+    },
+    tags: ["strapi", "blog-categories"],
+  });
+  return unwrapList(res)
+    .map((e) => ({
+      name: String(e.name || ""),
+      slug: e.slug ? String(e.slug) : undefined,
+    }))
+    .filter((c) => c.name);
 }
 
 export async function getCmsNavigation(): Promise<Record<string, unknown> | null> {
@@ -359,8 +414,8 @@ export async function getCmsStaticPage(slug: string): Promise<Record<string, unk
     path: "/api/static-pages",
     query: {
       "filters[slug][$eq]": slug,
-      "populate[0]": "seo",
-      "populate[1]": "heroimage",
+      "populate[0]": "heroimage",
+      ...SEO_POPULATE,
       "pagination[pageSize]": 1,
     },
     tags: ["strapi", "static-page", slug],
@@ -373,7 +428,7 @@ export async function getCmsLegalPage(slug: string): Promise<Record<string, unkn
     path: "/api/legal-pages",
     query: {
       "filters[slug][$eq]": slug,
-      "populate[0]": "seo",
+      ...SEO_POPULATE,
       "pagination[pageSize]": 1,
     },
     tags: ["strapi", "legal-page", slug],

@@ -5,9 +5,26 @@
     "defaultTitle": "VynTech Solutions | Building Digital Excellence for Canadian Businesses",
     "titleTemplate": "%s | VynTech Solutions, Canadian Digital Agency",
     "defaultDescription": "VynTech Solutions is Canada's leading digital agency specializing in custom web development, mobile apps, UI/UX design, and enterprise software solutions. Serving businesses across Toronto, Vancouver, Montreal & nationwide.",
-    "phone": "",
+    "phone": "+1-877-879-6061",
     "email": "info@vyntechsolutions.ca",
-    "locale": "en_CA"
+    "locale": "en_CA",
+    "gaMeasurementId": "G-KJSSQXW965",
+    "gaPropertyId": "",
+    "cookieTitle": "We value your privacy",
+    "cookieBody": "We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking \"Accept All\", you consent to our use of cookies.",
+    "cookieAcceptLabel": "Accept All",
+    "cookieCustomizeLabel": "Customize",
+    "ogDescription": "Transform your business with Canada's leading digital agency. Custom web development, mobile apps, and enterprise solutions.",
+    "twitterTitle": "VynTech Solutions | Canada's Leading Digital Agency",
+    "keywords": [
+      "web development Canada",
+      "software development company Toronto",
+      "mobile app development Vancouver",
+      "digital agency Canada",
+      "custom software development"
+    ],
+    "googleSiteVerification": "",
+    "bingSiteVerification": ""
   },
   "pageSeos": [
     {
@@ -15,44 +32,98 @@
       "h1": "VynTech Solutions",
       "seo": {
         "metaTitle": "VynTech Solutions | Building Digital Excellence for Canadian Businesses",
-        "metaDescription": "Canada's leading digital agency.",
-        "indexable": true
+        "metaDescription": "Canada's leading digital agency for web development, mobile apps, UI/UX, and enterprise software. Serving Toronto, Vancouver, Montreal & nationwide.",
+        "indexable": true,
+        "focusKeyword": "web development company Canada",
+        "canonicalURL": "https://vyntechsolutions.ca"
       }
     },
     {
       "path": "/blog",
       "h1": "Blog",
       "seo": {
-        "metaTitle": "Blog",
-        "metaDescription": "Practical insights on software development.",
-        "indexable": true
+        "metaTitle": "Blog | VynTech Solutions",
+        "metaDescription": "Practical insights on software development, technology decisions, and building digital products.",
+        "indexable": true,
+        "focusKeyword": "software development blog",
+        "canonicalURL": "https://vyntechsolutions.ca/blog"
       }
     },
     {
       "path": "/services",
       "h1": "Services",
       "seo": {
-        "metaTitle": "Our Services",
-        "metaDescription": "Web, mobile, cloud, AI and more.",
-        "indexable": true
+        "metaTitle": "Our Services | VynTech Solutions",
+        "metaDescription": "Web, mobile, cloud, AI, DevOps, UI/UX, ecommerce, SEO, and custom software development services for Canadian businesses.",
+        "indexable": true,
+        "focusKeyword": "software development services Canada",
+        "canonicalURL": "https://vyntechsolutions.ca/services"
       }
     },
     {
       "path": "/industries",
       "h1": "Industries",
       "seo": {
-        "metaTitle": "Industries",
-        "metaDescription": "Industry digital solutions.",
-        "indexable": true
+        "metaTitle": "Industries We Serve | VynTech Solutions",
+        "metaDescription": "Industry-focused digital solutions across healthcare, finance, retail, telecom, and more.",
+        "indexable": true,
+        "focusKeyword": "industry software solutions",
+        "canonicalURL": "https://vyntechsolutions.ca/industries"
       }
     },
     {
       "path": "/about",
       "h1": "About",
       "seo": {
-        "metaTitle": "About Us",
-        "metaDescription": "About VynTech Solutions.",
-        "indexable": true
+        "metaTitle": "About Us | VynTech Solutions",
+        "metaDescription": "Learn about VynTech Solutions — a Canadian software partner helping businesses ship reliable digital products.",
+        "indexable": true,
+        "focusKeyword": "about VynTech Solutions",
+        "canonicalURL": "https://vyntechsolutions.ca/about"
+      }
+    },
+    {
+      "path": "/careers",
+      "h1": "Careers",
+      "seo": {
+        "metaTitle": "Careers | VynTech Solutions",
+        "metaDescription": "Join the VynTech Solutions team and build digital products for Canadian businesses.",
+        "indexable": true,
+        "focusKeyword": "careers VynTech Solutions",
+        "canonicalURL": "https://vyntechsolutions.ca/careers"
+      }
+    },
+    {
+      "path": "/lets-talk-business",
+      "h1": "Let's Talk Business",
+      "seo": {
+        "metaTitle": "Let's Talk Business | VynTech Solutions",
+        "metaDescription": "Share your project requirements and get a free consultation from VynTech Solutions.",
+        "indexable": true,
+        "focusKeyword": "free consultation software development",
+        "canonicalURL": "https://vyntechsolutions.ca/lets-talk-business"
+      }
+    },
+    {
+      "path": "/privacy-policy",
+      "h1": "Privacy Policy",
+      "seo": {
+        "metaTitle": "Privacy Policy | VynTech Solutions",
+        "metaDescription": "How VynTech Solutions collects, uses, and protects your personal information.",
+        "indexable": true,
+        "focusKeyword": "privacy policy",
+        "canonicalURL": "https://vyntechsolutions.ca/privacy-policy"
+      }
+    },
+    {
+      "path": "/terms-and-conditions",
+      "h1": "Terms and Conditions",
+      "seo": {
+        "metaTitle": "Terms and Conditions | VynTech Solutions",
+        "metaDescription": "Terms governing use of the VynTech Solutions website and services.",
+        "indexable": true,
+        "focusKeyword": "terms and conditions",
+        "canonicalURL": "https://vyntechsolutions.ca/terms-and-conditions"
       }
     }
   ],
@@ -281,8 +352,8 @@
   "services": [
     {
       "title": "Web Development",
-      "subtitle": "Websites & Web Applications",
-      "description": "From business websites to complex web applications, we handle frontend, backend, databases, and everything in between.",
+      "subtitle": "Website Design and Development Services Built to Perform",
+      "description": "As a trusted web development company, VynTech Solutions designs and engineers websites and applications that don't just look good they drive real business results. From first click to final conversion, we build digital experiences your customers trust and your business can scale on.",
       "heroImage": "/services/web-dev.jpg",
       "overview": "We build websites and web apps using modern frameworks like React, Next.js, and Node.js. Whether you need a company website, a customer portal, an admin dashboard, or a full SaaS product, we write clean, maintainable code that works reliably. No bloated templates, no unnecessary complexity.",
       "features": [
@@ -319,28 +390,28 @@
       ],
       "process": [
         {
-          "step": "Requirements",
-          "description": "We discuss what you need, who will use it, and what problems it should solve."
+          "step": "Discovery & Planning",
+          "description": "We map your goals, audience, and pages, then lock scope, timeline, and success metrics before design starts."
         },
         {
-          "step": "Planning",
-          "description": "Technical approach, timeline, and milestones, you know what to expect."
+          "step": "UX & Visual Design",
+          "description": "Wireframes and polished UI so the site looks right and converts, reviewed with you before we write code."
         },
         {
           "step": "Development",
-          "description": "We build in iterations. You see progress weekly, not after months."
+          "description": "We build in React and Next.js with clean, SEO-ready structure. You see progress in weekly demos, not months later."
         },
         {
-          "step": "Testing",
-          "description": "We test across browsers and devices. Bugs get fixed before launch."
+          "step": "QA & Performance",
+          "description": "Cross-browser and device testing, speed checks, and bug fixes so launch feels solid, not rushed."
         },
         {
-          "step": "Deployment",
-          "description": "We set up hosting, domains, SSL, and get your site live."
+          "step": "Launch",
+          "description": "Hosting, domain, SSL, and go-live handled carefully so your site is live without drama or downtime."
         },
         {
-          "step": "Handover",
-          "description": "Documentation, training if needed, and support for any issues."
+          "step": "Support & Growth",
+          "description": "Training, documentation, and ongoing tweaks so the site stays fast, secure, and easy to update."
         }
       ],
       "stats": [
@@ -384,7 +455,31 @@
         "metaTitle": "Web Development | VynTech Solutions",
         "metaDescription": "From business websites to complex web applications, we handle frontend, backend, databases, and everything in between.",
         "indexable": true
-      }
+      },
+      "deliveryHeading": "How We Deliver Web Application Development Services",
+      "deliveryDescription": "Web application development only pays off when the product is fast, secure, easy to use, and built to scale. At VynTech Solutions, our delivery model is structured, outcome-oriented, and refined across 50+ web and product engagements.\\n\\nWe work in clear phases so discovery is thorough, build quality is high, and launches are predictable. Scope, timelines, architecture, and support are defined upfront, which removes ambiguity and gives stakeholders full visibility from day one.\\n\\nBy pairing human-centric UI/UX design with product-grade engineering, we move your business from fragile websites to a web application that performs, converts, and compounds value release after release.",
+      "deliverySteps": [
+        {
+          "title": "Discovery & Product Strategy",
+          "content": "We define product goals, target audience requirements, feature prioritization, system architecture blueprints, and a clear execution roadmap before writing code."
+        },
+        {
+          "title": "UX/UI Design & Prototyping",
+          "content": "Our design team crafts intuitive user journeys, wireframes, high-fidelity UI components, and interactive prototypes tailored for high conversion and seamless interaction."
+        },
+        {
+          "title": "Agile Engineering & QA",
+          "content": "We build scalable frontend and backend systems using agile 2-week sprints, automated unit/integration testing, continuous code reviews, and frequent demo deployments."
+        },
+        {
+          "title": "Cloud Deployment & DevOps",
+          "content": "We establish automated CI/CD pipelines, containerized environments, secure cloud infrastructure, and zero-downtime deployment strategies on AWS, Azure, or GCP."
+        },
+        {
+          "title": "Support, Optimize & Scale",
+          "content": "After launch, we continuously monitor app performance, perform security audits, optimize load times, and ship ongoing feature enhancements to support your business growth."
+        }
+      ]
     },
     {
       "title": "Mobile App Development",
@@ -426,28 +521,28 @@
       ],
       "process": [
         {
-          "step": "Concept",
-          "description": "We define what the app does, who uses it, and the core features for v1."
+          "step": "Product Discovery",
+          "description": "We define who the app is for, the must-have features for v1, and a realistic path to App Store and Play Store."
         },
         {
-          "step": "Design",
-          "description": "Wireframes first, then full UI designs. You approve before we code."
+          "step": "UI/UX Design",
+          "description": "Wireframes first, then full mobile screens. You approve the flow on a prototype before development begins."
         },
         {
-          "step": "Development",
-          "description": "We build the app with regular builds for you to test on your phone."
+          "step": "App Development",
+          "description": "Native or cross-platform builds with regular test installs on your phone so feedback stays early and clear."
         },
         {
-          "step": "Testing",
-          "description": "Bug fixing, performance testing, and testing on real devices."
+          "step": "Device QA",
+          "description": "Real-device testing for speed, crashes, and edge cases across iOS and Android before submission."
         },
         {
-          "step": "Launch",
-          "description": "We handle App Store and Google Play submission and approval."
+          "step": "Store Launch",
+          "description": "We handle App Store and Google Play listing, assets, review notes, and approval follow-up."
         },
         {
-          "step": "Updates",
-          "description": "Bug fixes, OS updates, and new features as needed."
+          "step": "Updates & Care",
+          "description": "OS updates, bug fixes, and feature releases so the app stays current after launch day."
         }
       ],
       "stats": [
@@ -533,28 +628,28 @@
       ],
       "process": [
         {
-          "step": "Audit",
-          "description": "We look at your current setup (or requirements) and identify what needs to be done."
+          "step": "Cloud Assessment",
+          "description": "We review your current stack or requirements and identify risks, cost drivers, and the right cloud fit."
         },
         {
-          "step": "Planning",
-          "description": "Architecture design, cost estimates, and migration plan if applicable."
+          "step": "Architecture Design",
+          "description": "Clear architecture, cost estimates, security baseline, and a migration plan if you are moving workloads."
         },
         {
-          "step": "Setup",
-          "description": "We configure the infrastructure, security groups, databases, and monitoring."
+          "step": "Infrastructure Setup",
+          "description": "We configure servers, networks, databases, IAM, and monitoring with production-ready defaults."
         },
         {
-          "step": "Migration",
-          "description": "Data and application migration with testing at each step."
+          "step": "Migration & Cutover",
+          "description": "Data and apps move in stages with rollback options so downtime stays short and controlled."
         },
         {
-          "step": "Testing",
-          "description": "Load testing, security checks, and failover testing."
+          "step": "Validation",
+          "description": "Load, security, and failover checks confirm the environment holds under real traffic."
         },
         {
-          "step": "Handover",
-          "description": "Documentation and training for your team to manage day-to-day."
+          "step": "Ops Handover",
+          "description": "Runbooks, access, and team training so your staff can manage day-to-day with confidence."
         }
       ],
       "stats": [
@@ -640,28 +735,28 @@
       ],
       "process": [
         {
-          "step": "Problem Definition",
-          "description": "What are you trying to automate or improve? We define the actual use case."
+          "step": "Use-Case Definition",
+          "description": "We pin down the business problem, success metrics, and where AI genuinely saves time or improves outcomes."
         },
         {
-          "step": "Feasibility",
-          "description": "Is AI the right solution? Sometimes simpler approaches work better."
+          "step": "Feasibility Check",
+          "description": "We validate data, model options, and ROI. If a simpler automation wins, we say so upfront."
         },
         {
           "step": "Prototype",
-          "description": "We build a quick proof-of-concept so you can see if it works for your needs."
+          "description": "A working proof of concept you can try with real samples before committing to full build."
         },
         {
-          "step": "Development",
-          "description": "Full implementation with proper error handling and edge cases."
+          "step": "Build & Guardrails",
+          "description": "Production implementation with error handling, prompts, limits, and privacy controls baked in."
         },
         {
-          "step": "Integration",
-          "description": "Connect it to your existing systems, databases, and workflows."
+          "step": "System Integration",
+          "description": "We connect the solution to your apps, CRMs, and workflows so it fits how your team already works."
         },
         {
-          "step": "Monitoring",
-          "description": "Track usage, accuracy, and costs. Adjust as needed."
+          "step": "Monitor & Improve",
+          "description": "Usage, accuracy, and cost tracking with ongoing tuning as your data and needs evolve."
         }
       ],
       "stats": [
@@ -747,28 +842,28 @@
       ],
       "process": [
         {
-          "step": "Current State",
-          "description": "How do you deploy now? What is painful? What breaks often?"
+          "step": "Delivery Audit",
+          "description": "We map how you ship today, what breaks often, and where releases slow your team down."
         },
         {
-          "step": "Design",
-          "description": "We design the pipeline and infrastructure based on your actual needs."
+          "step": "Pipeline Design",
+          "description": "CI/CD, environments, and infrastructure designed around your stack, not a generic template."
         },
         {
-          "step": "Setup",
-          "description": "Configure CI/CD, containers, hosting, and monitoring tools."
+          "step": "Automation Setup",
+          "description": "Pipelines, containers, and infra-as-code configured so builds and deploys become routine."
         },
         {
-          "step": "Migration",
-          "description": "Move your existing apps to the new setup with minimal disruption."
+          "step": "Safe Migration",
+          "description": "Existing apps move onto the new flow with staged rollouts and clear rollback paths."
         },
         {
-          "step": "Documentation",
-          "description": "Your team needs to understand it. We write clear docs."
+          "step": "Observability",
+          "description": "Alerts, logs, and dashboards so issues surface before customers feel them."
         },
         {
-          "step": "Training",
-          "description": "We show your devs how to use and maintain the new setup."
+          "step": "Team Enablement",
+          "description": "Docs and hands-on training so your developers own the pipeline with confidence."
         }
       ],
       "stats": [
@@ -854,28 +949,28 @@
       ],
       "process": [
         {
-          "step": "Brief",
-          "description": "What does the app/site need to do? Who uses it? Any brand guidelines?"
+          "step": "Design Brief",
+          "description": "We gather goals, users, brand rules, and constraints so the design solves a real product problem."
         },
         {
           "step": "Wireframes",
-          "description": "Rough layouts to nail down structure and flow before we polish visuals."
+          "description": "Low-fidelity layouts lock structure and flow before visual polish, saving costly rework later."
         },
         {
           "step": "Visual Design",
-          "description": "Full designs with real content, proper spacing, and your brand style."
+          "description": "High-fidelity screens with your brand, real content, and clear hierarchy across key journeys."
         },
         {
-          "step": "Prototype",
-          "description": "Clickable prototype so you can test the flow before development."
+          "step": "Interactive Prototype",
+          "description": "Clickable flows you can test with stakeholders before a single line of code is written."
         },
         {
-          "step": "Revisions",
-          "description": "We refine based on your feedback. Usually 2-3 rounds."
+          "step": "Iteration",
+          "description": "Focused revision rounds based on feedback until the experience feels clear and on-brand."
         },
         {
-          "step": "Handoff",
-          "description": "Organized Figma file with components, specs, and assets for devs."
+          "step": "Dev Handoff",
+          "description": "Organized Figma files, components, and specs so engineering builds exactly what was approved."
         }
       ],
       "stats": [
@@ -961,28 +1056,28 @@
       ],
       "process": [
         {
-          "step": "Requirements",
-          "description": "What are you selling? How many products? Any special requirements?"
+          "step": "Store Discovery",
+          "description": "We clarify catalog size, payments, shipping rules, and the growth goals your store must support."
         },
         {
           "step": "Platform Choice",
-          "description": "We recommend Shopify, WooCommerce, or custom based on your needs."
+          "description": "Shopify, WooCommerce, or custom, recommended based on operations, budget, and how you sell."
         },
         {
-          "step": "Design",
-          "description": "Store design, homepage, product pages, cart, checkout."
+          "step": "Store Design",
+          "description": "Homepage, product pages, cart, and checkout designed to feel trustworthy and convert under load."
         },
         {
-          "step": "Setup",
-          "description": "Products, categories, payments, shipping, taxes, all configured."
+          "step": "Build & Configure",
+          "description": "Products, taxes, gateways, and shipping wired correctly so orders flow without manual workarounds."
         },
         {
-          "step": "Testing",
-          "description": "Test orders, payment flows, edge cases before going live."
+          "step": "Checkout QA",
+          "description": "Test orders, payment edge cases, and mobile checkout before a single real customer pays."
         },
         {
-          "step": "Launch",
-          "description": "Go live, monitor for issues, fix anything that comes up."
+          "step": "Go Live",
+          "description": "Launch with monitoring so issues are caught early and the store stays stable on busy days."
         }
       ],
       "stats": [
@@ -1068,28 +1163,28 @@
       ],
       "process": [
         {
-          "step": "Discovery",
-          "description": "We learn your current workflow. What works? What does not? What is manual?"
+          "step": "Workflow Discovery",
+          "description": "We learn how your team works today, what is manual, and where software can remove friction."
         },
         {
-          "step": "Scope",
-          "description": "Define exactly what the software needs to do. No scope creep."
+          "step": "Scope Definition",
+          "description": "Clear features, roles, and boundaries so the build stays focused and on budget."
         },
         {
-          "step": "Design",
-          "description": "Database structure, user interface, how it fits with existing systems."
+          "step": "System Design",
+          "description": "Data model, interfaces, and integrations planned around your existing tools and processes."
         },
         {
-          "step": "Build",
-          "description": "Iterative development. You see progress and can give feedback regularly."
+          "step": "Iterative Build",
+          "description": "Working slices delivered regularly so you can steer the product while it is still taking shape."
         },
         {
-          "step": "Test",
-          "description": "We test with real scenarios. You test before it goes live."
+          "step": "UAT & Hardening",
+          "description": "Real scenarios, security checks, and your team's sign-off before anything hits production."
         },
         {
-          "step": "Deploy",
-          "description": "We handle hosting, training, and support for the first few months."
+          "step": "Deploy & Train",
+          "description": "Go-live, admin training, and early support so adoption sticks after day one."
         }
       ],
       "stats": [
@@ -1175,28 +1270,28 @@
       ],
       "process": [
         {
-          "step": "Audit",
-          "description": "We check your site for SEO issues and see where you stand vs competitors."
+          "step": "SEO Audit",
+          "description": "Technical health, rankings, and competitor gaps reviewed so we know exactly where to start."
         },
         {
           "step": "Quick Wins",
-          "description": "Fix obvious issues first, broken links, missing tags, slow pages."
+          "description": "Broken links, missing tags, and speed issues fixed first for early measurable lift."
         },
         {
-          "step": "Keyword Plan",
-          "description": "What should you rank for? We find keywords with traffic and intent."
+          "step": "Keyword Strategy",
+          "description": "Keywords chosen for real search intent and business value, not vanity volume."
         },
         {
-          "step": "Optimization",
-          "description": "Update existing pages, create new content, build authority."
+          "step": "On-Page & Content",
+          "description": "Pages and content optimized so Google understands what you offer and who it is for."
         },
         {
-          "step": "Tracking",
-          "description": "Set up proper tracking so you know what is working."
+          "step": "Tracking Setup",
+          "description": "Analytics and Search Console configured so progress is visible in leads, not just rankings."
         },
         {
-          "step": "Monthly Work",
-          "description": "Ongoing optimization, new content, link building, reporting."
+          "step": "Ongoing Growth",
+          "description": "Monthly optimization, new content, and reporting that keeps momentum compounding."
         }
       ],
       "stats": [
@@ -1282,28 +1377,28 @@
       ],
       "process": [
         {
-          "step": "Handover",
-          "description": "You give us access. We review the codebase and document how things work."
+          "step": "Access & Review",
+          "description": "We take access, review the codebase and hosting, and document how your system actually runs."
         },
         {
           "step": "Retainer Setup",
-          "description": "We agree on hours per month and priority levels for requests."
+          "description": "Hours, priorities, and response times agreed upfront so support is predictable, not reactive chaos."
         },
         {
-          "step": "Request System",
-          "description": "You submit requests via email or Slack. We track everything."
+          "step": "Request Channel",
+          "description": "A simple intake via email or Slack with tracking, so nothing gets lost between conversations."
         },
         {
-          "step": "Regular Work",
-          "description": "We handle updates, fixes, and improvements each month."
+          "step": "Ongoing Care",
+          "description": "Updates, backups, security patches, and fixes handled on a steady monthly cadence."
         },
         {
-          "step": "Reporting",
-          "description": "Monthly summary of what we did and any recommendations."
+          "step": "Monthly Reporting",
+          "description": "A clear summary of what we shipped, what we watched, and what we recommend next."
         },
         {
-          "step": "Availability",
-          "description": "Need something urgent? We are reachable. Response times defined upfront."
+          "step": "Priority Response",
+          "description": "Urgent issues get defined SLAs so someone real is reachable when something is down."
         }
       ],
       "stats": [
@@ -1404,28 +1499,28 @@
       ],
       "process": [
         {
-          "step": "Consultation",
-          "description": "We review your current financial situation and understand your goals."
+          "step": "Financial Consultation",
+          "description": "We review your current books, tax position, and goals so advice starts from your real numbers."
         },
         {
-          "step": "Assessment",
-          "description": "Analyze your books, identify issues, and find optimization opportunities."
+          "step": "Books Assessment",
+          "description": "Gaps, risks, and cleanup opportunities identified before filing or planning decisions."
         },
         {
-          "step": "Strategy",
-          "description": "Develop a tailored tax and financial strategy for your situation."
+          "step": "Tax Strategy",
+          "description": "A practical plan for filings, deductions, and timing tailored to your business structure."
         },
         {
           "step": "Implementation",
-          "description": "Set up systems, file returns, and execute the financial plan."
+          "description": "Returns filed, systems set up, and the plan put into motion with clear deadlines."
         },
         {
-          "step": "Monitoring",
-          "description": "Ongoing review and adjustments as regulations and your business change."
+          "step": "Ongoing Monitoring",
+          "description": "Rules and your business change, we adjust so compliance and savings stay aligned."
         },
         {
-          "step": "Reporting",
-          "description": "Regular financial reports and tax summaries so you always know where you stand."
+          "step": "Clear Reporting",
+          "description": "Regular summaries so you always know where cash, tax, and obligations stand."
         }
       ],
       "stats": [
@@ -1563,7 +1658,7 @@
       "order": 0,
       "seo": {
         "metaTitle": "Healthcare & Pharmaceuticals | VynTech Solutions",
-        "metaDescription": "In today's evolving healthcare landscape, providers need technology solutions that are flexible, scalable, and capable of meeting the demands of modern healthcare. We empower healthcare organizations to deliver exceptional care by integrating innovative technology that enhances operational efficiency, streamlines processes, and improves patient outcomes.",
+        "metaDescription": "In today's evolving healthcare landscape, providers need technology solutions that are flexible, scalable, and capable of meeting the demands of modern healt...",
         "indexable": true
       }
     },
@@ -1657,7 +1752,7 @@
       "order": 1,
       "seo": {
         "metaTitle": "Finance & Banking | VynTech Solutions",
-        "metaDescription": "The financial services industry demands precision, security, and innovation. We deliver cutting-edge fintech solutions that help banks, insurance companies, and financial institutions modernize their operations, enhance customer experiences, and maintain regulatory compliance.",
+        "metaDescription": "The financial services industry demands precision, security, and innovation. We deliver cutting-edge fintech solutions that help banks, insurance companies,...",
         "indexable": true
       }
     },
@@ -1751,7 +1846,7 @@
       "order": 2,
       "seo": {
         "metaTitle": "E-commerce & Retail | VynTech Solutions",
-        "metaDescription": "The retail landscape is evolving rapidly. We help retailers and e-commerce businesses create compelling shopping experiences, optimize operations, and drive growth through innovative technology solutions that connect with customers across all channels.",
+        "metaDescription": "The retail landscape is evolving rapidly. We help retailers and e-commerce businesses create compelling shopping experiences, optimize operations, and drive...",
         "indexable": true
       }
     },
@@ -1845,7 +1940,7 @@
       "order": 3,
       "seo": {
         "metaTitle": "Education & E-learning | VynTech Solutions",
-        "metaDescription": "Education is undergoing a digital revolution. We help educational institutions, EdTech startups, and corporate training programs create engaging learning experiences that empower students and educators with innovative technology solutions.",
+        "metaDescription": "Education is undergoing a digital revolution. We help educational institutions, EdTech startups, and corporate training programs create engaging learning exp...",
         "indexable": true
       }
     },
@@ -1939,7 +2034,7 @@
       "order": 4,
       "seo": {
         "metaTitle": "Real Estate & Property | VynTech Solutions",
-        "metaDescription": "The real estate industry is embracing digital transformation. We help real estate companies, property managers, and proptech startups leverage technology to streamline operations, enhance customer experiences, and drive growth in a competitive market.",
+        "metaDescription": "The real estate industry is embracing digital transformation. We help real estate companies, property managers, and proptech startups leverage technology to...",
         "indexable": true
       }
     },
@@ -2033,7 +2128,7 @@
       "order": 5,
       "seo": {
         "metaTitle": "Logistics & Transportation | VynTech Solutions",
-        "metaDescription": "The logistics industry demands efficiency, visibility, and reliability. We deliver technology solutions that optimize supply chain operations, improve fleet management, and provide real-time visibility across your entire logistics network.",
+        "metaDescription": "The logistics industry demands efficiency, visibility, and reliability. We deliver technology solutions that optimize supply chain operations, improve fleet...",
         "indexable": true
       }
     },
@@ -2127,7 +2222,7 @@
       "order": 6,
       "seo": {
         "metaTitle": "Entertainment & Media | VynTech Solutions",
-        "metaDescription": "The entertainment and media industry is being transformed by digital technology. We help media companies, streaming platforms, and content creators deliver engaging experiences that captivate audiences and drive content monetization.",
+        "metaDescription": "The entertainment and media industry is being transformed by digital technology. We help media companies, streaming platforms, and content creators deliver e...",
         "indexable": true
       }
     },
@@ -2221,7 +2316,7 @@
       "order": 7,
       "seo": {
         "metaTitle": "Manufacturing & Industry | VynTech Solutions",
-        "metaDescription": "Industry 4.0 is transforming manufacturing. We help manufacturers leverage IoT, AI, and automation to optimize production, improve quality, and drive operational excellence across their facilities.",
+        "metaDescription": "Industry 4.0 is transforming manufacturing. We help manufacturers leverage IoT, AI, and automation to optimize production, improve quality, and drive operati...",
         "indexable": true
       }
     },
@@ -2315,7 +2410,7 @@
       "order": 8,
       "seo": {
         "metaTitle": "Hospitality & Travel | VynTech Solutions",
-        "metaDescription": "The hospitality and travel industry thrives on exceptional experiences. We help hotels, restaurants, airlines, and travel companies leverage technology to delight guests, streamline operations, and drive revenue growth.",
+        "metaDescription": "The hospitality and travel industry thrives on exceptional experiences. We help hotels, restaurants, airlines, and travel companies leverage technology to de...",
         "indexable": true
       }
     },
@@ -2409,7 +2504,7 @@
       "order": 9,
       "seo": {
         "metaTitle": "Telecommunications | VynTech Solutions",
-        "metaDescription": "The telecommunications industry is at the forefront of digital innovation. We help telecom operators and service providers modernize their infrastructure, enhance customer experiences, and capitalize on emerging technologies like 5G and IoT.",
+        "metaDescription": "The telecommunications industry is at the forefront of digital innovation. We help telecom operators and service providers modernize their infrastructure, en...",
         "indexable": true
       }
     }
@@ -2447,7 +2542,48 @@
         "mediaUrl": "/your-tech-partner.mp4",
         "mediaType": "video"
       }
-    ]
+    ],
+    "heroCtaLabel": "GET FREE CONSULTATION",
+    "heroWords": [
+      "Build",
+      "Innovate",
+      "Scale"
+    ],
+    "impactEyebrow": "Proven delivery",
+    "impactBody": "We don't just build software we build outcomes. Every project is guided by one question: Does this genuinely move your business forward? That focus is what turns technology into growth, and growth into lasting success.",
+    "impactCtaLabel": "About VynTech",
+    "impactCtaHref": "/about",
+    "impactStats": [
+      {
+        "value": "12+",
+        "label": "Years of industry experience"
+      },
+      {
+        "value": "50+",
+        "label": "Projects successfully delivered"
+      },
+      {
+        "value": "4+",
+        "label": "Countries served worldwide"
+      },
+      {
+        "value": "40+",
+        "label": "Happy clients & partners"
+      }
+    ],
+    "industriesSubheading": "Industries we serve",
+    "faqEyebrow": "FAQ",
+    "faqHeading": "Frequently asked questions",
+    "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
+    "techStackEyebrow": "Tech stack",
+    "techStackHeading": "Technology stack",
+    "techStackBody": "React, Next.js, Node.js, and cloud platforms we use to build websites, mobile apps, and custom software for every business.",
+    "seo": {
+      "metaTitle": "VynTech Solutions | Building Digital Excellence for Canadian Businesses",
+      "metaDescription": "Canada's leading digital agency for web development, mobile apps, UI/UX, and enterprise software. Serving Toronto, Vancouver, Montreal & nationwide.",
+      "focusKeyword": "web development company Canada",
+      "indexable": true
+    }
   },
   "navigation": {
     "primaryLinks": [
@@ -2478,38 +2614,246 @@
       }
     ],
     "socialLinks": [
-      { "label": "LinkedIn", "href": "https://linkedin.com" },
-      { "label": "Facebook", "href": "https://facebook.com" },
-      { "label": "Instagram", "href": "https://instagram.com" },
-      { "label": "YouTube", "href": "https://youtube.com" },
-      { "label": "X", "href": "https://x.com" }
+      {
+        "label": "LinkedIn",
+        "href": "https://linkedin.com"
+      },
+      {
+        "label": "Facebook",
+        "href": "https://facebook.com"
+      },
+      {
+        "label": "Instagram",
+        "href": "https://instagram.com"
+      },
+      {
+        "label": "YouTube",
+        "href": "https://youtube.com"
+      },
+      {
+        "label": "X",
+        "href": "https://x.com"
+      }
+    ],
+    "footerGroups": [
+      {
+        "title": "Services",
+        "links": [
+          {
+            "label": "Web Development",
+            "href": "/services/web-development"
+          },
+          {
+            "label": "Mobile App Development",
+            "href": "/services/mobile-app-development"
+          },
+          {
+            "label": "Cloud Solutions",
+            "href": "/services/cloud-solutions"
+          },
+          {
+            "label": "AI/ML Solutions",
+            "href": "/services/ai-ml-solutions"
+          },
+          {
+            "label": "DevOps & CI/CD",
+            "href": "/services/devops-cicd"
+          },
+          {
+            "label": "UI/UX Design",
+            "href": "/services/ui-ux-design"
+          }
+        ]
+      },
+      {
+        "title": "Industries",
+        "links": [
+          {
+            "label": "Healthcare & Pharmaceuticals",
+            "href": "/industries/healthcare"
+          },
+          {
+            "label": "Finance & Banking",
+            "href": "/industries/finance-banking"
+          },
+          {
+            "label": "Ecommerce & Retail",
+            "href": "/industries/ecommerce-retail"
+          },
+          {
+            "label": "Education & E-learning",
+            "href": "/industries/education-elearning"
+          },
+          {
+            "label": "Real Estate & Property",
+            "href": "/industries/real-estate"
+          },
+          {
+            "label": "Logistics & Transportation",
+            "href": "/industries/logistics-transportation"
+          },
+          {
+            "label": "Entertainment & Media",
+            "href": "/industries/entertainment-media"
+          },
+          {
+            "label": "Manufacturing & Industry",
+            "href": "/industries/manufacturing"
+          },
+          {
+            "label": "Hospitality & Travel",
+            "href": "/industries/hospitality-travel"
+          },
+          {
+            "label": "Telecommunications",
+            "href": "/industries/telecommunications"
+          }
+        ]
+      },
+      {
+        "title": "Solutions",
+        "links": [
+          {
+            "label": "Ecommerce Solutions",
+            "href": "/services/ecommerce-solutions"
+          },
+          {
+            "label": "Custom Software Development",
+            "href": "/services/custom-software-development"
+          },
+          {
+            "label": "SEO/Digital Marketing",
+            "href": "/services/seo-digital-marketing"
+          },
+          {
+            "label": "Maintenance & Support",
+            "href": "/services/maintenance-support"
+          }
+        ]
+      }
     ]
   },
   "clientLogos": [
-    { "name": "Maple Harvest Foods", "order": 1, "logoUrl": "/clients/maple-harvest-foods.svg" },
-    { "name": "True North Realty", "order": 2, "logoUrl": "/clients/true-north-realty.svg" },
-    { "name": "ShopBC Online", "order": 3, "logoUrl": "/clients/shopbc-online.svg" },
-    { "name": "Prairie Farms", "order": 4, "logoUrl": "/clients/prairie-farms.svg" },
-    { "name": "Calgary Homes", "order": 5, "logoUrl": "/clients/calgary-homes.svg" },
-    { "name": "Fresh Market", "order": 6, "logoUrl": "/clients/fresh-market.svg" },
-    { "name": "CanadaCart", "order": 7, "logoUrl": "/clients/canadacart.svg" },
-    { "name": "Ontario Bites", "order": 8, "logoUrl": "/clients/ontario-bites.svg" },
-    { "name": "Edmonton Properties", "order": 9, "logoUrl": "/clients/edmonton-properties.svg" },
-    { "name": "West Coast Eats", "order": 10, "logoUrl": "/clients/west-coast-eats.svg" },
-    { "name": "Vancouver Realtors", "order": 11, "logoUrl": "/clients/vancouver-realtors.svg" },
-    { "name": "Quick Shop", "order": 12, "logoUrl": "/clients/quick-shop.svg" },
-    { "name": "Northern Grind Coffee", "order": 13, "logoUrl": "/clients/northern-grind-coffee.svg" },
-    { "name": "Snowline Hotels", "order": 14, "logoUrl": "/clients/snowline-hotels.svg" },
-    { "name": "Great Lakes Logistics", "order": 15, "logoUrl": "/clients/great-lakes-logistics.svg" },
-    { "name": "Peak Fitness", "order": 16, "logoUrl": "/clients/peak-fitness.svg" },
-    { "name": "Harbour & Co", "order": 17, "logoUrl": "/clients/harbour-and-co.svg" },
-    { "name": "Atlantic Dental", "order": 18, "logoUrl": "/clients/atlantic-dental.svg" },
-    { "name": "Rideau Markets", "order": 19, "logoUrl": "/clients/rideau-markets.svg" },
-    { "name": "Muskoka Lodge", "order": 20, "logoUrl": "/clients/muskoka-lodge.svg" },
-    { "name": "Nova Labs", "order": 21, "logoUrl": "/clients/nova-labs.svg" },
-    { "name": "Pacific Bloom", "order": 22, "logoUrl": "/clients/pacific-bloom.svg" },
-    { "name": "Yukon Outfitters", "order": 23, "logoUrl": "/clients/yukon-outfitters.svg" },
-    { "name": "Ottawa Legal", "order": 24, "logoUrl": "/clients/ottawa-legal.svg" }
+    {
+      "name": "Maple Harvest Foods",
+      "order": 1,
+      "logoUrl": "/clients/maple-harvest-foods.svg"
+    },
+    {
+      "name": "True North Realty",
+      "order": 2,
+      "logoUrl": "/clients/true-north-realty.svg"
+    },
+    {
+      "name": "ShopBC Online",
+      "order": 3,
+      "logoUrl": "/clients/shopbc-online.svg"
+    },
+    {
+      "name": "Prairie Farms",
+      "order": 4,
+      "logoUrl": "/clients/prairie-farms.svg"
+    },
+    {
+      "name": "Calgary Homes",
+      "order": 5,
+      "logoUrl": "/clients/calgary-homes.svg"
+    },
+    {
+      "name": "Fresh Market",
+      "order": 6,
+      "logoUrl": "/clients/fresh-market.svg"
+    },
+    {
+      "name": "CanadaCart",
+      "order": 7,
+      "logoUrl": "/clients/canadacart.svg"
+    },
+    {
+      "name": "Ontario Bites",
+      "order": 8,
+      "logoUrl": "/clients/ontario-bites.svg"
+    },
+    {
+      "name": "Edmonton Properties",
+      "order": 9,
+      "logoUrl": "/clients/edmonton-properties.svg"
+    },
+    {
+      "name": "West Coast Eats",
+      "order": 10,
+      "logoUrl": "/clients/west-coast-eats.svg"
+    },
+    {
+      "name": "Vancouver Realtors",
+      "order": 11,
+      "logoUrl": "/clients/vancouver-realtors.svg"
+    },
+    {
+      "name": "Quick Shop",
+      "order": 12,
+      "logoUrl": "/clients/quick-shop.svg"
+    },
+    {
+      "name": "Northern Grind Coffee",
+      "order": 13,
+      "logoUrl": "/clients/northern-grind-coffee.svg"
+    },
+    {
+      "name": "Snowline Hotels",
+      "order": 14,
+      "logoUrl": "/clients/snowline-hotels.svg"
+    },
+    {
+      "name": "Great Lakes Logistics",
+      "order": 15,
+      "logoUrl": "/clients/great-lakes-logistics.svg"
+    },
+    {
+      "name": "Peak Fitness",
+      "order": 16,
+      "logoUrl": "/clients/peak-fitness.svg"
+    },
+    {
+      "name": "Harbour & Co",
+      "order": 17,
+      "logoUrl": "/clients/harbour-and-co.svg"
+    },
+    {
+      "name": "Atlantic Dental",
+      "order": 18,
+      "logoUrl": "/clients/atlantic-dental.svg"
+    },
+    {
+      "name": "Rideau Markets",
+      "order": 19,
+      "logoUrl": "/clients/rideau-markets.svg"
+    },
+    {
+      "name": "Muskoka Lodge",
+      "order": 20,
+      "logoUrl": "/clients/muskoka-lodge.svg"
+    },
+    {
+      "name": "Nova Labs",
+      "order": 21,
+      "logoUrl": "/clients/nova-labs.svg"
+    },
+    {
+      "name": "Pacific Bloom",
+      "order": 22,
+      "logoUrl": "/clients/pacific-bloom.svg"
+    },
+    {
+      "name": "Yukon Outfitters",
+      "order": 23,
+      "logoUrl": "/clients/yukon-outfitters.svg"
+    },
+    {
+      "name": "Ottawa Legal",
+      "order": 24,
+      "logoUrl": "/clients/ottawa-legal.svg"
+    }
   ],
   "promos": [
     {
@@ -2541,6 +2885,16 @@
       "ctaHref": "/lets-talk-business",
       "active": true,
       "priority": 5
+    },
+    {
+      "name": "Services Page Promo",
+      "slot": "services-promo",
+      "heading": "Need a custom solution?",
+      "body": "Tell us about your project and get a free consultation from our technical team.",
+      "ctaLabel": "Let's Talk",
+      "ctaHref": "/lets-talk-business",
+      "active": true,
+      "priority": 3
     }
   ],
   "formConfig": {
@@ -2555,7 +2909,8 @@
       "custom-software-development",
       "seo-digital-marketing",
       "maintenance-support",
-      "tax-accounting"
+      "tax-accounting",
+      "Other IT Services"
     ],
     "regions": [
       "Ontario",
@@ -2569,6 +2924,9 @@
       "Google",
       "Referral",
       "LinkedIn",
+      "Social Media",
+      "Event/Conference",
+      "Advertisement",
       "Other"
     ],
     "budgetOptions": [
@@ -2576,17 +2934,28 @@
       "$10,000 to $25,000",
       "$25,000 to $50,000",
       "$50,000 to $100,000",
-      "$100,000+"
+      "$100,000 to $250,000",
+      "$250,000+"
+    ],
+    "timelineOptions": [
+      "ASAP",
+      "Within 1 month",
+      "1-3 months",
+      "3-6 months",
+      "6+ months",
+      "Not sure yet"
     ]
   },
   "organizationProfile": {
     "name": "VynTech Solutions",
-    "phone": "",
+    "phone": "+1-877-879-6061",
     "email": "info@vyntechsolutions.ca",
     "geoLatitude": "43.6532",
     "geoLongitude": "-79.3832",
     "ratingValue": 4.9,
-    "reviewCount": 50
+    "reviewCount": 50,
+    "address": "55 Village Centre Pl #200,\nMississauga, ON L4Z 1V9",
+    "tagline": "Empowering businesses with innovative technology solutions. We deliver cutting-edge software, robust cloud architectures, and transformative digital experiences that drive growth."
   },
   "staticPages": [
     {
@@ -2597,7 +2966,52 @@
       "sections": {
         "missionHeading": "Empowering Businesses Through Innovative Technology",
         "missionBody": "We believe every business deserves access to world-class software. Our mission is to bridge the gap between visionary ideas and technical execution, delivering solutions that are not just functional, but transformative.",
-        "missionBody2": "Whether you're a startup validating your first MVP or an enterprise modernizing legacy systems, we bring the same level of dedication, expertise, and passion to every project."
+        "missionBody2": "Whether you're a startup validating your first MVP or an enterprise modernizing legacy systems, we bring the same level of dedication, expertise, and passion to every project.",
+        "valuesEyebrow": "What Drives Us",
+        "valuesHeading": "Our Core Values",
+        "values": [
+          {
+            "title": "Excellence First",
+            "description": "Good enough isn't in our vocabulary. From the first line of code to the final pixel, we sweat the details others skip because your business deserves work we're genuinely proud of."
+          },
+          {
+            "title": "Radical Transparency",
+            "description": "No surprise invoices, no vague timelines, no vanishing acts mid-project. You'll always know exactly where things stand, what's next, and why straight talk, every step of the way."
+          },
+          {
+            "title": "Partnership Mindset",
+            "description": "We're not here to just check boxes and send invoices. When you win, we win. That's why we treat every project like it's our own business on the line."
+          },
+          {
+            "title": "Speed Without Sacrifice",
+            "description": "Fast doesn't have to mean sloppy. We move quickly, stay agile, and still build things that hold up because rushed work today just means rework tomorrow."
+          }
+        ],
+        "processEyebrow": "Our Process",
+        "processHeading": "How We Bring Ideas to Life",
+        "processIntro": "A proven methodology refined over 50+ successful projects.",
+        "process": [
+          {
+            "number": "01",
+            "title": "Discovery & Strategy",
+            "description": "Before we write a single line of code, we get to know your business inside out your goals, your users, your constraints. We align on the vision first, so nothing gets lost in translation later."
+          },
+          {
+            "number": "02",
+            "title": "Architecture & Design",
+            "description": "We design systems built to grow with you, not just work for today. Every screen, every interaction, and every technical decision is intentional, laying a foundation that's scalable, intuitive, and built to last."
+          },
+          {
+            "number": "03",
+            "title": "Agile Development",
+            "description": "You'll never be left wondering what's happening behind the scenes. With two-week sprints and live demos, you see real progress, give real feedback, and stay in the loop from the very first build."
+          },
+          {
+            "number": "04",
+            "title": "Launch & Scale",
+            "description": "Launch day isn't the finish line it's the starting point. We test rigorously, deploy without disruption, and stick around to optimize, support, and scale your product long after it goes live."
+          }
+        ]
       }
     },
     {
@@ -2605,6 +3019,12 @@
       "slug": "careers",
       "heroHeading": "Careers",
       "heroBody": "Join the VynTech Solutions team."
+    },
+    {
+      "title": "Blog",
+      "slug": "blog",
+      "heroHeading": "Blog",
+      "heroBody": "Practical insights on software development, technology decisions, and building digital products."
     }
   ],
   "legalPages": [
@@ -2619,6 +3039,58 @@
       "slug": "terms-and-conditions",
       "lastUpdated": "2026-03-27",
       "body": "<p>Welcome to VynTech Solutions. By accessing vyntechsolutions.ca or engaging our services, you agree to these Terms and Conditions.</p><h2>Services</h2><p>We provide software development, digital design, SEO/marketing, and related consulting. Project scope, fees, and timelines are defined in separate agreements or statements of work.</p><h2>Website Use</h2><p>You may use this website for lawful purposes only. You may not attempt to disrupt the site, scrape content without permission, or misuse contact forms.</p><h2>Intellectual Property</h2><p>Site content, branding, and materials are owned by VynTech Solutions unless otherwise stated. Client deliverables ownership is governed by your project agreement.</p><h2>Limitation of Liability</h2><p>To the fullest extent permitted by Canadian law, VynTech Solutions is not liable for indirect or consequential damages arising from website use or general informational content on this site.</p><h2>Contact</h2><p>Questions about these terms: info@vyntechsolutions.ca</p>"
+    }
+  ],
+  "jobOpenings": [
+    {
+      "title": "Full-Stack Developer",
+      "department": "Engineering",
+      "location": "Mississauga, ON (Hybrid)",
+      "type": "Full-time",
+      "experience": "3+ years",
+      "salary": "Competitive",
+      "description": "Build and ship web applications with React, Next.js, and Node.js for Canadian and international clients.",
+      "requirements": [
+        "Strong experience with React and TypeScript",
+        "Familiarity with Next.js and REST/GraphQL APIs",
+        "Comfortable collaborating in agile teams"
+      ],
+      "responsibilities": [
+        "Develop and maintain client-facing applications",
+        "Write clean, tested, maintainable code",
+        "Participate in code reviews and technical planning"
+      ],
+      "benefits": [
+        "Competitive compensation",
+        "Flexible hybrid work",
+        "Learning and growth budget"
+      ],
+      "isActive": true
+    },
+    {
+      "title": "UI/UX Designer",
+      "department": "Design",
+      "location": "Remote (Canada)",
+      "type": "Full-time",
+      "experience": "2+ years",
+      "salary": "Competitive",
+      "description": "Design polished product experiences for web and mobile platforms across industries.",
+      "requirements": [
+        "Portfolio of shipped digital products",
+        "Proficiency in Figma",
+        "Strong visual and interaction design skills"
+      ],
+      "responsibilities": [
+        "Create wireframes, prototypes, and high-fidelity designs",
+        "Collaborate with engineers and stakeholders",
+        "Maintain design systems and component libraries"
+      ],
+      "benefits": [
+        "Competitive compensation",
+        "Remote-friendly culture",
+        "Modern design tooling"
+      ],
+      "isActive": true
     }
   ]
 }

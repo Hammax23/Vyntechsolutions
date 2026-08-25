@@ -373,7 +373,8 @@ export interface ApiBlogCategoryBlogCategory
   extends Struct.CollectionTypeSchema {
   collectionName: 'blog_categories';
   info: {
-    displayName: 'Blog Category';
+    description: 'Blog topic groups';
+    displayName: '04. Blog Categories';
     pluralName: 'blog-categories';
     singularName: 'blog-category';
   };
@@ -403,7 +404,8 @@ export interface ApiBlogCategoryBlogCategory
 export interface ApiBlogPostBlogPost extends Struct.CollectionTypeSchema {
   collectionName: 'blog_posts';
   info: {
-    displayName: 'Blog Post';
+    description: 'Articles and insights';
+    displayName: '03. Blog Posts';
     pluralName: 'blog-posts';
     singularName: 'blog-post';
   };
@@ -446,7 +448,8 @@ export interface ApiBlogPostBlogPost extends Struct.CollectionTypeSchema {
 export interface ApiClientLogoClientLogo extends Struct.CollectionTypeSchema {
   collectionName: 'client_logos';
   info: {
-    displayName: 'Client Logo';
+    description: 'Homepage client logo carousel';
+    displayName: '06. Client Logos';
     pluralName: 'client-logos';
     singularName: 'client-logo';
   };
@@ -478,7 +481,8 @@ export interface ApiClientLogoClientLogo extends Struct.CollectionTypeSchema {
 export interface ApiFaqFaq extends Struct.CollectionTypeSchema {
   collectionName: 'faqs';
   info: {
-    displayName: 'FAQ';
+    description: 'Frequently asked questions';
+    displayName: '05. FAQs';
     pluralName: 'faqs';
     singularName: 'faq';
   };
@@ -506,7 +510,8 @@ export interface ApiFaqFaq extends Struct.CollectionTypeSchema {
 export interface ApiFormConfigFormConfig extends Struct.SingleTypeSchema {
   collectionName: 'form_configs';
   info: {
-    displayName: 'Form Config';
+    description: 'Quote form services, budgets, regions, and timelines';
+    displayName: '05. Form Config';
     pluralName: 'form-configs';
     singularName: 'form-config';
   };
@@ -528,6 +533,7 @@ export interface ApiFormConfigFormConfig extends Struct.SingleTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     regions: Schema.Attribute.JSON;
     services: Schema.Attribute.JSON;
+    timelineOptions: Schema.Attribute.JSON;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -537,8 +543,8 @@ export interface ApiFormConfigFormConfig extends Struct.SingleTypeSchema {
 export interface ApiGlobalSeoGlobalSeo extends Struct.SingleTypeSchema {
   collectionName: 'global_seos';
   info: {
-    description: 'Site-wide SEO defaults';
-    displayName: 'Global SEO';
+    description: 'Site-wide SEO defaults and social sharing';
+    displayName: '04. Global SEO';
     pluralName: 'global-seos';
     singularName: 'global-seo';
   };
@@ -546,6 +552,11 @@ export interface ApiGlobalSeoGlobalSeo extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    bingSiteVerification: Schema.Attribute.String;
+    cookieAcceptLabel: Schema.Attribute.String;
+    cookieBody: Schema.Attribute.Text;
+    cookieCustomizeLabel: Schema.Attribute.String;
+    cookieTitle: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -553,6 +564,10 @@ export interface ApiGlobalSeoGlobalSeo extends Struct.SingleTypeSchema {
     defaultOgImage: Schema.Attribute.Media<'images'>;
     defaultTitle: Schema.Attribute.String;
     email: Schema.Attribute.String;
+    gaMeasurementId: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'G-KJSSQXW965'>;
+    gaPropertyId: Schema.Attribute.String;
+    googleSiteVerification: Schema.Attribute.String;
     keywords: Schema.Attribute.JSON;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -579,7 +594,8 @@ export interface ApiGlobalSeoGlobalSeo extends Struct.SingleTypeSchema {
 export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
   collectionName: 'homepages';
   info: {
-    displayName: 'Homepage';
+    description: 'Main homepage hero, services intro, and impact content';
+    displayName: '01. Homepage';
     pluralName: 'homepages';
     singularName: 'homepage';
   };
@@ -590,13 +606,20 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    faqEyebrow: Schema.Attribute.String;
+    faqHeading: Schema.Attribute.String;
+    faqIntro: Schema.Attribute.Text;
+    heroCtaLabel: Schema.Attribute.String;
     heroSlides: Schema.Attribute.Component<'home.hero-slide', true>;
+    heroWords: Schema.Attribute.JSON;
     impactBody: Schema.Attribute.Text;
     impactCtaHref: Schema.Attribute.String;
     impactCtaLabel: Schema.Attribute.String;
+    impactEyebrow: Schema.Attribute.String;
     impactHeading: Schema.Attribute.String;
     impactStats: Schema.Attribute.Component<'shared.stat', true>;
     industriesHeading: Schema.Attribute.String;
+    industriesSubheading: Schema.Attribute.String;
     insightsHeading: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -611,6 +634,10 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
     servicesBody: Schema.Attribute.Text;
     servicesHeading: Schema.Attribute.String;
     servicesSubheading: Schema.Attribute.String;
+    techStack: Schema.Attribute.JSON;
+    techStackBody: Schema.Attribute.Text;
+    techStackEyebrow: Schema.Attribute.String;
+    techStackHeading: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -620,8 +647,8 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
 export interface ApiIndustryIndustry extends Struct.CollectionTypeSchema {
   collectionName: 'industries';
   info: {
-    description: '';
-    displayName: 'Industry';
+    description: 'Industry pages and vertical content';
+    displayName: '02. Industries';
     pluralName: 'industries';
     singularName: 'industry';
   };
@@ -660,7 +687,8 @@ export interface ApiIndustryIndustry extends Struct.CollectionTypeSchema {
 export interface ApiJobOpeningJobOpening extends Struct.CollectionTypeSchema {
   collectionName: 'job_openings';
   info: {
-    displayName: 'Job Opening';
+    description: 'Careers listings';
+    displayName: '10. Job Openings';
     pluralName: 'job-openings';
     singularName: 'job-opening';
   };
@@ -698,7 +726,8 @@ export interface ApiJobOpeningJobOpening extends Struct.CollectionTypeSchema {
 export interface ApiLegalPageLegalPage extends Struct.CollectionTypeSchema {
   collectionName: 'legal_pages';
   info: {
-    displayName: 'Legal Page';
+    description: 'Privacy policy and terms';
+    displayName: '09. Legal Pages';
     pluralName: 'legal-pages';
     singularName: 'legal-page';
   };
@@ -730,7 +759,8 @@ export interface ApiLegalPageLegalPage extends Struct.CollectionTypeSchema {
 export interface ApiNavigationNavigation extends Struct.SingleTypeSchema {
   collectionName: 'navigations';
   info: {
-    displayName: 'Navigation';
+    description: 'Header, footer, and social links';
+    displayName: '02. Navigation';
     pluralName: 'navigations';
     singularName: 'navigation';
   };
@@ -762,7 +792,8 @@ export interface ApiOrganizationProfileOrganizationProfile
   extends Struct.SingleTypeSchema {
   collectionName: 'organization_profiles';
   info: {
-    displayName: 'Organization Profile';
+    description: 'Company name, phone, email, and business details';
+    displayName: '03. Organization Profile';
     pluralName: 'organization-profiles';
     singularName: 'organization-profile';
   };
@@ -792,6 +823,7 @@ export interface ApiOrganizationProfileOrganizationProfile
     ratingValue: Schema.Attribute.Decimal;
     reviewCount: Schema.Attribute.Integer;
     sameAs: Schema.Attribute.JSON;
+    tagline: Schema.Attribute.Text;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -801,7 +833,8 @@ export interface ApiOrganizationProfileOrganizationProfile
 export interface ApiPageSeoPageSeo extends Struct.CollectionTypeSchema {
   collectionName: 'page_seos';
   info: {
-    displayName: 'Page SEO';
+    description: 'Per-route SEO overrides';
+    displayName: '11. Page SEO';
     pluralName: 'page-seos';
     singularName: 'page-seo';
   };
@@ -833,7 +866,8 @@ export interface ApiPageSeoPageSeo extends Struct.CollectionTypeSchema {
 export interface ApiPromoPromo extends Struct.CollectionTypeSchema {
   collectionName: 'promos';
   info: {
-    displayName: 'Promo';
+    description: 'Popups, banners, and promo slots';
+    displayName: '07. Promos';
     pluralName: 'promos';
     singularName: 'promo';
   };
@@ -868,7 +902,8 @@ export interface ApiPromoPromo extends Struct.CollectionTypeSchema {
 export interface ApiServiceService extends Struct.CollectionTypeSchema {
   collectionName: 'services';
   info: {
-    displayName: 'Service';
+    description: 'Service pages: web, mobile, SEO, cloud, and more';
+    displayName: '01. Services';
     pluralName: 'services';
     singularName: 'service';
   };
@@ -920,8 +955,8 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
 export interface ApiStaticPageStaticPage extends Struct.CollectionTypeSchema {
   collectionName: 'static_pages';
   info: {
-    description: '';
-    displayName: 'Static Page';
+    description: 'About, careers, and other fixed pages';
+    displayName: '08. Static Pages';
     pluralName: 'static-pages';
     singularName: 'static-page';
   };

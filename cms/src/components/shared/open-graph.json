@@ -9,12 +9,10 @@
   "attributes": {
     "ogTitle": {
       "type": "string",
-      "required": true,
       "maxLength": 70
     },
     "ogDescription": {
       "type": "string",
-      "required": true,
       "maxLength": 200
     },
     "ogImage": {

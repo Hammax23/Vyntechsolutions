@@ -141,11 +141,7 @@ export default function LogoCarousel() {
             logoUrl: resolveLogoUrl(name, item.logoUrl ? String(item.logoUrl) : fromMedia),
           };
         });
-        const seen = new Set(fromCms.map((l) => l.name.toLowerCase().replace(/\s+/g, "")));
-        const extras = DEFAULT_LOGOS.filter(
-          (l) => !seen.has(l.name.toLowerCase().replace(/\s+/g, ""))
-        );
-        setLogos([...fromCms, ...extras]);
+        setLogos(fromCms);
       })
       .catch(() => {});
   }, []);

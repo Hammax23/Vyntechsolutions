@@ -13,6 +13,10 @@ export default function BlogPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [posts, setPosts] = useState<BlogPost[]>(blogPosts);
   const [categories, setCategories] = useState(defaultCategories);
+  const [heroHeading, setHeroHeading] = useState("Blog");
+  const [heroBody, setHeroBody] = useState(
+    "Practical insights on software development, technology decisions, and building digital products."
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -25,6 +29,25 @@ export default function BlogPage() {
           new Set<string>(["All", ...data.posts.map((p: BlogPost) => p.category).filter(Boolean)])
         );
         setCategories(cats);
+      })
+      .catch(() => {});
+    fetch("/api/cms/content?type=blog-categories")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (cancelled) return;
+        const list = data?.categories as { name?: string }[] | undefined;
+        if (!list?.length) return;
+        const names = list.map((c) => String(c.name || "")).filter(Boolean);
+        if (names.length) setCategories(["All", ...names]);
+      })
+      .catch(() => {});
+    fetch("/api/cms/content?type=static-page&slug=blog")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (cancelled) return;
+        const page = data?.page as Record<string, unknown> | undefined;
+        if (page?.heroHeading) setHeroHeading(String(page.heroHeading));
+        if (page?.heroBody) setHeroBody(String(page.heroBody));
       })
       .catch(() => {});
     return () => {
@@ -66,11 +89,9 @@ export default function BlogPage() {
 
             <div className="max-w-3xl">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
-                Blog
+                {heroHeading}
               </h1>
-              <p className="text-white/70 leading-relaxed">
-                Practical insights on software development, technology decisions, and building digital products.
-              </p>
+              <p className="text-white/70 leading-relaxed">{heroBody}</p>
             </div>
           </div>
         </section>

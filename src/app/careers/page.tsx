@@ -25,9 +25,22 @@ export default function CareersPage() {
   const [positions, setPositions] = useState<JobPosition[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedPosition, setSelectedPosition] = useState<JobPosition | null>(null);
+  const [heroHeading, setHeroHeading] = useState("Join Our Team");
+  const [heroBody, setHeroBody] = useState(
+    "We're looking for people who want to build great software and grow with us. If that sounds like you, let's talk."
+  );
 
   useEffect(() => {
     fetchPositions();
+    fetch("/api/cms/content?type=static-page&slug=careers")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        const page = data?.page as Record<string, unknown> | undefined;
+        if (!page) return;
+        if (page.heroHeading) setHeroHeading(String(page.heroHeading));
+        if (page.heroBody) setHeroBody(String(page.heroBody));
+      })
+      .catch(() => {});
   }, []);
 
   const fetchPositions = async () => {
@@ -87,11 +100,9 @@ export default function CareersPage() {
 
             <div className="max-w-3xl">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
-                Join Our Team
+                {heroHeading}
               </h1>
-              <p className="text-white/70 leading-relaxed">
-                We&apos;re looking for people who want to build great software and grow with us. If that sounds like you, let&apos;s talk.
-              </p>
+              <p className="text-white/70 leading-relaxed">{heroBody}</p>
             </div>
           </div>
         </section>
