@@ -21,31 +21,108 @@ interface JobPosition {
   createdAt: string;
 }
 
+type CareersChrome = {
+  openingsEyebrow: string;
+  openingsHeading: string;
+  emptyHeading: string;
+  emptyBody: string;
+  emptyEmail: string;
+  whyEyebrow: string;
+  whyHeading: string;
+  whyCards: { title: string; description: string }[];
+  ctaHeading: string;
+  ctaBody: string;
+  ctaLabel: string;
+  ctaHref: string;
+  applyLabel: string;
+};
+
+const EMPTY_CHROME: CareersChrome = {
+  openingsEyebrow: "",
+  openingsHeading: "",
+  emptyHeading: "",
+  emptyBody: "",
+  emptyEmail: "",
+  whyEyebrow: "",
+  whyHeading: "",
+  whyCards: [],
+  ctaHeading: "",
+  ctaBody: "",
+  ctaLabel: "",
+  ctaHref: "",
+  applyLabel: "",
+};
+
 export default function CareersPage() {
   const [positions, setPositions] = useState<JobPosition[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedPosition, setSelectedPosition] = useState<JobPosition | null>(null);
-  const [heroHeading, setHeroHeading] = useState("Join Our Team");
-  const [heroBody, setHeroBody] = useState(
-    "We're looking for people who want to build great software and grow with us. If that sounds like you, let's talk."
-  );
+  const [heroHeading, setHeroHeading] = useState("");
+  const [heroBody, setHeroBody] = useState("");
+  const [chrome, setChrome] = useState<CareersChrome>(EMPTY_CHROME);
 
   useEffect(() => {
     fetchPositions();
-    fetch("/api/cms/content?type=static-page&slug=careers")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
+    let cancelled = false;
+    Promise.all([
+      fetch("/api/cms/content?type=static-page&slug=careers").then((r) =>
+        r.ok ? r.json() : null
+      ),
+      fetch("/api/cms/content?type=page-seo&path=/careers").then((r) =>
+        r.ok ? r.json() : null
+      ),
+    ])
+      .then(([data, seoRes]) => {
+        if (cancelled) return;
         const page = data?.page as Record<string, unknown> | undefined;
-        if (!page) return;
-        if (page.heroHeading) setHeroHeading(String(page.heroHeading));
-        if (page.heroBody) setHeroBody(String(page.heroBody));
+        const pageSeo = seoRes?.pageSeo as Record<string, unknown> | undefined;
+        const seoH1 = typeof pageSeo?.h1 === "string" ? pageSeo.h1.trim() : "";
+
+        if (page?.heroHeading) setHeroHeading(String(page.heroHeading));
+        else if (seoH1) setHeroHeading(seoH1);
+
+        if (page?.heroBody) setHeroBody(String(page.heroBody));
+
+        const sections =
+          page?.sections && typeof page.sections === "object" && !Array.isArray(page.sections)
+            ? (page.sections as Record<string, unknown>)
+            : {};
+
+        const whyCardsRaw = Array.isArray(sections.whyCards) ? sections.whyCards : [];
+        const whyCards = whyCardsRaw
+          .map((card) => {
+            const row = card as { title?: string; description?: string };
+            return {
+              title: String(row?.title || ""),
+              description: String(row?.description || ""),
+            };
+          })
+          .filter((c) => c.title || c.description);
+
+        setChrome({
+          openingsEyebrow: String(sections.openingsEyebrow || ""),
+          openingsHeading: String(sections.openingsHeading || ""),
+          emptyHeading: String(sections.emptyHeading || ""),
+          emptyBody: String(sections.emptyBody || ""),
+          emptyEmail: String(sections.emptyEmail || ""),
+          whyEyebrow: String(sections.whyEyebrow || ""),
+          whyHeading: String(sections.whyHeading || ""),
+          whyCards,
+          ctaHeading: String(sections.ctaHeading || ""),
+          ctaBody: String(sections.ctaBody || ""),
+          ctaLabel: String(sections.ctaLabel || ""),
+          ctaHref: String(sections.ctaHref || ""),
+          applyLabel: String(sections.applyLabel || ""),
+        });
       })
       .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const fetchPositions = async () => {
     try {
-      // Prefer Strapi CMS job openings when available
       const cmsRes = await fetch("/api/cms/content?type=jobs");
       if (cmsRes.ok) {
         const cms = await cmsRes.json();
@@ -84,14 +161,20 @@ export default function CareersPage() {
     }
   };
 
+  const emptyMailto = chrome.emptyEmail
+    ? `mailto:${chrome.emptyEmail}`
+    : chrome.ctaHref || "#";
+  const applyMailto = (title: string) =>
+    chrome.emptyEmail
+      ? `mailto:${chrome.emptyEmail}?subject=Application for ${encodeURIComponent(title)}`
+      : chrome.ctaHref || "#";
+
   return (
     <>
       <Navbar />
       <main className="min-h-screen bg-white">
-        {/* Hero Section */}
         <section className="relative bg-[#1a1a2e] pt-28 pb-16 overflow-hidden">
           <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6">
-            {/* Breadcrumb */}
             <div className="flex items-center gap-2 text-white/50 text-sm mb-8">
               <Link href="/" className="hover:text-white transition-colors">Home</Link>
               <span>›</span>
@@ -99,49 +182,60 @@ export default function CareersPage() {
             </div>
 
             <div className="max-w-3xl">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
-                {heroHeading}
-              </h1>
-              <p className="text-white/70 leading-relaxed">{heroBody}</p>
+              {heroHeading ? (
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+                  {heroHeading}
+                </h1>
+              ) : null}
+              {heroBody ? <p className="text-white/70 leading-relaxed">{heroBody}</p> : null}
             </div>
           </div>
         </section>
 
-        {/* Open Positions Section */}
         <section className="py-16 bg-white">
           <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
-            <div className="mb-10">
-              <span className="inline-block bg-[#262b3f]/10 text-[#262b3f] text-sm font-semibold px-4 py-2 rounded-full mb-4">Open Positions</span>
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a2e]">Current Openings</h2>
-            </div>
+            {(chrome.openingsEyebrow || chrome.openingsHeading) && (
+              <div className="mb-10">
+                {chrome.openingsEyebrow ? (
+                  <span className="inline-block bg-[#262b3f]/10 text-[#262b3f] text-sm font-semibold px-4 py-2 rounded-full mb-4">
+                    {chrome.openingsEyebrow}
+                  </span>
+                ) : null}
+                {chrome.openingsHeading ? (
+                  <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a2e]">{chrome.openingsHeading}</h2>
+                ) : null}
+              </div>
+            )}
 
             {loading ? (
               <div className="flex justify-center py-12">
                 <div className="w-8 h-8 border-4 border-[#0055FF]/20 border-t-[#0055FF] rounded-full animate-spin"></div>
               </div>
             ) : positions.length === 0 ? (
-              /* No Positions Message */
-              <div className="max-w-2xl">
-                <div className="bg-[#f8f9fa] rounded-xl p-8">
-                  <h3 className="text-xl font-semibold text-[#1a1a2e] mb-3">
-                    No open positions right now
-                  </h3>
-                  <p className="text-gray-600 mb-6">
-                    We don&apos;t have any roles open at the moment, but we&apos;re always interested in meeting talented people. Drop us your resume and we&apos;ll reach out when something comes up.
-                  </p>
-                  <a
-                    href="mailto:careers@vyntechsolutions.ca"
-                    className="inline-flex items-center gap-2 bg-[#262b3f] hover:bg-[#0055FF] text-white px-5 py-2.5 rounded-lg font-medium transition-all duration-300"
-                  >
-                    Send Resume
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                  </a>
+              (chrome.emptyHeading || chrome.emptyBody || chrome.emptyEmail) && (
+                <div className="max-w-2xl">
+                  <div className="bg-[#f8f9fa] rounded-xl p-8">
+                    {chrome.emptyHeading ? (
+                      <h3 className="text-xl font-semibold text-[#1a1a2e] mb-3">{chrome.emptyHeading}</h3>
+                    ) : null}
+                    {chrome.emptyBody ? (
+                      <p className="text-gray-600 mb-6">{chrome.emptyBody}</p>
+                    ) : null}
+                    {chrome.emptyEmail || chrome.ctaLabel ? (
+                      <a
+                        href={emptyMailto}
+                        className="inline-flex items-center gap-2 bg-[#262b3f] hover:bg-[#0055FF] text-white px-5 py-2.5 rounded-lg font-medium transition-all duration-300"
+                      >
+                        {chrome.ctaLabel || "Send Resume"}
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                      </a>
+                    ) : null}
+                  </div>
                 </div>
-              </div>
+              )
             ) : (
-              /* Positions List */
               <div className="grid gap-4 max-w-4xl">
                 {positions.map((position) => (
                   <div
@@ -189,62 +283,70 @@ export default function CareersPage() {
           </div>
         </section>
 
-        {/* Why Work With Us */}
-        <section className="py-16 bg-[#f8f9fa]">
-          <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
-            <div className="mb-10">
-              <span className="inline-block bg-[#262b3f]/10 text-[#262b3f] text-sm font-semibold px-4 py-2 rounded-full mb-4">Why Us</span>
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a2e]">What you get</h2>
-            </div>
+        {(chrome.whyEyebrow || chrome.whyHeading || chrome.whyCards.length > 0) && (
+          <section className="py-16 bg-[#f8f9fa]">
+            <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
+              <div className="mb-10">
+                {chrome.whyEyebrow ? (
+                  <span className="inline-block bg-[#262b3f]/10 text-[#262b3f] text-sm font-semibold px-4 py-2 rounded-full mb-4">
+                    {chrome.whyEyebrow}
+                  </span>
+                ) : null}
+                {chrome.whyHeading ? (
+                  <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a2e]">{chrome.whyHeading}</h2>
+                ) : null}
+              </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              <div className="bg-white rounded-xl p-6 border border-transparent hover:border-[#262b3f]/20 transition-all">
-                <h3 className="text-lg font-semibold text-[#1a1a2e] mb-2">Real projects</h3>
-                <p className="text-gray-600 text-sm">Work on actual client projects, not internal tools nobody uses.</p>
-              </div>
-              <div className="bg-white rounded-xl p-6 border border-transparent hover:border-[#262b3f]/20 transition-all">
-                <h3 className="text-lg font-semibold text-[#1a1a2e] mb-2">Remote-friendly</h3>
-                <p className="text-gray-600 text-sm">Work from home or our office. We care about output, not hours at a desk.</p>
-              </div>
-              <div className="bg-white rounded-xl p-6 border border-transparent hover:border-[#262b3f]/20 transition-all">
-                <h3 className="text-lg font-semibold text-[#1a1a2e] mb-2">No micromanaging</h3>
-                <p className="text-gray-600 text-sm">We hire adults and treat them like adults. You own your work.</p>
-              </div>
-              <div className="bg-white rounded-xl p-6 border border-transparent hover:border-[#262b3f]/20 transition-all">
-                <h3 className="text-lg font-semibold text-[#1a1a2e] mb-2">Growth</h3>
-                <p className="text-gray-600 text-sm">Learn new tech, take on bigger projects, and grow your skills.</p>
-              </div>
+              {chrome.whyCards.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                  {chrome.whyCards.map((card, i) => (
+                    <div
+                      key={i}
+                      className="bg-white rounded-xl p-6 border border-transparent hover:border-[#262b3f]/20 transition-all"
+                    >
+                      {card.title ? (
+                        <h3 className="text-lg font-semibold text-[#1a1a2e] mb-2">{card.title}</h3>
+                      ) : null}
+                      {card.description ? (
+                        <p className="text-gray-600 text-sm">{card.description}</p>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+              ) : null}
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
-        {/* CTA Section */}
-        <section className="py-10 bg-[#1a1a2e]">
-          <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 bg-gradient-to-r from-[#262b3f]/20 to-transparent rounded-2xl p-6 md:p-8">
-              <div>
-                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-                  Interested?
-                </h2>
-                <p className="text-white/70 text-sm">
-                  Send us your resume. We&apos;ll get back to you if there&apos;s a fit.
-                </p>
+        {(chrome.ctaHeading || chrome.ctaBody || chrome.ctaLabel) && (
+          <section className="py-10 bg-[#1a1a2e]">
+            <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 bg-gradient-to-r from-[#262b3f]/20 to-transparent rounded-2xl p-6 md:p-8">
+                <div>
+                  {chrome.ctaHeading ? (
+                    <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">{chrome.ctaHeading}</h2>
+                  ) : null}
+                  {chrome.ctaBody ? (
+                    <p className="text-white/70 text-sm">{chrome.ctaBody}</p>
+                  ) : null}
+                </div>
+                {chrome.ctaLabel ? (
+                  <a
+                    href={chrome.ctaHref || emptyMailto}
+                    className="inline-flex items-center justify-center gap-2 bg-[#262b3f] hover:bg-[#0055FF] text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 whitespace-nowrap"
+                  >
+                    {chrome.ctaLabel}
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </a>
+                ) : null}
               </div>
-              <a
-                href="mailto:careers@vyntechsolutions.ca"
-                className="inline-flex items-center justify-center gap-2 bg-[#262b3f] hover:bg-[#0055FF] text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 whitespace-nowrap"
-              >
-                Get in Touch
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </a>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
       </main>
 
-      {/* Position Detail Modal */}
       {selectedPosition && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setSelectedPosition(null)}>
           <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden shadow-2xl" onClick={(e) => e.stopPropagation()}>
@@ -285,10 +387,10 @@ export default function CareersPage() {
             </div>
             <div className="p-6 border-t border-gray-100 bg-gray-50">
               <a
-                href={`mailto:careers@vyntechsolutions.ca?subject=Application for ${selectedPosition.title}`}
+                href={applyMailto(selectedPosition.title)}
                 className="w-full flex items-center justify-center gap-2 bg-[#0055FF] hover:bg-[#0044CC] text-white px-6 py-3 rounded-lg font-medium transition-all duration-300"
               >
-                Apply Now
+                {chrome.applyLabel || "Apply Now"}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>

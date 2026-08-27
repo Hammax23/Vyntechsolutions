@@ -46,9 +46,9 @@ const industries = [
   },
   {
     id: 4,
-    slug: "education-elearning",
+    slug: "education",
     name: "Education & E-learning",
-    href: "/industries/education-elearning",
+    href: "/industries/education",
     image: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1600&q=80",
     line: "Course platforms and school portals students can actually finish a lesson on.",
     icon: (
@@ -74,9 +74,9 @@ const industries = [
   },
   {
     id: 6,
-    slug: "logistics-transportation",
+    slug: "logistics",
     name: "Logistics & Transportation",
-    href: "/industries/logistics-transportation",
+    href: "/industries/logistics",
     image: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1600&q=80",
     line: "Tracking, dispatch, and warehouse screens built for people on the floor.",
     icon: (
@@ -214,6 +214,7 @@ export default function IndustriesImpact() {
               subtitle?: string;
               description?: string;
               shortDescription?: string;
+              cardImage?: string;
             }[]
           | undefined;
         if (list?.length) {
@@ -224,12 +225,14 @@ export default function IndustriesImpact() {
               const local = bySlug.get(String(i.slug)) || industries[idx % industries.length];
               const name = String(i.title || i.name || local.name);
               const line = String(i.subtitle || i.shortDescription || i.description || local.line);
+              const image = String(i.cardImage || local.image);
               return {
                 ...local,
                 id: idx + 1,
                 slug: String(i.slug),
                 name,
                 line,
+                image,
                 href: `/industries/${i.slug}`,
               };
             });

@@ -2,40 +2,51 @@
 
 import { useState } from "react";
 
+interface CityFAQItem {
+  question: string;
+  answer: string;
+}
+
 interface CityFAQProps {
   formattedCity: string;
   serviceTitle: string;
+  faqs?: CityFAQItem[];
 }
 
-export default function CityFAQ({ formattedCity, serviceTitle }: CityFAQProps) {
+export default function CityFAQ({ formattedCity, serviceTitle, faqs }: CityFAQProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const toggleAccordion = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-  const faqData = [
+  const defaultFaqs: CityFAQItem[] = [
     {
       question: `Why do I need professional ${serviceTitle} services in ${formattedCity}?`,
-      answer: `${formattedCity} is a highly competitive market. Having a professional ${serviceTitle} strategy ensures your business stands out locally, attracts the right audience, and converts visitors into loyal customers.`
+      answer: `${formattedCity} is a highly competitive market. Having a professional ${serviceTitle} strategy ensures your business stands out locally, attracts the right audience, and converts visitors into loyal customers.`,
     },
     {
       question: `How long does a typical ${serviceTitle} project take?`,
-      answer: "The timeline depends on the scope and complexity of your requirements. Once we evaluate your business goals during our free consultation, we provide a clear, transparent timeline with milestones."
+      answer:
+        "The timeline depends on the scope and complexity of your requirements. Once we evaluate your business goals during our free consultation, we provide a clear, transparent timeline with milestones.",
     },
     {
       question: `Do you have experience working with businesses in ${formattedCity}?`,
-      answer: `Yes, we have extensive experience working with companies across ${formattedCity} in various industries. We understand the local market dynamics and tailor our strategies to match regional consumer behavior.`
+      answer: `Yes, we have extensive experience working with companies across ${formattedCity} in various industries. We understand the local market dynamics and tailor our strategies to match regional consumer behavior.`,
     },
     {
       question: `What makes VynTech Solutions different from other agencies in ${formattedCity}?`,
-      answer: "We don't just deliver a service; we act as your technology partner. Our team focuses on ROI-driven results, transparent communication, and building long-term scalable solutions for your business."
+      answer:
+        "We don't just deliver a service; we act as your technology partner. Our team focuses on ROI-driven results, transparent communication, and building long-term scalable solutions for your business.",
     },
     {
       question: "How do we get started?",
-      answer: "Getting started is easy! Simply reach out to us using the 'Let's Talk Business' button below. We'll schedule a free consultation to discuss your needs and outline the perfect strategy."
-    }
+      answer:
+        "Getting started is easy! Simply reach out to us using the 'Let's Talk Business' button below. We'll schedule a free consultation to discuss your needs and outline the perfect strategy.",
+    },
   ];
+
+  const faqData = faqs && faqs.length > 0 ? faqs : defaultFaqs;
 
   return (
     <section className="w-full bg-white py-16 md:py-24 border-t border-slate-100">

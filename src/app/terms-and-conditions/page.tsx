@@ -6,44 +6,11 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CmsHtml from '@/components/CmsHtml';
 
-function TermsFallback() {
-  return (
-    <div className="space-y-6">
-      <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-        <p className="text-white/70 leading-relaxed">
-          By using vyntechsolutions.ca and our services, you agree to these Terms & Conditions. Please read them carefully.
-        </p>
-      </div>
-      <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-        <h2 className="text-xl font-bold text-white mb-4">Our Services</h2>
-        <p className="text-white/70">
-          VynTech Solutions provides web development, mobile apps, cloud, AI/ML, SEO, and related digital services. Project scope, timelines, and fees are defined in individual agreements or quotes.
-        </p>
-      </div>
-      <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-        <h2 className="text-xl font-bold text-white mb-4">Payments</h2>
-        <p className="text-white/70">
-          Invoices are due as stated in your agreement. Late payments may pause work. Refunds follow the terms of your signed contract.
-        </p>
-      </div>
-      <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-        <h2 className="text-xl font-bold text-white mb-4">Intellectual Property</h2>
-        <p className="text-white/70">
-          Upon full payment, you own the deliverables created for your project, except third-party tools, libraries, and our pre-existing IP.
-        </p>
-      </div>
-      <div className="bg-gradient-to-r from-[#00B4FF]/10 to-[#00FF94]/10 border border-[#00B4FF]/30 rounded-2xl p-6">
-        <h2 className="text-xl font-bold text-white mb-4">Contact</h2>
-        <p className="text-white/70">Questions? Email <span className="text-[#00B4FF]">info@vyntechsolutions.ca</span></p>
-      </div>
-    </div>
-  );
-}
-
 export default function TermsAndConditionsPage() {
   const [title, setTitle] = useState('Terms & Conditions');
   const [lastUpdated, setLastUpdated] = useState('March 27, 2026');
   const [body, setBody] = useState<string | null>(null);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     fetch('/api/cms/content?type=legal-page&slug=terms-and-conditions')
@@ -57,7 +24,8 @@ export default function TermsAndConditionsPage() {
           setBody(String(page.body));
         }
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoaded(true));
   }, []);
 
   return (
@@ -84,9 +52,11 @@ export default function TermsAndConditionsPage() {
               <div className="bg-white/5 border border-white/10 rounded-2xl p-6 text-white/80">
                 <CmsHtml html={body} />
               </div>
-            ) : (
-              <TermsFallback />
-            )}
+            ) : loaded ? (
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-6 text-white/70">
+                Content unavailable. Please check back soon.
+              </div>
+            ) : null}
           </motion.div>
         </div>
       </section>

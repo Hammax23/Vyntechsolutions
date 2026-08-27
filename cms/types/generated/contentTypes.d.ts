@@ -656,14 +656,22 @@ export interface ApiIndustryIndustry extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    cardImage: Schema.Attribute.String;
     challenges: Schema.Attribute.Component<'shared.named-item', true>;
+    challengesHeading: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    ctaBody: Schema.Attribute.Text;
+    ctaButtonLabel: Schema.Attribute.String;
+    ctaHeading: Schema.Attribute.String;
     description: Schema.Attribute.Text;
     hero: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    heroCtaLabel: Schema.Attribute.String;
+    heroImageUrl: Schema.Attribute.String;
     heroStats: Schema.Attribute.Component<'shared.stat', true>;
     highlights: Schema.Attribute.JSON;
+    icon: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -674,13 +682,21 @@ export interface ApiIndustryIndustry extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     seo: Schema.Attribute.Component<'shared.seo', false>;
     services: Schema.Attribute.Component<'shared.named-item', true>;
+    servicesHeading: Schema.Attribute.String;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
+    solutionsEyebrow: Schema.Attribute.String;
     subtitle: Schema.Attribute.String;
     technologies: Schema.Attribute.JSON;
+    technologiesHeading: Schema.Attribute.String;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    whyChooseUsCards: Schema.Attribute.Component<'sections.value-card', true>;
+    whyChooseUsHeading: Schema.Attribute.String;
+    whyChooseUsIntro: Schema.Attribute.Text;
+    whyChooseUsSubHeading: Schema.Attribute.String;
+    whyChooseUsSubText: Schema.Attribute.Text;
   };
 }
 
@@ -802,6 +818,7 @@ export interface ApiOrganizationProfileOrganizationProfile
   };
   attributes: {
     address: Schema.Attribute.Text;
+    copyrightText: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -817,6 +834,8 @@ export interface ApiOrganizationProfileOrganizationProfile
       Schema.Attribute.Private;
     name: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'VynTech Solutions'>;
+    officeLabel: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Canada (Head Office)'>;
     openingHours: Schema.Attribute.JSON;
     phone: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
@@ -911,17 +930,42 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    canadaCities: Schema.Attribute.JSON;
+    cardImage: Schema.Attribute.String;
     caseStudies: Schema.Attribute.Component<'shared.case-study', true>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    ctaBody: Schema.Attribute.Text;
+    ctaButtonLabel: Schema.Attribute.String;
+    ctaHeading: Schema.Attribute.String;
     deliveryDescription: Schema.Attribute.Text;
+    deliveryEyebrow: Schema.Attribute.String;
     deliveryHeading: Schema.Attribute.String;
     deliverySteps: Schema.Attribute.Component<'sections.delivery-step', true>;
     description: Schema.Attribute.Text;
     faqs: Schema.Attribute.Component<'shared.faq', true>;
     features: Schema.Attribute.Component<'shared.named-item', true>;
+    featuresEyebrow: Schema.Attribute.String;
+    heroCtaLabel: Schema.Attribute.String;
     heroImage: Schema.Attribute.String;
+    heroVariant: Schema.Attribute.Enumeration<
+      [
+        'browser',
+        'mobile',
+        'cloud',
+        'devops',
+        'aiml',
+        'uiux',
+        'ecommerce',
+        'custom',
+        'seo',
+        'maintenance',
+        'tax',
+      ]
+    > &
+      Schema.Attribute.DefaultTo<'browser'>;
+    icon: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -931,15 +975,18 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
     order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     overview: Schema.Attribute.RichText;
     overviewTagline: Schema.Attribute.Text;
+    pageSections: Schema.Attribute.JSON;
     process: Schema.Attribute.Component<'shared.process-step', true>;
     processDescription: Schema.Attribute.Text;
     processHeading: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     seo: Schema.Attribute.Component<'shared.seo', false>;
+    showTechStack: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
     stats: Schema.Attribute.Component<'shared.stat', true>;
     subtitle: Schema.Attribute.String;
     technologies: Schema.Attribute.JSON;
+    techStack: Schema.Attribute.JSON;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

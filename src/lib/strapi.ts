@@ -57,7 +57,9 @@ export async function strapiFetch<T>({
         "Content-Type": "application/json",
         ...(STRAPI_TOKEN ? { Authorization: `Bearer ${STRAPI_TOKEN}` } : {}),
       },
-      next: revalidate === false ? { revalidate: 0 } : { revalidate, tags },
+      // Always bypass Next/Data cache so Strapi admin edits show immediately after deploy.
+      cache: "no-store",
+      next: { tags, revalidate: 0 },
     });
 
     if (!res.ok) {

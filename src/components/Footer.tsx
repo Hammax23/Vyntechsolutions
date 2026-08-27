@@ -59,9 +59,9 @@ const DEFAULT_GROUPS: FooterGroup[] = [
       { label: "Healthcare & Pharmaceuticals", href: "/industries/healthcare" },
       { label: "Finance & Banking", href: "/industries/finance-banking" },
       { label: "Ecommerce & Retail", href: "/industries/ecommerce-retail" },
-      { label: "Education & E-learning", href: "/industries/education-elearning" },
+      { label: "Education & E-learning", href: "/industries/education" },
       { label: "Real Estate & Property", href: "/industries/real-estate" },
-      { label: "Logistics & Transportation", href: "/industries/logistics-transportation" },
+      { label: "Logistics & Transportation", href: "/industries/logistics" },
       { label: "Entertainment & Media", href: "/industries/entertainment-media" },
       { label: "Manufacturing & Industry", href: "/industries/manufacturing" },
       { label: "Hospitality & Travel", href: "/industries/hospitality-travel" },
@@ -144,6 +144,10 @@ export default function Footer() {
   const [openSection, setOpenSection] = useState<string | null>(null);
   const [tagline, setTagline] = useState(DEFAULT_TAGLINE);
   const [address, setAddress] = useState(DEFAULT_ADDRESS);
+  const [officeLabel, setOfficeLabel] = useState("Canada (Head Office)");
+  const [copyrightText, setCopyrightText] = useState(
+    `© ${new Date().getFullYear()} VynTech Solutions. All rights reserved.`
+  );
   const [groups, setGroups] = useState<FooterGroup[]>(DEFAULT_GROUPS);
   const [legalLinks, setLegalLinks] = useState<NavLink[]>(DEFAULT_LEGAL);
   const [socialLinks, setSocialLinks] = useState<NavLink[]>(DEFAULT_SOCIAL);
@@ -160,6 +164,14 @@ export default function Footer() {
         const org = orgData?.organization as Record<string, unknown> | undefined;
         if (org?.tagline) setTagline(String(org.tagline));
         if (org?.address) setAddress(String(org.address));
+        if (org?.officeLabel) setOfficeLabel(String(org.officeLabel));
+        if (org?.copyrightText) {
+          setCopyrightText(String(org.copyrightText));
+        } else if (org?.name) {
+          setCopyrightText(
+            `© ${new Date().getFullYear()} ${String(org.name)}. All rights reserved.`
+          );
+        }
 
         const cmsGroups = nav?.footerGroups as
           | { title?: string; links?: { label?: string; href?: string }[] }[]
@@ -209,6 +221,19 @@ export default function Footer() {
 
   const addressLines = address.split("\n");
 
+  const officeHeading = (
+    <h4 className="text-[#1a1a2e] text-sm font-semibold flex items-center gap-2 mb-2">
+      {officeLabel}
+      <Image
+        src="https://flagcdn.com/w40/ca.png"
+        alt="Canada Flag"
+        width={20}
+        height={14}
+        className="object-cover rounded-sm shadow-sm"
+      />
+    </h4>
+  );
+
   const socialRow = (
     <div className="flex items-center gap-3">
       {socialLinks.map((social) => (
@@ -239,16 +264,7 @@ export default function Footer() {
 
             <div className="hidden md:block">
               <div className="mb-8">
-                <h4 className="text-[#1a1a2e] text-sm font-semibold flex items-center gap-2 mb-2">
-                  Canada <span className="font-normal text-[#4A5568]">(Head Office)</span>
-                  <Image
-                    src="https://flagcdn.com/w40/ca.png"
-                    alt="Canada Flag"
-                    width={20}
-                    height={14}
-                    className="object-cover rounded-sm shadow-sm"
-                  />
-                </h4>
+                {officeHeading}
                 <p className="text-[#4A5568] text-sm leading-relaxed">
                   {addressLines.map((line, i) => (
                     <span key={i}>
@@ -274,16 +290,7 @@ export default function Footer() {
 
         <div className="md:hidden block mt-4 mb-4">
           <div className="mb-8">
-            <h4 className="text-[#1a1a2e] text-sm font-semibold flex items-center gap-2 mb-2">
-              Canada <span className="font-normal text-[#4A5568]">(Head Office)</span>
-              <Image
-                src="https://flagcdn.com/w40/ca.png"
-                alt="Canada Flag"
-                width={20}
-                height={14}
-                className="object-cover rounded-sm shadow-sm"
-              />
-            </h4>
+            {officeHeading}
             <p className="text-[#4A5568] text-sm leading-relaxed">
               {addressLines.map((line, i) => (
                 <span key={i}>
@@ -310,7 +317,7 @@ export default function Footer() {
               </Link>
             ))}
           </div>
-          <p className="text-xs text-[#4A5568]">© 2026 VynTech Solutions All Rights Reserved.</p>
+          <p className="text-xs text-[#4A5568]">{copyrightText}</p>
         </div>
       </div>
     </footer>

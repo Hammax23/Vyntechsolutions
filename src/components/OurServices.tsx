@@ -146,7 +146,9 @@ export default function OurServices() {
     fetch("/api/cms/services")
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
-        const list = data?.services as { slug?: string; title?: string; description?: string }[] | undefined;
+        const list = data?.services as
+          | { slug?: string; title?: string; description?: string; cardImage?: string }[]
+          | undefined;
         if (!list?.length) return;
         const homeServices = list.filter(
           (s) => s.slug && s.slug !== "tax-accounting" && !String(s.slug).includes("tax")
@@ -161,7 +163,7 @@ export default function OurServices() {
               title: withoutWordDash(String(s.title || fallback.title)),
               description: withoutWordDash(String(s.description || fallback.description)),
               href: `/services/${s.slug}`,
-              art: fallback.art,
+              art: String(s.cardImage || fallback.art),
             };
           })
         );

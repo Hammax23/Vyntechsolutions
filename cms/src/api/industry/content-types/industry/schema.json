@@ -26,6 +26,27 @@
     "description": {
       "type": "text"
     },
+    "icon": {
+      "type": "string"
+    },
+    "cardImage": {
+      "type": "string"
+    },
+    "solutionsEyebrow": {
+      "type": "string"
+    },
+    "challengesHeading": {
+      "type": "string"
+    },
+    "servicesHeading": {
+      "type": "string"
+    },
+    "technologiesHeading": {
+      "type": "string"
+    },
+    "heroCtaLabel": {
+      "type": "string"
+    },
     "heroStats": {
       "type": "component",
       "repeatable": true,
@@ -47,6 +68,32 @@
     "highlights": {
       "type": "json"
     },
+    "whyChooseUsHeading": {
+      "type": "string"
+    },
+    "whyChooseUsIntro": {
+      "type": "text"
+    },
+    "whyChooseUsSubHeading": {
+      "type": "string"
+    },
+    "whyChooseUsSubText": {
+      "type": "text"
+    },
+    "whyChooseUsCards": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.value-card"
+    },
+    "ctaHeading": {
+      "type": "string"
+    },
+    "ctaBody": {
+      "type": "text"
+    },
+    "ctaButtonLabel": {
+      "type": "string"
+    },
     "seo": {
       "type": "component",
       "repeatable": false,
@@ -65,6 +112,9 @@
       ],
       "type": "media",
       "multiple": false
+    },
+    "heroImageUrl": {
+      "type": "string"
     }
   }
 }

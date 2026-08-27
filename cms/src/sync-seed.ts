@@ -34,55 +34,10 @@ function mergeMissing(existing: Record<string, unknown>, seedData: Record<string
   return out;
 }
 
-/** Content keys we intentionally refresh from seed so the live site matches the repo copy. */
-const SERVICE_FORCE_KEYS = [
-  "title",
-  "subtitle",
-  "description",
-  "overview",
-  "overviewTagline",
-  "features",
-  "technologies",
-  "process",
-  "processHeading",
-  "processDescription",
-  "stats",
-  "caseStudies",
-  "whyChooseUsHeading",
-  "whyChooseUsIntro",
-  "whyChooseUsSubHeading",
-  "whyChooseUsSubText",
-  "whyChooseUsCards",
-  "deliveryHeading",
-  "deliveryDescription",
-  "deliverySteps",
-  "faqs",
-];
-
-const HOMEPAGE_FORCE_KEYS = [
-  "heroSlides",
-  "heroCtaLabel",
-  "heroWords",
-  "servicesHeading",
-  "servicesSubheading",
-  "servicesBody",
-  "impactEyebrow",
-  "impactHeading",
-  "impactBody",
-  "impactStats",
-  "impactCtaLabel",
-  "impactCtaHref",
-  "insightsHeading",
-  "industriesHeading",
-  "industriesSubheading",
-  "faqEyebrow",
-  "faqHeading",
-  "faqIntro",
-  "techStackEyebrow",
-  "techStackHeading",
-  "techStackBody",
-  "techStack",
-];
+/** Fill-missing-only. Empty force keys = never overwrite Strapi admin edits on sync. */
+const SERVICE_FORCE_KEYS: string[] = [];
+const INDUSTRY_FORCE_KEYS: string[] = [];
+const HOMEPAGE_FORCE_KEYS: string[] = [];
 
 function mergeForced(
   existing: Record<string, unknown>,
@@ -97,10 +52,6 @@ function mergeForced(
 }
 
 export async function syncSeedIfRequested(strapi: Core.Strapi) {
-  if (process.env.NODE_ENV === "production") {
-    strapi.log.info("Production: CMS_SYNC_SEED ignored");
-    return;
-  }
   if (process.env.CMS_SYNC_SEED !== "true") return;
 
   const seedPath = path.join(process.cwd(), "data", "seed.json");
@@ -110,7 +61,7 @@ export async function syncSeedIfRequested(strapi: Core.Strapi) {
   }
 
   const seed = JSON.parse(fs.readFileSync(seedPath, "utf8"));
-  strapi.log.info("CMS_SYNC_SEED=true — merging missing fields from seed.json...");
+  strapi.log.info("CMS_SYNC_SEED=true — filling EMPTY fields only from seed.json (never overwrites admin edits)...");
 
   async function upsertSingle(
     uid: any,
@@ -192,7 +143,7 @@ export async function syncSeedIfRequested(strapi: Core.Strapi) {
 
   await upsertCollection("api::faq.faq", seed.faqs, "question");
   await upsertCollection("api::service.service", seed.services, "slug", SERVICE_FORCE_KEYS);
-  await upsertCollection("api::industry.industry", seed.industries);
+  await upsertCollection("api::industry.industry", seed.industries, "slug", INDUSTRY_FORCE_KEYS);
   await upsertCollection("api::static-page.static-page", seed.staticPages, "slug", [
     "heroHeading",
     "heroBody",

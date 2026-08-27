@@ -26,6 +26,13 @@ export type SeoBits = {
   focusKeyword?: string;
   keywords?: string[];
   metaRobots?: string;
+  /**
+   * CMS shared.seo.metaViewport. Next.js 14 expects viewport via a separate
+   * `export const viewport` / `generateViewport` (not Metadata.viewport).
+   * We surface the value here and optionally mirror it under `other` so it is
+   * available to callers; the framework default viewport tag remains authoritative.
+   */
+  metaViewport?: string;
   ogTitle?: string;
   ogDescription?: string;
   ogType?: string;
@@ -95,6 +102,8 @@ export function asSeo(raw: unknown): SeoBits {
     focusKeyword,
     keywords,
     metaRobots: typeof s.metaRobots === "string" ? s.metaRobots : undefined,
+    // See SeoBits.metaViewport — not mapped into Next Metadata.viewport (App Router).
+    metaViewport: typeof s.metaViewport === "string" ? s.metaViewport : undefined,
     ogTitle: typeof og.ogTitle === "string" ? og.ogTitle : undefined,
     ogDescription: typeof og.ogDescription === "string" ? og.ogDescription : undefined,
     ogType: typeof og.ogType === "string" ? og.ogType : undefined,
@@ -179,6 +188,7 @@ type BuildArgs = {
   canonicalOverride?: string;
   indexable?: boolean;
   metaRobots?: string;
+  metaViewport?: string;
   keywords?: string[];
   focusKeyword?: string;
   ogTitle?: string;
@@ -200,6 +210,7 @@ function buildMetadata(args: BuildArgs): Metadata {
     canonicalOverride,
     indexable = true,
     metaRobots,
+    metaViewport,
     keywords,
     focusKeyword,
     ogTitle,
@@ -231,6 +242,11 @@ function buildMetadata(args: BuildArgs): Metadata {
     keywords: finalKeywords,
     alternates: canonical ? { canonical } : undefined,
     robots: parseMetaRobots(metaRobots, indexable),
+    // metaViewport is not applied as Metadata.viewport (unsupported / separate API in Next 14).
+    // Expose under `other` for debugging / future generateViewport wiring.
+    other: metaViewport?.trim()
+      ? { "cms-meta-viewport": metaViewport.trim() }
+      : undefined,
     openGraph: {
       title: ogTitle || title || undefined,
       description: ogDescription || description || undefined,
@@ -297,6 +313,7 @@ async function withGlobalDefaults(
     canonicalOverride: pageSeo.canonical,
     indexable: pageSeo.indexable !== false,
     metaRobots: pageSeo.metaRobots,
+    metaViewport: pageSeo.metaViewport,
     keywords: mergeKeywords(pageSeo.keywords, opts.extraKeywords, globalKeywords),
     focusKeyword: pageSeo.focusKeyword,
     ogTitle,

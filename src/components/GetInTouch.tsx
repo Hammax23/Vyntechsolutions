@@ -3,9 +3,11 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import {
+  DEFAULT_BUDGET_OPTIONS,
   DEFAULT_FORM_REGIONS,
   DEFAULT_FORM_SERVICES,
   DEFAULT_HEAR_ABOUT,
+  DEFAULT_TIMELINE_OPTIONS,
   applyFormConfigServices,
   withSelectPrefix,
 } from "@/lib/form-options";
@@ -16,6 +18,8 @@ export default function GetInTouch() {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [services, setServices] = useState<string[]>(DEFAULT_FORM_SERVICES);
   const [regions, setRegions] = useState<string[]>(DEFAULT_FORM_REGIONS);
+  const [budgetOptions, setBudgetOptions] = useState<string[]>(DEFAULT_BUDGET_OPTIONS);
+  const [timelineOptions, setTimelineOptions] = useState<string[]>(DEFAULT_TIMELINE_OPTIONS);
   const [hearAboutOptions, setHearAboutOptions] = useState<string[]>(DEFAULT_HEAR_ABOUT);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
@@ -26,6 +30,8 @@ export default function GetInTouch() {
     companyName: "",
     companyUrl: "",
     region: "",
+    budget: "",
+    timeline: "",
     projectDetails: "",
     hearAbout: "",
   });
@@ -66,6 +72,12 @@ export default function GetInTouch() {
           setRegions(withSelectPrefix(formConfig.regions.map(String)));
         }
 
+        if (Array.isArray(formConfig?.budgetOptions) && formConfig.budgetOptions.length) {
+          setBudgetOptions(formConfig.budgetOptions.map(String));
+        }
+        if (Array.isArray(formConfig?.timelineOptions) && formConfig.timelineOptions.length) {
+          setTimelineOptions(formConfig.timelineOptions.map(String));
+        }
         if (Array.isArray(formConfig?.hearAbout) && formConfig.hearAbout.length) {
           setHearAboutOptions(formConfig.hearAbout.map(String));
         }
@@ -107,6 +119,8 @@ export default function GetInTouch() {
           companyName: formData.companyName,
           companyUrl: formData.companyUrl,
           region: formData.region,
+          budget: formData.budget,
+          timeline: formData.timeline,
           services: selectedServices,
           projectDetails: formData.projectDetails,
           hearAbout: formData.hearAbout,
@@ -122,6 +136,8 @@ export default function GetInTouch() {
           companyName: "",
           companyUrl: "",
           region: "",
+          budget: "",
+          timeline: "",
           projectDetails: "",
           hearAbout: "",
         });
@@ -290,6 +306,42 @@ export default function GetInTouch() {
                       className="text-gray-900 bg-white"
                     >
                       {region}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Budget */}
+              <div>
+                <label className="block text-xs text-gray-500 mb-1">Budget</label>
+                <select
+                  name="budget"
+                  value={formData.budget}
+                  onChange={handleInputChange}
+                  className="w-full border border-gray-300 rounded-md p-3 focus:border-[#0d9488] focus:outline-none transition-colors bg-white appearance-none cursor-pointer text-gray-900"
+                >
+                  <option value="" className="text-gray-900 bg-white">Please Select</option>
+                  {budgetOptions.map((option) => (
+                    <option key={option} value={option} className="text-gray-900 bg-white">
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Timeline */}
+              <div>
+                <label className="block text-xs text-gray-500 mb-1">Timeline</label>
+                <select
+                  name="timeline"
+                  value={formData.timeline}
+                  onChange={handleInputChange}
+                  className="w-full border border-gray-300 rounded-md p-3 focus:border-[#0d9488] focus:outline-none transition-colors bg-white appearance-none cursor-pointer text-gray-900"
+                >
+                  <option value="" className="text-gray-900 bg-white">Please Select</option>
+                  {timelineOptions.map((option) => (
+                    <option key={option} value={option} className="text-gray-900 bg-white">
+                      {option}
                     </option>
                   ))}
                 </select>

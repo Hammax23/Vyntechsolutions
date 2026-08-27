@@ -79,7 +79,8 @@ function normalizeSteps(
   steps?: { step?: string; title?: string; description: string }[] | HowWeWorkStep[] | null
 ): HowWeWorkStep[] {
   if (!steps?.length) return DEFAULT_STEPS;
-  const mapped = steps.slice(0, 6).map((step, index) => ({
+  // CMS steps win as-is — never pad with hardcoded leftovers (that masked Strapi edits).
+  return steps.slice(0, 6).map((step, index) => ({
     number: index + 1,
     title:
       ("title" in step && step.title
@@ -89,25 +90,31 @@ function normalizeSteps(
           : `Step ${index + 1}`) || `Step ${index + 1}`,
     description: step.description,
   }));
-  if (mapped.length >= 6) return mapped;
-  return [...mapped, ...DEFAULT_STEPS.slice(mapped.length)];
 }
 
 export default function HowWeWork({
   steps: stepsProp,
   heading = "How We Work",
+  description,
 }: {
   steps?: { step?: string; title?: string; description: string }[] | HowWeWorkStep[] | null;
   heading?: string;
+  description?: string;
 } = {}) {
   const steps = normalizeSteps(stepsProp);
 
   return (
     <section className="w-full bg-white py-16 md:py-24 overflow-hidden">
       <div className="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-10">
-        <h2 className="text-center text-3xl sm:text-4xl md:text-[42px] font-bold tracking-tight text-[#0a0a0a] mb-10 md:mb-14">
+        <h2 className="text-center text-3xl sm:text-4xl md:text-[42px] font-bold tracking-tight text-[#0a0a0a] mb-4 md:mb-6">
           {heading}
         </h2>
+        {description ? (
+          <p className="text-center text-gray-600 text-base md:text-lg max-w-3xl mx-auto mb-10 md:mb-14 leading-relaxed">
+            {description}
+          </p>
+        ) : null}
+        {!description ? <div className="mb-10 md:mb-14" /> : null}
 
         {/* Mobile */}
         <div className="lg:hidden space-y-6 max-w-xl mx-auto">

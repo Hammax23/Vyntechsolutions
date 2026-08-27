@@ -198,13 +198,13 @@ export default {
       strapi.log.warn(`Could not set public permissions: ${err}`);
     }
 
-    // Seeds only when explicitly enabled (never on live — keep CMS_AUTO_SEED/CMS_SYNC_SEED=false in .env).
-    const autoSeed = process.env.CMS_AUTO_SEED === "true";
+    // Auto-seed never runs in production. Explicit CMS_SYNC_SEED=true is allowed once to push seed.json.
+    const isProduction = process.env.NODE_ENV === "production";
+    const autoSeed = process.env.CMS_AUTO_SEED === "true" && !isProduction;
     const syncSeed = process.env.CMS_SYNC_SEED === "true";
-    if (process.env.NODE_ENV === "production" || (!autoSeed && !syncSeed)) {
-      strapi.log.info(
-        "Bootstrap seed/sync disabled (production or CMS_AUTO_SEED/CMS_SYNC_SEED not true)"
-      );
+
+    if (!autoSeed && !syncSeed) {
+      strapi.log.info("Bootstrap seed/sync disabled (set CMS_AUTO_SEED or CMS_SYNC_SEED=true to enable)");
       return;
     }
 

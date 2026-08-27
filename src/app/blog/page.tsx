@@ -13,10 +13,8 @@ export default function BlogPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [posts, setPosts] = useState<BlogPost[]>(blogPosts);
   const [categories, setCategories] = useState(defaultCategories);
-  const [heroHeading, setHeroHeading] = useState("Blog");
-  const [heroBody, setHeroBody] = useState(
-    "Practical insights on software development, technology decisions, and building digital products."
-  );
+  const [heroHeading, setHeroHeading] = useState("");
+  const [heroBody, setHeroBody] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -41,13 +39,28 @@ export default function BlogPage() {
         if (names.length) setCategories(["All", ...names]);
       })
       .catch(() => {});
-    fetch("/api/cms/content?type=static-page&slug=blog")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
+    Promise.all([
+      fetch("/api/cms/content?type=static-page&slug=blog").then((r) =>
+        r.ok ? r.json() : null
+      ),
+      fetch("/api/cms/content?type=page-seo&path=/blog").then((r) =>
+        r.ok ? r.json() : null
+      ),
+    ])
+      .then(([data, seoRes]) => {
         if (cancelled) return;
         const page = data?.page as Record<string, unknown> | undefined;
+        const pageSeo = seoRes?.pageSeo as Record<string, unknown> | undefined;
+        const seoH1 = typeof pageSeo?.h1 === "string" ? pageSeo.h1.trim() : "";
         if (page?.heroHeading) setHeroHeading(String(page.heroHeading));
+        else if (seoH1) setHeroHeading(seoH1);
+        else setHeroHeading("Blog");
         if (page?.heroBody) setHeroBody(String(page.heroBody));
+        else {
+          setHeroBody(
+            "Practical insights on software development, technology decisions, and building digital products."
+          );
+        }
       })
       .catch(() => {});
     return () => {
@@ -60,7 +73,8 @@ export default function BlogPage() {
       ? posts
       : posts.filter((post) => post.category === selectedCategory);
 
-  const featuredPost = posts[0];
+  const featuredPost =
+    posts.find((p) => (p as { featured?: boolean }).featured) || posts[0];
   if (!featuredPost) {
     return (
       <>

@@ -47,6 +47,13 @@
     },
     "openingHours": {
       "type": "json"
+    },
+    "officeLabel": {
+      "type": "string",
+      "default": "Canada (Head Office)"
+    },
+    "copyrightText": {
+      "type": "string"
     }
   }
 }

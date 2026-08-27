@@ -6,25 +6,42 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import TechStack from "@/components/TechStack";
 import FAQ from "@/components/FAQ";
 import HowWeWork from "@/components/HowWeWork";
 import { servicesData, type ServiceData } from "@/data/servicesData";
+import type { ServicePageSections } from "@/data/servicePageSections";
 
-// Services Data
-const allServices = [
-  { slug: "web-development", name: "Web Development" },
-  { slug: "mobile-app-development", name: "Mobile App Development" },
-  { slug: "cloud-solutions", name: "Cloud Solutions" },
-  { slug: "ai-ml-solutions", name: "AI/ML Solutions" },
-  { slug: "devops-cicd", name: "DevOps & CI/CD" },
-  { slug: "ui-ux-design", name: "UI/UX Design" },
-  { slug: "ecommerce-solutions", name: "E-commerce Solutions" },
-  { slug: "custom-software-development", name: "Custom Software Development" },
-  { slug: "seo-digital-marketing", name: "SEO/Digital Marketing" },
-  { slug: "maintenance-support", name: "Maintenance & Support" },
-  { slug: "tax-accounting", name: "Tax & Accounting Services" },
-];
+const HERO_VARIANT_BY_SLUG: Record<string, string> = {
+  "web-development": "browser",
+  "mobile-app-development": "mobile",
+  "cloud-solutions": "cloud",
+  "devops-cicd": "devops",
+  "ai-ml-solutions": "aiml",
+  "ui-ux-design": "uiux",
+  "ecommerce-solutions": "ecommerce",
+  "custom-software-development": "custom",
+  "seo-digital-marketing": "seo",
+  "maintenance-support": "maintenance",
+  "tax-accounting": "tax",
+};
+
+function resolvePageSections(service: ServiceData): ServicePageSections {
+  return ((service as ServiceData & { pageSections?: ServicePageSections }).pageSections ||
+    {}) as ServicePageSections;
+}
+
+function resolveCanadaCities(
+  service: ServiceData,
+  pageSections: ServicePageSections
+): { heading?: string; description?: string; cities: string[] } | null {
+  const raw = pageSections.canadaCities || (service as ServiceData & { canadaCities?: ServicePageSections["canadaCities"] | string[] }).canadaCities;
+  if (!raw) return null;
+  if (Array.isArray(raw)) {
+    return raw.length ? { cities: raw } : null;
+  }
+  if (raw.cities?.length) return raw;
+  return null;
+}
 
 // Icon component
 const FeatureIcon = ({ type }: { type: string }) => {
@@ -99,68 +116,16 @@ const FeatureIcon = ({ type }: { type: string }) => {
 };
 
 // Categorized Tech Stack Component (Tabbed navigation design)
-const techCategoriesData = [
-  {
-    id: "frontend",
-    name: "FRONTEND",
-    items: [
-      { name: "React", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
-      { name: "Next.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" },
-      { name: "Vue.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg" },
-      { name: "TypeScript", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
-      { name: "JavaScript", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
-      { name: "Tailwind", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" },
-      { name: "Bootstrap", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg" },
-    ]
-  },
-  {
-    id: "backend",
-    name: "BACKEND",
-    items: [
-      { name: "Node.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
-      { name: "Express", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg" },
-      { name: "Laravel", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/laravel/laravel-original.svg" },
-      { name: "PHP", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg" },
-      { name: "Python", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
-      { name: "Flask", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg" },
-    ]
-  },
-  {
-    id: "database",
-    name: "DATABASE",
-    items: [
-      { name: "PostgreSQL", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" },
-      { name: "MongoDB", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" },
-      { name: "Redis", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" },
-      { name: "MySQL", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" },
-      { name: "Firebase", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg" },
-    ]
-  },
-  {
-    id: "infra",
-    name: "INFRA AND DEVOPS",
-    items: [
-      { name: "AWS", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-plain-wordmark.svg" },
-      { name: "Azure", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg" },
-      { name: "Docker", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" },
-      { name: "Kubernetes", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg" },
-      { name: "Git", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" },
-      { name: "GraphQL", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg" },
-    ]
-  },
-  {
-    id: "design",
-    name: "DESIGN",
-    items: [
-      { name: "Figma", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" },
-    ]
-  },
-];
+const CategorizedTechStack = ({
+  data,
+}: {
+  data: NonNullable<ServicePageSections["techStack"]>;
+}) => {
+  const categories = data.categories || [];
+  const [activeTab, setActiveTab] = useState(categories[0]?.id || "frontend");
+  const activeCategory = categories.find((cat) => cat.id === activeTab) || categories[0];
 
-
-const CategorizedTechStack = () => {
-  const [activeTab, setActiveTab] = useState("frontend");
-  const activeCategory = techCategoriesData.find(cat => cat.id === activeTab) || techCategoriesData[0];
+  if (!categories.length || !activeCategory) return null;
 
   return (
     <section className="py-24 bg-[#070a12] relative overflow-hidden text-white" style={{ backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
@@ -168,18 +133,20 @@ const CategorizedTechStack = () => {
         {/* Title */}
         <div className="text-center mb-16 max-w-4xl mx-auto">
           <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-5">
-            Technology Stack
+            {data.heading || "Technology Stack"}
           </h2>
-          <p className="text-white/60 text-sm sm:text-base leading-relaxed max-w-3xl mx-auto">
-            We work with a wide range of modern, cutting-edge technologies. From programming languages and frameworks to databases, cloud platforms, and testing environments, our flexible tech stack ensures applications remain scalable, secure, and high-performing as businesses grow.
-          </p>
+          {data.description && (
+            <p className="text-white/60 text-sm sm:text-base leading-relaxed max-w-3xl mx-auto">
+              {data.description}
+            </p>
+          )}
         </div>
 
         {/* Content Layout */}
         <div className="flex flex-col md:flex-row items-start gap-8 lg:gap-12">
           {/* Vertical Tabs Side */}
           <div className="w-full md:w-64 flex-shrink-0 flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-visible pb-4 md:pb-0">
-            {techCategoriesData.map((category) => {
+            {categories.map((category) => {
               const isActive = category.id === activeTab;
               return (
                 <button
@@ -210,14 +177,18 @@ const CategorizedTechStack = () => {
                   className="bg-[#121826] border border-white/5 hover:border-white/20 rounded-2xl p-6 flex flex-col items-center justify-center gap-4 transition-all duration-300 hover:-translate-y-1 shadow-lg group"
                 >
                   <div className="w-12 h-12 relative flex items-center justify-center">
-                    <Image
-                      src={tech.logo}
-                      alt={tech.name}
-                      width={48}
-                      height={48}
-                      className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
-                      unoptimized
-                    />
+                    {tech.logo ? (
+                      <Image
+                        src={tech.logo}
+                        alt={tech.name}
+                        width={48}
+                        height={48}
+                        className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
+                        unoptimized
+                      />
+                    ) : (
+                      <span className="text-white/40 text-xs">{tech.name.slice(0, 2)}</span>
+                    )}
                   </div>
                   <span className="text-white text-xs font-semibold tracking-wide text-center">{tech.name}</span>
                 </div>
@@ -235,10 +206,12 @@ const WebDevDeliveryModelSection = ({
   heading,
   description,
   steps,
+  eyebrow,
 }: {
   heading?: string;
   description?: string;
   steps?: { title: string; content: string }[];
+  eyebrow?: string;
 }) => {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
 
@@ -258,7 +231,7 @@ const WebDevDeliveryModelSection = ({
           {/* Left Column: Heading & Outcome Copy */}
           <div className="lg:col-span-6">
             <span className="inline-block bg-gradient-to-r from-[#00E1FF]/10 to-[#0055FF]/10 text-[#0055FF] border border-[#00E1FF]/30 text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full mb-4 shadow-sm">
-              Delivery Framework
+              {eyebrow || "Delivery Framework"}
             </span>
 
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0f172a] mb-6 leading-tight">
@@ -324,104 +297,66 @@ const WebDevDeliveryModelSection = ({
       </div>
     </section>
   );
-}; const cloudIncludedData = [
-  {
-    id: "auto-scaling",
-    title: "High-Availability & Auto-Scaling",
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25A2.25 2.25 0 0113.5 8.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
-      </svg>
-    ),
-    description: "Architecting zero-downtime, multi-region cloud infrastructures equipped with horizontal auto-scaling and intelligent load balancing to absorb traffic surges effortlessly.",
-    points: [
-      "Multi-AZ fault tolerance & load balancing",
-      "Traffic-triggered horizontal auto-scaling",
-      "99.99% Guaranteed SLA Uptime Target"
-    ]
-  },
-  {
-    id: "iac-automation",
-    title: "IaC & CI/CD Release Automation",
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
-      </svg>
-    ),
-    description: "Eliminating manual server management using Terraform, GitHub Actions, and containerization so code moves seamlessly from commit to production.",
-    points: [
-      "Terraform & CloudFormation state control",
-      "Automated testing & deployment pipelines",
-      "Instant environment duplication & rollbacks"
-    ]
-  },
-  {
-    id: "cyber-security",
-    title: "Cyber Security & Regulatory Compliance",
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-      </svg>
-    ),
-    description: "Hardening cloud environments with zero-trust network policies, data encryption at rest and in transit, and continuous compliance audit readiness.",
-    points: [
-      "End-to-end KMS data encryption & IAM policies",
-      "Automated WAF & DDoS threat protection",
-      "SOC 2, ISO 27001 & HIPAA audit readiness"
-    ]
-  },
-  {
-    id: "finops-cost",
-    title: "FinOps Spend & Cost Optimization",
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-    description: "Proactively managing monthly cloud bills through rightsizing idle compute nodes, savings plans, and automated resource cleanup triggers.",
-    points: [
-      "Savings Plans & Reserved Instance optimization",
-      "Automated idle server shutdown triggers",
-      "30-50% average cloud bill reduction"
-    ]
-  },
-  {
-    id: "observability",
-    title: "24/7 Observability & Managed SLA",
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m-9-6l2-2 2 2 4-4" />
-      </svg>
-    ),
-    description: "Deep telemetry monitoring across metrics, logs, and APM traces to resolve latency bottlenecks before end users encounter any issues.",
-    points: [
-      "Real-time Prometheus & Grafana alerting",
-      "Centralized log aggregation & tracing",
-      "24/7 automated incident response SLAs"
-    ]
-  }
-];
+};
 
-const CloudIncludedSection = () => {
+const CLOUD_ITEM_ICONS: Record<string, JSX.Element> = {
+  "auto-scaling": (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25A2.25 2.25 0 0113.5 8.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+    </svg>
+  ),
+  "iac-automation": (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+    </svg>
+  ),
+  "cyber-security": (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+    </svg>
+  ),
+  "finops-cost": (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  ),
+  observability: (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m-9-6l2-2 2 2 4-4" />
+    </svg>
+  ),
+};
+
+const CloudIncludedSection = ({ data }: { data: NonNullable<ServicePageSections["cloudIncluded"]> }) => {
   const [activeTab, setActiveTab] = useState(0);
+  if (!data?.items?.length) return null;
 
+  const cloudIncludedData = data.items.map((item) => ({
+    ...item,
+    icon: CLOUD_ITEM_ICONS[item.id] || CLOUD_ITEM_ICONS["auto-scaling"],
+  }));
   const current = cloudIncludedData[activeTab < 0 ? 0 : activeTab];
+
+  const headingParts = (data.heading || "Enterprise Cloud Deliverables").split(" ");
+  const lastTwo = headingParts.slice(-2).join(" ");
+  const firstPart = headingParts.slice(0, -2).join(" ");
 
   return (
     <section className="py-14 sm:py-24 bg-[#f8fafc] text-[#0f172a] border-t border-b border-gray-200/80">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12">
-        {/* Header matching Why Choose Us */}
         <div className="text-center mb-8 sm:mb-12 max-w-3xl mx-auto flex flex-col items-center">
           <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-[#0f172a] mb-2 sm:mb-3 tracking-tight">
-            Enterprise Cloud <span className="bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text">Deliverables</span>
+            {firstPart ? <>{firstPart} </> : null}
+            <span className="bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text">{lastTwo || data.heading}</span>
           </h2>
           <div className="w-20 sm:w-24 h-1 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full mb-3 sm:mb-4" />
-          <p className="text-gray-600 text-xs sm:text-base leading-relaxed px-2">
-            Beyond basic cloud setup, we engineer production-ready cloud standards that guarantee uptime, security, and cost efficiency:
-          </p>
+          {data.description && (
+            <p className="text-gray-600 text-xs sm:text-base leading-relaxed px-2">
+              {data.description}
+            </p>
+          )}
         </div>
 
-        {/* Mobile Accordion View (< lg) */}
         <div className="lg:hidden space-y-3">
           {cloudIncludedData.map((item, idx) => {
             const isOpen = activeTab === idx;
@@ -486,10 +421,8 @@ const CloudIncludedSection = () => {
           })}
         </div>
 
-        {/* Desktop View (>= lg) */}
         <div className="hidden lg:block bg-white border border-gray-200/80 rounded-3xl p-10 lg:p-14 shadow-xl">
           <div className="grid grid-cols-12 gap-8 items-stretch">
-            {/* Left Column: 5 Pill Buttons */}
             <div className="col-span-5 flex flex-col gap-3">
               {cloudIncludedData.map((item, idx) => {
                 const isActive = activeTab === idx;
@@ -528,7 +461,6 @@ const CloudIncludedSection = () => {
               })}
             </div>
 
-            {/* Right Column: Detail Card */}
             <div className="col-span-7 bg-[#f8fafc] border border-gray-200 text-[#0f172a] rounded-2xl p-10 flex flex-col justify-center shadow-inner">
               <h3 className="text-3xl font-extrabold text-[#0f172a] mb-4">{current?.title}</h3>
               <p className="text-gray-600 text-base leading-relaxed mb-8">{current?.description}</p>
@@ -552,205 +484,129 @@ const CloudIncludedSection = () => {
   );
 };
 
-const aiMlServicesData = [
-  {
-    id: "chatbot",
-    title: "Customer Service Automation",
-    icon: (
-      <svg className="w-6 h-6 text-[#0055FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 01.978-2.025c.09-.108.157-.235.18-.372a9.756 9.756 0 01-1.084-2.508C4.03 15.25 3 13.7 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
-      </svg>
-    ),
-    description: "Automate customer interactions using NLP and intelligent chatbots to reduce human workload, improve response times, and ensure 24/7 availability with consistent support experiences.",
-    bgColor: "bg-white",
-    borderColor: "border-gray-200"
-  },
-  {
-    id: "analytics",
-    title: "Data Analytics & Business Intelligence",
-    icon: (
-      <svg className="w-6 h-6 text-[#0055FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m-9-6l2-2 2 2 4-4" />
-      </svg>
-    ),
-    description: "Unlock the value of your enterprise data with advanced analytics dashboards and visualization tools that reveal performance trends and uncover growth opportunities.",
-    bgColor: "bg-white",
-    borderColor: "border-gray-200"
-  },
-  {
-    id: "process",
-    title: "Process Automation & Optimization",
-    icon: (
-      <svg className="w-6 h-6 text-[#0055FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
-        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-      </svg>
-    ),
-    description: "Streamline repetitive tasks and complex operational workflows using AI and ML automation to reduce manual costs, eliminate errors, and boost team output.",
-    bgColor: "bg-white",
-    borderColor: "border-gray-200"
-  },
-  {
-    id: "strategy",
-    title: "AI/ML Strategy & Consulting",
-    icon: (
-      <svg className="w-6 h-6 text-[#0055FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 2.625a3.375 3.375 0 00-3.75-3.375m-3.75 3.375a3.375 3.375 0 013.75-3.375m0 0V5.25m0 0A2.25 2.25 0 009.75 3h-4.5A2.25 2.25 0 003 5.25v4.5A2.25 2.25 0 005.25 12h4.5A2.25 2.25 0 0012 9.75V5.25zm0 0A2.25 2.25 0 0114.25 3h4.5A2.25 2.25 0 0121 5.25v4.5A2.25 2.25 0 0118.75 12h-4.5A2.25 2.25 0 0112 9.75V5.25z" />
-      </svg>
-    ),
-    description: "Design and implement tailored AI roadmaps aligned with business goals, focusing on high-ROI use cases, scalable architectures, and responsible AI innovation.",
-    bgColor: "bg-white",
-    borderColor: "border-gray-200"
-  },
-  {
-    id: "predictive",
-    title: "Predictive Analytics & Forecasting",
-    icon: (
-      <svg className="w-6 h-6 text-[#0055FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
-      </svg>
-    ),
-    description: "Forecast market demand, user churn, and inventory trends through custom machine learning models trained on historical data to drive proactive decision-making.",
-    bgColor: "bg-white",
-    borderColor: "border-gray-200"
-  },
-  {
-    id: "llm",
-    title: "Custom LLM & Generative AI Integration",
-    icon: (
-      <svg className="w-6 h-6 text-[#0055FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
-      </svg>
-    ),
-    description: "Fine-tune and integrate state-of-the-art Large Language Models (LLMs) and Generative AI into your applications for document processing, content generation, and smart search.",
-    bgColor: "bg-white",
-    borderColor: "border-gray-200"
-  }
-];
+const AIML_ITEM_ICONS: Record<string, JSX.Element> = {
+  chatbot: (
+    <svg className="w-6 h-6 text-[#0055FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 01.978-2.025c.09-.108.157-.235.18-.372a9.756 9.756 0 01-1.084-2.508C4.03 15.25 3 13.7 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
+    </svg>
+  ),
+  analytics: (
+    <svg className="w-6 h-6 text-[#0055FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m-9-6l2-2 2 2 4-4" />
+    </svg>
+  ),
+  process: (
+    <svg className="w-6 h-6 text-[#0055FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  ),
+  strategy: (
+    <svg className="w-6 h-6 text-[#0055FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 2.625a3.375 3.375 0 00-3.75-3.375m-3.75 3.375a3.375 3.375 0 013.75-3.375m0 0V5.25m0 0A2.25 2.25 0 009.75 3h-4.5A2.25 2.25 0 003 5.25v4.5A2.25 2.25 0 005.25 12h4.5A2.25 2.25 0 0012 9.75V5.25zm0 0A2.25 2.25 0 0114.25 3h4.5A2.25 2.25 0 0121 5.25v4.5A2.25 2.25 0 0118.75 12h-4.5A2.25 2.25 0 0112 9.75V5.25z" />
+    </svg>
+  ),
+  predictive: (
+    <svg className="w-6 h-6 text-[#0055FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
+    </svg>
+  ),
+  llm: (
+    <svg className="w-6 h-6 text-[#0055FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
+    </svg>
+  ),
+};
 
-const AiMlServicesGridSection = () => {
+const AiMlServicesGridSection = ({ data }: { data: NonNullable<ServicePageSections["aiMlGrid"]> }) => {
+  if (!data?.items?.length) return null;
+  const items = data.items.map((item, idx) => ({
+    id: item.id || `item-${idx}`,
+    title: item.title,
+    description: item.description,
+    icon: AIML_ITEM_ICONS[item.id || ""] || AIML_ITEM_ICONS.chatbot,
+  }));
+
   return (
     <section className="py-16 sm:py-24 bg-[#f8fafc] text-[#0f172a] border-t border-b border-gray-200/80">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
-
-          {/* Left Column: Title & Intro (Sticky on Desktop) */}
           <div className="lg:col-span-5 lg:sticky lg:top-28 flex flex-col justify-center">
-            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-[#0055FF] text-[10px] sm:text-xs font-extrabold tracking-wider uppercase mb-4 shadow-sm w-fit">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00E1FF] animate-pulse" />
-              Best AI/ML Services in Canada
-            </div>
-
+            {data.eyebrow && (
+              <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-[#0055FF] text-[10px] sm:text-xs font-extrabold tracking-wider uppercase mb-4 shadow-sm w-fit">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00E1FF] animate-pulse" />
+                {data.eyebrow}
+              </div>
+            )}
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0f172a] mb-4 leading-tight tracking-tight">
-              Enterprise <span className="bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text">AI & ML Capabilities</span>
+              {data.heading || "Enterprise AI & ML Capabilities"}
             </h2>
-
             <div className="w-20 sm:w-24 h-1 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full mb-6" />
-
-            <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-4">
-              From intelligent chatbots to custom predictive algorithms, we deliver end-to-end AI capabilities that drive business growth. Our artificial intelligence and machine learning solutions empower organizations to unlock hidden data patterns, automate complex operational workflows, and enhance customer experiences across all touchpoints.
-            </p>
-
-            <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6">
-              By leveraging state-of-the-art neural networks, natural language processing, and advanced predictive analytics, we build resilient AI infrastructure tailored to your exact business objectives. Whether you are modernizing legacy operations or deploying next-generation Generative AI models, our engineering team ensures seamless scalability, robust enterprise security, and measurable ROI at every stage of development.
-            </p>
+            {(data.intro || []).map((para, i) => (
+              <p key={i} className={`text-gray-600 text-sm sm:text-base leading-relaxed ${i === (data.intro?.length || 0) - 1 ? "mb-6" : "mb-4"}`}>
+                {para}
+              </p>
+            ))}
           </div>
-
-          {/* Right Column: Sticky Scroll Stacking Cards Container */}
           <div className="lg:col-span-7 flex flex-col gap-6 sm:gap-8 relative pb-10">
-            {aiMlServicesData.map((service, idx) => {
+            {items.map((svc, idx) => {
               const stickyTop = 100 + idx * 24;
               return (
                 <div
-                  key={service.id}
-                  style={{
-                    position: "sticky",
-                    top: `${stickyTop}px`,
-                    zIndex: 10 + idx
-                  }}
-                  className={`rounded-2xl sm:rounded-3xl border ${service.borderColor} ${service.bgColor} p-5 sm:p-8 transition-all duration-300 shadow-lg hover:shadow-2xl relative overflow-hidden group`}
+                  key={svc.id}
+                  style={{ position: "sticky", top: `${stickyTop}px`, zIndex: 10 + idx }}
+                  className="rounded-2xl sm:rounded-3xl border border-gray-200 bg-white p-5 sm:p-8 transition-all duration-300 shadow-lg hover:shadow-2xl relative overflow-hidden group"
                 >
                   <div className="flex items-start justify-between gap-3 sm:gap-4 mb-3">
                     <div className="flex items-center gap-3 sm:gap-4">
                       <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-white shadow-sm border border-gray-200/80 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
-                        {service.icon}
+                        {svc.icon}
                       </div>
                       <h3 className="text-base sm:text-2xl font-extrabold text-[#0f172a] tracking-tight">
-                        {service.title}
+                        {svc.title}
                       </h3>
                     </div>
-
                   </div>
-
                   <p className="text-gray-700 text-xs sm:text-base leading-relaxed">
-                    {service.description}
+                    {svc.description}
                   </p>
                 </div>
               );
             })}
           </div>
-
         </div>
       </div>
     </section>
   );
 };
 
-const DevOpsServicesGridSection = () => {
-  const services = [
-    {
-      num: "01",
-      title: "CI/CD Pipeline Automation",
-      desc: "We design and build robust, automated CI/CD pipelines that enable you to test and deploy your code frequently and reliably with zero downtime.",
-      link: true
-    },
-    {
-      num: "02",
-      title: "Infrastructure as Code (IaC)",
-      desc: "We use tools like Terraform and Ansible to manage your infrastructure as code, enabling versioning, repeatability, and scalability.",
-      link: true
-    },
-    {
-      num: "03",
-      title: "Cloud Automation & Management",
-      desc: "We help you leverage the full power of the cloud (AWS, Azure, GCP) by automating resource provisioning, configuration, and management.",
-      link: true
-    },
-    {
-      num: "04",
-      title: "Monitoring & Observability",
-      desc: "We implement comprehensive monitoring and observability solutions that give you deep visibility into your systems' health and performance.",
-      link: true
-    },
-    {
-      num: "05",
-      title: "DevSecOps & Security",
-      desc: "We integrate security into every stage of your development lifecycle, from code scanning to compliance automation, to build more secure applications.",
-      link: true
-    },
-    {
-      num: "06",
-      title: "Site Reliability Engineering (SRE)",
-      desc: "We apply SRE principles to improve your systems' reliability, performance, and resilience, ensuring you meet your service level objectives (SLOs).",
-      link: true
-    }
-  ];
+const DevOpsServicesGridSection = ({ data }: { data: NonNullable<ServicePageSections["devopsGrid"]> }) => {
+  if (!data?.items?.length) return null;
+  const services = data.items.map((item, i) => ({
+    num: item.num || String(i + 1).padStart(2, "0"),
+    title: item.title,
+    desc: item.desc,
+    link: true,
+  }));
 
   return (
     <section className="py-16 sm:py-24 bg-[#f8fafc] border-t border-gray-100">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-12">
           <span className="inline-block bg-gradient-to-r from-[#00E1FF]/10 to-[#0055FF]/10 text-[#0055FF] border border-[#00E1FF]/30 text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full mb-4 shadow-sm">
-            Our Services
+            {data.eyebrow || "Our Services"}
           </span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0f172a] mb-4">
-            Our Comprehensive <span className="bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text">DevOps Services</span>
+            {data.heading || "Our Comprehensive DevOps Services"}
           </h2>
           <div className="w-20 h-1 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full mb-6" />
-          <p className="text-gray-600 max-w-3xl text-sm sm:text-base leading-relaxed">
-            We provide end-to-end DevOps support, from initial assessment and strategy to implementation and ongoing management, helping you mature your software delivery lifecycle.
-          </p>
+          {data.description && (
+            <p className="text-gray-600 max-w-3xl text-sm sm:text-base leading-relaxed">
+              {data.description}
+            </p>
+          )}
         </div>
+
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((svc, idx) => (
@@ -1380,40 +1236,7 @@ const CustomSoftwareServicesSection = () => {
   );
 };
 
-const ECOMMERCE_SERVICES = [
-  {
-    num: "01",
-    title: "Custom Storefront Development",
-    desc: "Fully tailored custom ecommerce website development aligned with your brand and sales goals.",
-  },
-  {
-    num: "02",
-    title: "Platform-Agnostic Builds",
-    desc: "Flexible ecommerce site development across Shopify, WooCommerce, Magento, and custom stacks.",
-  },
-  {
-    num: "03",
-    title: "UX & Conversion Design",
-    desc: "High-impact ecommerce website design and development focused on usability and checkout flow.",
-  },
-  {
-    num: "04",
-    title: "Backend & API Integrations",
-    desc: "Robust web ecommerce development with ERP, CRM, inventory, and payment integrations.",
-  },
-  {
-    num: "05",
-    title: "Scalable Architecture",
-    desc: "Enterprise-ready ecommerce development services built for performance and growth.",
-  },
-  {
-    num: "06",
-    title: "Optimization & Support",
-    desc: "Ongoing enhancements by experienced ecommerce developers and QA specialists.",
-  },
-];
-
-const EcommerceServicesSection = () => {
+const EcommerceServicesSection = ({ data }: { data: NonNullable<ServicePageSections["ecommerceServices"]> }) => {
   const [visible, setVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -1425,6 +1248,8 @@ const EcommerceServicesSection = () => {
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
+
+  if (!data?.items?.length) return null;
 
   return (
     <section
@@ -1442,26 +1267,21 @@ const EcommerceServicesSection = () => {
         <div className={`mb-12 transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#00E1FF]/15 to-[#0055FF]/15 border border-[#00E1FF]/25 rounded-full px-4 py-1.5 mb-4">
             <span className="w-2 h-2 rounded-full bg-gradient-to-r from-[#00E1FF] to-[#0055FF] animate-pulse" />
-            <span className="text-xs font-bold text-[#0055FF] uppercase tracking-widest">Our Services</span>
+            <span className="text-xs font-bold text-[#0055FF] uppercase tracking-widest">{data.eyebrow || "Our Services"}</span>
           </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0f172a] leading-tight mb-4">
-            End-to-End{" "}
-            <span className="relative inline-block">
-              <span className="bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text">Ecommerce</span>
-              <span
-                className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full transition-all duration-1000 delay-500 ${visible ? "w-full" : "w-0"}`}
-              />
-            </span>{" "}
-            Development Services
+            {data.heading || "End-to-End Ecommerce Development Services"}
           </h2>
+          {data.description && (
           <p className={`text-gray-500 max-w-xl text-sm sm:text-base leading-relaxed transition-all duration-700 delay-200 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
-            As a trusted ecommerce development company, we design, build, and optimize powerful online stores that drive revenue, improve user experience, and integrate seamlessly with your business systems.
+            {data.description}
           </p>
+          )}
         </div>
 
         {/* Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {ECOMMERCE_SERVICES.map((item, i) => (
+          {data.items.map((item, i) => (
             <div
               key={item.num}
               className={`group relative bg-white rounded-2xl p-7 border border-gray-100 overflow-hidden cursor-default
@@ -1512,34 +1332,10 @@ const EcommerceServicesSection = () => {
 };
 
 
-const UIUX_ENGAGEMENTS = [
-  {
-    title: "UX audit and recommendations",
-    description:
-      "An analysis of your current interface, identifying friction points and a report prioritized by impact on conversion. Delivered as a standalone engagement or built into a larger project.",
-  },
-  {
-    title: "Wireframes and architecture",
-    description:
-      "Navigation structure, information hierarchy and functional mockups before the visual design. This step avoids costly revisions down the line.",
-  },
-  {
-    title: "Interactive prototypes",
-    description:
-      "Clickable mockups and functional prototypes to validate the user experience before development. Quick tests and low-cost iterations.",
-  },
-  {
-    title: "Full UI/UX design",
-    description:
-      "End-to-end design covering research, wireframes, visual UI, design systems, and handoff-ready assets. The complete package for a polished, pixel-perfect product.",
-  },
-];
-
-const UiUxEngagementsSection = () => {
+const UiUxEngagementsSection = ({ data }: { data: NonNullable<ServicePageSections["uiuxEngagements"]> }) => {
   const [visible, setVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Intersection Observer for scroll-in
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) setVisible(true); },
@@ -1548,6 +1344,8 @@ const UiUxEngagementsSection = () => {
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
+
+  if (!data?.items?.length) return null;
 
   return (
     <section
@@ -1568,21 +1366,10 @@ const UiUxEngagementsSection = () => {
         >
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#00E1FF]/15 to-[#0055FF]/15 border border-[#00E1FF]/25 rounded-full px-4 py-1.5 mb-5">
             <span className="w-2 h-2 rounded-full bg-gradient-to-r from-[#00E1FF] to-[#0055FF] animate-pulse" />
-            <span className="text-xs font-bold text-[#0055FF] uppercase tracking-widest">UI/UX Engagements</span>
+            <span className="text-xs font-bold text-[#0055FF] uppercase tracking-widest">{data.eyebrow || "UI/UX Engagements"}</span>
           </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0f172a] leading-tight">
-            Four types of UI/UX{" "}
-            <span className="relative inline-block">
-              <span className="bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text">
-                engagements
-              </span>
-              {/* Animated underline */}
-              <span
-                className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full transition-all duration-1000 delay-500 ${visible ? "w-full" : "w-0"
-                  }`}
-              />
-            </span>{" "}
-            we run
+            {data.heading || "Four types of UI/UX engagements we run"}
           </h2>
         </div>
 
@@ -1591,7 +1378,7 @@ const UiUxEngagementsSection = () => {
           <div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
           >
-            {UIUX_ENGAGEMENTS.map((item, i) => (
+            {data.items.map((item, i) => (
               <div
                 key={i}
                 className={`group relative bg-white rounded-2xl p-7 shadow-sm border border-gray-100 overflow-hidden cursor-default
@@ -2133,10 +1920,11 @@ const CloudOrbitHeroGraphic = () => {
   );
 };
 
-const MobileDevServicesTabSection = () => {
+const MobileDevServicesTabSection = ({ data }: { data: NonNullable<ServicePageSections["mobileTabs"]> }) => {
   const [activeTab, setActiveTab] = useState(0);
+  if (!data?.tabs?.length) return null;
 
-  const tabs = [
+  const _iconTabs = [
     {
       id: "ios",
       name: "iOS App Development",
@@ -2257,6 +2045,20 @@ const MobileDevServicesTabSection = () => {
     }
   ];
 
+
+  const tabs = data.tabs.map((cmsTab, idx) => {
+    const shell = _iconTabs[idx] || _iconTabs[0];
+    return {
+      ...shell,
+      id: cmsTab.id || shell.id,
+      name: cmsTab.name || shell.name,
+      highlightText: cmsTab.highlightText || shell.highlightText,
+      title: cmsTab.title || shell.title,
+      description: cmsTab.description || shell.description,
+      points: cmsTab.points?.length ? cmsTab.points : shell.points,
+    };
+  });
+
   const current = tabs[activeTab];
 
   const renderDescription = (desc: string, highlight: string) => {
@@ -2279,14 +2081,16 @@ const MobileDevServicesTabSection = () => {
         {/* Section Header */}
         <div className="max-w-4xl mx-auto text-center mb-10 sm:mb-14 px-2">
           <span className="inline-block bg-gradient-to-r from-[#00E1FF]/10 to-[#0055FF]/10 text-[#00E1FF] border border-[#00E1FF]/30 text-xs sm:text-sm font-semibold px-4 py-1.5 sm:px-5 sm:py-2 rounded-full mb-4 shadow-sm">
-            What We Offer
+            {data.eyebrow || "What We Offer"}
           </span>
           <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-3 sm:mb-4 tracking-tight leading-tight">
-            Mobile App Development Services
+            {data.heading || "Mobile App Development Services"}
           </h2>
+          {data.description && (
           <p className="text-gray-400 text-xs sm:text-base max-w-2xl mx-auto leading-relaxed">
-            End-to-end native and cross-platform mobile engineering tailored to deliver high performance, robust security, and seamless user experiences.
+            {data.description}
           </p>
+          )}
         </div>
 
         <div className="bg-[#121217] rounded-3xl p-4 sm:p-10 lg:p-14 border border-gray-800/80 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative overflow-hidden">
@@ -2713,15 +2517,18 @@ const TaxAccountingHeroGraphic = () => {
 export default function ServicePage() {
   const params = useParams();
   const slug = params.slug as string;
-  const isMobilePage = slug === "mobile-app-development";
   const [service, setService] = useState<ServiceData | null>(servicesData[slug] || null);
   const [isVisible, setIsVisible] = useState(false);
   const [activeFeature, setActiveFeature] = useState(0);
+  const pageSections = service ? resolvePageSections(service) : {};
+  const heroVariant = (service?.heroVariant || HERO_VARIANT_BY_SLUG[slug] || "browser") as string;
+  const techStackData = (service?.techStack || pageSections.techStack) as ServicePageSections["techStack"] | undefined;
+  const canadaBlock = service ? resolveCanadaCities(service, pageSections) : null;
 
   useEffect(() => {
     setIsVisible(true);
     let cancelled = false;
-    fetch(`/api/cms/services/${slug}`)
+    fetch(`/api/cms/services/${slug}`, { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
         if (!cancelled && data?.service) setService(data.service);
@@ -2753,6 +2560,17 @@ export default function ServicePage() {
         <section className="relative pt-28 pb-16 bg-[#0d1117] overflow-hidden">
           {/* Subtle background glow */}
           <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(ellipse at 70% 50%, rgba(0,180,255,0.08) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(59,130,246,0.06) 0%, transparent 50%)' }} />
+          {service.heroImage ? (
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={service.heroImage}
+                alt=""
+                className="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none"
+              />
+              <div className="absolute inset-0 bg-[#0d1117]/75" />
+            </>
+          ) : null}
 
           <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-20">
             {/* Breadcrumb */}
@@ -2790,7 +2608,7 @@ export default function ServicePage() {
                     onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
                     className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] hover:opacity-90 text-white px-7 py-4 rounded-xl font-semibold text-base transition-all duration-300 shadow-lg shadow-[#00E1FF]/25"
                   >
-                    Get a Free Consultation
+                    {service.heroCtaLabel || "Get a Free Consultation"}
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
@@ -2802,7 +2620,7 @@ export default function ServicePage() {
 
               {/* Right: Mockup Illustration */}
               <div className={`relative transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-                {slug === "mobile-app-development" ? (
+                {heroVariant === "mobile" ? (
                   /* Cascading 4-Phone 3D Showcase for Mobile App Development */
                   <div className="relative w-full h-[340px] sm:h-[480px] flex items-center justify-center overflow-visible py-2 sm:py-4">
                     {/* Background Glow */}
@@ -2939,31 +2757,31 @@ export default function ServicePage() {
 
                     </div>
                   </div>
-                ) : slug === "cloud-solutions" ? (
+                ) : heroVariant === "cloud" ? (
                   /* Cloud Orbiting Graphic for Cloud Solutions */
                   <CloudOrbitHeroGraphic />
-                ) : slug === "devops-cicd" ? (
+                ) : heroVariant === "devops" ? (
                   /* CI/CD Infinity Loop Graphic for DevOps & CI/CD */
                   <DevOpsHeroGraphic />
-                ) : slug === "ai-ml-solutions" ? (
+                ) : heroVariant === "aiml" ? (
                   /* Glowing Cyber Graphic for AI / ML Solutions */
                   <AiMlHeroGraphic />
-                ) : slug === "ui-ux-design" ? (
+                ) : heroVariant === "uiux" ? (
                   /* UI/UX Graphic */
                   <UiUxHeroGraphic />
-                ) : slug === "ecommerce-solutions" ? (
+                ) : heroVariant === "ecommerce" ? (
                   /* E-commerce Illustration */
                   <EcommerceHeroGraphic />
-                ) : slug === "custom-software-development" ? (
+                ) : heroVariant === "custom" ? (
                   /* Custom Software Development Graphic */
                   <CustomSoftwareHeroGraphic />
-                ) : slug === "seo-digital-marketing" ? (
+                ) : heroVariant === "seo" ? (
                   /* SEO Graphic */
                   <SeoHeroGraphic />
-                ) : slug === "maintenance-support" ? (
+                ) : heroVariant === "maintenance" ? (
                   /* Maintenance & Support Graphic */
                   <MaintenanceHeroGraphic />
-                ) : slug === "tax-accounting" ? (
+                ) : heroVariant === "tax" ? (
                   /* Tax & Accounting Graphic */
                   <TaxAccountingHeroGraphic />
                 ) : (
@@ -3072,21 +2890,62 @@ export default function ServicePage() {
         {/* Combined Overview & Features Section */}
         <section id="features" className="py-20 bg-white">
           <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
-            {/* Header with Subtitle & Description */}
+            {/* Header: subtitle + Strapi `overview` (primary). overviewTagline only if overview empty. */}
             <div className="max-w-4xl mx-auto text-center mb-14">
               <h2 className="text-3xl sm:text-4xl font-bold text-[#0f172a] mb-4">
                 {service.subtitle}
               </h2>
-              <p className="text-gray-600 text-lg leading-relaxed">
-                {service.overviewTagline || "We focus on understanding your business goals first, then build solutions that actually solve problems, not just look good on paper. Every project gets dedicated attention, clear communication, and a team that takes ownership of delivering results on time."}
-              </p>
+              {(() => {
+                const overviewHtml = String(service.overview || "").trim();
+                const tagline = String(service.overviewTagline || "").trim();
+                const body = overviewHtml || tagline;
+                if (!body) return null;
+                const looksLikeHtml = /<[a-z][\s\S]*>/i.test(body);
+                return looksLikeHtml ? (
+                  <div
+                    className="text-gray-600 text-lg leading-relaxed prose prose-neutral max-w-none mx-auto"
+                    dangerouslySetInnerHTML={{ __html: body }}
+                  />
+                ) : (
+                  <p className="text-gray-600 text-lg leading-relaxed whitespace-pre-line">{body}</p>
+                );
+              })()}
             </div>
+
+            {service.stats?.length ? (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-14 max-w-4xl mx-auto">
+                {service.stats.map((stat, i) => (
+                  <div
+                    key={`${stat.label}-${i}`}
+                    className="rounded-2xl border border-gray-100 bg-[#f8fafc] p-5 text-center"
+                  >
+                    <div className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text">
+                      {stat.value}
+                    </div>
+                    <div className="text-gray-500 text-xs sm:text-sm mt-1">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+
+            {service.technologies?.length && !techStackData?.categories?.length ? (
+              <div className="flex flex-wrap justify-center gap-2 mb-12">
+                {service.technologies.map((tech) => (
+                  <span
+                    key={tech}
+                    className="px-3 py-1.5 rounded-full bg-[#00B4FF]/10 text-[#0055FF] text-xs font-medium"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            ) : null}
 
             {/* What We Offer Label & Feature Cards */}
             <>
               <div className="text-center mb-8">
                 <span className="inline-block bg-gradient-to-r from-[#00E1FF]/10 to-[#0055FF]/10 text-[#0055FF] border border-[#00E1FF]/30 text-sm font-semibold px-4 py-2 rounded-full">
-                  What We Offer
+                  {service.featuresEyebrow || "What We Offer"}
                 </span>
               </div>
 
@@ -3118,276 +2977,162 @@ export default function ServicePage() {
         </section>
 
         {/* Mobile Services Interactive Tab Section (What We Offer for Mobile App Development page) */}
-        {isMobilePage && (
-          <MobileDevServicesTabSection />
+        {pageSections.mobileTabs && (
+          <MobileDevServicesTabSection data={pageSections.mobileTabs} />
         )}
 
         {/* UI/UX Engagements Section - Only for UI/UX Design */}
-        {slug === "ui-ux-design" && (
-          <UiUxEngagementsSection />
+        {pageSections.uiuxEngagements && (
+          <UiUxEngagementsSection data={pageSections.uiuxEngagements} />
         )}
 
 
         {/* E-commerce Services Section - Only for E-commerce Solutions */}
-        {slug === "ecommerce-solutions" && (
-          <EcommerceServicesSection />
+        {pageSections.ecommerceServices && (
+          <EcommerceServicesSection data={pageSections.ecommerceServices} />
         )}
 
-        {/* SEO Packages Section - Only for SEO/Digital Marketing */}
-        {slug === "seo-digital-marketing" && (
+        {/* SEO Packages Section */}
+        {pageSections.seoPackages?.packages?.length ? (
           <section className="py-20 bg-white">
             <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
               <div className="text-center mb-16">
                 <span className="inline-block bg-[#262b3f]/10 text-[#262b3f] text-sm font-semibold px-4 py-2 rounded-full mb-4">
-                  SEO Packages
+                  {pageSections.seoPackages.eyebrow || "SEO Packages"}
                 </span>
                 <h2 className="text-3xl sm:text-4xl font-bold text-[#1a1a2e] mb-4">
-                  Choose Your Growth Plan
+                  {pageSections.seoPackages.heading || "Choose Your Growth Plan"}
                 </h2>
-                <p className="text-gray-600 max-w-2xl mx-auto">
-                  Transparent pricing with real deliverables. No hidden fees, no long-term contracts.
-                </p>
+                {pageSections.seoPackages.description && (
+                  <p className="text-gray-600 max-w-2xl mx-auto">
+                    {pageSections.seoPackages.description}
+                  </p>
+                )}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-6 lg:gap-8">
-                {/* Starter Package */}
-                <div className="relative bg-white border-2 border-gray-200 rounded-2xl p-8 hover:border-[#262b3f]/30 hover:shadow-xl transition-all duration-300">
-                  <div className="mb-6">
-                    <h3 className="text-xl font-bold text-[#1a1a2e] mb-2">Starter</h3>
-                    <p className="text-gray-500 text-sm">For small businesses getting started with SEO</p>
-                  </div>
-                  <div className="mb-6">
-                    <span className="text-4xl font-bold text-[#1a1a2e]">$799</span>
-                    <span className="text-gray-500">/month</span>
-                  </div>
-                  <ul className="space-y-3 mb-8">
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className="text-gray-600 text-sm">Up to 10 keywords optimized</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className="text-gray-600 text-sm">Technical SEO audit & fixes</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className="text-gray-600 text-sm">On-page optimization</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className="text-gray-600 text-sm">2 blog posts/month</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className="text-gray-600 text-sm">Google Business Profile setup</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className="text-gray-600 text-sm">Monthly ranking report</span>
-                    </li>
-                  </ul>
-                  <button
-                    onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
-                    className="w-full py-3 px-6 border-2 border-[#262b3f] text-[#262b3f] font-semibold rounded-lg hover:bg-[#262b3f] hover:text-white transition-all duration-300"
+                {pageSections.seoPackages.packages.map((pkg) => (
+                  <div
+                    key={pkg.name}
+                    className={`relative rounded-2xl p-8 transition-all duration-300 ${
+                      pkg.featured
+                        ? "bg-[#1a1a2e] border-2 border-[#262b3f] shadow-2xl transform md:-translate-y-4"
+                        : "bg-white border-2 border-gray-200 hover:border-[#262b3f]/30 hover:shadow-xl"
+                    }`}
                   >
-                    Get Started
-                  </button>
-                </div>
-
-                {/* Growth Package - Popular */}
-                <div className="relative bg-[#1a1a2e] border-2 border-[#262b3f] rounded-2xl p-8 shadow-2xl transform md:-translate-y-4">
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <span className="bg-gradient-to-r from-[#0055FF] to-[#00AAFF] text-white text-xs font-bold px-4 py-1.5 rounded-full">
-                      MOST POPULAR
-                    </span>
+                    {pkg.featured && pkg.featuredBadge && (
+                      <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                        <span className="bg-gradient-to-r from-[#0055FF] to-[#00AAFF] text-white text-xs font-bold px-4 py-1.5 rounded-full">
+                          {pkg.featuredBadge}
+                        </span>
+                      </div>
+                    )}
+                    <div className="mb-6">
+                      <h3 className={`text-xl font-bold mb-2 ${pkg.featured ? "text-white" : "text-[#1a1a2e]"}`}>{pkg.name}</h3>
+                      {pkg.blurb && (
+                        <p className={`text-sm ${pkg.featured ? "text-white/60" : "text-gray-500"}`}>{pkg.blurb}</p>
+                      )}
+                    </div>
+                    <div className="mb-6">
+                      <span className={`text-4xl font-bold ${pkg.featured ? "text-white" : "text-[#1a1a2e]"}`}>{pkg.price}</span>
+                      {pkg.priceSuffix && (
+                        <span className={pkg.featured ? "text-white/60" : "text-gray-500"}>{pkg.priceSuffix}</span>
+                      )}
+                    </div>
+                    <ul className="space-y-3 mb-8">
+                      {pkg.features.map((feature) => (
+                        <li key={feature} className="flex items-start gap-3">
+                          <svg className={`w-5 h-5 flex-shrink-0 mt-0.5 ${pkg.featured ? "text-emerald-400" : "text-emerald-500"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                          <span className={`text-sm ${pkg.featured ? "text-white/80" : "text-gray-600"}`}>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <button
+                      onClick={() => window.dispatchEvent(new CustomEvent("openLetsTalkBusiness"))}
+                      className={`w-full py-3 px-6 font-semibold rounded-lg transition-all duration-300 ${
+                        pkg.featured
+                          ? "bg-gradient-to-r from-[#0055FF] to-[#00AAFF] text-white hover:opacity-90"
+                          : "border-2 border-[#262b3f] text-[#262b3f] hover:bg-[#262b3f] hover:text-white"
+                      }`}
+                    >
+                      {pkg.ctaLabel || "Get Started"}
+                    </button>
                   </div>
-                  <div className="mb-6">
-                    <h3 className="text-xl font-bold text-white mb-2">Growth</h3>
-                    <p className="text-white/60 text-sm">For businesses ready to scale their online presence</p>
-                  </div>
-                  <div className="mb-6">
-                    <span className="text-4xl font-bold text-white">$1,499</span>
-                    <span className="text-white/60">/month</span>
-                  </div>
-                  <ul className="space-y-3 mb-8">
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className="text-white/80 text-sm">Up to 25 keywords optimized</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className="text-white/80 text-sm">Everything in Starter</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className="text-white/80 text-sm">4 blog posts/month</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className="text-white/80 text-sm">Link building (10 backlinks/month)</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className="text-white/80 text-sm">Competitor analysis</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className="text-white/80 text-sm">Local SEO optimization</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className="text-white/80 text-sm">Bi-weekly strategy calls</span>
-                    </li>
-                  </ul>
-                  <button
-                    onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
-                    className="w-full py-3 px-6 bg-gradient-to-r from-[#0055FF] to-[#00AAFF] text-white font-semibold rounded-lg hover:opacity-90 transition-all duration-300"
-                  >
-                    Get Started
-                  </button>
-                </div>
-
-                {/* Enterprise Package */}
-                <div className="relative bg-white border-2 border-gray-200 rounded-2xl p-8 hover:border-[#262b3f]/30 hover:shadow-xl transition-all duration-300">
-                  <div className="mb-6">
-                    <h3 className="text-xl font-bold text-[#1a1a2e] mb-2">Enterprise</h3>
-                    <p className="text-gray-500 text-sm">For large businesses with aggressive growth goals</p>
-                  </div>
-                  <div className="mb-6">
-                    <span className="text-4xl font-bold text-[#1a1a2e]">$2,999</span>
-                    <span className="text-gray-500">/month</span>
-                  </div>
-                  <ul className="space-y-3 mb-8">
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className="text-gray-600 text-sm">Unlimited keywords</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className="text-gray-600 text-sm">Everything in Growth</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className="text-gray-600 text-sm">8 blog posts/month</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className="text-gray-600 text-sm">Link building (25 backlinks/month)</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className="text-gray-600 text-sm">Google Ads management included</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className="text-gray-600 text-sm">Dedicated SEO manager</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className="text-gray-600 text-sm">Weekly strategy calls</span>
-                    </li>
-                  </ul>
-                  <button
-                    onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
-                    className="w-full py-3 px-6 border-2 border-[#262b3f] text-[#262b3f] font-semibold rounded-lg hover:bg-[#262b3f] hover:text-white transition-all duration-300"
-                  >
-                    Get Started
-                  </button>
-                </div>
+                ))}
               </div>
 
-              {/* Additional Info */}
               <div className="mt-12 text-center">
-                <p className="text-gray-500 text-sm mb-4">
-                  All packages include: Google Analytics setup, Search Console integration, and monthly performance reports.
-                </p>
-                <p className="text-gray-600 font-medium">
-                  Need a custom package? <button onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))} className="text-[#0055FF] hover:underline">Contact us</button> for a tailored solution.
-                </p>
+                {pageSections.seoPackages.footerNote && (
+                  <p className="text-gray-500 text-sm mb-4">{pageSections.seoPackages.footerNote}</p>
+                )}
+                {(pageSections.seoPackages.customPackageText || pageSections.seoPackages.customPackageCtaLabel) && (
+                  <p className="text-gray-600 font-medium">
+                    {pageSections.seoPackages.customPackageText || "Need a custom package?"}{" "}
+                    <button onClick={() => window.dispatchEvent(new CustomEvent("openLetsTalkBusiness"))} className="text-[#0055FF] hover:underline">
+                      {pageSections.seoPackages.customPackageCtaLabel || "Contact us"}
+                    </button>
+                    {" "}for a tailored solution.
+                  </p>
+                )}
               </div>
             </div>
           </section>
-        )}
+        ) : null}
+
 
         {/* How We Work, same oval process as homepage */}
         {service.process && service.process.length > 0 && (
-          <HowWeWork steps={service.process} heading={service.processHeading || "How We Work"} />
+          <HowWeWork
+            steps={service.process}
+            heading={service.processHeading || "How We Work"}
+            description={service.processDescription}
+          />
         )}
 
-        {/* Local SEO Services Section - Only for SEO/Digital Marketing */}
-        {slug === "seo-digital-marketing" && (
+        {service.caseStudies?.length ? (
+          <section className="py-16 bg-white border-t border-gray-100">
+            <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
+              <h2 className="text-3xl font-bold text-[#0f172a] text-center mb-10">Case Studies</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {service.caseStudies.map((cs, i) => (
+                  <div
+                    key={`${cs.title}-${i}`}
+                    className="rounded-2xl border border-gray-100 bg-[#f8fafc] p-6"
+                  >
+                    <h3 className="font-semibold text-[#0f172a] mb-2">{cs.title}</h3>
+                    {cs.industry ? (
+                      <p className="text-xs text-[#0055FF] font-medium mb-2">{cs.industry}</p>
+                    ) : null}
+                    <p className="text-gray-600 text-sm leading-relaxed">{cs.result}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : null}
+
+        {/* Local SEO Services Section */}
+        {pageSections.localSeo && (
           <>
-            {/* Section 1: Local SEO Services Toronto & Across Canada (Elegant Blue Theme) */}
-            {/* Section 2: Why Our Local SEO Works */}
             <section className="py-20 bg-white border-t border-gray-100">
               <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12">
                 <div className="bg-[#f8fafc] border border-gray-200/80 rounded-3xl p-8 sm:p-12 lg:p-16 shadow-sm">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-
-                    {/* Left: Text Content */}
                     <div>
                       <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0f172a] mb-4 leading-tight">
-                        Why Our Local SEO Works
+                        {pageSections.localSeo.whyHeading || "Why Our Local SEO Works"}
                       </h2>
                       <div className="w-16 h-1 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full mb-6" />
                       <div className="space-y-4 text-gray-600 text-sm sm:text-base leading-relaxed">
-                        <p>
-                          Most affordable SEO services cut corners, thin content, low-quality backlinks, and cookie-cutter audits. We don&apos;t. Our local SEO services in Toronto and across Canada are built on three pillars: <strong className="text-[#0f172a]">technical excellence</strong>, <strong className="text-[#0f172a]">hyper-local content</strong>, and <strong className="text-[#0f172a]">authoritative link earning</strong>.
-                        </p>
-                        <p>
-                          When someone in Toronto searches &quot;local SEO services near me,&quot; your business should be the first thing they see. We make that happen through Google Business Profile optimization, structured data markup, local citation building, and neighbourhood-level keyword targeting, the kind of work that moves the needle.
-                        </p>
+                        {(pageSections.localSeo.whyParagraphs || []).map((para, i) => (
+                          <p key={i}>{para}</p>
+                        ))}
                       </div>
                     </div>
-
-                    {/* Right: Stats Grid */}
                     <div className="grid grid-cols-2 gap-4">
-                      {[
-                        { value: "312%", label: "Avg. traffic increase" },
-                        { value: "24+", label: "Cities served" },
-                        { value: "200+", label: "Google Business Profiles optimized" },
-                        { value: "18 spots", label: "Avg. ranking improvement" },
-                      ].map((stat) => (
+                      {(pageSections.localSeo.stats || []).map((stat) => (
                         <div
                           key={stat.label}
                           className="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col gap-1 shadow-sm hover:shadow-xl hover:border-[#00E1FF]/40 hover:-translate-y-1 transition-all duration-300"
@@ -3397,44 +3142,34 @@ export default function ServicePage() {
                         </div>
                       ))}
                     </div>
-
                   </div>
                 </div>
               </div>
             </section>
             <section className="py-24 bg-white border-t border-gray-100">
               <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-12">
-                {/* Header Container */}
                 <div className="max-w-3xl mx-auto text-center mb-16">
                   <div className="flex items-center justify-center gap-4 mb-6">
                     <div className="w-12 h-[2px] bg-gradient-to-r from-[#00E1FF] to-[#0055FF]" />
                     <span className="text-[#0055FF] text-xs font-bold uppercase tracking-[0.2em]">
-                      Local SEO Specialists
+                      {pageSections.localSeo.specialistsEyebrow || "Local SEO Specialists"}
                     </span>
                     <div className="w-12 h-[2px] bg-gradient-to-l from-[#00E1FF] to-[#0055FF]" />
                   </div>
-
                   <h2 className="text-4xl sm:text-5xl font-bold text-[#0f172a] mb-8 leading-[1.15] tracking-tight">
-                    Local SEO Services Toronto <br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0055FF] to-[#00E1FF] font-medium">&amp; Across Canada</span>
+                    {pageSections.localSeo.citiesHeading || "Local SEO Services Toronto & Across Canada"}
                   </h2>
-
-                  <p className="text-gray-500 text-lg leading-relaxed max-w-2xl mx-auto font-light">
-                    We provide sophisticated local SEO services to businesses in every major Canadian city. Our targeted strategies help you dominate the Google Maps pack and rank for searches that actually convert.
-                  </p>
+                  {pageSections.localSeo.citiesDescription && (
+                    <p className="text-gray-500 text-lg leading-relaxed max-w-2xl mx-auto font-light">
+                      {pageSections.localSeo.citiesDescription}
+                    </p>
+                  )}
                 </div>
-
-                {/* Cities Grid - Elegant Typography Focus with Blue Accents */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-24 border-t border-b border-gray-100 py-12 relative">
-                  {/* Subtle background glow for the grid */}
                   <div className="absolute inset-0 bg-gradient-to-r from-[#00E1FF]/5 via-[#0055FF]/5 to-transparent blur-2xl -z-10" />
-
-                  {[
-                    "Toronto", "Brampton", "Mississauga", "North York",
-                    "Calgary", "Vancouver", "Ottawa", "Hamilton"
-                  ].map((city) => (
+                  {(pageSections.localSeo.cities || []).map((city) => (
                     <Link
-                      href={`/services/${slug}/${city.toLowerCase().replace(/ /g, '-')}`}
+                      href={`/services/${slug}/${city.toLowerCase().replace(/ /g, "-")}`}
                       key={city}
                       className="group flex items-center gap-4 cursor-pointer border border-gray-200 rounded-2xl px-5 py-4 hover:border-[#0055FF]/30 hover:shadow-[0_4px_20px_rgba(0,85,255,0.05)] transition-all duration-300 bg-white/60 backdrop-blur-sm"
                     >
@@ -3448,25 +3183,23 @@ export default function ServicePage() {
                     </Link>
                   ))}
                 </div>
-
-                {/* Refined CTA - Classy Blue */}
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 bg-[#f8fbff] p-10 rounded-2xl border border-[#0055FF]/10 relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#00E1FF]/10 to-transparent rounded-full blur-3xl pointer-events-none" />
-
                   <div className="max-w-xl relative z-10">
                     <h3 className="text-2xl font-bold text-[#0f172a] mb-3 tracking-tight">
-                      Ready to Grow Your Organic Traffic?
+                      {pageSections.localSeo.ctaHeading || "Ready to Grow Your Organic Traffic?"}
                     </h3>
-                    <p className="text-gray-600 text-sm leading-relaxed font-light">
-                      Every SEO engagement is scoped to your market, goals, and competition. Get a free strategy call and custom quote, no contracts, no lock-in.
-                    </p>
+                    {pageSections.localSeo.ctaBody && (
+                      <p className="text-gray-600 text-sm leading-relaxed font-light">
+                        {pageSections.localSeo.ctaBody}
+                      </p>
+                    )}
                   </div>
-
                   <button
-                    onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
+                    onClick={() => window.dispatchEvent(new CustomEvent("openLetsTalkBusiness"))}
                     className="relative z-10 shrink-0 inline-flex items-center justify-center gap-3 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] hover:opacity-90 text-white px-8 py-4 rounded-full font-medium text-sm transition-all duration-300 shadow-[0_8px_20px_rgba(0,85,255,0.2)] hover:-translate-y-0.5 hover:shadow-[0_12px_25px_rgba(0,85,255,0.3)]"
                   >
-                    Request a Free Quote
+                    {pageSections.localSeo.ctaLabel || "Request a Free Quote"}
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
@@ -3474,37 +3207,38 @@ export default function ServicePage() {
                 </div>
               </div>
             </section>
-
           </>
         )}
+
         {/* How We Deliver Section (ONLY for Web Development Service Page, directly after Process section) */}
-        {slug === "web-development" && (
+        {service.deliverySteps && service.deliverySteps.length > 0 && (
           <WebDevDeliveryModelSection
             heading={service.deliveryHeading}
             description={service.deliveryDescription}
             steps={service.deliverySteps}
+            eyebrow={service.deliveryEyebrow}
           />
         )}
 
         {/* What's Included Section (ONLY for Cloud Solutions Service Page, directly after Process section) */}
-        {slug === "cloud-solutions" && (
-          <CloudIncludedSection />
+        {pageSections.cloudIncluded && (
+          <CloudIncludedSection data={pageSections.cloudIncluded} />
         )}
 
         {/* Enterprise AI/ML Capabilities Grid (ONLY for AI/ML Solutions Service Page, directly after Process section) */}
-        {slug === "ai-ml-solutions" && (
-          <AiMlServicesGridSection />
+        {pageSections.aiMlGrid && (
+          <AiMlServicesGridSection data={pageSections.aiMlGrid} />
         )}
 
         {/* Comprehensive DevOps Services Section (ONLY for DevOps & CI/CD Service Page) */}
-        {slug === "devops-cicd" && (
-          <DevOpsServicesGridSection />
+        {pageSections.devopsGrid && (
+          <DevOpsServicesGridSection data={pageSections.devopsGrid} />
         )}
 
         {/* Categorized Tech Stack */}
-        {slug !== "tax-accounting" && slug !== "seo-digital-marketing" && (
-          <CategorizedTechStack />
-        )}
+        {service.showTechStack !== false && techStackData?.categories?.length ? (
+          <CategorizedTechStack data={techStackData} />
+        ) : null}
 
 
 
@@ -3586,115 +3320,23 @@ export default function ServicePage() {
           );
         })()}
 
-        {/* Why Choose Us, Tax & Accounting (custom version) */}
-        {slug === "tax-accounting" && (
-          <section className="py-20 bg-[#f8fafc]">
-            <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-
-                {/* Left Column: Heading + Text */}
-                <div className="lg:col-span-5">
-                  <span className="inline-block bg-gradient-to-r from-[#00E1FF]/10 to-[#0055FF]/10 text-[#0055FF] border border-[#00E1FF]/30 text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full mb-5 shadow-sm">
-                    Why VynTech Solutions
-                  </span>
-                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0f172a] mb-4">
-                    Why <span className="bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text">choose us</span>
-                  </h2>
-                  <div className="w-24 h-1 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full mb-8" />
-
-                  <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6">
-                    Managing taxes and accounting isn&apos;t just about numbers, it&apos;s about making confident financial decisions. At VynTech Solutions, our certified accounting professionals provide accurate, transparent, and deadline-driven financial services tailored for Canadian businesses of every size.
-                  </p>
-
-                  <h3 className="text-base sm:text-lg font-bold text-[#0f172a] mb-2">
-                    Precision you can trust
-                  </h3>
-                  <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
-                    From personal income tax to corporate filings and CRA compliance, we handle the complexity so you can focus on growing your business. Every engagement is backed by transparency, accuracy, and proactive year-round support.
-                  </p>
-                </div>
-
-                {/* Right Column: 6 Benefit Cards */}
-                <div className="lg:col-span-7">
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3.5 sm:gap-5">
-
-                    {/* Card 1, CRA Compliance */}
-                    <div className="bg-white rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-lg hover:border-[#00E1FF]/40 transition-all duration-300 min-h-[130px] sm:min-h-[160px] border border-gray-100 group">
-                      <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#0f172a] group-hover:text-[#00E1FF] transition-colors mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                      </svg>
-                      <span className="text-[#0f172a] font-semibold text-[11px] sm:text-xs md:text-sm leading-snug">CRA Compliant<br />Filings</span>
-                    </div>
-
-                    {/* Card 2, Certified Professionals */}
-                    <div className="bg-white rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-lg hover:border-[#00E1FF]/40 transition-all duration-300 min-h-[130px] sm:min-h-[160px] border border-gray-100 group">
-                      <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#0f172a] group-hover:text-[#00E1FF] transition-colors mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-                      </svg>
-                      <span className="text-[#0f172a] font-semibold text-[11px] sm:text-xs md:text-sm leading-snug">Certified<br />Accountants</span>
-                    </div>
-
-                    {/* Card 3, On-Time Deadlines */}
-                    <div className="bg-white rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-lg hover:border-[#00E1FF]/40 transition-all duration-300 min-h-[130px] sm:min-h-[160px] border border-gray-100 group">
-                      <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#0f172a] group-hover:text-[#00E1FF] transition-colors mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <span className="text-[#0f172a] font-semibold text-[11px] sm:text-xs md:text-sm leading-snug">On-Time<br />Deadlines</span>
-                    </div>
-
-                    {/* Card 4, Tax Savings */}
-                    <div className="bg-white rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-lg hover:border-[#00E1FF]/40 transition-all duration-300 min-h-[130px] sm:min-h-[160px] border border-gray-100 group">
-                      <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#0f172a] group-hover:text-[#00E1FF] transition-colors mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <span className="text-[#0f172a] font-semibold text-[11px] sm:text-xs md:text-sm leading-snug">Maximum Tax<br />Savings</span>
-                    </div>
-
-                    {/* Card 5, Transparent Pricing */}
-                    <div className="bg-white rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-lg hover:border-[#00E1FF]/40 transition-all duration-300 min-h-[130px] sm:min-h-[160px] border border-gray-100 group">
-                      <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#0f172a] group-hover:text-[#00E1FF] transition-colors mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m-9-6l2-2 2 2 4-4" />
-                      </svg>
-                      <span className="text-[#0f172a] font-semibold text-[11px] sm:text-xs md:text-sm leading-snug">Transparent<br />Pricing</span>
-                    </div>
-
-                    {/* Card 6, Year-Round Support */}
-                    <div className="bg-white rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-lg hover:border-[#00E1FF]/40 transition-all duration-300 min-h-[130px] sm:min-h-[160px] border border-gray-100 group">
-                      <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#0f172a] group-hover:text-[#00E1FF] transition-colors mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.712 4.33a9.027 9.027 0 011.652 1.306c.51.51.944 1.064 1.306 1.652M16.712 4.33l-3.448 4.138m3.448-4.138a9.014 9.014 0 00-9.424 0M19.67 7.288l-4.138 3.448m4.138-3.448a9.014 9.014 0 010 9.424m-4.138-5.976a3.736 3.736 0 00-.88-1.388 3.737 3.737 0 00-1.388-.88m2.268 2.268a3.765 3.765 0 010 2.528m-2.268-4.796a3.765 3.765 0 00-2.528 0m4.796 4.796c-.181.506-.475.982-.88 1.388a3.736 3.736 0 01-1.388.88m2.268-2.268l4.138 3.448m0 0a9.027 9.027 0 01-1.306 1.652c-.51.51-1.064.944-1.652 1.306m0 0l-3.448-4.138m3.448 4.138a9.014 9.014 0 01-9.424 0m5.976-4.138a3.765 3.765 0 01-2.528 0m0 0a3.736 3.736 0 01-1.388-.88 3.737 3.737 0 01-.88-1.388m2.268 2.268L7.288 19.67m0 0a9.024 9.024 0 01-1.652-1.306 9.027 9.027 0 01-1.306-1.652m0 0l4.138-3.448M4.33 16.712a9.014 9.014 0 010-9.424m4.138 5.976a3.765 3.765 0 010-2.528m0 0c.181-.506.475-.982.88-1.388a3.736 3.736 0 011.388-.88m-2.268 2.268L4.33 7.288m6.406 1.18L7.288 4.33m0 0a9.024 9.024 0 00-1.652 1.306A9.025 9.025 0 004.33 7.288" />
-                      </svg>
-                      <span className="text-[#0f172a] font-semibold text-[11px] sm:text-xs md:text-sm leading-snug">Year-Round<br />Support</span>
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
-
         {/* Services Across Canada Section (Only for Web Development Page) */}
-        {slug === "web-development" && (
+        {canadaBlock && canadaBlock.cities?.length > 0 && (
           <section className="py-16 bg-[#f8fafc] border-t border-gray-100">
             <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 text-center">
               <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0f172a] mb-3">
-                {service.title} Services <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0055FF] to-[#00E1FF]">Across Canada</span>
+                {canadaBlock.heading || (
+                  <>
+                    {service.title} Services <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0055FF] to-[#00E1FF]">Across Canada</span>
+                  </>
+                )}
               </h2>
               <p className="text-gray-500 text-sm sm:text-base max-w-2xl mx-auto mb-10 leading-relaxed">
-                We serve businesses in every major Canadian city. Click your city to learn more about our local {service.title.toLowerCase()} services.
+                {canadaBlock.description || `We serve businesses in every major Canadian city. Click your city to learn more about our local ${service.title.toLowerCase()} services.`}
               </p>
 
               <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 max-w-5xl mx-auto">
-                {[
-                  "Toronto",
-                  "Vancouver",
-                  "Calgary",
-                  "Ottawa",
-                  "Mississauga",
-                  "Brampton",
-                  "Edmonton",
-                  "Hamilton"
-                ].map((city, idx) => (
+                {canadaBlock.cities.map((city, idx) => (
                   <Link
                     href={`/services/${slug}/${city.toLowerCase().replace(/ /g, '-')}`}
                     key={idx}
@@ -3725,17 +3367,17 @@ export default function ServicePage() {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 bg-gradient-to-r from-[#262b3f]/20 to-transparent rounded-2xl p-6 md:p-8">
               <div>
                 <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-                  Ready To Get Started?
+                  {service.ctaHeading || "Ready To Get Started?"}
                 </h2>
                 <p className="text-white/70 text-sm">
-                  Let&apos;s discuss how our {service.title.toLowerCase()} services can help transform your business.
+                  {(service.ctaBody || "Let's discuss how our {title} services can help transform your business.").replace(/\{title\}/g, service.title)}
                 </p>
               </div>
               <button
                 onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
                 className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] hover:opacity-90 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 whitespace-nowrap shadow-lg shadow-[#00E1FF]/20"
               >
-                Transform Your Digital Presence
+                {service.ctaButtonLabel || "Transform Your Digital Presence"}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>

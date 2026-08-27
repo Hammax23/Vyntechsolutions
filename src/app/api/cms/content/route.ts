@@ -12,6 +12,7 @@ import {
   getCmsStaticPage,
   getCmsLegalPage,
   getCmsBlogCategories,
+  getCmsPageSeo,
 } from "@/lib/cms/content";
 
 export async function GET(req: Request) {
@@ -43,6 +44,12 @@ export async function GET(req: Request) {
       return NextResponse.json({ organization: await getCmsOrganizationProfile() });
     case "blog-categories":
       return NextResponse.json({ categories: await getCmsBlogCategories() });
+    case "page-seo": {
+      const path = searchParams.get("path") || searchParams.get("slug");
+      if (!path) return NextResponse.json({ error: "path required" }, { status: 400 });
+      const normalized = path.startsWith("/") ? path : `/${path}`;
+      return NextResponse.json({ pageSeo: await getCmsPageSeo(normalized) });
+    }
     case "static-page": {
       const slug = searchParams.get("slug");
       if (!slug) return NextResponse.json({ error: "slug required" }, { status: 400 });
@@ -68,6 +75,7 @@ export async function GET(req: Request) {
             "client-logos",
             "organization",
             "blog-categories",
+            "page-seo",
             "static-page",
             "legal-page",
           ],

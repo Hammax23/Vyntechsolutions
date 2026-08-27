@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
+import { getCmsService } from "@/lib/cms/content";
 import { servicesData } from "@/data/servicesData";
-
-const SITE_URL = "https://vyntechsolutions.ca";
+import { SITE_URL } from "@/lib/company";
 
 export async function generateMetadata({
   params,
 }: {
   params: { slug: string; city: string };
 }): Promise<Metadata> {
-  const service = servicesData[params.slug as keyof typeof servicesData];
+  const service = await getCmsService(params.slug, servicesData);
   const formattedCity = params.city
     .split("-")
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
@@ -24,7 +24,9 @@ export async function generateMetadata({
   }
 
   const title = `${service.title} Services in ${formattedCity} | VynTech Solutions`;
-  const description = `Leading ${service.title.toLowerCase()} services in ${formattedCity}. We help businesses grow with custom digital solutions tailored to the local market.`;
+  const description =
+    service.description?.trim() ||
+    `Leading ${service.title.toLowerCase()} services in ${formattedCity}. We help businesses grow with custom digital solutions tailored to the local market.`;
 
   return {
     title,
@@ -32,7 +34,9 @@ export async function generateMetadata({
     alternates: { canonical },
     openGraph: {
       title: `${service.title} in ${formattedCity} | VynTech Solutions`,
-      description: `Get top-tier ${service.title.toLowerCase()} services in ${formattedCity}.`,
+      description:
+        service.description?.trim() ||
+        `Get top-tier ${service.title.toLowerCase()} services in ${formattedCity}.`,
       url: canonical,
       siteName: "VynTech Solutions",
       type: "website",
@@ -45,6 +49,10 @@ export async function generateMetadata({
   };
 }
 
-export default function CityServiceLayout({ children }: { children: React.ReactNode }) {
+export default function CityServiceLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return children;
 }

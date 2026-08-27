@@ -1,72 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { servicesData, type ServiceData } from "@/data/servicesData";
 import { industriesData } from "@/data/industriesData";
+import {
+  defaultCityEngagementStrategies,
+  type ServicePageSections,
+} from "@/data/servicePageSections";
 import CityFAQ from "@/components/CityFAQ";
 
-const engagementStrategies = [
-  {
-    id: "content",
-    title: "Engaging Content",
-    description: "Quality content is the backbone of any successful digital presence. We craft compelling, SEO-optimized copy that resonates with your local audience and drives action.",
-    calloutTitle: "Struggling with Bounce Rates?",
-    calloutText: "Compelling content keeps visitors engaged. Let our team write copy that converts."
-  },
-  {
-    id: "cta",
-    title: "Call-To-Actions",
-    description: "This feature has the power to compel your customers. Higher interaction and traffic can be achieved with the help of compelling CTAs that create a sense of urgency for the website visitors. For the architecture of a CTA, we follow a proper format. With comprehensive expertise in broader portfolios, our accomplished team will ensure maximum leverage from your portal.",
-    calloutTitle: "Struggling with Low Conversions?",
-    calloutText: "Effective CTAs can change that. Let VynTech Solutions design the perfect CTAs to boost your sales. Contact us now!"
-  },
-  {
-    id: "blog",
-    title: "Informative Blog",
-    description: "An active, informative blog establishes your authority and keeps your website fresh for search engines. We implement scalable blog architectures that attract organic traffic over time.",
-    calloutTitle: "Need More Organic Traffic?",
-    calloutText: "A strategic blog can multiply your inbound leads. Ask us about our content strategy services."
-  },
-  {
-    id: "mobile",
-    title: "Mobile Responsive",
-    description: "With the majority of local searches happening on mobile devices, a seamless mobile experience is non-negotiable. Our designs are fluid, adapting perfectly to any screen size for maximum engagement.",
-    calloutTitle: "Losing Mobile Customers?",
-    calloutText: "Don't let a poor mobile experience cost you sales. We build mobile-first designs."
-  },
-  {
-    id: "functionality",
-    title: "Proper Functionality",
-    description: "Broken links, slow load times, and clunky navigation frustrate users. We rigorously test all features to ensure flawless performance that builds trust with your visitors.",
-    calloutTitle: "Is Your Site Slow or Buggy?",
-    calloutText: "Technical issues kill conversions. Let us optimize your site's performance today."
-  },
-  {
-    id: "media",
-    title: "Rich Media",
-    description: "High-quality images, videos, and interactive elements capture attention faster than text alone. We integrate optimized rich media that enhances your message without slowing down your site.",
-    calloutTitle: "Want to Stand Out Visually?",
-    calloutText: "Engage visitors instantly with custom graphics and optimized video content."
-  },
-  {
-    id: "social",
-    title: "Integrating Social Media",
-    description: "Connect your website directly to your social channels. We build seamless integrations that encourage sharing, social proof, and community growth right from your landing pages.",
-    calloutTitle: "Looking to Grow Your Following?",
-    calloutText: "Turn website visitors into loyal followers with integrated social strategies."
-  },
-  {
-    id: "consumer",
-    title: "Consumer-Centric Design",
-    description: "We don't just design for looks; we design for your specific user. By analyzing user behavior, we create intuitive journeys that guide visitors naturally toward becoming customers.",
-    calloutTitle: "Are Users Getting Lost?",
-    calloutText: "Streamline your user journey with our UX/UI design expertise."
-  }
-];
+type ServiceWithSections = ServiceData & { pageSections?: ServicePageSections };
 
 export default function CityServicePage() {
   const params = useParams();
@@ -79,7 +26,9 @@ export default function CityServicePage() {
         .join(" ")
     : "";
 
-  const [service, setService] = useState<ServiceData | null>(servicesData[slug] || null);
+  const [service, setService] = useState<ServiceWithSections | null>(
+    (servicesData[slug] as ServiceWithSections) || null
+  );
   const [isVisible, setIsVisible] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
 
@@ -97,6 +46,24 @@ export default function CityServicePage() {
     };
   }, [slug]);
 
+  const pageSections = service?.pageSections || {};
+  const engagementStrategies = useMemo(() => {
+    const fromCms =
+      pageSections.cityEngagement || pageSections.engagementStrategies;
+    return Array.isArray(fromCms) && fromCms.length > 0
+      ? fromCms
+      : defaultCityEngagementStrategies;
+  }, [pageSections.cityEngagement, pageSections.engagementStrategies]);
+
+  const cityFaqs = useMemo(() => {
+    const faqs = pageSections.cityFaqs;
+    return Array.isArray(faqs) && faqs.length > 0 ? faqs : undefined;
+  }, [pageSections.cityFaqs]);
+
+  useEffect(() => {
+    setActiveTab(0);
+  }, [slug, engagementStrategies]);
+
   if (!service) {
     return (
       <main className="min-h-screen bg-white flex items-center justify-center">
@@ -109,6 +76,9 @@ export default function CityServicePage() {
       </main>
     );
   }
+
+  const activeStrategy =
+    engagementStrategies[activeTab] || engagementStrategies[0];
 
   return (
     <>
@@ -207,19 +177,19 @@ export default function CityServicePage() {
               {/* Content Area */}
               <div className="lg:col-span-8 lg:pl-12">
                 <h3 className="text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#00E1FF] to-[#0055FF] mb-6 tracking-tight">
-                  {engagementStrategies[activeTab].title}
+                  {activeStrategy.title}
                 </h3>
                 <p className="text-gray-600 text-lg leading-relaxed mb-10 font-light">
-                  {engagementStrategies[activeTab].description}
+                  {activeStrategy.description}
                 </p>
                 
                 {/* Callout Box */}
                 <div className="border-l-[4px] border-[#0055FF] bg-gradient-to-r from-white to-gray-50/50 p-8 shadow-sm rounded-r-2xl">
                   <h4 className="text-[#0055FF] font-extrabold text-lg mb-2">
-                    {engagementStrategies[activeTab].calloutTitle}
+                    {activeStrategy.calloutTitle}
                   </h4>
                   <p className="text-gray-600 mb-6 font-light">
-                    {engagementStrategies[activeTab].calloutText}
+                    {activeStrategy.calloutText}
                   </p>
                   <button 
                     onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
@@ -424,7 +394,11 @@ export default function CityServicePage() {
         </section>
 
         {/* Dynamic FAQ for City Page */}
-        <CityFAQ formattedCity={formattedCity} serviceTitle={service.title} />
+        <CityFAQ
+          formattedCity={formattedCity}
+          serviceTitle={service.title}
+          faqs={cityFaqs}
+        />
 
         {/* Local CTA */}
         <section className="py-8 bg-[#0d1117] relative overflow-hidden">

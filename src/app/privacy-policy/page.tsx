@@ -6,59 +6,11 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CmsHtml from '@/components/CmsHtml';
 
-function PrivacyFallback() {
-  return (
-    <div className="space-y-6">
-      <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-        <p className="text-white/70 leading-relaxed">
-          VynTech Solutions (&quot;we&quot;, &quot;us&quot;, &quot;our&quot;) respects your privacy. This policy explains how we collect and use your information when you use <span className="text-[#00B4FF]">vyntechsolutions.ca</span> or our services. We comply with <strong className="text-white">PIPEDA</strong> (Personal Information Protection and Electronic Documents Act) and Canadian privacy laws.
-        </p>
-      </div>
-      <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-        <h2 className="text-xl font-bold text-white mb-4">What We Collect</h2>
-        <div className="space-y-3 text-white/70">
-          <p><strong className="text-white">Information you provide:</strong> Name, email, phone number, company name when you contact us or request a quote.</p>
-          <p><strong className="text-white">Automatic data:</strong> IP address, browser type, pages visited, and cookies for website functionality and analytics.</p>
-          <p><strong className="text-white">Payment info:</strong> Processed securely through Stripe, we never store your card details.</p>
-        </div>
-      </div>
-      <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-        <h2 className="text-xl font-bold text-white mb-4">How We Use Your Information</h2>
-        <ul className="list-disc pl-5 text-white/70 space-y-2">
-          <li>Respond to your inquiries and provide our services</li>
-          <li>Send project updates, invoices, and important notices</li>
-          <li>Improve our website and services</li>
-          <li>Send marketing emails (only with your consent, you can unsubscribe anytime)</li>
-        </ul>
-      </div>
-      <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-        <h2 className="text-xl font-bold text-white mb-4">Information Sharing</h2>
-        <p className="text-white/70 mb-3"><strong className="text-white">We do not sell your data.</strong> We only share with:</p>
-        <ul className="list-disc pl-5 text-white/70 space-y-2">
-          <li><strong className="text-white">Service providers:</strong> Hosting, email, payments, analytics</li>
-          <li><strong className="text-white">Legal requirements:</strong> When required by law or to protect our rights</li>
-        </ul>
-      </div>
-      <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-        <h2 className="text-xl font-bold text-white mb-4">Your Rights</h2>
-        <p className="text-white/70">Email us at <span className="text-[#00B4FF]">info@vyntechsolutions.ca</span> to access, correct, or delete your data.</p>
-      </div>
-      <div className="bg-gradient-to-r from-[#00B4FF]/10 to-[#00FF94]/10 border border-[#00B4FF]/30 rounded-2xl p-6">
-        <h2 className="text-xl font-bold text-white mb-4">Contact Us</h2>
-        <div className="text-white/70 space-y-1">
-          <p><strong className="text-white">VynTech Solutions</strong></p>
-          <p>Email: <span className="text-[#00B4FF]">info@vyntechsolutions.ca</span></p>
-          <p>Location: Toronto, Ontario, Canada</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function PrivacyPolicyPage() {
   const [title, setTitle] = useState('Privacy Policy');
   const [lastUpdated, setLastUpdated] = useState('March 27, 2026');
   const [body, setBody] = useState<string | null>(null);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     fetch('/api/cms/content?type=legal-page&slug=privacy-policy')
@@ -72,7 +24,8 @@ export default function PrivacyPolicyPage() {
           setBody(String(page.body));
         }
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoaded(true));
   }, []);
 
   return (
@@ -103,9 +56,11 @@ export default function PrivacyPolicyPage() {
               <div className="bg-white/5 border border-white/10 rounded-2xl p-6 text-white/80">
                 <CmsHtml html={body} />
               </div>
-            ) : (
-              <PrivacyFallback />
-            )}
+            ) : loaded ? (
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-6 text-white/70">
+                Content unavailable. Please check back soon.
+              </div>
+            ) : null}
           </motion.div>
         </div>
       </section>

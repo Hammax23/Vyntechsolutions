@@ -13,6 +13,8 @@ type HeroMediaItem = {
 type HeroSlide = {
   heading: string;
   subtext: string;
+  ctaLabel?: string;
+  ctaHref?: string;
   media?: HeroMediaItem;
 };
 
@@ -80,13 +82,22 @@ export default function HeroSection() {
         const hp = data?.homepage as Record<string, unknown> | undefined;
         if (!hp) return;
         const cmsSlides = hp.heroSlides as
-          | { heading?: string; subtext?: string; mediaUrl?: string; mediaType?: string }[]
+          | {
+              heading?: string;
+              subtext?: string;
+              mediaUrl?: string;
+              mediaType?: string;
+              ctaLabel?: string;
+              ctaHref?: string;
+            }[]
           | undefined;
         if (cmsSlides?.length) {
           setSlides(
             cmsSlides.map((s, i) => ({
               heading: String(s.heading || DEFAULT_SLIDES[i % DEFAULT_SLIDES.length].heading),
               subtext: String(s.subtext || DEFAULT_SLIDES[i % DEFAULT_SLIDES.length].subtext),
+              ctaLabel: s.ctaLabel ? String(s.ctaLabel) : undefined,
+              ctaHref: s.ctaHref ? String(s.ctaHref) : undefined,
             }))
           );
           setHeroMedia(
@@ -349,18 +360,38 @@ export default function HeroSection() {
               )}
             </div>
 
-            {/* CTA Button */}
-            <button
-              onClick={() => window.dispatchEvent(new CustomEvent("openLetsTalkBusiness"))}
-              className={`inline-flex items-center justify-center gap-2 border border-white text-white px-8 py-3 text-sm font-light tracking-wider hover:bg-white hover:text-black transition-all duration-300 ${
+            {/* CTA Button — prefer current slide CTA from CMS, else homepage heroCtaLabel */}
+            {(() => {
+              const slide = slides[currentSlide] || slides[0];
+              const label = slide?.ctaLabel || ctaLabel;
+              const href = slide?.ctaHref;
+              const className = `inline-flex items-center justify-center gap-2 border border-white text-white px-8 py-3 text-sm font-light tracking-wider hover:bg-white hover:text-black transition-all duration-300 ${
                 hideHeroText ? "mt-16 md:mt-24" : "mt-2 md:mt-4"
-              }`}
-            >
-              {ctaLabel}
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </button>
+              }`;
+              const arrow = (
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              );
+              if (href) {
+                return (
+                  <a href={href} className={className}>
+                    {label}
+                    {arrow}
+                  </a>
+                );
+              }
+              return (
+                <button
+                  type="button"
+                  onClick={() => window.dispatchEvent(new CustomEvent("openLetsTalkBusiness"))}
+                  className={className}
+                >
+                  {label}
+                  {arrow}
+                </button>
+              );
+            })()}
 
             {/* Stats */}
             <motion.div

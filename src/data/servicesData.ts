@@ -1,10 +1,22 @@
+import {
+  defaultServiceChrome,
+  defaultTechStack,
+  servicePageSectionsBySlug,
+  type ServicePageSections,
+} from "@/data/servicePageSections";
+
 export type ServiceData = {
   title: string;
   subtitle: string;
   description: string;
+  icon?: string;
+  cardImage?: string;
   heroImage: string;
+  heroVariant?: string;
+  heroCtaLabel?: string;
   overview: string;
   overviewTagline?: string;
+  featuresEyebrow?: string;
   features: { title: string; description: string; icon: string }[];
   technologies: string[];
   process: { step: string; description: string }[];
@@ -17,15 +29,165 @@ export type ServiceData = {
   whyChooseUsSubText?: string;
   whyChooseUsCards?: { icon: string; label: string }[];
   // How We Deliver
+  deliveryEyebrow?: string;
   deliveryHeading?: string;
   deliveryDescription?: string;
   deliverySteps?: { title: string; content: string }[];
   processHeading?: string;
   processDescription?: string;
   faqs?: { question: string; answer: string }[];
+  ctaHeading?: string;
+  ctaBody?: string;
+  ctaButtonLabel?: string;
+  showTechStack?: boolean;
+  techStack?: ServicePageSections["techStack"];
+  pageSections?: ServicePageSections;
+  canadaCities?: ServicePageSections["canadaCities"] | string[];
 };
 
-export const servicesData: Record<string, ServiceData> = {
+export type ServicesListingDefaults = {
+  heroEyebrow: string;
+  heroHeading: string;
+  heroBody: string;
+  learnMoreLabel: string;
+  whyChooseEyebrow: string;
+  whyChooseHeading: string;
+  whyChooseBody: string;
+  whyChooseItems: { title: string; description: string }[];
+  stats: { value: string; label: string }[];
+  secondaryCtaLabel: string;
+  ctaHeading: string;
+  ctaBody: string;
+  ctaLabel: string;
+  ctaHref: string;
+};
+
+export const servicesListingDefaults: ServicesListingDefaults = {
+  heroEyebrow: "Our Expertise",
+  heroHeading: "What We Do",
+  heroBody:
+    "Comprehensive technology services designed to transform your business. From strategy to execution, we deliver solutions that drive growth.",
+  learnMoreLabel: "Learn More",
+  whyChooseEyebrow: "Why Choose Us",
+  whyChooseHeading: "Your Success Is Our Priority",
+  whyChooseBody:
+    "We don't just build technology, we build partnerships. Our team of experts works closely with you to understand your challenges and deliver solutions that exceed expectations.",
+  whyChooseItems: [
+    {
+      title: "Expert Team",
+      description: "A focused team across web, mobile, and cloud",
+    },
+    {
+      title: "Proven Track Record",
+      description: "50+ successful projects delivered",
+    },
+    {
+      title: "Agile Approach",
+      description: "Flexible methodologies adapted to your needs",
+    },
+    {
+      title: "24/7 Support",
+      description: "Round-the-clock assistance for your peace of mind",
+    },
+  ],
+  stats: [
+    { value: "12+", label: "Years Experience" },
+    { value: "50+", label: "Projects Delivered" },
+    { value: "4+", label: "Countries Served" },
+    { value: "40+", label: "Happy Clients" },
+  ],
+  secondaryCtaLabel: "Get in Touch",
+  ctaHeading: "Ready to Transform Your Business?",
+  ctaBody:
+    "Let's discuss how our services can help you achieve your goals and drive real results.",
+  ctaLabel: "Get in Touch",
+  ctaHref: "/lets-talk-business",
+};
+
+const SERVICE_ICON_BY_SLUG: Record<string, string> = {
+  "web-development": "code",
+  "mobile-app-development": "mobile",
+  "cloud-solutions": "cloud",
+  "ai-ml-solutions": "ai",
+  "devops-cicd": "devops",
+  "ui-ux-design": "design",
+  "ecommerce-solutions": "ecommerce",
+  "custom-software-development": "custom",
+  "seo-digital-marketing": "marketing",
+  "maintenance-support": "support",
+  "tax-accounting": "tax",
+};
+
+const HERO_VARIANT_BY_SLUG: Record<string, string> = {
+  "web-development": "browser",
+  "mobile-app-development": "mobile",
+  "cloud-solutions": "cloud",
+  "devops-cicd": "devops",
+  "ai-ml-solutions": "aiml",
+  "ui-ux-design": "uiux",
+  "ecommerce-solutions": "ecommerce",
+  "custom-software-development": "custom",
+  "seo-digital-marketing": "seo",
+  "maintenance-support": "maintenance",
+  "tax-accounting": "tax",
+};
+
+const DEFAULT_OVERVIEW_TAGLINE =
+  "We focus on understanding your business goals first, then build solutions that actually solve problems, not just look good on paper. Every project gets dedicated attention, clear communication, and a team that takes ownership of delivering results on time.";
+
+const DEFAULT_WHY_CHOOSE = {
+  whyChooseUsHeading: "Why choose us",
+  whyChooseUsIntro:
+    "As you know, digital solutions are the core concept of online businesses today. Either driving qualified traffic or building scalable software, digital strategy is essential for your enterprise to grow revenue and stay competitive. VynTech Solutions is a premier web design and software development agency delivering reliable, high-performance services.",
+  whyChooseUsSubHeading: "Imaginations into creativity",
+  whyChooseUsSubText:
+    "As a dedicated software and web development company, we have worked on websites and web applications with incredible clients for diverse industries. It has enabled us to stretch our imaginations into a new realm of creativity and apply technical skills to enhance user experience.",
+  whyChooseUsCards: [
+    { icon: "chart", label: "Result Driven\nApproach" },
+    { icon: "desktop", label: "Digital First\nStrategies" },
+    { icon: "users", label: "Team of Experienced\nProfessionals" },
+    { icon: "clock", label: "On Time Delivery" },
+    { icon: "check", label: "No False\nCommitments" },
+    { icon: "star", label: "Industry Standard\nQuality" },
+  ],
+};
+
+const DEFAULT_SERVICE_FAQS = [
+  {
+    question: "How long does a typical project take?",
+    answer:
+      "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next.",
+  },
+  {
+    question: "Do you work with businesses across Canada?",
+    answer:
+      "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication.",
+  },
+  {
+    question: "What happens after launch?",
+    answer:
+      "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals.",
+  },
+];
+
+const TAX_WHY_CHOOSE = {
+  whyChooseUsHeading: "Why choose us",
+  whyChooseUsIntro:
+    "Managing taxes and accounting isn't just about numbers, it's about making confident financial decisions. At VynTech Solutions, our certified accounting professionals provide accurate, transparent, and deadline-driven financial services tailored for Canadian businesses of every size.",
+  whyChooseUsSubHeading: "Precision you can trust",
+  whyChooseUsSubText:
+    "From personal income tax to corporate filings and CRA compliance, we handle the complexity so you can focus on growing your business. Every engagement is backed by transparency, accuracy, and proactive year-round support.",
+  whyChooseUsCards: [
+    { icon: "shield", label: "CRA Compliant\nFilings" },
+    { icon: "users", label: "Certified\nAccountants" },
+    { icon: "clock", label: "On-Time\nDeadlines" },
+    { icon: "trend", label: "Maximum Tax\nSavings" },
+    { icon: "chart", label: "Transparent\nPricing" },
+    { icon: "check", label: "Year-Round\nSupport" },
+  ],
+};
+
+const baseServicesData: Record<string, ServiceData> = {
   "web-development": {
     "title": "Web Development",
     "subtitle": "Website Design and Development Services Built to Perform",
@@ -1166,3 +1328,55 @@ export const servicesData: Record<string, ServiceData> = {
     ]
   }
 };
+
+function enrichServices(data: Record<string, ServiceData>): Record<string, ServiceData> {
+  const out: Record<string, ServiceData> = {};
+
+  for (const [slug, service] of Object.entries(data)) {
+    const pageSections = service.pageSections || servicePageSectionsBySlug[slug];
+    const showTechStack =
+      typeof service.showTechStack === "boolean"
+        ? service.showTechStack
+        : slug !== "tax-accounting" && slug !== "seo-digital-marketing";
+
+    const techStack =
+      service.techStack ||
+      pageSections?.techStack ||
+      (showTechStack ? defaultTechStack : undefined);
+
+    const canadaCities =
+      service.canadaCities ||
+      pageSections?.canadaCities;
+
+    const whyExtras =
+      !service.whyChooseUsHeading
+        ? slug === "tax-accounting"
+          ? TAX_WHY_CHOOSE
+          : DEFAULT_WHY_CHOOSE
+        : {};
+
+    out[slug] = {
+      ...service,
+      ...whyExtras,
+      icon: service.icon || SERVICE_ICON_BY_SLUG[slug] || "code",
+      heroVariant: service.heroVariant || HERO_VARIANT_BY_SLUG[slug] || "browser",
+      heroCtaLabel: service.heroCtaLabel || defaultServiceChrome.heroCtaLabel,
+      featuresEyebrow: service.featuresEyebrow || defaultServiceChrome.featuresEyebrow,
+      ctaHeading: service.ctaHeading || defaultServiceChrome.ctaHeading,
+      ctaBody: service.ctaBody || defaultServiceChrome.ctaBody,
+      ctaButtonLabel: service.ctaButtonLabel || defaultServiceChrome.ctaButtonLabel,
+      deliveryEyebrow: service.deliveryEyebrow || defaultServiceChrome.deliveryEyebrow,
+      overviewTagline: service.overviewTagline || DEFAULT_OVERVIEW_TAGLINE,
+      processHeading: service.processHeading || "How We Work",
+      faqs: service.faqs?.length ? service.faqs : DEFAULT_SERVICE_FAQS,
+      showTechStack,
+      techStack,
+      pageSections,
+      canadaCities,
+    };
+  }
+
+  return out;
+}
+
+export const servicesData: Record<string, ServiceData> = enrichServices(baseServicesData);

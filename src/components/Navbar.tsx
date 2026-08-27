@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import VynTechLogo from "./VynTechLogo";
 
-type NavItem = { title: string; slug: string };
+type NavItem = { title: string; slug: string; features?: { title: string }[] };
 type PrimaryLink = { label: string; href: string };
 type SearchItem = { title: string; href: string; category: string };
 
@@ -142,6 +142,10 @@ export default function Navbar() {
   const [navIndustries, setNavIndustries] = useState<NavItem[]>(defaultNavIndustries);
   const [primaryLinks, setPrimaryLinks] = useState<PrimaryLink[]>(defaultPrimaryLinks);
   const [careersHref, setCareersHref] = useState("/careers");
+  const [careersLabel, setCareersLabel] = useState("Careers");
+  const [industriesPromo, setIndustriesPromo] = useState(
+    "Transforming industries with innovative solutions"
+  );
   const [searchItems, setSearchItems] = useState<SearchItem[]>(() =>
     buildSearchItems(defaultNavServices, defaultNavIndustries)
   );
@@ -168,11 +172,24 @@ export default function Navbar() {
       fetch("/api/cms/content?type=navigation").then((r) => (r.ok ? r.json() : null)),
       fetch("/api/cms/services").then((r) => (r.ok ? r.json() : null)),
       fetch("/api/cms/industries").then((r) => (r.ok ? r.json() : null)),
+      fetch("/api/cms/content?type=homepage").then((r) => (r.ok ? r.json() : null)),
     ])
-      .then(([navData, servicesData, industriesData]) => {
-        const services = (servicesData?.services as { title?: string; slug?: string }[] | undefined)
+      .then(([navData, servicesData, industriesData, homepageData]) => {
+        const services = (
+          servicesData?.services as
+            | { title?: string; slug?: string; features?: { title?: string }[] }[]
+            | undefined
+        )
           ?.filter((s) => s.title && s.slug)
-          .map((s) => ({ title: String(s.title), slug: String(s.slug) }));
+          .map((s) => ({
+            title: String(s.title),
+            slug: String(s.slug),
+            features: Array.isArray(s.features)
+              ? s.features
+                  .filter((f) => f?.title)
+                  .map((f) => ({ title: String(f.title) }))
+              : undefined,
+          }));
         const industries = (industriesData?.industries as { title?: string; slug?: string }[] | undefined)
           ?.filter((i) => i.title && i.slug)
           .map((i) => ({ title: String(i.title), slug: String(i.slug) }));
@@ -199,6 +216,9 @@ export default function Navbar() {
           if (careers?.href) {
             setCareersHref(String(careers.href));
           }
+          if (careers?.label) {
+            setCareersLabel(String(careers.label));
+          }
           const links = nav.primaryLinks
             .filter((l) => !String(l.href || "").toLowerCase().includes("careers"))
             .filter((l) => l.label && l.href)
@@ -207,6 +227,15 @@ export default function Navbar() {
             setPrimaryLinks(links);
           }
         }
+
+        const hp = homepageData?.homepage as
+          | { industriesHeading?: string; industriesSubheading?: string }
+          | undefined;
+        const promo =
+          (hp?.industriesHeading && String(hp.industriesHeading).trim()) ||
+          (hp?.industriesSubheading && String(hp.industriesSubheading).trim()) ||
+          "";
+        if (promo) setIndustriesPromo(promo);
 
         setSearchItems(buildSearchItems(nextServices, nextIndustries));
       })
@@ -390,7 +419,7 @@ export default function Navbar() {
 
             <div className="hidden lg:flex items-center gap-6">
               <Link href={careersHref} className="text-white text-sm font-light hover:text-white/80 transition-colors">
-                Careers
+                {careersLabel}
               </Link>
 
               <button
@@ -538,7 +567,7 @@ export default function Navbar() {
               onClick={toggleMobileMenu}
               className="block py-4 text-white text-lg font-light tracking-wide border-b border-white/10 hover:text-[#00B4FF] transition-colors"
             >
-              CAREERS
+              {careersLabel.toUpperCase()}
             </Link>
           </nav>
 
@@ -627,8 +656,10 @@ export default function Navbar() {
                 </div>
               </div>
 
-              <div className="col-span-5 grid grid-cols-2 gap-y-6 gap-x-8 pr-6">
-                {navServices.map((service) => (
+              <div className={`grid grid-cols-2 gap-y-6 gap-x-8 pr-6 ${navServices.some((s) => s.slug === "tax-accounting") ? "col-span-5" : "col-span-9"}`}>
+                {navServices
+                  .filter((service) => service.slug !== "tax-accounting")
+                  .map((service) => (
                   <Link
                     key={service.slug}
                     href={`/services/${service.slug}`}
@@ -642,39 +673,47 @@ export default function Navbar() {
                 ))}
               </div>
 
-              <div className="col-span-4 bg-[#0F172A] rounded-xl p-6 relative overflow-hidden flex flex-col shadow-xl">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-8 h-8 rounded-lg bg-[#3B82F6] flex items-center justify-center shrink-0">
-                    <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  </div>
-                  <h4 className="text-white font-bold text-base">Tax & Accounting</h4>
-                </div>
+              {(() => {
+                const taxService = navServices.find((s) => s.slug === "tax-accounting");
+                if (!taxService) return null;
+                const taxFeatures = (taxService.features || []).slice(0, 4);
+                return (
+                  <div className="col-span-4 bg-[#0F172A] rounded-xl p-6 relative overflow-hidden flex flex-col shadow-xl">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-8 h-8 rounded-lg bg-[#3B82F6] flex items-center justify-center shrink-0">
+                        <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                      </div>
+                      <h4 className="text-white font-bold text-base">{taxService.title}</h4>
+                    </div>
 
-                <div className="space-y-3 mb-6 flex-1">
-                  {[
-                    "Comprehensive Tax & Accounting",
-                    "Business Incorporation & CFO",
-                    "Financial Planning & Forecasting",
-                    "Government Grants Assistance"
-                  ].map((title, i) => (
-                    <Link key={i} href="/services/tax-accounting" className="block border border-white/10 bg-white/5 text-gray-300 text-xs font-medium px-4 py-3 rounded-lg hover:bg-white/10 hover:text-white hover:border-white/20 transition-all duration-300">
-                      {title}
+                    {taxFeatures.length > 0 && (
+                      <div className="space-y-3 mb-6 flex-1">
+                        {taxFeatures.map((feature) => (
+                          <Link
+                            key={feature.title}
+                            href="/services/tax-accounting"
+                            className="block border border-white/10 bg-white/5 text-gray-300 text-xs font-medium px-4 py-3 rounded-lg hover:bg-white/10 hover:text-white hover:border-white/20 transition-all duration-300"
+                          >
+                            {feature.title}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+
+                    <Link
+                      href="/services/tax-accounting"
+                      className="w-full bg-[#3B82F6] text-white font-semibold py-3 px-4 rounded-lg hover:bg-blue-500 transition-all duration-300 flex items-center justify-center gap-2 group text-sm shadow-[0_4px_14px_0_rgba(59,130,246,0.39)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.23)] mt-auto"
+                    >
+                      <span>View All Services</span>
+                      <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
                     </Link>
-                  ))}
-                </div>
-
-                <Link
-                  href="/services/tax-accounting"
-                  className="w-full bg-[#3B82F6] text-white font-semibold py-3 px-4 rounded-lg hover:bg-blue-500 transition-all duration-300 flex items-center justify-center gap-2 group text-sm shadow-[0_4px_14px_0_rgba(59,130,246,0.39)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.23)]"
-                >
-                  <span>View All Services</span>
-                  <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </Link>
-              </div>
+                  </div>
+                );
+              })()}
             </div>
           </div>
         </div>
@@ -699,7 +738,7 @@ export default function Navbar() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                   <p className="absolute bottom-3 left-3 text-white text-sm font-semibold pr-3 leading-tight">
-                    Transforming industries with innovative solutions
+                    {industriesPromo}
                   </p>
                 </div>
                 <div className="mt-auto">

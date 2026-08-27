@@ -21,6 +21,9 @@ function getAdminEmailTemplate(data: {
   phone: string;
   companyName: string;
   companyUrl: string;
+  region?: string;
+  budget?: string;
+  timeline?: string;
   services: string[];
   projectDetails: string;
   hearAbout: string;
@@ -102,6 +105,24 @@ function getAdminEmailTemplate(data: {
                         <td colspan="2" style="padding: 8px 0;">
                           <span style="color: #6b7280; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Company Website</span><br>
                           <a href="${data.companyUrl}" style="color: #0055FF; font-size: 16px; font-weight: 500; text-decoration: none;">${data.companyUrl}</a>
+                        </td>
+                      </tr>
+                      ` : ''}
+                      ${data.region || data.budget || data.timeline ? `
+                      <tr>
+                        <td style="padding: 8px 0;">
+                          <span style="color: #6b7280; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Region</span><br>
+                          <span style="color: #1a1a2e; font-size: 16px; font-weight: 500;">${data.region || 'Not provided'}</span>
+                        </td>
+                        <td style="padding: 8px 0;">
+                          <span style="color: #6b7280; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Budget</span><br>
+                          <span style="color: #1a1a2e; font-size: 16px; font-weight: 500;">${data.budget || 'Not provided'}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2" style="padding: 8px 0;">
+                          <span style="color: #6b7280; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Timeline</span><br>
+                          <span style="color: #1a1a2e; font-size: 16px; font-weight: 500;">${data.timeline || 'Not provided'}</span>
                         </td>
                       </tr>
                       ` : ''}
@@ -357,6 +378,9 @@ function saveSubmission(data: {
   phone: string;
   companyName: string;
   companyUrl: string;
+  region?: string;
+  budget?: string;
+  timeline?: string;
   services: string[];
   projectDetails: string;
   hearAbout: string;
@@ -387,10 +411,34 @@ export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
 
-    const { fullName, email, phone, companyName, companyUrl, services, projectDetails, hearAbout } = data;
+    const {
+      fullName,
+      email,
+      phone,
+      companyName,
+      companyUrl,
+      region,
+      budget,
+      timeline,
+      services,
+      projectDetails,
+      hearAbout,
+    } = data;
 
     // Save to database for admin panel
-    saveSubmission({ fullName, email, phone, companyName, companyUrl, services, projectDetails, hearAbout });
+    saveSubmission({
+      fullName,
+      email,
+      phone,
+      companyName,
+      companyUrl,
+      region,
+      budget,
+      timeline,
+      services,
+      projectDetails,
+      hearAbout,
+    });
 
     // Send email to admin
     await transporter.sendMail({
@@ -403,6 +451,9 @@ export async function POST(request: NextRequest) {
         phone,
         companyName,
         companyUrl,
+        region,
+        budget,
+        timeline,
         services,
         projectDetails,
         hearAbout,
