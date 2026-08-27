@@ -6,6 +6,9 @@
 const STRAPI_URL = (process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL || "http://127.0.0.1:1337").replace(/\/$/, "");
 const STRAPI_TOKEN = process.env.STRAPI_API_TOKEN || "";
 
+/** ISR window — avoids cache:"no-store" which breaks `next build` static generation. */
+const DEFAULT_REVALIDATE_SECONDS = 30;
+
 export type StrapiListResponse<T> = {
   data: T[];
   meta?: { pagination?: { page: number; pageSize: number; pageCount: number; total: number } };
@@ -29,7 +32,7 @@ type FetchOptions = {
   path: string;
   query?: Record<string, string | number | boolean | undefined>;
   tags?: string[];
-  revalidate?: number | false;
+  revalidate?: number;
 };
 
 function buildQuery(query?: FetchOptions["query"]): string {
@@ -46,17 +49,20 @@ function buildQuery(query?: FetchOptions["query"]): string {
 export async function strapiFetch<T>({
   path,
   query,
+  tags = ["strapi"],
+  revalidate = DEFAULT_REVALIDATE_SECONDS,
 }: FetchOptions): Promise<T | null> {
   const url = `${getStrapiURL(path)}${buildQuery(query)}`;
 
   try {
-    // Only cache: "no-store" — do not also set next.revalidate (Next build throws DYNAMIC_SERVER_USAGE).
+    // ISR only — never set cache:"no-store" here.
+    // no-store during `next build` logs DYNAMIC_SERVER_USAGE on every static page.
     const res = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
         ...(STRAPI_TOKEN ? { Authorization: `Bearer ${STRAPI_TOKEN}` } : {}),
       },
-      cache: "no-store",
+      next: { tags, revalidate },
     });
 
     if (!res.ok) {
@@ -72,7 +78,8 @@ export async function strapiFetch<T>({
 
     return (await res.json()) as T;
   } catch (err) {
-    console.warn(`[strapi] unreachable ${url}`, err);
+    const reason = err instanceof Error ? err.message : String(err);
+    console.warn(`[strapi] unreachable ${url} (${reason})`);
     return null;
   }
 }
