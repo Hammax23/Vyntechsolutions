@@ -357,7 +357,8 @@ export async function metadataForBlog(slug: string): Promise<Metadata> {
 }
 
 export async function metadataForService(slug: string): Promise<Metadata> {
-  const service = await getCmsService(slug, servicesData);
+  const result = await getCmsService(slug, servicesData);
+  const service = result?.service;
   if (!service) return metadataFromPath(`/services/${slug}`);
   const seo = asSeo(service.seo);
   return withGlobalDefaults(seo, {
@@ -590,8 +591,8 @@ export async function getStructuredDataForPath(path: string): Promise<unknown | 
 }
 
 export async function getStructuredDataForService(slug: string): Promise<unknown | null> {
-  const service = await getCmsService(slug, servicesData);
-  return asSeo(service?.seo).structuredData ?? null;
+  const result = await getCmsService(slug, servicesData);
+  return asSeo(result?.service?.seo).structuredData ?? null;
 }
 
 export async function getStructuredDataForIndustry(slug: string): Promise<unknown | null> {

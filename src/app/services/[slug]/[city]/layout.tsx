@@ -8,7 +8,8 @@ export async function generateMetadata({
 }: {
   params: { slug: string; city: string };
 }): Promise<Metadata> {
-  const service = await getCmsService(params.slug, servicesData);
+  const result = await getCmsService(params.slug, servicesData);
+  const service = result?.service;
   const formattedCity = params.city
     .split("-")
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))

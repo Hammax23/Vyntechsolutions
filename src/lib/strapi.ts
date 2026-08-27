@@ -63,7 +63,13 @@ export async function strapiFetch<T>({
     });
 
     if (!res.ok) {
-      console.warn(`[strapi] ${res.status} ${url}`);
+      let detail = "";
+      try {
+        detail = (await res.text()).slice(0, 300);
+      } catch {
+        /* ignore */
+      }
+      console.warn(`[strapi] ${res.status} ${url}${detail ? ` — ${detail}` : ""}`);
       return null;
     }
 

@@ -9,12 +9,22 @@ export async function GET(
   _req: NextRequest,
   { params }: { params: { slug: string } }
 ) {
-  const service = await getCmsService(params.slug, servicesData);
-  if (!service) {
+  const result = await getCmsService(params.slug, servicesData);
+  if (!result) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
   return NextResponse.json(
-    { service },
+    {
+      service: result.service,
+      meta: {
+        source: result.source,
+        // If source is local-fallback, Strapi is unreachable or entry missing — panel edits won't show.
+        hint:
+          result.source === "strapi"
+            ? "Serving PUBLISHED Strapi content. Draft edits need Publish in admin."
+            : "Strapi not returning this service — check STRAPI_URL / API token / publish status.",
+      },
+    },
     {
       headers: {
         "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",

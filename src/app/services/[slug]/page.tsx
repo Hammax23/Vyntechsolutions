@@ -2528,10 +2528,17 @@ export default function ServicePage() {
   useEffect(() => {
     setIsVisible(true);
     let cancelled = false;
-    fetch(`/api/cms/services/${slug}`, { cache: "no-store" })
+    fetch(`/api/cms/services/${slug}?t=${Date.now()}`, { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
-        if (!cancelled && data?.service) setService(data.service);
+        if (cancelled || !data?.service) return;
+        setService(data.service);
+        if (typeof window !== "undefined" && data?.meta?.source === "local-fallback") {
+          console.warn(
+            "[CMS] Service page using local fallback — Strapi published content not reached.",
+            data.meta
+          );
+        }
       })
       .catch(() => { });
     return () => {

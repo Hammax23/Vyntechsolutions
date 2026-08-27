@@ -1,11 +1,34 @@
 import { blogPosts, getPostBySlug as getLocalPost, type BlogPost } from "@/data/blogData";
 import { strapiFetch, unwrapList, unwrapSingle, type StrapiListResponse, type StrapiSingleResponse } from "@/lib/strapi";
 
-/** Deep-populate shared.seo (media + openGraph) for metadata wiring. */
+/**
+ * Deep-populate shared.seo (media + openGraph).
+ * Use named keys only — mixing populate[0]=… with populate[seo]=… returns HTTP 400 in Strapi 5.
+ */
 const SEO_POPULATE: Record<string, string> = {
-  "populate[seo][populate][0]": "metaImage",
-  "populate[seo][populate][1]": "ogImage",
-  "populate[seo][populate][openGraph][populate][0]": "ogImage",
+  "populate[seo][populate][metaImage]": "true",
+  "populate[seo][populate][ogImage]": "true",
+  "populate[seo][populate][openGraph][populate][ogImage]": "true",
+};
+
+const SERVICE_POPULATE: Record<string, string> = {
+  "populate[features]": "true",
+  "populate[process]": "true",
+  "populate[stats]": "true",
+  "populate[caseStudies]": "true",
+  "populate[whyChooseUsCards]": "true",
+  "populate[deliverySteps]": "true",
+  "populate[faqs]": "true",
+  ...SEO_POPULATE,
+};
+
+const INDUSTRY_POPULATE: Record<string, string> = {
+  "populate[heroStats]": "true",
+  "populate[challenges]": "true",
+  "populate[services]": "true",
+  "populate[hero]": "true",
+  "populate[whyChooseUsCards]": "true",
+  ...SEO_POPULATE,
 };
 
 export type CmsBlogPost = BlogPost & { featured?: boolean; seo?: Record<string, unknown> };
@@ -46,8 +69,8 @@ export async function getCmsBlogPosts(): Promise<CmsBlogPost[]> {
   const res = await strapiFetch<StrapiListResponse<Record<string, unknown>>>({
     path: "/api/blog-posts",
     query: {
-      "populate[0]": "category",
-      "populate[1]": "cover",
+      "populate[category]": "true",
+      "populate[cover]": "true",
       ...SEO_POPULATE,
       "sort": "publishedAt:desc",
       "pagination[pageSize]": 100,
@@ -64,8 +87,8 @@ export async function getCmsBlogPost(slug: string): Promise<CmsBlogPost | null> 
     path: "/api/blog-posts",
     query: {
       "filters[slug][$eq]": slug,
-      "populate[0]": "category",
-      "populate[1]": "cover",
+      "populate[category]": "true",
+      "populate[cover]": "true",
       ...SEO_POPULATE,
       "pagination[pageSize]": 1,
     },
@@ -195,14 +218,9 @@ export async function getCmsServices(fallback: Record<string, Omit<CmsService, "
   const res = await strapiFetch<StrapiListResponse<Record<string, unknown>>>({
     path: "/api/services",
     query: {
-      "populate[0]": "features",
-      "populate[1]": "process",
-      "populate[2]": "stats",
-      "populate[3]": "caseStudies",
-      "populate[4]": "whyChooseUsCards",
-      "populate[5]": "deliverySteps",
-      "populate[6]": "faqs",
-      ...SEO_POPULATE,
+      // Strapi 5: Content API returns published by default; be explicit.
+      status: "published",
+      ...SERVICE_POPULATE,
       "sort": "order:asc",
       "pagination[pageSize]": 100,
     },
@@ -222,19 +240,13 @@ export async function getCmsServices(fallback: Record<string, Omit<CmsService, "
 export async function getCmsService(
   slug: string,
   fallback: Record<string, Omit<CmsService, "slug">>
-): Promise<CmsService | null> {
+): Promise<{ service: CmsService; source: "strapi" | "local-fallback" } | null> {
   const res = await strapiFetch<StrapiListResponse<Record<string, unknown>>>({
     path: "/api/services",
     query: {
+      status: "published",
       "filters[slug][$eq]": slug,
-      "populate[0]": "features",
-      "populate[1]": "process",
-      "populate[2]": "stats",
-      "populate[3]": "caseStudies",
-      "populate[4]": "whyChooseUsCards",
-      "populate[5]": "deliverySteps",
-      "populate[6]": "faqs",
-      ...SEO_POPULATE,
+      ...SERVICE_POPULATE,
       "pagination[pageSize]": 1,
     },
     tags: ["strapi", "services", `service-${slug}`],
@@ -242,8 +254,14 @@ export async function getCmsService(
 
   const entry = unwrapList(res)[0];
   const local = fallback[slug];
-  if (entry) return mapService(entry, slug, local ? { slug, ...local } : undefined);
-  return local ? { slug, ...local } : null;
+  if (entry) {
+    return {
+      service: mapService(entry, slug, local ? { slug, ...local } : undefined),
+      source: "strapi",
+    };
+  }
+  if (local) return { service: { slug, ...local }, source: "local-fallback" };
+  return null;
 }
 
 export type CmsIndustry = {
@@ -335,12 +353,8 @@ export async function getCmsIndustries(
   const res = await strapiFetch<StrapiListResponse<Record<string, unknown>>>({
     path: "/api/industries",
     query: {
-      "populate[0]": "heroStats",
-      "populate[1]": "challenges",
-      "populate[2]": "services",
-      "populate[3]": "hero",
-      "populate[4]": "whyChooseUsCards",
-      ...SEO_POPULATE,
+      status: "published",
+      ...INDUSTRY_POPULATE,
       "sort": "order:asc",
       "pagination[pageSize]": 100,
     },
@@ -363,12 +377,8 @@ export async function getCmsIndustry(
     path: "/api/industries",
     query: {
       "filters[slug][$eq]": slug,
-      "populate[0]": "heroStats",
-      "populate[1]": "challenges",
-      "populate[2]": "services",
-      "populate[3]": "hero",
-      "populate[4]": "whyChooseUsCards",
-      ...SEO_POPULATE,
+      status: "published",
+      ...INDUSTRY_POPULATE,
       "pagination[pageSize]": 1,
     },
     tags: ["strapi", "industries", `industry-${slug}`],
@@ -438,8 +448,8 @@ export async function getCmsHomepage(): Promise<Record<string, unknown> | null> 
   const res = await strapiFetch<StrapiSingleResponse<Record<string, unknown>>>({
     path: "/api/homepage",
     query: {
-      "populate[0]": "heroSlides",
-      "populate[1]": "impactStats",
+      "populate[heroSlides]": "true",
+      "populate[impactStats]": "true",
       ...SEO_POPULATE,
     },
     tags: ["strapi", "homepage"],
@@ -483,7 +493,7 @@ export async function getCmsStaticPage(slug: string): Promise<Record<string, unk
     path: "/api/static-pages",
     query: {
       "filters[slug][$eq]": slug,
-      "populate[0]": "heroimage",
+      "populate[heroimage]": "true",
       ...SEO_POPULATE,
       "pagination[pageSize]": 1,
     },
