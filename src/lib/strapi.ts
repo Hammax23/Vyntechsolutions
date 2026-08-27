@@ -46,20 +46,17 @@ function buildQuery(query?: FetchOptions["query"]): string {
 export async function strapiFetch<T>({
   path,
   query,
-  tags = ["strapi"],
-  revalidate = 0,
 }: FetchOptions): Promise<T | null> {
   const url = `${getStrapiURL(path)}${buildQuery(query)}`;
 
   try {
+    // Only cache: "no-store" — do not also set next.revalidate (Next build throws DYNAMIC_SERVER_USAGE).
     const res = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
         ...(STRAPI_TOKEN ? { Authorization: `Bearer ${STRAPI_TOKEN}` } : {}),
       },
-      // Always bypass Next/Data cache so Strapi admin edits show immediately after deploy.
       cache: "no-store",
-      next: { tags, revalidate: 0 },
     });
 
     if (!res.ok) {
