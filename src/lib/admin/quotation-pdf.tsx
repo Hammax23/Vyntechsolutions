@@ -1,10 +1,9 @@
 import React from "react";
 import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
-import fs from "fs";
-import path from "path";
 import type { QuotationData, ScopeSection } from "./quotation-types";
 import { calculateQuotationTotals, formatCad } from "./quotation-types";
 import { DEFAULT_SCOPE } from "./quotation-defaults";
+import { loadPrintLogoSrc } from "./pdf-logo";
 
 const NAVY = "#0F2A5F";
 const BLUE = "#1B4F9C";
@@ -17,13 +16,6 @@ const WHITE = "#FFFFFF";
 const COMPANY_EMAIL = "info@vyntechsolutions.ca";
 const COMPANY_WEB = "www.vyntechsolutions.ca";
 
-function loadLogoSrc(): string {
-  const logoPath = path.join(process.cwd(), "public", "logo.png");
-  const base64 = fs.readFileSync(logoPath).toString("base64");
-  return `data:image/png;base64,${base64}`;
-}
-
-const logoSrc = loadLogoSrc();
 const VALIDITY_DAYS = 15;
 
 const s = StyleSheet.create({
@@ -44,22 +36,12 @@ const s = StyleSheet.create({
     marginBottom: 10,
   },
   brandBlock: { flexDirection: "row", alignItems: "center" },
-  logoWrap: {
-    width: 36,
-    height: 36,
-    marginRight: 10,
-    backgroundColor: "#030014",
-    borderRadius: 6,
-    padding: 4,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  logo: { width: 28, height: 28 },
+  logo: { width: 42, height: 42, marginRight: 10, objectFit: "contain" },
   brandName: {
-    fontSize: 12,
-    fontFamily: "Helvetica-Bold",
+    fontSize: 14,
+    fontFamily: "Helvetica",
     color: NAVY,
-    letterSpacing: 0.8,
+    letterSpacing: 0.4,
   },
   brandTag: { fontSize: 7, color: MUTED, marginTop: 2 },
   contact: { fontSize: 7.5, color: MUTED, textAlign: "right", marginBottom: 2 },
@@ -284,6 +266,7 @@ function OfferPage({ data, variant }: { data: QuotationData; variant: "client" |
   const company = data.companyName || "";
   const sections = getSections(data);
   const preparedFor = company ? `${recipient}\n${company}` : recipient;
+  const logoSrc = loadPrintLogoSrc();
 
   return (
     <Page size="A4" style={s.page}>
@@ -297,12 +280,10 @@ function OfferPage({ data, variant }: { data: QuotationData; variant: "client" |
       <View style={s.header}>
         <View style={s.brandBlock}>
           {/* eslint-disable-next-line jsx-a11y/alt-text */}
-          <View style={s.logoWrap}>
-            <Image src={logoSrc} style={s.logo} />
-          </View>
+          <Image src={logoSrc} style={s.logo} />
           <View>
-            <Text style={s.brandName}>VYNTECH SOLUTIONS</Text>
-            <Text style={s.brandTag}>Digital Product Engineering</Text>
+            <Text style={s.brandName}>vyntech</Text>
+            <Text style={s.brandTag}>VynTech Solutions Inc.</Text>
           </View>
         </View>
         <View>

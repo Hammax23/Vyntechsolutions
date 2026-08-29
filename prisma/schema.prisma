@@ -192,3 +192,28 @@ model ClientInvoice {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
+
+// Client billing invoices (invoices issued TO clients)
+model BillingInvoice {
+  id             String   @id @default(cuid())
+  invoiceNumber  String   @unique
+  issueDate      DateTime @default(now())
+  dueDate        DateTime?
+  clientName     String
+  companyName    String?
+  clientEmail    String?
+  clientPhone    String?
+  clientAddress  String?
+  projectTitle   String?
+  lineItems      Json     @default("[]")
+  discountPercent Float   @default(0)
+  hstPercent     Float    @default(13)
+  amountPaid     Float    @default(0)
+  paymentMethod  String?
+  paymentTerms   String?
+  notes          String?
+  status         String   @default("draft") // draft | sent | paid | overdue | cancelled
+  projectId      String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}

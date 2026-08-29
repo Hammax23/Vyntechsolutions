@@ -1,9 +1,8 @@
 import React from "react";
 import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
-import fs from "fs";
-import path from "path";
 import type { InvoiceData } from "./invoice-types";
 import { calculateInvoiceTotals, formatCad } from "./invoice-types";
+import { loadPrintLogoSrc } from "./pdf-logo";
 
 const NAVY = "#0F2A5F";
 const BLUE = "#1B4F9C";
@@ -15,14 +14,6 @@ const WHITE = "#FFFFFF";
 const RED = "#B91C1C";
 const COMPANY_EMAIL = "info@vyntechsolutions.ca";
 const COMPANY_WEB = "www.vyntechsolutions.ca";
-
-function loadLogoSrc(): string {
-  const logoPath = path.join(process.cwd(), "public", "logo-print.png");
-  const base64 = fs.readFileSync(logoPath).toString("base64");
-  return `data:image/png;base64,${base64}`;
-}
-
-const logoSrc = loadLogoSrc();
 
 const s = StyleSheet.create({
   page: {
@@ -41,16 +32,18 @@ const s = StyleSheet.create({
     marginBottom: 10,
   },
   brandRow: { flexDirection: "row", alignItems: "center" },
-  logo: { width: 42, height: 42, marginRight: 10 },
-  brand: { fontSize: 14, fontFamily: "Helvetica-Bold", color: NAVY, letterSpacing: 0.6 },
+  logo: { width: 48, height: 48, marginRight: 10, objectFit: "contain" },
+  brand: { fontSize: 16, fontFamily: "Helvetica", color: NAVY, letterSpacing: 0.4 },
+  brandSub: { fontSize: 7.5, color: MUTED, marginTop: 2 },
   contact: { fontSize: 7.5, color: MUTED, textAlign: "right", marginBottom: 2 },
   watermark: {
     position: "absolute",
-    top: 280,
-    left: 147,
-    width: 300,
-    height: 300,
-    opacity: 0.06,
+    top: 300,
+    left: 170,
+    width: 250,
+    height: 250,
+    opacity: 0.05,
+    objectFit: "contain",
   },
   bar: { height: 2.5, backgroundColor: BLUE, marginBottom: 14 },
   titleRow: {
@@ -207,6 +200,7 @@ export function InvoicePdfDocument({
   const earnings = data.lineItems.filter((i) => i.kind === "earning" && i.description.trim());
   const deductions = data.lineItems.filter((i) => i.kind === "deduction" && i.description.trim());
   const expenses = data.lineItems.filter((i) => i.kind === "expense" && i.description.trim());
+  const logoSrc = loadPrintLogoSrc();
 
   return (
     <Document title={`${title} ${data.documentNumber}`} author="VynTech Solutions Inc.">
@@ -216,11 +210,11 @@ export function InvoicePdfDocument({
           <View style={s.brandRow}>
             <Image src={logoSrc} style={s.logo} />
             <View>
-              <Text style={s.brand}>VYNTECH SOLUTIONS</Text>
+              <Text style={s.brand}>vyntech</Text>
+              <Text style={s.brandSub}>VynTech Solutions Inc.</Text>
             </View>
           </View>
           <View>
-            <Text style={s.contact}>VynTech Solutions Inc.</Text>
             <Text style={s.contact}>{COMPANY_EMAIL}</Text>
             <Text style={s.contact}>{COMPANY_WEB}</Text>
           </View>
