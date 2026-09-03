@@ -250,7 +250,7 @@ export default function WorkflowApp({ user }: { user: Staff }) {
         const next = new Set(prev);
         for (const t of list) next.add(t.id);
         try {
-          localStorage.setItem(seenStorageKey, JSON.stringify([...next]));
+          localStorage.setItem(seenStorageKey, JSON.stringify(Array.from(next)));
         } catch {
           /* ignore */
         }
