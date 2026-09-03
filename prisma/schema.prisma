@@ -217,3 +217,39 @@ model BillingInvoice {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
+
+// Internal staff accounts for /workflow daily progress
+model StaffUser {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("employee") // employee | system
+  isActive     Boolean  @default(true)
+  color        String   @default("#00B4FF")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  createdTasks  WorkflowTask[] @relation("TaskCreator")
+  assignedTasks WorkflowTask[] @relation("TaskAssignee")
+}
+
+model WorkflowTask {
+  id           String    @id @default(cuid())
+  title        String
+  description  String?
+  status       String    @default("todo") // todo | in_progress | done | blocked
+  priority     String    @default("medium") // low | medium | high
+  workDate     DateTime
+  dueAt        DateTime?
+  createdById  String
+  assignedToId String
+  createdBy    StaffUser @relation("TaskCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  assignedTo   StaffUser @relation("TaskAssignee", fields: [assignedToId], references: [id], onDelete: Restrict)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([assignedToId, workDate])
+  @@index([createdById, workDate])
+  @@index([workDate])
+}

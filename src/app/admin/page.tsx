@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import VynTechLogo from "@/components/VynTechLogo";
+import { useAdminTheme } from "@/components/admin/admin-theme";
+import AdminThemeToggle from "@/components/admin/AdminThemeToggle";
 
 const OfferLetterSection = dynamic(() => import("@/components/admin/OfferLetterSection"), {
   ssr: false,
@@ -22,6 +24,13 @@ const ClientInvoiceSection = dynamic(() => import("@/components/admin/ClientInvo
   ssr: false,
   loading: () => (
     <div className="flex items-center justify-center h-64 text-white/40 text-sm">Loading client invoices...</div>
+  ),
+});
+
+const TeamProgressSection = dynamic(() => import("@/components/admin/TeamProgressSection"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-64 text-white/40 text-sm">Loading team progress...</div>
   ),
 });
 
@@ -112,6 +121,7 @@ interface Project {
 }
 
 export default function AdminPage() {
+  const { theme, toggle, isDark } = useAdminTheme();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [email, setEmail] = useState("");
@@ -125,7 +135,7 @@ export default function AdminPage() {
   const [selectedSubmission, setSelectedSubmission] = useState<QuoteSubmission | null>(null);
   const [activeTab, setActiveTab] = useState<"all" | "new" | "in_progress" | "completed">("all");
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeSection, setActiveSection] = useState<"quotes" | "projects" | "careers" | "offer_letters" | "invoices" | "client_invoices">("quotes");
+  const [activeSection, setActiveSection] = useState<"quotes" | "projects" | "workflow" | "careers" | "offer_letters" | "invoices" | "client_invoices">("quotes");
   const [projects, setProjects] = useState<Project[]>([]);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [projectTab, setProjectTab] = useState<"overview" | "tasks" | "timeline" | "notes" | "activity">("overview");
@@ -644,7 +654,7 @@ export default function AdminPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#030014] flex items-center justify-center">
+      <div data-admin-theme={theme} className="min-h-screen bg-[#030014] flex items-center justify-center">
         <div className="relative">
           <div className="w-16 h-16 border-4 border-[#0055FF]/20 rounded-full"></div>
           <div className="absolute top-0 left-0 w-16 h-16 border-4 border-[#00B4FF] border-t-transparent rounded-full animate-spin"></div>
@@ -656,7 +666,10 @@ export default function AdminPage() {
   // Login Page
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#030014] flex items-center justify-center p-4 relative overflow-hidden">
+      <div data-admin-theme={theme} className="min-h-screen bg-[#030014] flex items-center justify-center p-4 relative overflow-hidden">
+        <div className="absolute top-4 right-4 z-20">
+          <AdminThemeToggle isDark={isDark} onToggle={toggle} />
+        </div>
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-[#0055FF]/20 rounded-full blur-[150px] animate-pulse"></div>
           <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-[#00B4FF]/15 rounded-full blur-[150px] animate-pulse"></div>
@@ -664,7 +677,7 @@ export default function AdminPage() {
 
         <div className="w-full max-w-md relative z-10">
           <div className="flex flex-col items-center mb-6">
-            <VynTechLogo className="scale-110 cursor-default" />
+            <VynTechLogo className="scale-110 cursor-default" darkText={!isDark} />
           </div>
 
           <div className="bg-[#0a0a1a]/80 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl p-8">
@@ -809,12 +822,12 @@ export default function AdminPage() {
 
   // Dashboard
   return (
-    <div className="min-h-screen bg-[#030014] flex">
+    <div data-admin-theme={theme} className="h-screen bg-[#030014] flex overflow-hidden">
       {/* Sidebar */}
       <aside className={`${sidebarOpen ? "w-64" : "w-20"} bg-[#0a0a1a]/80 backdrop-blur-xl border-r border-white/5 flex flex-col transition-all duration-300 fixed h-full z-40`}>
         <div className="p-4 border-b border-white/5">
           <div className="flex items-center">
-            <VynTechLogo className={`cursor-default ${sidebarOpen ? "scale-90 -ml-2" : "scale-75 -ml-4"}`} />
+            <VynTechLogo className={`cursor-default ${sidebarOpen ? "scale-90 -ml-2" : "scale-75 -ml-4"}`} darkText={!isDark} />
           </div>
         </div>
 
@@ -830,6 +843,12 @@ export default function AdminPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
             </svg>
             {sidebarOpen && <span className="text-sm font-medium">Project Manager</span>}
+          </button>
+          <button onClick={() => { setActiveSection("workflow"); setSelectedSubmission(null); setSelectedProject(null); setSelectedPosition(null); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeSection === "workflow" ? "bg-[#0055FF]/20 border-l-2 border-[#00B4FF] text-white" : "text-white/50 hover:text-white hover:bg-white/5"}`}>
+            <svg className={`w-5 h-5 ${activeSection === "workflow" ? "text-[#00B4FF]" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+            </svg>
+            {sidebarOpen && <span className="text-sm font-medium">Team Progress</span>}
           </button>
           <button onClick={() => { setActiveSection("careers"); setSelectedSubmission(null); setSelectedProject(null); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeSection === "careers" ? "bg-[#0055FF]/20 border-l-2 border-[#00B4FF] text-white" : "text-white/50 hover:text-white hover:bg-white/5"}`}>
             <svg className={`w-5 h-5 ${activeSection === "careers" ? "text-[#00B4FF]" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -868,7 +887,7 @@ export default function AdminPage() {
       </aside>
 
       {/* Main Content */}
-      <main className={`flex-1 ${sidebarOpen ? "ml-64" : "ml-20"} transition-all duration-300`}>
+      <main className={`flex-1 min-h-0 flex flex-col bg-[#030014] ${sidebarOpen ? "ml-64" : "ml-20"} transition-all duration-300`}>
         {/* Header */}
         <header className="sticky top-0 z-30 bg-[#030014]/90 backdrop-blur-xl border-b border-white/5 px-6 py-4">
           <div className="flex items-center justify-between">
@@ -884,6 +903,8 @@ export default function AdminPage() {
                     ? "Quote Requests"
                     : activeSection === "projects"
                       ? "Project Manager"
+                      : activeSection === "workflow"
+                        ? "Team Progress"
                       : activeSection === "careers"
                         ? "Careers"
                         : activeSection === "offer_letters"
@@ -897,6 +918,8 @@ export default function AdminPage() {
                     ? "Manage incoming leads"
                     : activeSection === "projects"
                       ? "Enterprise project management"
+                      : activeSection === "workflow"
+                        ? "All employees, daily completion at a glance"
                       : activeSection === "careers"
                         ? "Manage job openings"
                         : activeSection === "offer_letters"
@@ -907,15 +930,18 @@ export default function AdminPage() {
                 </p>
               </div>
             </div>
-            <button onClick={activeSection === "quotes" ? fetchSubmissions : activeSection === "projects" ? loadProjects : loadJobPositions} className="p-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition-all" title="Refresh">
+            <div className="flex items-center gap-2">
+              <AdminThemeToggle isDark={isDark} onToggle={toggle} />
+              <button onClick={activeSection === "quotes" ? fetchSubmissions : activeSection === "projects" ? loadProjects : loadJobPositions} className="p-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition-all" title="Refresh">
               <svg className="w-4 h-4 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>
             </button>
+            </div>
           </div>
         </header>
 
-        <div className="p-6">
+        <div className="p-6 flex-1 overflow-y-auto">
           {activeSection === "quotes" && (
           <>
           {/* Stats */}
@@ -959,13 +985,13 @@ export default function AdminPage() {
           </div>
 
           {/* Content */}
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-5 min-h-[calc(100vh-260px)]">
             {/* List */}
-            <div className="xl:col-span-1 bg-white/[0.02] border border-white/10 rounded-xl overflow-hidden">
+            <div className="xl:col-span-1 bg-white/[0.02] border border-white/10 rounded-xl overflow-hidden flex flex-col">
               <div className="p-4 border-b border-white/5">
                 <h3 className="text-white font-semibold text-sm">Submissions</h3>
               </div>
-              <div className="max-h-[calc(100vh-380px)] overflow-y-auto">
+              <div className="flex-1 min-h-0 overflow-y-auto">
                 {filteredSubmissions.length === 0 ? (
                   <div className="p-10 text-center">
                     <div className="w-14 h-14 bg-white/5 rounded-xl flex items-center justify-center mx-auto mb-3">
@@ -1131,7 +1157,7 @@ export default function AdminPage() {
                   </div>
                 </div>
               ) : (
-                <div className="bg-white/[0.02] border border-white/10 rounded-xl p-12 text-center">
+                <div className="bg-white/[0.02] border border-white/10 rounded-xl p-12 text-center h-full min-h-[calc(100vh-280px)] flex flex-col items-center justify-center">
                   <div className="w-16 h-16 bg-white/5 rounded-xl flex items-center justify-center mx-auto mb-4">
                     <svg className="w-8 h-8 text-white/15" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -1655,6 +1681,9 @@ export default function AdminPage() {
 
           {activeSection === "offer_letters" && (
             <OfferLetterSection sidebarOpen={sidebarOpen} />
+          )}
+          {activeSection === "workflow" && (
+            <TeamProgressSection />
           )}
           {activeSection === "client_invoices" && (
             <ClientInvoiceSection sidebarOpen={sidebarOpen} />
