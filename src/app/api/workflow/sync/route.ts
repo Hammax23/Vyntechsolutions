@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { notSystemStaffWhere, requireStaff } from "@/lib/workflow-auth";
 
+export const dynamic = "force-dynamic";
+
 /** Lightweight change detector — clients poll this, then refetch only when stamp moves. */
 export async function GET() {
   const me = await requireStaff();
@@ -34,5 +36,6 @@ export async function GET() {
   } catch (error) {
     console.error("workflow sync", error);
     return NextResponse.json({ error: "Sync failed" }, { status: 500 });
+
   }
 }

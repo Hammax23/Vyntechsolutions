@@ -1,5 +1,6 @@
 import React from "react";
 import { Document, Page, Text, View, StyleSheet, Image } from "@react-pdf/renderer";
+/* eslint-disable jsx-a11y/alt-text -- @react-pdf Image is not an HTML <img> */
 import {
   formatReportDate,
   priorityLabel,

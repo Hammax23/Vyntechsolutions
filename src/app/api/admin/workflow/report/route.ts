@@ -10,6 +10,8 @@ import type {
   ProgressReportTask,
 } from "@/lib/admin/workflow-progress-report-types";
 
+export const dynamic = "force-dynamic";
+
 function makeReportId(staffId: string) {
   const stamp = new Date().toISOString().replace(/[-:TZ.]/g, "").slice(0, 14);
   return `PR-${stamp}-${staffId.slice(-4).toUpperCase()}`;
@@ -129,5 +131,6 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("workflow progress report", error);
     return NextResponse.json({ error: "Failed to generate progress report" }, { status: 500 });
+
   }
 }

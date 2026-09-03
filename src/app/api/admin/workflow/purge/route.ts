@@ -3,6 +3,8 @@ import prisma from "@/lib/prisma";
 import { notSystemStaffWhere } from "@/lib/workflow-auth";
 import { resolveProgressPeriod } from "@/lib/admin/workflow-period";
 
+export const dynamic = "force-dynamic";
+
 /**
  * Preview or permanently delete an employee's workflow tasks for a day / range / month.
  * Body mirrors progress report export. Use dryRun:true to count first.
@@ -66,5 +68,6 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("workflow progress purge", error);
     return NextResponse.json({ error: "Failed to clear progress" }, { status: 500 });
+
   }
 }

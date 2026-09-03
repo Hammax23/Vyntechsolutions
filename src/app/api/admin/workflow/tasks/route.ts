@@ -3,6 +3,8 @@ import prisma from "@/lib/prisma";
 import { ensureAdminWorkflowCreator, notSystemStaffWhere } from "@/lib/workflow-auth";
 import { isValidIsoDate, mapTask, todayKey, utcDay, utcDayRange } from "@/lib/workflow-progress";
 
+export const dynamic = "force-dynamic";
+
 const STATUSES = new Set(["todo", "in_progress", "done", "blocked"]);
 const PRIORITIES = new Set(["low", "medium", "high"]);
 
@@ -80,5 +82,6 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("admin assign task", error);
     return NextResponse.json({ error: "Failed to assign task" }, { status: 500 });
+
   }
 }

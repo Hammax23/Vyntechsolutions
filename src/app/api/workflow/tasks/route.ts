@@ -3,6 +3,8 @@ import prisma from "@/lib/prisma";
 import { mapTask, todayKey, isValidIsoDate, utcDay, utcDayRange } from "@/lib/workflow-progress";
 import { notSystemStaffWhere, requireStaff } from "@/lib/workflow-auth";
 
+export const dynamic = "force-dynamic";
+
 const STATUSES = new Set(["todo", "in_progress", "done", "blocked"]);
 const PRIORITIES = new Set(["low", "medium", "high"]);
 
@@ -140,4 +142,5 @@ export async function DELETE(request: NextRequest) {
 
   await prisma.workflowTask.delete({ where: { id } });
   return NextResponse.json({ success: true });
+
 }

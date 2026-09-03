@@ -3,6 +3,8 @@ import prisma from "@/lib/prisma";
 import { requireStaff } from "@/lib/workflow-auth";
 import { dateKey, scoreTasks } from "@/lib/workflow-progress";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: NextRequest) {
   const me = await requireStaff();
   if (!me) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -50,4 +52,5 @@ export async function GET(request: NextRequest) {
   }
 
   return NextResponse.json({ year, month, days });
+
 }

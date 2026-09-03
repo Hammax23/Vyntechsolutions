@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { notSystemStaffWhere } from "@/lib/workflow-auth";
 
+export const dynamic = "force-dynamic";
+
 /** Admin change detector for Team Progress live refresh. */
 export async function GET() {
   try {
@@ -28,5 +30,6 @@ export async function GET() {
   } catch (error) {
     console.error("admin workflow sync", error);
     return NextResponse.json({ error: "Sync failed" }, { status: 500 });
+
   }
 }

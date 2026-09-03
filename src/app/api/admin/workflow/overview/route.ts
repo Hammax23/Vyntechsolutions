@@ -3,6 +3,8 @@ import prisma from "@/lib/prisma";
 import { notSystemStaffWhere } from "@/lib/workflow-auth";
 import { dateKey, scoreTasks, todayKey, utcDay } from "@/lib/workflow-progress";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: NextRequest) {
   try {
     const year = Number(request.nextUrl.searchParams.get("year")) || new Date().getFullYear();
@@ -84,5 +86,6 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("workflow overview", error);
     return NextResponse.json({ error: "Failed to load overview" }, { status: 500 });
+
   }
 }

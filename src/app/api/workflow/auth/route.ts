@@ -8,6 +8,8 @@ import {
 } from "@/lib/workflow-auth";
 import { publicStaff } from "@/lib/workflow-progress";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   const session = await getWorkflowSession();
   if (!session) return NextResponse.json({ user: null });
@@ -50,4 +52,5 @@ export async function POST(request: NextRequest) {
 
   await setWorkflowCookie({ sub: staff.id, email: staff.email, name: staff.name });
   return NextResponse.json({ success: true, user: publicStaff(staff) });
+
 }

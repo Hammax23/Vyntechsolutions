@@ -16,6 +16,13 @@ function getSecret(): string {
   );
 }
 
+/** Fresh ArrayBuffer — satisfies TS SubtleCrypto BufferSource typings on Node/VPS. */
+function toBufferSource(bytes: Uint8Array): ArrayBuffer {
+  const copy = new Uint8Array(bytes.byteLength);
+  copy.set(bytes);
+  return copy.buffer;
+}
+
 function toBase64Url(bytes: Uint8Array): string {
   let bin = "";
   for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
@@ -35,7 +42,7 @@ function fromBase64Url(input: string): Uint8Array {
 }
 
 async function hmacKey(): Promise<CryptoKey> {
-  const enc = new TextEncoder().encode(getSecret());
+  const enc = toBufferSource(new TextEncoder().encode(getSecret()));
   return crypto.subtle.importKey("raw", enc, { name: "HMAC", hash: "SHA-256" }, false, ["sign", "verify"]);
 }
 
@@ -46,7 +53,7 @@ export async function signWorkflowSession(payload: Omit<WorkflowSessionPayload, 
   };
   const body = toBase64Url(new TextEncoder().encode(JSON.stringify(full)));
   const key = await hmacKey();
-  const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(body));
+  const sig = await crypto.subtle.sign("HMAC", key, toBufferSource(new TextEncoder().encode(body)));
   return `${body}.${toBase64Url(new Uint8Array(sig))}`;
 }
 
@@ -56,7 +63,12 @@ export async function verifyWorkflowSession(token: string | undefined | null): P
   if (!body || !sig) return null;
   try {
     const key = await hmacKey();
-    const ok = await crypto.subtle.verify("HMAC", key, fromBase64Url(sig), new TextEncoder().encode(body));
+    const ok = await crypto.subtle.verify(
+      "HMAC",
+      key,
+      toBufferSource(fromBase64Url(sig)),
+      toBufferSource(new TextEncoder().encode(body))
+    );
     if (!ok) return null;
     const json = JSON.parse(new TextDecoder().decode(fromBase64Url(body))) as WorkflowSessionPayload;
     if (!json?.sub || !json.exp || json.exp < Math.floor(Date.now() / 1000)) return null;

@@ -9,6 +9,8 @@ import {
 } from "@/lib/workflow-auth";
 import { publicStaff } from "@/lib/workflow-progress";
 
+export const dynamic = "force-dynamic";
+
 function serialize(staff: {
   id: string;
   name: string;
@@ -102,5 +104,6 @@ export async function PATCH(request: NextRequest) {
   } catch (error) {
     console.error("staff PATCH", error);
     return NextResponse.json({ error: "Failed to update employee" }, { status: 500 });
+
   }
 }

@@ -3,6 +3,8 @@ import prisma from "@/lib/prisma";
 import { notSystemStaffWhere, requireStaff } from "@/lib/workflow-auth";
 import { publicStaff } from "@/lib/workflow-progress";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   const me = await requireStaff();
   if (!me) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -14,4 +16,5 @@ export async function GET() {
   });
 
   return NextResponse.json({ staff: staff.map(publicStaff) });
+
 }
