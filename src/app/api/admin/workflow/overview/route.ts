@@ -15,12 +15,12 @@ export async function GET(request: NextRequest) {
       orderBy: { name: "asc" },
       select: { id: true, name: true, email: true, color: true, role: true },
     });
-    const staffIds = new Set(staff.map((s) => s.id));
+    const staffIds = staff.map((s) => s.id);
 
     const tasks = await prisma.workflowTask.findMany({
       where: {
         workDate: { gte: start, lt: end },
-        assignedToId: { in: [...staffIds] },
+        assignedToId: { in: staffIds },
       },
       select: { assignedToId: true, workDate: true, status: true },
     });
@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
     const todayTasks = await prisma.workflowTask.findMany({
       where: {
         workDate: { gte: todayStart, lt: todayEnd },
-        assignedToId: { in: [...staffIds] },
+        assignedToId: { in: staffIds },
       },
       select: { assignedToId: true, status: true },
     });
