@@ -2,7 +2,7 @@
 
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import VynTechLogo from "@/components/VynTechLogo";
-import { heatmapTone, isWeekendKey, todayKey } from "@/lib/workflow-progress";
+import { heatmapTone, isWeekendKey, todayKey, formatDuration, computeTaskTiming } from "@/lib/workflow-progress";
 import { useWorkflowTheme, workflowUi } from "@/components/workflow/workflow-theme";
 import { useLivePoll } from "@/hooks/useLivePoll";
 
@@ -16,6 +16,26 @@ type WTask = {
   workDate: string;
   createdById: string;
   assignedToId: string;
+  createdAt?: string;
+  statusChangedAt?: string;
+  cycleStartedAt?: string;
+  startedAt?: string | null;
+  completedAt?: string | null;
+  firstBlockedAt?: string | null;
+  todoMs?: number;
+  inProgressMs?: number;
+  blockedMs?: number;
+  timing?: {
+    todoMs: number;
+    inProgressMs: number;
+    blockedMs: number;
+    activeMs: number;
+    blockedTotalMs: number;
+    currentSegmentMs: number;
+    elapsedMs: number;
+    timeToBlockedMs: number | null;
+    cycleMs: number | null;
+  };
   createdBy?: { id: string; name: string; color: string };
   assignedTo?: { id: string; name: string; color: string };
 };
@@ -26,7 +46,7 @@ const STATUS_LABEL: Record<WTask["status"], string> = {
   todo: "To do",
   in_progress: "In progress",
   done: "Done",
-  blocked: "Blocked",
+  blocked: "On hold",
 };
 
 const COLUMNS: WTask["status"][] = ["todo", "in_progress", "done", "blocked"];
@@ -78,6 +98,72 @@ function inboxKeep(t: WTask, userId: string) {
   return t.assignedToId === userId && t.createdById !== userId && t.status !== "done";
 }
 
+function TimingMeter({
+  label,
+  value,
+  hint,
+  tone,
+  isDark,
+}: {
+  label: string;
+  value: string;
+  hint: string;
+  tone: "work" | "hold" | "total" | "info";
+  isDark: boolean;
+}) {
+  const toneClass =
+    tone === "work"
+      ? isDark
+        ? "border-sky-500/30 bg-sky-500/10"
+        : "border-sky-200 bg-sky-50"
+      : tone === "hold"
+        ? isDark
+          ? "border-amber-500/30 bg-amber-500/10"
+          : "border-amber-200 bg-amber-50"
+        : tone === "total"
+          ? isDark
+            ? "border-white/10 bg-white/[0.04]"
+            : "border-slate-200 bg-slate-50"
+          : isDark
+            ? "border-emerald-500/30 bg-emerald-500/10"
+            : "border-emerald-200 bg-emerald-50";
+  const valueClass =
+    tone === "work"
+      ? isDark
+        ? "text-sky-300"
+        : "text-sky-800"
+      : tone === "hold"
+        ? isDark
+          ? "text-amber-300"
+          : "text-amber-900"
+        : tone === "info"
+          ? isDark
+            ? "text-emerald-300"
+            : "text-emerald-800"
+          : isDark
+            ? "text-white/90"
+            : "text-slate-800";
+  const labelClass =
+    tone === "work"
+      ? isDark
+        ? "text-sky-300/80"
+        : "text-sky-700"
+      : tone === "hold"
+        ? isDark
+          ? "text-amber-300/80"
+          : "text-amber-800"
+        : isDark
+          ? "text-white/45"
+          : "text-slate-500";
+
+  return (
+    <div title={hint} className={`w-full rounded-lg border px-2.5 py-2 ${toneClass}`}>
+      <p className={`text-[9px] font-semibold uppercase tracking-wide ${labelClass}`}>{label}</p>
+      <p className={`text-sm font-bold tabular-nums leading-tight mt-0.5 ${valueClass}`}>{value}</p>
+    </div>
+  );
+}
+
 const TaskCard = memo(function TaskCard({
   t,
   showDate,
@@ -85,6 +171,7 @@ const TaskCard = memo(function TaskCard({
   staff,
   ui,
   isDark,
+  readOnly,
   onPatch,
   onRemove,
 }: {
@@ -94,10 +181,39 @@ const TaskCard = memo(function TaskCard({
   staff: Staff[];
   ui: Ui;
   isDark: boolean;
+  readOnly?: boolean;
   onPatch: (id: string, body: Record<string, unknown>) => void;
   onRemove: (id: string) => void;
 }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [nowTick, setNowTick] = useState(() => Date.now());
+
+  useEffect(() => {
+    const id = window.setInterval(() => setNowTick(Date.now()), 30_000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const timing = useMemo(() => {
+    void nowTick;
+    if (t.timing && t.statusChangedAt) {
+      return computeTaskTiming(
+        {
+          status: t.status,
+          statusChangedAt: new Date(t.statusChangedAt),
+          cycleStartedAt: new Date(t.cycleStartedAt || t.createdAt || t.statusChangedAt),
+          startedAt: t.startedAt ? new Date(t.startedAt) : null,
+          completedAt: t.completedAt ? new Date(t.completedAt) : null,
+          firstBlockedAt: t.firstBlockedAt ? new Date(t.firstBlockedAt) : null,
+          todoMs: t.todoMs ?? 0,
+          inProgressMs: t.inProgressMs ?? 0,
+          blockedMs: t.blockedMs ?? 0,
+          createdAt: new Date(t.createdAt || t.statusChangedAt),
+        },
+        new Date(nowTick)
+      );
+    }
+    return t.timing || null;
+  }, [t, nowTick]);
 
   return (
     <div className={`${ui.card} border rounded-xl p-3 space-y-2 ${ui.cardHover} transition-colors`}>
@@ -115,18 +231,52 @@ const TaskCard = memo(function TaskCard({
         </div>
       </div>
       {t.description ? <p className={`${ui.muted} text-xs leading-relaxed line-clamp-3 break-words`}>{t.description}</p> : null}
+      {timing ? (
+        <div className="space-y-1.5">
+          <p className={`text-[10px] font-medium ${ui.faint}`}>Time on this task</p>
+          <div className="grid grid-cols-3 gap-1.5">
+            <TimingMeter
+              label="To do → Done"
+              value={formatDuration(timing.elapsedMs)}
+              hint={
+                timing.completedAt
+                  ? "Total time from To do until Done"
+                  : "Running time from To do until Done"
+              }
+              tone="total"
+              isDark={isDark}
+            />
+            <TimingMeter
+              label="In progress"
+              value={formatDuration(timing.activeMs)}
+              hint="Time spent while In progress"
+              tone="work"
+              isDark={isDark}
+            />
+            <TimingMeter
+              label="On hold"
+              value={formatDuration(timing.blockedTotalMs)}
+              hint="How long this task stayed On hold"
+              tone="hold"
+              isDark={isDark}
+            />
+          </div>
+        </div>
+      ) : null}
       <div className={`flex flex-wrap items-center gap-2 text-[11px] ${ui.muted}`}>
         {showDate ? <span>{t.workDate}</span> : null}
         {t.createdBy && t.createdById !== user.id ? <span>from {t.createdBy.name}</span> : null}
-        <button
-          type="button"
-          onClick={() => setDetailsOpen((v) => !v)}
-          className="text-[10px] text-[#0055FF] hover:underline ml-auto"
-        >
-          {detailsOpen ? "Hide" : "Date / assign"}
-        </button>
+        {!readOnly ? (
+          <button
+            type="button"
+            onClick={() => setDetailsOpen((v) => !v)}
+            className="text-[10px] text-[#0055FF] hover:underline ml-auto"
+          >
+            {detailsOpen ? "Hide" : "Date / assign"}
+          </button>
+        ) : null}
       </div>
-      {detailsOpen ? (
+      {!readOnly && detailsOpen ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div>
             <label className={`block ${ui.faint} text-[10px] mb-1`}>Work date</label>
@@ -151,6 +301,7 @@ const TaskCard = memo(function TaskCard({
           </div>
         </div>
       ) : null}
+      {!readOnly ? (
       <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
         <select
           className={`${ui.input} text-[11px] py-1.5 sm:hidden grow min-w-0`}
@@ -186,11 +337,21 @@ const TaskCard = memo(function TaskCard({
           Delete
         </button>
       </div>
+      ) : null}
     </div>
   );
 });
 
-export default function WorkflowApp({ user }: { user: Staff }) {
+export default function WorkflowApp({
+  user,
+  mode = "self",
+  onClose,
+}: {
+  user: Staff;
+  mode?: "self" | "admin-preview";
+  onClose?: () => void;
+}) {
+  const preview = mode === "admin-preview";
   const { isDark, toggle, ready: themeReady } = useWorkflowTheme();
   const ui = workflowUi(isDark);
   const titleRef = useRef<HTMLInputElement>(null);
@@ -267,6 +428,7 @@ export default function WorkflowApp({ user }: { user: Staff }) {
   }, [inbox, markInboxSeen]);
 
   const forceLogout = useCallback(async () => {
+    if (preview) return;
     try {
       await fetch("/api/workflow/auth", {
         method: "POST",
@@ -276,32 +438,37 @@ export default function WorkflowApp({ user }: { user: Staff }) {
     } finally {
       window.location.reload();
     }
-  }, []);
+  }, [preview]);
 
   const handleAuth = useCallback(
     async (res: Response) => {
+      if (preview) return true;
       if (res.status === 401) {
         await forceLogout();
         return false;
       }
       return true;
     },
-    [forceLogout]
+    [forceLogout, preview]
   );
 
   const loadStaff = useCallback(async () => {
-    const res = await fetch("/api/workflow/staff", { cache: "no-store" });
+    const res = await fetch(preview ? "/api/admin/staff" : "/api/workflow/staff", { cache: "no-store" });
     if (!(await handleAuth(res))) return false;
     if (!res.ok) return false;
     const data = await res.json();
-    setStaff(data.staff || []);
+    const list = (data.staff || []) as Array<Staff & { isActive?: boolean }>;
+    setStaff(preview ? list.filter((s) => s.isActive !== false) : list);
     return true;
-  }, [handleAuth]);
+  }, [handleAuth, preview]);
 
   const loadBoard = useCallback(
     async (d: string) => {
       const seq = ++boardSeq.current;
-      const res = await fetch(`/api/workflow/tasks?date=${encodeURIComponent(d)}`, { cache: "no-store" });
+      const url = preview
+        ? `/api/admin/workflow/employee/tasks?staffId=${encodeURIComponent(user.id)}&date=${encodeURIComponent(d)}`
+        : `/api/workflow/tasks?date=${encodeURIComponent(d)}`;
+      const res = await fetch(url, { cache: "no-store" });
       if (!(await handleAuth(res))) return false;
       if (!res.ok) return false;
       const data = await res.json();
@@ -309,41 +476,49 @@ export default function WorkflowApp({ user }: { user: Staff }) {
       setTasks(data.tasks || []);
       return true;
     },
-    [handleAuth]
+    [handleAuth, preview, user.id]
   );
 
   const loadInbox = useCallback(async () => {
-    const res = await fetch("/api/workflow/tasks?inbox=1", { cache: "no-store" });
+    const url = preview
+      ? `/api/admin/workflow/employee/tasks?staffId=${encodeURIComponent(user.id)}&inbox=1`
+      : "/api/workflow/tasks?inbox=1";
+    const res = await fetch(url, { cache: "no-store" });
     if (!(await handleAuth(res))) return false;
     if (!res.ok) return false;
     const data = await res.json();
     const next = (data.tasks || []) as WTask[];
 
-    if (knownInboxIds.current === null) {
-      knownInboxIds.current = new Set(next.map((t) => t.id));
-    } else {
-      const fresh = next.filter((t) => !knownInboxIds.current!.has(t.id));
-      if (fresh.length > 0) {
-        const first = fresh[0];
-        const from = first.createdBy?.name || "teammate";
-        setMessage(
-          fresh.length === 1
-            ? `New task from ${from}: “${first.title}”`
-            : `${fresh.length} new tasks in Inbox (latest from ${from})`
-        );
-        if (tabRef.current !== "inbox") setInboxPulse(true);
+    if (!preview) {
+      if (knownInboxIds.current === null) {
+        knownInboxIds.current = new Set(next.map((t) => t.id));
+      } else {
+        const fresh = next.filter((t) => !knownInboxIds.current!.has(t.id));
+        if (fresh.length > 0) {
+          const first = fresh[0];
+          const from = first.createdBy?.name || "teammate";
+          setMessage(
+            fresh.length === 1
+              ? `New task from ${from}: “${first.title}”`
+              : `${fresh.length} new tasks in Inbox (latest from ${from})`
+          );
+          if (tabRef.current !== "inbox") setInboxPulse(true);
+        }
+        knownInboxIds.current = new Set(next.map((t) => t.id));
       }
-      knownInboxIds.current = new Set(next.map((t) => t.id));
     }
 
     setInbox(next);
     return true;
-  }, [handleAuth]);
+  }, [handleAuth, preview, user.id]);
 
   const loadCalendar = useCallback(
     async (year: number, month: number) => {
       const seq = ++calSeq.current;
-      const res = await fetch(`/api/workflow/calendar?year=${year}&month=${month}`, { cache: "no-store" });
+      const url = preview
+        ? `/api/admin/workflow/employee/calendar?staffId=${encodeURIComponent(user.id)}&year=${year}&month=${month}`
+        : `/api/workflow/calendar?year=${year}&month=${month}`;
+      const res = await fetch(url, { cache: "no-store" });
       if (!(await handleAuth(res))) return false;
       if (!res.ok) return false;
       const data = await res.json();
@@ -351,7 +526,7 @@ export default function WorkflowApp({ user }: { user: Staff }) {
       setMonthDays(data.days || {});
       return true;
     },
-    [handleAuth]
+    [handleAuth, preview, user.id]
   );
 
   const refreshAll = useCallback(async () => {
@@ -362,7 +537,7 @@ export default function WorkflowApp({ user }: { user: Staff }) {
   }, [loadBoard, loadInbox, loadCalendar, loadStaff]);
 
   const checkSync = useCallback(async () => {
-    const res = await fetch("/api/workflow/sync", { cache: "no-store" });
+    const res = await fetch(preview ? "/api/admin/workflow/sync" : "/api/workflow/sync", { cache: "no-store" });
     if (!(await handleAuth(res))) return;
     if (!res.ok) return;
     const data = await res.json();
@@ -370,7 +545,7 @@ export default function WorkflowApp({ user }: { user: Staff }) {
     if (!next || next === stampRef.current) return;
     const ok = await refreshAll();
     if (ok) stampRef.current = next;
-  }, [handleAuth, refreshAll]);
+  }, [handleAuth, refreshAll, preview]);
 
   useLivePoll(checkSync, { intervalMs: 3000, enabled: true });
 
@@ -414,6 +589,7 @@ export default function WorkflowApp({ user }: { user: Staff }) {
   };
 
   const createTask = async () => {
+    if (preview) return;
     if (saving) return;
     if (!form.title.trim()) {
       setMessage("Task title is required");
@@ -453,27 +629,42 @@ export default function WorkflowApp({ user }: { user: Staff }) {
   };
 
   const patch = async (id: string, body: Record<string, unknown>) => {
+    if (preview) return;
     if (typeof body.status === "string" && COLUMNS.includes(body.status as WTask["status"])) {
       setFocusCol(body.status as WTask["status"]);
     }
-    setTasks((prev) => prev.map((t) => (t.id === id ? ({ ...t, ...body } as WTask) : t)));
-    setInbox((prev) =>
-      prev
-        .map((t) => (t.id === id ? ({ ...t, ...body } as WTask) : t))
-        .filter((t) => inboxKeep(t, user.id))
-    );
+    // Optimistic status-only for snappy UI; server task replaces with accurate timing
+    if (typeof body.status === "string") {
+      setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, status: body.status as WTask["status"] } : t)));
+      setInbox((prev) =>
+        prev
+          .map((t) => (t.id === id ? { ...t, status: body.status as WTask["status"] } : t))
+          .filter((t) => inboxKeep(t, user.id))
+      );
+    }
     const res = await fetch("/api/workflow/tasks", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, ...body }),
     });
     if (!(await handleAuth(res))) return;
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.task) {
+      const next = data.task as WTask;
+      setTasks((prev) => prev.map((t) => (t.id === id ? next : t)));
+      setInbox((prev) =>
+        prev
+          .map((t) => (t.id === id ? next : t))
+          .filter((t) => inboxKeep(t, user.id))
+      );
+    }
     const ok = await refreshAll();
     if (ok) stampRef.current = "";
     if (!res.ok) setMessage("Update failed, refreshed");
   };
 
   const remove = async (id: string) => {
+    if (preview) return;
     if (!confirm("Delete this task?")) return;
     const prevTasks = tasks;
     const prevInbox = inbox;
@@ -532,28 +723,46 @@ export default function WorkflowApp({ user }: { user: Staff }) {
   }
 
   return (
-    <div className={`min-h-screen xl:h-screen xl:overflow-hidden flex flex-col transition-colors duration-300 ${ui.page}`}>
+    <div
+      className={`${
+        preview ? "h-full overflow-hidden" : "min-h-screen xl:h-screen xl:overflow-hidden"
+      } flex flex-col transition-colors duration-300 ${ui.page}`}
+    >
       <header className={`shrink-0 z-30 backdrop-blur-xl border-b px-5 lg:px-8 py-3 ${ui.header}`}>
         <div className="flex items-center justify-between gap-4 w-full">
           <div className="flex items-center gap-4">
             <VynTechLogo className="scale-90 cursor-default" darkText={!isDark} />
             <div className="hidden sm:block">
               <p className="text-sm font-semibold">Daily Progress</p>
-              <p className={`text-[11px] ${ui.muted}`}>Workflow, {user.name}</p>
+              <p className={`text-[11px] ${ui.muted}`}>
+                {preview ? `Admin view · ${user.name}` : `Workflow, ${user.name}`}
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <span
-              className={`hidden sm:inline-flex items-center gap-1.5 text-[11px] px-2 py-1 rounded-full border ${
-                isDark
-                  ? "border-emerald-500/40 text-emerald-300 bg-emerald-500/10"
-                  : "border-emerald-500/40 text-emerald-700 bg-emerald-50"
-              }`}
-              title="Live sync, new tasks appear automatically"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Live
-            </span>
+            {preview ? (
+              <span
+                className={`text-[11px] px-2 py-1 rounded-full border ${
+                  isDark
+                    ? "border-sky-500/40 text-sky-300 bg-sky-500/10"
+                    : "border-sky-500/40 text-sky-800 bg-sky-50"
+                }`}
+              >
+                View only
+              </span>
+            ) : (
+              <span
+                className={`hidden sm:inline-flex items-center gap-1.5 text-[11px] px-2 py-1 rounded-full border ${
+                  isDark
+                    ? "border-emerald-500/40 text-emerald-300 bg-emerald-500/10"
+                    : "border-emerald-500/40 text-emerald-700 bg-emerald-50"
+                }`}
+                title="Live sync, new tasks appear automatically"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Live
+              </span>
+            )}
             <span className={`hidden md:inline text-xs ${ui.muted}`}>{user.email}</span>
             <button
               type="button"
@@ -563,14 +772,30 @@ export default function WorkflowApp({ user }: { user: Staff }) {
             >
               {isDark ? "Light" : "Dark"}
             </button>
-            <button onClick={logout} className={`px-3 py-1.5 text-xs rounded-lg border transition ${ui.btnGhost}`}>
-              Logout
-            </button>
+            {preview ? (
+              <button
+                type="button"
+                onClick={() => onClose?.()}
+                className={`px-3 py-1.5 text-xs rounded-lg border transition ${ui.btnGhost}`}
+              >
+                Close
+              </button>
+            ) : (
+              <button onClick={logout} className={`px-3 py-1.5 text-xs rounded-lg border transition ${ui.btnGhost}`}>
+                Logout
+              </button>
+            )}
           </div>
         </div>
       </header>
 
-      <div className="flex-1 min-h-0 grid grid-cols-1 xl:grid-cols-[minmax(240px,280px)_minmax(0,1fr)_minmax(260px,320px)] gap-3 sm:gap-4 p-3 sm:p-4 lg:p-5 xl:overflow-hidden overflow-y-auto">
+      <div
+        className={`flex-1 min-h-0 grid grid-cols-1 gap-3 sm:gap-4 p-3 sm:p-4 lg:p-5 xl:overflow-hidden overflow-y-auto ${
+          preview
+            ? "xl:grid-cols-[minmax(240px,280px)_minmax(0,1fr)]"
+            : "xl:grid-cols-[minmax(240px,280px)_minmax(0,1fr)_minmax(260px,320px)]"
+        }`}
+      >
         <aside className="min-h-0 flex flex-col gap-3 sm:gap-4 xl:overflow-y-auto order-2 xl:order-1">
           <div className={`${ui.card} border rounded-xl p-3 sm:p-4`}>
             <div className="flex items-center justify-between mb-3">
@@ -727,7 +952,7 @@ export default function WorkflowApp({ user }: { user: Staff }) {
                     >
                       Open {formatDay(t.workDate)}
                     </button>
-                    <TaskCard t={t} showDate user={user} staff={staff} ui={ui} isDark={isDark} onPatch={patch} onRemove={remove} />
+                    <TaskCard t={t} showDate user={user} staff={staff} ui={ui} isDark={isDark} readOnly={preview} onPatch={patch} onRemove={remove} />
                   </div>
                 ))
               )}
@@ -735,14 +960,18 @@ export default function WorkflowApp({ user }: { user: Staff }) {
           ) : mine.length === 0 && created.length === 0 ? (
             <div className={`${ui.empty} border rounded-2xl flex-1 min-h-[220px] sm:min-h-[280px] flex flex-col items-center justify-center px-6 text-center space-y-3`}>
               <p className="font-medium text-lg">Nothing on this day yet</p>
-              <p className={`text-sm ${ui.muted}`}>Add a task, or pick another date on the calendar.</p>
-              <button
-                type="button"
-                onClick={() => titleRef.current?.focus()}
-                className="inline-flex px-4 py-2 rounded-lg bg-gradient-to-r from-[#0055FF] to-[#00B4FF] text-white text-sm"
-              >
-                Create a task
-              </button>
+              <p className={`text-sm ${ui.muted}`}>
+                {preview ? "Pick another date on the calendar." : "Add a task, or pick another date on the calendar."}
+              </p>
+              {!preview ? (
+                <button
+                  type="button"
+                  onClick={() => titleRef.current?.focus()}
+                  className="inline-flex px-4 py-2 rounded-lg bg-gradient-to-r from-[#0055FF] to-[#00B4FF] text-white text-sm"
+                >
+                  Create a task
+                </button>
+              ) : null}
             </div>
           ) : (
             <div className="flex-1 min-h-0 flex flex-col gap-3 xl:overflow-hidden">
@@ -767,7 +996,7 @@ export default function WorkflowApp({ user }: { user: Staff }) {
                     <p className={`text-xs ${ui.faint} py-10 text-center`}>No tasks in {STATUS_LABEL[focusCol].toLowerCase()}</p>
                   ) : (
                     byColumn[focusCol].map((t) => (
-                      <TaskCard key={t.id} t={t} user={user} staff={staff} ui={ui} isDark={isDark} onPatch={patch} onRemove={remove} />
+                      <TaskCard key={t.id} t={t} user={user} staff={staff} ui={ui} isDark={isDark} readOnly={preview} onPatch={patch} onRemove={remove} />
                     ))
                   )}
                 </div>
@@ -788,7 +1017,7 @@ export default function WorkflowApp({ user }: { user: Staff }) {
                           <p className={`text-xs ${ui.faint} py-8 text-center`}>Empty</p>
                         ) : (
                           list.map((t) => (
-                            <TaskCard key={t.id} t={t} user={user} staff={staff} ui={ui} isDark={isDark} onPatch={patch} onRemove={remove} />
+                            <TaskCard key={t.id} t={t} user={user} staff={staff} ui={ui} isDark={isDark} readOnly={preview} onPatch={patch} onRemove={remove} />
                           ))
                         )}
                       </div>
@@ -802,7 +1031,7 @@ export default function WorkflowApp({ user }: { user: Staff }) {
                   <h3 className={`text-xs uppercase tracking-wide ${ui.muted} mb-2`}>Assigned to others ({created.length})</h3>
                   <div className="space-y-2">
                     {created.map((t) => (
-                      <TaskCard key={t.id} t={t} user={user} staff={staff} ui={ui} isDark={isDark} onPatch={patch} onRemove={remove} />
+                      <TaskCard key={t.id} t={t} user={user} staff={staff} ui={ui} isDark={isDark} readOnly={preview} onPatch={patch} onRemove={remove} />
                     ))}
                   </div>
                 </div>
@@ -811,6 +1040,7 @@ export default function WorkflowApp({ user }: { user: Staff }) {
           )}
         </section>
 
+        {!preview ? (
         <aside className={`${ui.card} border rounded-xl p-3 sm:p-4 space-y-3 min-h-0 xl:overflow-y-auto order-3`}>
           <h3 className="text-sm font-semibold">New task</h3>
           <input
@@ -871,6 +1101,7 @@ export default function WorkflowApp({ user }: { user: Staff }) {
             {saving ? "Saving…" : "Create task"}
           </button>
         </aside>
+        ) : null}
       </div>
     </div>
   );

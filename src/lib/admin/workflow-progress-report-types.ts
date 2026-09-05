@@ -8,6 +8,11 @@ export type ProgressReportTask = {
   priority: string;
   workDate: string;
   createdByName: string;
+  activeLabel: string;
+  blockedLabel: string;
+  elapsedLabel: string;
+  toBlockedLabel: string | null;
+  cycleLabel: string | null;
 };
 
 export type ProgressReportDay = {
@@ -51,7 +56,7 @@ export function statusLabel(status: string): string {
   if (status === "in_progress") return "In progress";
   if (status === "todo") return "To do";
   if (status === "done") return "Done";
-  if (status === "blocked") return "Blocked";
+  if (status === "blocked") return "On hold";
   return status;
 }
 

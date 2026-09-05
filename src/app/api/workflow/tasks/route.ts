@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { mapTask, todayKey, isValidIsoDate, utcDay, utcDayRange } from "@/lib/workflow-progress";
+import {
+  buildStatusTransition,
+  mapTask,
+  todayKey,
+  isValidIsoDate,
+  utcDay,
+  utcDayRange,
+} from "@/lib/workflow-progress";
 import { notSystemStaffWhere, requireStaff } from "@/lib/workflow-auth";
 
 export const dynamic = "force-dynamic";
@@ -12,6 +19,19 @@ const includePeople = {
   createdBy: { select: { id: true, name: true, color: true } },
   assignedTo: { select: { id: true, name: true, color: true } },
 };
+
+function initialTiming(status: string, now = new Date()) {
+  return {
+    statusChangedAt: now,
+    cycleStartedAt: now,
+    startedAt: status === "in_progress" || status === "done" || status === "blocked" ? now : null,
+    completedAt: status === "done" ? now : null,
+    firstBlockedAt: status === "blocked" ? now : null,
+    todoMs: 0,
+    inProgressMs: 0,
+    blockedMs: 0,
+  };
+}
 
 export async function GET(request: NextRequest) {
   const me = await requireStaff();
@@ -61,6 +81,7 @@ export async function POST(request: NextRequest) {
   const workDate = utcDay(dateRaw);
   const status = STATUSES.has(body.status) ? body.status : "todo";
   const priority = PRIORITIES.has(body.priority) ? body.priority : "medium";
+  const now = new Date();
 
   const task = await prisma.workflowTask.create({
     data: {
@@ -71,6 +92,7 @@ export async function POST(request: NextRequest) {
       workDate,
       assignedToId: assignee.id,
       createdById: me.id,
+      ...initialTiming(status, now),
     },
     include: includePeople,
   });
@@ -92,18 +114,10 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const data: {
-    title?: string;
-    description?: string | null;
-    status?: string;
-    priority?: string;
-    workDate?: Date;
-    assignedToId?: string;
-  } = {};
+  const data: Record<string, unknown> = {};
 
   if (typeof body.title === "string" && body.title.trim()) data.title = body.title.trim();
   if (typeof body.description === "string") data.description = body.description || null;
-  if (STATUSES.has(body.status)) data.status = body.status;
   if (PRIORITIES.has(body.priority)) data.priority = body.priority;
   if (typeof body.workDate === "string" && body.workDate) {
     const d = body.workDate.slice(0, 10);
@@ -116,6 +130,27 @@ export async function PATCH(request: NextRequest) {
     });
     if (!assignee) return NextResponse.json({ error: "Assignee not found" }, { status: 400 });
     data.assignedToId = assignee.id;
+  }
+
+  if (STATUSES.has(body.status) && body.status !== existing.status) {
+    Object.assign(
+      data,
+      buildStatusTransition(
+        {
+          status: existing.status,
+          statusChangedAt: existing.statusChangedAt,
+          cycleStartedAt: existing.cycleStartedAt,
+          startedAt: existing.startedAt,
+          completedAt: existing.completedAt,
+          firstBlockedAt: existing.firstBlockedAt,
+          todoMs: existing.todoMs,
+          inProgressMs: existing.inProgressMs,
+          blockedMs: existing.blockedMs,
+          createdAt: existing.createdAt,
+        },
+        body.status
+      )
+    );
   }
 
   const task = await prisma.workflowTask.update({
@@ -142,5 +177,4 @@ export async function DELETE(request: NextRequest) {
 
   await prisma.workflowTask.delete({ where: { id } });
   return NextResponse.json({ success: true });
-
 }

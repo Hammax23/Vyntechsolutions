@@ -316,7 +316,7 @@ export function WorkflowProgressPdfDocument({ data }: { data: ProgressReportData
               { value: String(data.summary.totalTasks), label: "Total tasks", color: NAVY },
               { value: String(data.summary.done), label: "Completed", color: EMERALD },
               { value: String(data.summary.inProgress), label: "In progress", color: SKY },
-              { value: String(data.summary.blocked), label: "Blocked", color: AMBER },
+              { value: String(data.summary.blocked), label: "On hold", color: AMBER },
               {
                 value: data.summary.percent == null ? "N/A" : `${data.summary.percent}%`,
                 label: "Completion",
@@ -344,7 +344,7 @@ export function WorkflowProgressPdfDocument({ data }: { data: ProgressReportData
               <Text style={[s.th, { width: "12%", textAlign: "center" }]}>Tasks</Text>
               <Text style={[s.th, { width: "12%", textAlign: "center" }]}>Done</Text>
               <Text style={[s.th, { width: "12%", textAlign: "center" }]}>Active</Text>
-              <Text style={[s.th, { width: "12%", textAlign: "center" }]}>Blocked</Text>
+              <Text style={[s.th, { width: "12%", textAlign: "center" }]}>On hold</Text>
               <Text style={[s.th, { width: "14%", textAlign: "center" }]}>Rate</Text>
               <Text style={[s.th, { width: "16%", textAlign: "right" }]}>To do</Text>
             </View>
@@ -410,7 +410,10 @@ export function WorkflowProgressPdfDocument({ data }: { data: ProgressReportData
                     <View style={s.taskMain}>
                       <Text style={s.taskTitle}>{t.title}</Text>
                       {t.description ? <Text style={s.taskDesc}>{t.description}</Text> : null}
-                      <Text style={s.taskMeta}>Assigned by {t.createdByName}</Text>
+                      <Text style={s.taskMeta}>
+                        Assigned by {t.createdByName}
+                        {` · To do → Done ${t.elapsedLabel} · In progress ${t.activeLabel} · On hold ${t.blockedLabel}`}
+                      </Text>
                     </View>
                     <View style={s.badges}>
                       <Text

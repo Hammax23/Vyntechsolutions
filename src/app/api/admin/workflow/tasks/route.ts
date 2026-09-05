@@ -64,6 +64,7 @@ export async function POST(request: NextRequest) {
     const workDate = utcDay(dateRaw);
     const status = STATUSES.has(body.status) ? body.status : "todo";
     const priority = PRIORITIES.has(body.priority) ? body.priority : "medium";
+    const now = new Date();
 
     const task = await prisma.workflowTask.create({
       data: {
@@ -74,6 +75,11 @@ export async function POST(request: NextRequest) {
         workDate,
         assignedToId: assignee.id,
         createdById: creator.id,
+        statusChangedAt: now,
+        cycleStartedAt: now,
+        startedAt: status === "in_progress" || status === "done" || status === "blocked" ? now : null,
+        completedAt: status === "done" ? now : null,
+        firstBlockedAt: status === "blocked" ? now : null,
       },
       include: includePeople,
     });

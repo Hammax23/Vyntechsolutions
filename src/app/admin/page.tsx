@@ -135,7 +135,7 @@ export default function AdminPage() {
   const [selectedSubmission, setSelectedSubmission] = useState<QuoteSubmission | null>(null);
   const [activeTab, setActiveTab] = useState<"all" | "new" | "in_progress" | "completed">("all");
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeSection, setActiveSection] = useState<"quotes" | "projects" | "workflow" | "careers" | "offer_letters" | "invoices" | "client_invoices">("quotes");
+  const [activeSection, setActiveSection] = useState<"quotes" | "projects" | "workflow" | "careers" | "offer_letters" | "invoices" | "client_invoices">("workflow");
   const [projects, setProjects] = useState<Project[]>([]);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [projectTab, setProjectTab] = useState<"overview" | "tasks" | "timeline" | "notes" | "activity">("overview");
@@ -832,6 +832,12 @@ export default function AdminPage() {
         </div>
 
         <nav className="flex-1 p-3 space-y-1">
+          <button onClick={() => { setActiveSection("workflow"); setSelectedSubmission(null); setSelectedProject(null); setSelectedPosition(null); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeSection === "workflow" ? "bg-[#0055FF]/20 border-l-2 border-[#00B4FF] text-white" : "text-white/50 hover:text-white hover:bg-white/5"}`}>
+            <svg className={`w-5 h-5 ${activeSection === "workflow" ? "text-[#00B4FF]" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+            </svg>
+            {sidebarOpen && <span className="text-sm font-medium">Team Progress</span>}
+          </button>
           <button onClick={() => { setActiveSection("quotes"); setSelectedProject(null); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeSection === "quotes" ? "bg-[#0055FF]/20 border-l-2 border-[#00B4FF] text-white" : "text-white/50 hover:text-white hover:bg-white/5"}`}>
             <svg className={`w-5 h-5 ${activeSection === "quotes" ? "text-[#00B4FF]" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
@@ -843,12 +849,6 @@ export default function AdminPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
             </svg>
             {sidebarOpen && <span className="text-sm font-medium">Project Manager</span>}
-          </button>
-          <button onClick={() => { setActiveSection("workflow"); setSelectedSubmission(null); setSelectedProject(null); setSelectedPosition(null); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeSection === "workflow" ? "bg-[#0055FF]/20 border-l-2 border-[#00B4FF] text-white" : "text-white/50 hover:text-white hover:bg-white/5"}`}>
-            <svg className={`w-5 h-5 ${activeSection === "workflow" ? "text-[#00B4FF]" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
-            </svg>
-            {sidebarOpen && <span className="text-sm font-medium">Team Progress</span>}
           </button>
           <button onClick={() => { setActiveSection("careers"); setSelectedSubmission(null); setSelectedProject(null); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeSection === "careers" ? "bg-[#0055FF]/20 border-l-2 border-[#00B4FF] text-white" : "text-white/50 hover:text-white hover:bg-white/5"}`}>
             <svg className={`w-5 h-5 ${activeSection === "careers" ? "text-[#00B4FF]" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">

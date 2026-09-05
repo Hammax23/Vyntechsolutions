@@ -235,19 +235,33 @@ model StaffUser {
 }
 
 model WorkflowTask {
-  id           String    @id @default(cuid())
-  title        String
-  description  String?
-  status       String    @default("todo") // todo | in_progress | done | blocked
-  priority     String    @default("medium") // low | medium | high
-  workDate     DateTime
-  dueAt        DateTime?
-  createdById  String
-  assignedToId String
-  createdBy    StaffUser @relation("TaskCreator", fields: [createdById], references: [id], onDelete: Restrict)
-  assignedTo   StaffUser @relation("TaskAssignee", fields: [assignedToId], references: [id], onDelete: Restrict)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id              String    @id @default(cuid())
+  title           String
+  description     String?
+  status          String    @default("todo") // todo | in_progress | done | blocked
+  priority        String    @default("medium") // low | medium | high
+  workDate        DateTime
+  dueAt           DateTime?
+  createdById     String
+  assignedToId    String
+  createdBy       StaffUser @relation("TaskCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  assignedTo      StaffUser @relation("TaskAssignee", fields: [assignedToId], references: [id], onDelete: Restrict)
+  /// When the current status segment started
+  statusChangedAt DateTime  @default(now())
+  /// Start of the current To do → Done attempt (resets if reopened from Done)
+  cycleStartedAt  DateTime  @default(now())
+  /// First time the task entered in_progress (this cycle)
+  startedAt       DateTime?
+  /// When the task entered done (cleared if reopened)
+  completedAt     DateTime?
+  /// First time the task entered blocked (this cycle)
+  firstBlockedAt  DateTime?
+  /// Accumulated milliseconds spent in each status this cycle (closed segments only)
+  todoMs          Int       @default(0)
+  inProgressMs    Int       @default(0)
+  blockedMs       Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   @@index([assignedToId, workDate])
   @@index([createdById, workDate])

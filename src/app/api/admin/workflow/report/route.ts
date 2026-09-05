@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { notSystemStaffWhere } from "@/lib/workflow-auth";
-import { dateKey, scoreTasks } from "@/lib/workflow-progress";
+import { dateKey, scoreTasks, computeTaskTiming, formatDuration } from "@/lib/workflow-progress";
 import { daysInResolvedPeriod, resolveProgressPeriod } from "@/lib/admin/workflow-period";
 import { renderWorkflowProgressPdf } from "@/lib/admin/render-workflow-progress-pdf";
 import type {
@@ -67,15 +67,34 @@ export async function POST(request: NextRequest) {
       const list = byDay[key];
       const statuses = list.map((t) => t.status);
       const score = scoreTasks(statuses);
-      const mapped: ProgressReportTask[] = list.map((t) => ({
-        id: t.id,
-        title: t.title,
-        description: (t.description || "").slice(0, 280),
-        status: t.status,
-        priority: t.priority || "medium",
-        workDate: key,
-        createdByName: t.createdBy?.name || "System",
-      }));
+      const mapped: ProgressReportTask[] = list.map((t) => {
+        const timing = computeTaskTiming({
+          status: t.status,
+          statusChangedAt: t.statusChangedAt,
+          cycleStartedAt: t.cycleStartedAt,
+          startedAt: t.startedAt,
+          completedAt: t.completedAt,
+          firstBlockedAt: t.firstBlockedAt,
+          todoMs: t.todoMs,
+          inProgressMs: t.inProgressMs,
+          blockedMs: t.blockedMs,
+          createdAt: t.createdAt,
+        });
+        return {
+          id: t.id,
+          title: t.title,
+          description: (t.description || "").slice(0, 280),
+          status: t.status,
+          priority: t.priority || "medium",
+          workDate: key,
+          createdByName: t.createdBy?.name || "System",
+          activeLabel: formatDuration(timing.activeMs),
+          blockedLabel: formatDuration(timing.blockedTotalMs),
+          elapsedLabel: formatDuration(timing.elapsedMs),
+          toBlockedLabel: timing.timeToBlockedMs != null ? formatDuration(timing.timeToBlockedMs) : null,
+          cycleLabel: timing.cycleMs != null ? formatDuration(timing.cycleMs) : null,
+        };
+      });
       return {
         date: key,
         total: score.total,

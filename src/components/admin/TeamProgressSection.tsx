@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { heatmapTone, isWeekendKey, todayKey } from "@/lib/workflow-progress";
+import { heatmapTone, isWeekendKey, todayKey, formatDuration } from "@/lib/workflow-progress";
 import { useLivePoll } from "@/hooks/useLivePoll";
+import WorkflowApp from "@/components/workflow/WorkflowApp";
 
 type StaffRow = { id: string; name: string; email: string; color: string; role: string };
 type Score = { total: number; done: number; percent: number | null };
@@ -13,6 +14,13 @@ type Task = {
   status: string;
   priority: string;
   createdBy?: { name: string };
+  timing?: {
+    activeMs: number;
+    blockedTotalMs: number;
+    elapsedMs: number;
+    timeToBlockedMs: number | null;
+    cycleMs: number | null;
+  };
 };
 
 function cellClass(percent: number | null) {
@@ -28,7 +36,7 @@ const STATUS_LABEL: Record<string, string> = {
   todo: "To do",
   in_progress: "In progress",
   done: "Done",
-  blocked: "Blocked",
+  blocked: "On hold",
 };
 
 function statusBadge(status: string) {
@@ -68,6 +76,7 @@ export default function TeamProgressSection() {
     teamToday: Score;
   } | null>(null);
   const [selected, setSelected] = useState<{ staffId: string; date: string; name: string } | null>(null);
+  const [previewStaff, setPreviewStaff] = useState<StaffRow | null>(null);
   const [dayTasks, setDayTasks] = useState<Task[]>([]);
   const [toast, setToast] = useState<{ text: string; kind: "success" | "error" | "info" } | null>(null);
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -105,6 +114,7 @@ export default function TeamProgressSection() {
   const selectedRef = useRef(selected);
   const overviewSeq = useRef(0);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const employeePanelRef = useRef<HTMLDivElement | null>(null);
   yearRef.current = year;
   monthRef.current = month;
   selectedRef.current = selected;
@@ -332,6 +342,9 @@ export default function TeamProgressSection() {
     setReportDate(date);
     setReportMode("day");
     await loadDayTasks(staffId, date);
+    requestAnimationFrame(() => {
+      employeePanelRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
   };
 
   const assignTask = async () => {
@@ -428,6 +441,40 @@ export default function TeamProgressSection() {
     () => Array.from({ length: days }, (_, i) => `${year}-${String(month).padStart(2, "0")}-${String(i + 1).padStart(2, "0")}`),
     [year, month, days]
   );
+
+  const openEmployee = (staffId: string, name: string) => {
+    const fromOverview = overview?.staff.find((s) => s.id === staffId);
+    const fromList = staffList.find((s) => s.id === staffId);
+    const row = fromOverview || (fromList
+      ? {
+          id: fromList.id,
+          name: fromList.name,
+          email: fromList.email,
+          color: fromList.color,
+          role: fromList.role,
+        }
+      : null);
+    if (!row) {
+      showToast("Employee not found", "error");
+      return;
+    }
+    setReportStaffId(staffId);
+    setPreviewStaff(row);
+  };
+
+  useEffect(() => {
+    if (!previewStaff) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPreviewStaff(null);
+    };
+    window.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [previewStaff]);
 
   const input =
     "w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm placeholder-white/30 outline-none focus:border-[#00B4FF]/50";
@@ -588,6 +635,226 @@ export default function TeamProgressSection() {
         ) : null}
       </div>
 
+      <div className="bg-white/[0.03] border border-white/10 rounded-xl overflow-hidden">
+        <div className="p-4 border-b border-white/10 flex items-center justify-between gap-3">
+          <div>
+            <h3 className="text-white font-semibold text-sm">Team calendar</h3>
+            <p className="text-white/35 text-xs">
+              Click an employee name for their full Daily Progress panel, or a day cell for that date
+            </p>
+          </div>
+          <div className="flex items-center gap-2 flex-wrap justify-end">
+            <button
+              type="button"
+              disabled={exporting || !reportStaffId}
+              title={!reportStaffId ? "Select an employee in Export progress report" : "Export full month PDF"}
+              onClick={() => void exportProgressPdf({ mode: "month", staffId: reportStaffId, year, month })}
+              className="px-2.5 py-1 rounded-lg border border-white/15 text-[11px] text-white/75 hover:bg-white/5 disabled:opacity-40"
+            >
+              {exporting ? "PDF…" : "Month PDF"}
+            </button>
+            <button onClick={() => shiftMonth(-1)} className="px-2 py-1 bg-white/5 rounded-lg text-white/70">
+              ‹
+            </button>
+            <span className="text-sm text-white min-w-[140px] text-center">
+              {new Date(year, month - 1, 1).toLocaleString("en-CA", { month: "long", year: "numeric" })}
+            </span>
+            <button onClick={() => shiftMonth(1)} className="px-2 py-1 bg-white/5 rounded-lg text-white/70">
+              ›
+            </button>
+          </div>
+        </div>
+        <div className="overflow-auto max-h-[min(420px,55vh)]">
+          <table className="min-w-full text-xs">
+            <thead className="sticky top-0 z-10">
+              <tr>
+                <th className="sticky left-0 z-20 bg-[#0a0a1a] text-left text-white/40 font-medium px-3 py-2 min-w-[140px]">
+                  Employee
+                </th>
+                {dayKeys.map((k) => (
+                  <th key={k} className="bg-[#0a0a1a] text-white/30 font-normal px-0.5 py-2 w-7">
+                    {Number(k.slice(8))}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {(overview?.staff || []).map((s) => (
+                <tr key={s.id} className="border-t border-white/5">
+                  <td className="sticky left-0 bg-[#0a0a1a] px-3 py-1.5">
+                    <button
+                      type="button"
+                      title={`Open ${s.name}'s Daily Progress panel`}
+                      onClick={() => openEmployee(s.id, s.name)}
+                      className={`flex items-center gap-2 max-w-[150px] text-left rounded-md px-1.5 py-1 -mx-1.5 transition-colors hover:bg-white/10 ${
+                        previewStaff?.id === s.id || selected?.staffId === s.id
+                          ? "bg-white/10 ring-1 ring-[#0055FF]/50"
+                          : ""
+                      }`}
+                    >
+                      <span className="w-2 h-2 rounded-full shrink-0" style={{ background: s.color }} />
+                      <span
+                        className={`truncate text-sm font-medium ${
+                          previewStaff?.id === s.id || selected?.staffId === s.id ? "text-[#00B4FF]" : "text-white"
+                        }`}
+                      >
+                        {s.name}
+                      </span>
+                    </button>
+                  </td>
+                  {dayKeys.map((k) => {
+                    const cell = overview?.grid[s.id]?.[k];
+                    return (
+                      <td key={k} className="p-0.5">
+                        <button
+                          type="button"
+                          title={`${s.name} ${k}${cell?.percent != null ? `, ${cell.percent}%` : ""}`}
+                          onClick={() => openDay(s.id, k, s.name)}
+                          className={`block w-6 h-6 mx-auto rounded-sm ${cellClass(cell?.percent ?? null)} ${
+                            selected?.staffId === s.id && selected.date === k ? "ring-1 ring-white" : ""
+                          } ${isWeekendKey(k) ? "opacity-60" : ""}`}
+                        />
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+              {!overview?.staff.length ? (
+                <tr>
+                  <td colSpan={days + 1} className="px-3 py-8 text-center text-white/40">
+                    Add employees below. They sign in at /workflow.
+                  </td>
+                </tr>
+              ) : null}
+            </tbody>
+          </table>
+        </div>
+        <div className="px-4 py-3 border-t border-white/10 flex flex-wrap gap-3 text-[11px] text-white/40">
+          <span className="flex items-center gap-1.5">
+            <i className="w-3 h-3 rounded-sm bg-white/[0.04] inline-block" /> Empty
+          </span>
+          <span className="flex items-center gap-1.5">
+            <i className="w-3 h-3 rounded-sm bg-white/15 inline-block" /> 0%
+          </span>
+          <span className="flex items-center gap-1.5">
+            <i className="w-3 h-3 rounded-sm bg-amber-500/45 inline-block" /> 1–49%
+          </span>
+          <span className="flex items-center gap-1.5">
+            <i className="w-3 h-3 rounded-sm bg-[#0055FF]/55 inline-block" /> 50–99%
+          </span>
+          <span className="flex items-center gap-1.5">
+            <i className="w-3 h-3 rounded-sm bg-emerald-500/55 inline-block" /> 100%
+          </span>
+        </div>
+      </div>
+
+      {selected ? (
+        <div
+          ref={employeePanelRef}
+          className="bg-white/[0.03] border border-white/10 rounded-xl p-4"
+        >
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <div>
+              <p className="text-white/40 text-[11px] uppercase tracking-wide">Day tasks</p>
+              <h3 className="text-white font-semibold text-sm mt-0.5">
+                {selected.name}
+              </h3>
+              <p className="text-white/45 text-xs mt-0.5">{selected.date}</p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <input
+                type="date"
+                className="bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5 text-white text-xs outline-none focus:border-[#00B4FF]/50"
+                value={selected.date}
+                onChange={(e) => {
+                  if (e.target.value) void openDay(selected.staffId, e.target.value, selected.name);
+                }}
+              />
+              <button
+                type="button"
+                disabled={exporting}
+                onClick={() =>
+                  void exportProgressPdf({
+                    mode: "day",
+                    staffId: selected.staffId,
+                    date: selected.date,
+                  })
+                }
+                className="px-3 py-1.5 rounded-lg bg-[#0055FF] text-white text-xs font-medium disabled:opacity-50"
+              >
+                {exporting ? "Generating…" : "Export day PDF"}
+              </button>
+            </div>
+          </div>
+          {dayTasks.length === 0 ? (
+            <p className="text-white/40 text-sm">No tasks this day.</p>
+          ) : (
+            <ul className="space-y-2 max-h-[min(360px,50vh)] overflow-y-auto overscroll-contain pr-1">
+              {dayTasks.map((t) => (
+                <li
+                  key={t.id}
+                  className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 bg-white/[0.03] border border-white/10 rounded-xl px-3.5 py-3"
+                >
+                  <div className="min-w-0 flex-1 space-y-1.5">
+                    <p className="text-white text-sm font-medium leading-snug break-words">{t.title}</p>
+                    {t.description ? (
+                      <p className="text-white/45 text-xs leading-relaxed line-clamp-2 break-words">{t.description}</p>
+                    ) : null}
+                    {t.createdBy ? <p className="text-white/35 text-[11px]">from {t.createdBy.name}</p> : null}
+                    {t.timing ? (
+                      <div className="pt-0.5">
+                        <p className="text-white/35 text-[10px] font-medium uppercase tracking-wide mb-1.5">
+                          Time on this task
+                        </p>
+                        <div className="grid grid-cols-3 gap-1.5 max-w-md">
+                          <div className="admin-timing-meter admin-timing-meter--total rounded-lg border px-2.5 py-2">
+                            <p className="admin-timing-meter__label text-[9px] uppercase tracking-wide font-semibold">
+                              To do → Done
+                            </p>
+                            <p className="admin-timing-meter__value text-sm font-bold tabular-nums mt-0.5">
+                              {formatDuration(t.timing.elapsedMs)}
+                            </p>
+                          </div>
+                          <div className="admin-timing-meter admin-timing-meter--work rounded-lg border px-2.5 py-2">
+                            <p className="admin-timing-meter__label text-[9px] uppercase tracking-wide font-semibold">
+                              In progress
+                            </p>
+                            <p className="admin-timing-meter__value text-sm font-bold tabular-nums mt-0.5">
+                              {formatDuration(t.timing.activeMs)}
+                            </p>
+                          </div>
+                          <div className="admin-timing-meter admin-timing-meter--hold rounded-lg border px-2.5 py-2">
+                            <p className="admin-timing-meter__label text-[9px] uppercase tracking-wide font-semibold">
+                              On hold
+                            </p>
+                            <p className="admin-timing-meter__value text-sm font-bold tabular-nums mt-0.5">
+                              {formatDuration(t.timing.blockedTotalMs)}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
+                  <div className="flex flex-wrap sm:flex-col sm:items-end gap-1.5 shrink-0">
+                    <span
+                      className={`admin-status-chip inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-md border ${statusBadge(t.status)}`}
+                    >
+                      <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${statusDot(t.status)}`} />
+                      {STATUS_LABEL[t.status] || t.status.replace("_", " ")}
+                    </span>
+                    <span
+                      className={`admin-priority-chip inline-flex text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-md border ${priorityBadge(t.priority)}`}
+                    >
+                      {t.priority || "medium"}
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ) : null}
+
       <div className="bg-white/[0.03] border border-white/10 rounded-xl p-4 space-y-3">
         <div>
           <h3 className="text-white font-semibold text-sm">Export progress report</h3>
@@ -711,181 +978,6 @@ export default function TeamProgressSection() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white/[0.03] border border-white/10 rounded-xl p-4">
-          <p className="text-white/40 text-xs">Team today</p>
-          <p className="text-2xl font-bold text-[#00E1FF] mt-1">
-            {overview?.teamToday.percent == null ? "N/A" : `${overview.teamToday.percent}%`}
-          </p>
-          <p className="text-white/35 text-xs mt-1">
-            {overview?.teamToday.done || 0}/{overview?.teamToday.total || 0} tasks done
-          </p>
-        </div>
-        <div className="bg-white/[0.03] border border-white/10 rounded-xl p-4">
-          <p className="text-white/40 text-xs">Active staff</p>
-          <p className="text-2xl font-bold text-white mt-1">{overview?.staff.length || 0}</p>
-        </div>
-        <div className="bg-white/[0.03] border border-white/10 rounded-xl p-4 col-span-2">
-          <p className="text-white/40 text-xs mb-2">No tasks today</p>
-          <p className="text-sm text-white/70">
-            {(overview?.todayStrip.filter((s) => s.idle).map((s) => s.name) || []).join(", ") || "Everyone has work logged"}
-          </p>
-        </div>
-      </div>
-
-      <div className="bg-white/[0.03] border border-white/10 rounded-xl overflow-hidden">
-        <div className="p-4 border-b border-white/10 flex items-center justify-between gap-3">
-          <div>
-            <h3 className="text-white font-semibold text-sm">Team calendar</h3>
-            <p className="text-white/35 text-xs">One glance, click a cell for that day’s tasks</p>
-          </div>
-          <div className="flex items-center gap-2 flex-wrap justify-end">
-            <button
-              type="button"
-              disabled={exporting || !reportStaffId}
-              title={!reportStaffId ? "Select an employee in Export progress report" : "Export full month PDF"}
-              onClick={() => void exportProgressPdf({ mode: "month", staffId: reportStaffId, year, month })}
-              className="px-2.5 py-1 rounded-lg border border-white/15 text-[11px] text-white/75 hover:bg-white/5 disabled:opacity-40"
-            >
-              {exporting ? "PDF…" : "Month PDF"}
-            </button>
-            <button onClick={() => shiftMonth(-1)} className="px-2 py-1 bg-white/5 rounded-lg text-white/70">
-              ‹
-            </button>
-            <span className="text-sm text-white min-w-[140px] text-center">
-              {new Date(year, month - 1, 1).toLocaleString("en-CA", { month: "long", year: "numeric" })}
-            </span>
-            <button onClick={() => shiftMonth(1)} className="px-2 py-1 bg-white/5 rounded-lg text-white/70">
-              ›
-            </button>
-          </div>
-        </div>
-        <div className="overflow-auto max-h-[min(420px,55vh)]">
-          <table className="min-w-full text-xs">
-            <thead className="sticky top-0 z-10">
-              <tr>
-                <th className="sticky left-0 z-20 bg-[#0a0a1a] text-left text-white/40 font-medium px-3 py-2 min-w-[140px]">
-                  Employee
-                </th>
-                {dayKeys.map((k) => (
-                  <th key={k} className="bg-[#0a0a1a] text-white/30 font-normal px-0.5 py-2 w-7">
-                    {Number(k.slice(8))}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {(overview?.staff || []).map((s) => (
-                <tr key={s.id} className="border-t border-white/5">
-                  <td className="sticky left-0 bg-[#0a0a1a] px-3 py-1.5">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full shrink-0" style={{ background: s.color }} />
-                      <span className="text-white truncate max-w-[120px]">{s.name}</span>
-                    </div>
-                  </td>
-                  {dayKeys.map((k) => {
-                    const cell = overview?.grid[s.id]?.[k];
-                    return (
-                      <td key={k} className="p-0.5">
-                        <button
-                          type="button"
-                          title={`${s.name} ${k}${cell?.percent != null ? `, ${cell.percent}%` : ""}`}
-                          onClick={() => openDay(s.id, k, s.name)}
-                          className={`block w-6 h-6 mx-auto rounded-sm ${cellClass(cell?.percent ?? null)} ${
-                            selected?.staffId === s.id && selected.date === k ? "ring-1 ring-white" : ""
-                          } ${isWeekendKey(k) ? "opacity-60" : ""}`}
-                        />
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-              {!overview?.staff.length ? (
-                <tr>
-                  <td colSpan={days + 1} className="px-3 py-8 text-center text-white/40">
-                    Add employees below. They sign in at /workflow.
-                  </td>
-                </tr>
-              ) : null}
-            </tbody>
-          </table>
-        </div>
-        <div className="px-4 py-3 border-t border-white/10 flex flex-wrap gap-3 text-[11px] text-white/40">
-          <span className="flex items-center gap-1.5">
-            <i className="w-3 h-3 rounded-sm bg-white/[0.04] inline-block" /> Empty
-          </span>
-          <span className="flex items-center gap-1.5">
-            <i className="w-3 h-3 rounded-sm bg-white/15 inline-block" /> 0%
-          </span>
-          <span className="flex items-center gap-1.5">
-            <i className="w-3 h-3 rounded-sm bg-amber-500/45 inline-block" /> 1–49%
-          </span>
-          <span className="flex items-center gap-1.5">
-            <i className="w-3 h-3 rounded-sm bg-[#0055FF]/55 inline-block" /> 50–99%
-          </span>
-          <span className="flex items-center gap-1.5">
-            <i className="w-3 h-3 rounded-sm bg-emerald-500/55 inline-block" /> 100%
-          </span>
-        </div>
-      </div>
-
-      {selected ? (
-        <div className="bg-white/[0.03] border border-white/10 rounded-xl p-4">
-          <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-            <h3 className="text-white font-semibold text-sm">
-              {selected.name}, {selected.date}
-            </h3>
-            <button
-              type="button"
-              disabled={exporting}
-              onClick={() =>
-                void exportProgressPdf({
-                  mode: "day",
-                  staffId: selected.staffId,
-                  date: selected.date,
-                })
-              }
-              className="px-3 py-1.5 rounded-lg bg-[#0055FF] text-white text-xs font-medium disabled:opacity-50"
-            >
-              {exporting ? "Generating…" : "Export day PDF"}
-            </button>
-          </div>
-          {dayTasks.length === 0 ? (
-            <p className="text-white/40 text-sm">No tasks this day.</p>
-          ) : (
-            <ul className="space-y-2 max-h-[min(360px,50vh)] overflow-y-auto overscroll-contain pr-1">
-              {dayTasks.map((t) => (
-                <li
-                  key={t.id}
-                  className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 bg-white/[0.03] border border-white/10 rounded-xl px-3.5 py-3"
-                >
-                  <div className="min-w-0 flex-1 space-y-1.5">
-                    <p className="text-white text-sm font-medium leading-snug break-words">{t.title}</p>
-                    {t.description ? (
-                      <p className="text-white/45 text-xs leading-relaxed line-clamp-2 break-words">{t.description}</p>
-                    ) : null}
-                    {t.createdBy ? <p className="text-white/35 text-[11px]">from {t.createdBy.name}</p> : null}
-                  </div>
-                  <div className="flex flex-wrap sm:flex-col sm:items-end gap-1.5 shrink-0">
-                    <span
-                      className={`admin-status-chip inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-md border ${statusBadge(t.status)}`}
-                    >
-                      <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${statusDot(t.status)}`} />
-                      {STATUS_LABEL[t.status] || t.status.replace("_", " ")}
-                    </span>
-                    <span
-                      className={`admin-priority-chip inline-flex text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-md border ${priorityBadge(t.priority)}`}
-                    >
-                      {t.priority || "medium"}
-                    </span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      ) : null}
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white/[0.03] border border-white/10 rounded-xl p-4 space-y-3">
           <h3 className="text-white font-semibold text-sm">Add employee</h3>
@@ -941,6 +1033,15 @@ export default function TeamProgressSection() {
                     <p className="text-white/40 text-xs">{s.email}</p>
                   </div>
                   <div className="flex gap-1.5">
+                    {s.isActive ? (
+                      <button
+                        type="button"
+                        onClick={() => openEmployee(s.id, s.name)}
+                        className="text-[10px] px-2 py-1 rounded bg-[#0055FF]/25 text-[#7dd3fc]"
+                      >
+                        View board
+                      </button>
+                    ) : null}
                     <button
                       type="button"
                       onClick={() => {
@@ -1178,6 +1279,30 @@ export default function TeamProgressSection() {
           </div>
         ) : null}
       </div>
+
+      {previewStaff ? (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4">
+          <button
+            type="button"
+            aria-label="Close employee panel"
+            className="absolute inset-0 bg-black/55 backdrop-blur-[2px]"
+            onClick={() => setPreviewStaff(null)}
+          />
+          <div className="relative z-10 w-full max-w-[1400px] h-[min(94vh,920px)] rounded-2xl overflow-hidden border border-white/15 shadow-2xl">
+            <WorkflowApp
+              user={{
+                id: previewStaff.id,
+                name: previewStaff.name,
+                email: previewStaff.email,
+                role: previewStaff.role,
+                color: previewStaff.color,
+              }}
+              mode="admin-preview"
+              onClose={() => setPreviewStaff(null)}
+            />
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

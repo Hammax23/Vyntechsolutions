@@ -65,6 +65,10 @@
   color: #1e293b !important;
 }
 
+[data-admin-theme="light"] .text-white\/90 {
+  color: #0f172a !important;
+}
+
 [data-admin-theme="light"] .text-white\/70,
 [data-admin-theme="light"] .text-white\/60 {
   color: #334155 !important;
@@ -209,6 +213,85 @@
 [data-admin-theme="light"] .admin-status-chip span,
 [data-admin-theme="light"] .admin-priority-chip span {
   color: inherit !important;
+}
+
+/* Timing meters — readable on light + dark */
+.admin-timing-meter--total {
+  background-color: rgba(148, 163, 184, 0.12);
+  border-color: rgba(148, 163, 184, 0.35);
+}
+
+.admin-timing-meter--total .admin-timing-meter__label {
+  color: rgba(226, 232, 240, 0.75);
+}
+
+.admin-timing-meter--total .admin-timing-meter__value {
+  color: #f8fafc;
+}
+
+.admin-timing-meter--work {
+  background-color: rgba(14, 165, 233, 0.14);
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.admin-timing-meter--work .admin-timing-meter__label {
+  color: #7dd3fc;
+}
+
+.admin-timing-meter--work .admin-timing-meter__value {
+  color: #e0f2fe;
+}
+
+.admin-timing-meter--hold {
+  background-color: rgba(245, 158, 11, 0.14);
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+.admin-timing-meter--hold .admin-timing-meter__label {
+  color: #fbbf24;
+}
+
+.admin-timing-meter--hold .admin-timing-meter__value {
+  color: #fde68a;
+}
+
+[data-admin-theme="light"] .admin-timing-meter--total {
+  background-color: #e2e8f0 !important;
+  border-color: #94a3b8 !important;
+}
+
+[data-admin-theme="light"] .admin-timing-meter--total .admin-timing-meter__label {
+  color: #475569 !important;
+}
+
+[data-admin-theme="light"] .admin-timing-meter--total .admin-timing-meter__value {
+  color: #0f172a !important;
+}
+
+[data-admin-theme="light"] .admin-timing-meter--work {
+  background-color: #e0f2fe !important;
+  border-color: #38bdf8 !important;
+}
+
+[data-admin-theme="light"] .admin-timing-meter--work .admin-timing-meter__label {
+  color: #0369a1 !important;
+}
+
+[data-admin-theme="light"] .admin-timing-meter--work .admin-timing-meter__value {
+  color: #0c4a6e !important;
+}
+
+[data-admin-theme="light"] .admin-timing-meter--hold {
+  background-color: #ffedd5 !important;
+  border-color: #fb923c !important;
+}
+
+[data-admin-theme="light"] .admin-timing-meter--hold .admin-timing-meter__label {
+  color: #9a3412 !important;
+}
+
+[data-admin-theme="light"] .admin-timing-meter--hold .admin-timing-meter__value {
+  color: #7c2d12 !important;
 }
 
 /* Floating toast — slides in from right */
