@@ -2,7 +2,7 @@
 
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import VynTechLogo from "@/components/VynTechLogo";
-import { heatmapTone, isWeekendKey, todayKey, formatDuration, computeTaskTiming } from "@/lib/workflow-progress";
+import { heatmapTone, isWeekendKey, todayKey, formatDuration, computeTaskTiming, type TaskTimingSummary } from "@/lib/workflow-progress";
 import { useWorkflowTheme, workflowUi } from "@/components/workflow/workflow-theme";
 import { useLivePoll } from "@/hooks/useLivePoll";
 
@@ -25,17 +25,7 @@ type WTask = {
   todoMs?: number;
   inProgressMs?: number;
   blockedMs?: number;
-  timing?: {
-    todoMs: number;
-    inProgressMs: number;
-    blockedMs: number;
-    activeMs: number;
-    blockedTotalMs: number;
-    currentSegmentMs: number;
-    elapsedMs: number;
-    timeToBlockedMs: number | null;
-    cycleMs: number | null;
-  };
+  timing?: TaskTimingSummary;
   createdBy?: { id: string; name: string; color: string };
   assignedTo?: { id: string; name: string; color: string };
 };
@@ -239,7 +229,7 @@ const TaskCard = memo(function TaskCard({
               label="To do → Done"
               value={formatDuration(timing.elapsedMs)}
               hint={
-                timing.completedAt
+                timing.completedAt || t.status === "done"
                   ? "Total time from To do until Done"
                   : "Running time from To do until Done"
               }
