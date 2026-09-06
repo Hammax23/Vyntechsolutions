@@ -17,6 +17,7 @@ type WAttachment = {
   createdAt: string;
   uploadedBy?: { id: string; name: string } | null;
 };
+type PendingFile = { id: string; file: File; previewUrl: string | null };
 type WTask = {
   id: string;
   title: string;
@@ -503,8 +504,9 @@ export default function WorkflowApp({
     priority: "medium",
     assignedToId: user.id,
   });
-  const [pendingFiles, setPendingFiles] = useState<File[]>([]);
+  const [pendingFiles, setPendingFiles] = useState<PendingFile[]>([]);
   const createFileRef = useRef<HTMLInputElement>(null);
+  const pendingFilesRef = useRef<PendingFile[]>([]);
   const stampRef = useRef("");
   const dateRef = useRef(date);
   const cursorRef = useRef(cursor);
@@ -512,9 +514,6 @@ export default function WorkflowApp({
   const calSeq = useRef(0);
   const knownInboxIds = useRef<Set<string> | null>(null);
   const tabRef = useRef(tab);
-  dateRef.current = date;
-  cursorRef.current = cursor;
-  tabRef.current = tab;
   const [inboxPulse, setInboxPulse] = useState(false);
   const seenStorageKey = `vyntech-workflow-inbox-seen:${user.id}`;
   const [seenInboxIds, setSeenInboxIds] = useState<Set<string>>(() => {
@@ -528,6 +527,53 @@ export default function WorkflowApp({
       return new Set();
     }
   });
+  pendingFilesRef.current = pendingFiles;
+  dateRef.current = date;
+  cursorRef.current = cursor;
+  tabRef.current = tab;
+
+  useEffect(() => {
+    return () => {
+      for (const item of pendingFilesRef.current) {
+        if (item.previewUrl) URL.revokeObjectURL(item.previewUrl);
+      }
+    };
+  }, []);
+
+  const clearPendingFiles = () => {
+    for (const item of pendingFilesRef.current) {
+      if (item.previewUrl) URL.revokeObjectURL(item.previewUrl);
+    }
+    setPendingFiles([]);
+    if (createFileRef.current) createFileRef.current.value = "";
+  };
+
+  const addPendingFiles = (list: FileList | File[]) => {
+    const incoming = Array.from(list);
+    if (!incoming.length) return;
+    setPendingFiles((prev) => {
+      const room = Math.max(0, MAX_ATTACHMENTS_PER_TASK - prev.length);
+      const next = incoming.slice(0, room).map((file) => ({
+        id: `${file.name}-${file.size}-${file.lastModified}-${Math.random().toString(36).slice(2, 8)}`,
+        file,
+        previewUrl: file.type.startsWith("image/") ? URL.createObjectURL(file) : null,
+      }));
+      return [...prev, ...next];
+    });
+  };
+
+  const removePendingFile = (id: string) => {
+    setPendingFiles((prev) => {
+      const target = prev.find((p) => p.id === id);
+      if (target?.previewUrl) URL.revokeObjectURL(target.previewUrl);
+      return prev.filter((p) => p.id !== id);
+    });
+  };
+
+  const fileExtLabel = (name: string) => {
+    const ext = name.includes(".") ? name.split(".").pop()!.toUpperCase() : "FILE";
+    return ext.slice(0, 5);
+  };
 
   const unreadCount = useMemo(
     () => inbox.filter((t) => !seenInboxIds.has(t.id)).length,
@@ -731,9 +777,9 @@ export default function WorkflowApp({
       titleRef.current?.focus();
       return;
     }
-    for (const file of pendingFiles) {
-      if (file.size > MAX_ATTACHMENT_BYTES) {
-        setMessage(`“${file.name}” is larger than 25 MB`);
+    for (const item of pendingFiles) {
+      if (item.file.size > MAX_ATTACHMENT_BYTES) {
+        setMessage(`“${item.file.name}” is larger than 25 MB`);
         return;
       }
     }
@@ -752,7 +798,7 @@ export default function WorkflowApp({
         fd.append("priority", form.priority);
         fd.append("assignedToId", form.assignedToId);
         fd.append("workDate", date);
-        for (const file of pendingFiles) fd.append("files", file);
+        for (const item of pendingFiles) fd.append("files", item.file);
         res = await fetch("/api/workflow/tasks", { method: "POST", body: fd });
       } else {
         res = await fetch("/api/workflow/tasks", {
@@ -774,8 +820,7 @@ export default function WorkflowApp({
         }
       }
       setForm({ title: "", description: "", priority: "medium", assignedToId: user.id });
-      setPendingFiles([]);
-      if (createFileRef.current) createFileRef.current.value = "";
+      clearPendingFiles();
       const ok = await refreshAll();
       if (ok) stampRef.current = "";
       const attached = task?.attachments?.length || 0;
@@ -1310,47 +1355,82 @@ export default function WorkflowApp({
           <p className={`text-[11px] ${ui.faint}`}>Saves on the selected calendar day. Assigned teammates see it in Inbox live.</p>
           <div>
             <div className="flex items-center justify-between gap-2 mb-1.5">
-              <label className={`block ${ui.muted} text-xs`}>Attachments</label>
-              <button
-                type="button"
-                onClick={() => createFileRef.current?.click()}
-                className="text-[10px] text-[#0055FF] hover:underline"
-              >
+              <label className={`block ${ui.muted} text-xs`}>
+                Attachments
+                {pendingFiles.length > 0 ? (
+                  <span className="ml-1 text-[#0055FF] font-medium">· {pendingFiles.length}</span>
+                ) : null}
+              </label>
+              {pendingFiles.length > 0 ? (
+                <button
+                  type="button"
+                  onClick={clearPendingFiles}
+                  className={`text-[10px] ${ui.faint} hover:text-red-500`}
+                >
+                  Clear all
+                </button>
+              ) : null}
+            </div>
+            <div className="flex flex-wrap items-center gap-2 mb-2">
+              <label className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-[11px] cursor-pointer transition-colors ${
+                isDark
+                  ? "border-white/15 bg-white/[0.04] text-white/80 hover:bg-white/[0.07]"
+                  : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100"
+              }`}>
+                <svg className="w-3.5 h-3.5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                </svg>
                 Add files
-              </button>
-              <input
-                ref={createFileRef}
-                type="file"
-                multiple
-                className="hidden"
-                onChange={(e) => {
-                  const list = e.target.files;
-                  if (!list?.length) return;
-                  setPendingFiles((prev) => {
-                    const next = [...prev, ...Array.from(list)].slice(0, MAX_ATTACHMENTS_PER_TASK);
-                    return next;
-                  });
-                  e.target.value = "";
-                }}
-              />
+                <input
+                  ref={createFileRef}
+                  type="file"
+                  multiple
+                  className="sr-only"
+                  onChange={(e) => {
+                    const list = e.target.files;
+                    if (list?.length) addPendingFiles(list);
+                    e.target.value = "";
+                  }}
+                />
+              </label>
+              <span className={`text-[10px] ${ui.faint}`}>Max 25 MB each · any type</span>
             </div>
             {pendingFiles.length > 0 ? (
-              <ul className="space-y-1 mb-2">
-                {pendingFiles.map((f, i) => (
+              <ul className="space-y-1.5 mb-2">
+                {pendingFiles.map((item) => (
                   <li
-                    key={`${f.name}-${i}`}
-                    className={`flex items-center gap-2 rounded-lg border px-2 py-1.5 text-[11px] ${
+                    key={item.id}
+                    className={`flex items-center gap-2.5 rounded-lg border pl-1.5 pr-2 py-1.5 ${
                       isDark ? "border-white/10 bg-white/[0.03]" : "border-slate-200 bg-slate-50"
                     }`}
                   >
-                    <span className="truncate flex-1 min-w-0">{f.name}</span>
-                    <span className={`shrink-0 ${ui.faint}`}>{formatFileSize(f.size)}</span>
+                    <div
+                      className={`w-10 h-10 shrink-0 rounded-md overflow-hidden flex items-center justify-center border ${
+                        isDark ? "border-white/10 bg-white/[0.06]" : "border-slate-200 bg-white"
+                      }`}
+                    >
+                      {item.previewUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={item.previewUrl} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-[9px] font-semibold text-[#0055FF]">{fileExtLabel(item.file.name)}</span>
+                      )}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[11px] truncate leading-snug" title={item.file.name}>
+                        {item.file.name}
+                      </p>
+                      <p className={`text-[10px] tabular-nums mt-0.5 ${ui.faint}`}>{formatFileSize(item.file.size)}</p>
+                    </div>
                     <button
                       type="button"
-                      className="text-red-500/80 hover:underline shrink-0"
-                      onClick={() => setPendingFiles((prev) => prev.filter((_, idx) => idx !== i))}
+                      aria-label={`Remove ${item.file.name}`}
+                      onClick={() => removePendingFile(item.id)}
+                      className={`shrink-0 w-7 h-7 rounded-md flex items-center justify-center ${ui.faint} hover:text-red-500 hover:bg-red-500/10`}
                     >
-                      Remove
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
                     </button>
                   </li>
                 ))}
