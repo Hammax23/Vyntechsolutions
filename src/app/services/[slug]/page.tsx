@@ -3017,7 +3017,21 @@ export default function ServicePage() {
 
         {/* Mobile Services Interactive Tab Section (What We Offer for Mobile App Development page) */}
         {(() => {
-          const cms = (service as ServiceData & { mobileTabsBlock?: NonNullable<ServicePageSections["mobileTabs"]> & { tabs?: Array<{ tabId?: string; id?: string; name: string; highlightText?: string; title: string; description?: string; points?: Array<{ title: string; text?: string }> }> } }).mobileTabsBlock;
+          type MobileTabCms = {
+            eyebrow?: string;
+            heading?: string;
+            description?: string;
+            tabs?: Array<{
+              tabId?: string;
+              id?: string;
+              name: string;
+              highlightText?: string;
+              title: string;
+              description?: string;
+              points?: Array<{ title: string; text?: string }>;
+            }>;
+          };
+          const cms = (service as ServiceData & { mobileTabsBlock?: MobileTabCms }).mobileTabsBlock;
           const data = cms?.tabs?.length
             ? {
                 eyebrow: cms.eyebrow,
@@ -3291,7 +3305,12 @@ export default function ServicePage() {
 
         {/* What's Included Section (ONLY for Cloud Solutions Service Page, directly after Process section) */}
         {(() => {
-          const cms = (service as ServiceData & { cloudIncludedBlock?: NonNullable<ServicePageSections["cloudIncluded"]> & { items?: Array<{ id?: string; itemId?: string; title: string; description?: string; points?: string[] }> } }).cloudIncludedBlock;
+          type CloudCms = {
+            heading?: string;
+            description?: string;
+            items?: Array<{ id?: string; itemId?: string; title: string; description?: string; points?: string[] }>;
+          };
+          const cms = (service as ServiceData & { cloudIncludedBlock?: CloudCms }).cloudIncludedBlock;
           const hasCms = cms?.items?.length;
           const data = hasCms
             ? {
@@ -3310,7 +3329,13 @@ export default function ServicePage() {
 
         {/* Enterprise AI/ML Capabilities Grid (ONLY for AI/ML Solutions Service Page, directly after Process section) */}
         {(() => {
-          const cms = (service as ServiceData & { aiMlGridBlock?: NonNullable<ServicePageSections["aiMlGrid"]> & { items?: Array<{ id?: string; itemId?: string; title: string; description?: string }> } }).aiMlGridBlock;
+          type AiMlCms = {
+            eyebrow?: string;
+            heading?: string;
+            intro?: string[];
+            items?: Array<{ id?: string; itemId?: string; title: string; description?: string }>;
+          };
+          const cms = (service as ServiceData & { aiMlGridBlock?: AiMlCms }).aiMlGridBlock;
           const hasCms = cms?.items?.length;
           const data = hasCms
             ? {

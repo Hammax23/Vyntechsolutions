@@ -143,23 +143,20 @@ export default function OurServices() {
         if (hp.servicesBody) setBody(String(hp.servicesBody));
         if (hp.servicesLearnMoreLabel) setLearnMoreLabel(String(hp.servicesLearnMoreLabel));
         // Prefer editor-controlled list from Strapi homepage
-        const cmsCards = Array.isArray(hp.serviceCards) ? hp.serviceCards : null;
+        const cmsCards = Array.isArray(hp.serviceCards)
+          ? (hp.serviceCards as Array<{ title?: string; description?: string; href?: string; art?: string }>)
+          : null;
         if (cmsCards && cmsCards.length) {
           setCards(
-            cmsCards
-              .filter(
-                (c: unknown): c is { title?: string; description?: string; href?: string; art?: string } =>
-                  typeof c === "object" && c !== null
-              )
-              .map((c, i) => {
-                const fallback = serviceCards[i % serviceCards.length];
-                return {
-                  title: withoutWordDash(String(c.title || fallback.title)),
-                  description: withoutWordDash(String(c.description || fallback.description)),
-                  href: String(c.href || fallback.href),
-                  art: String(c.art || fallback.art),
-                };
-              })
+            cmsCards.map((c, i) => {
+              const fallback = serviceCards[i % serviceCards.length];
+              return {
+                title: withoutWordDash(String(c.title || fallback.title)),
+                description: withoutWordDash(String(c.description || fallback.description)),
+                href: String(c.href || fallback.href),
+                art: String(c.art || fallback.art),
+              };
+            })
           );
         }
       })
