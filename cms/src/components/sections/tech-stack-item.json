@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_sections_tech_stack_items",
+  "info": {
+    "displayName": "Tech Stack Item",
+    "icon": "brush"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "logo": {
+      "type": "string"
+    }
+  }
+}

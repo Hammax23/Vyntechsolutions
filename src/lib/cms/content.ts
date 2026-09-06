@@ -25,6 +25,13 @@ const SERVICE_POPULATE: Record<string, string> = {
   "populate[devopsGridBlock][populate][items]": "true",
   "populate[ecommerceServicesBlock][populate][items]": "true",
   "populate[uiuxEngagementsBlock][populate][items]": "true",
+  "populate[mobileTabsBlock][populate][tabs][populate][points]": "true",
+  "populate[techStackBlock][populate][categories][populate][items]": "true",
+  "populate[localSeoBlock][populate][stats]": "true",
+  "populate[canadaCitiesBlock]": "true",
+  "populate[cityHero]": "true",
+  "populate[engagementStrategies]": "true",
+  "populate[cityFaqs]": "true",
   ...SEO_POPULATE,
 };
 
@@ -201,6 +208,86 @@ export type CmsService = {
     heading?: string;
     items?: Array<{ title: string; description?: string }>;
   };
+  mobileTabsBlock?: {
+    eyebrow?: string;
+    heading?: string;
+    description?: string;
+    tabs?: Array<{
+      tabId?: string;
+      name: string;
+      highlightText?: string;
+      title: string;
+      description?: string;
+      points?: Array<{ title: string; text?: string }>;
+    }>;
+  };
+  techStackBlock?: {
+    heading?: string;
+    description?: string;
+    categories?: Array<{
+      categoryId?: string;
+      name: string;
+      items?: Array<{ name: string; logo?: string }>;
+    }>;
+  };
+  localSeoBlock?: {
+    whyHeading?: string;
+    whyParagraphs?: string[];
+    stats?: Array<{ value: string; label: string }>;
+    specialistsEyebrow?: string;
+    citiesHeading?: string;
+    citiesDescription?: string;
+    cities?: string[];
+    ctaHeading?: string;
+    ctaBody?: string;
+    ctaLabel?: string;
+  };
+  canadaCitiesBlock?: {
+    heading?: string;
+    description?: string;
+    cities?: string[];
+  };
+  caseStudiesHeading?: string;
+  cityHero?: {
+    eyebrowTemplate?: string;
+    headlineTemplate?: string;
+    subheadingTemplate?: string;
+    ctaLabel?: string;
+    whyChooseHeadingTemplate?: string;
+    whyChooseBodyTemplate?: string;
+    engagementHeadingTemplate?: string;
+    aboutEyebrowTemplate?: string;
+    aboutHeadingTemplate?: string;
+    aboutBodyTemplate?: string;
+    industriesHeadingTemplate?: string;
+    sidebarHeadingTemplate?: string;
+    sidebarItems?: string[];
+    hoursText?: string;
+    quoteCtaTemplate?: string;
+    bottomCtaHeadingTemplate?: string;
+    bottomCtaBodyTemplate?: string;
+    bottomCtaLabel?: string;
+    faqEyebrow?: string;
+    faqHeading?: string;
+    faqIntroTemplate?: string;
+    rankingEyebrow?: string;
+    rankingHeadingTemplate?: string;
+    rankingDescription?: string;
+    rankingItems?: Array<{ title: string; desc: string; iconKey?: string }>;
+    advantageHeadingTemplate?: string;
+    advantageBody?: string;
+    advantageCtaPrimary?: string;
+    advantageCtaSecondary?: string;
+    advantageStats?: Array<{ value: string; label: string }>;
+  };
+  engagementStrategies?: Array<{
+    strategyId?: string;
+    title: string;
+    description?: string;
+    calloutTitle?: string;
+    calloutText?: string;
+  }>;
+  cityFaqs?: Array<{ question: string; answer: string }>;
   canadaCities?: string[] | Record<string, unknown>;
 };
 
@@ -230,6 +317,7 @@ function mapService(entry: Record<string, unknown>, fallbackSlug?: string, local
     process: isArrayPopulated(entry.process) ? (entry.process as CmsService["process"]) : (localFallback?.process || []),
     stats: isArrayPopulated(entry.stats) ? (entry.stats as CmsService["stats"]) : (localFallback?.stats || []),
     caseStudies: isArrayPopulated(entry.caseStudies) ? (entry.caseStudies as CmsService["caseStudies"]) : (localFallback?.caseStudies || []),
+    caseStudiesHeading: isPopulated(entry.caseStudiesHeading) ? String(entry.caseStudiesHeading) : (localFallback?.caseStudiesHeading || "Case Studies"),
     seo: (entry.seo as Record<string, unknown>) || localFallback?.seo,
     whyChooseUsHeading: isPopulated(entry.whyChooseUsHeading) ? String(entry.whyChooseUsHeading) : localFallback?.whyChooseUsHeading,
     whyChooseUsIntro: isPopulated(entry.whyChooseUsIntro) ? String(entry.whyChooseUsIntro) : localFallback?.whyChooseUsIntro,
@@ -278,6 +366,27 @@ function mapService(entry: Record<string, unknown>, fallbackSlug?: string, local
     uiuxEngagementsBlock: isObjectPopulated(entry.uiuxEngagementsBlock)
       ? (entry.uiuxEngagementsBlock as CmsService["uiuxEngagementsBlock"])
       : localFallback?.uiuxEngagementsBlock,
+    mobileTabsBlock: isObjectPopulated(entry.mobileTabsBlock)
+      ? (entry.mobileTabsBlock as CmsService["mobileTabsBlock"])
+      : localFallback?.mobileTabsBlock,
+    techStackBlock: isObjectPopulated(entry.techStackBlock)
+      ? (entry.techStackBlock as CmsService["techStackBlock"])
+      : localFallback?.techStackBlock,
+    localSeoBlock: isObjectPopulated(entry.localSeoBlock)
+      ? (entry.localSeoBlock as CmsService["localSeoBlock"])
+      : localFallback?.localSeoBlock,
+    canadaCitiesBlock: isObjectPopulated(entry.canadaCitiesBlock)
+      ? (entry.canadaCitiesBlock as CmsService["canadaCitiesBlock"])
+      : localFallback?.canadaCitiesBlock,
+    cityHero: isObjectPopulated(entry.cityHero)
+      ? (entry.cityHero as CmsService["cityHero"])
+      : localFallback?.cityHero,
+    engagementStrategies: isArrayPopulated(entry.engagementStrategies)
+      ? (entry.engagementStrategies as CmsService["engagementStrategies"])
+      : localFallback?.engagementStrategies,
+    cityFaqs: isArrayPopulated(entry.cityFaqs)
+      ? (entry.cityFaqs as CmsService["cityFaqs"])
+      : localFallback?.cityFaqs,
     canadaCities: isArrayPopulated(entry.canadaCities) || isObjectPopulated(entry.canadaCities)
       ? (entry.canadaCities as CmsService["canadaCities"])
       : localFallback?.canadaCities,

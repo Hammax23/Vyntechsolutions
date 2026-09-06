@@ -12,8 +12,23 @@ import {
   type ServicePageSections,
 } from "@/data/servicePageSections";
 import CityFAQ from "@/components/CityFAQ";
+import { DEFAULT_CITY_FAQS, DEFAULT_CITY_HERO, fillCityCopy } from "@/lib/city-copy";
+import type { CmsService } from "@/lib/cms/content";
 
-type ServiceWithSections = ServiceData & { pageSections?: ServicePageSections };
+type ServiceWithSections = ServiceData &
+  Partial<
+    Pick<
+      CmsService,
+      "cityHero" | "engagementStrategies" | "cityFaqs"
+    >
+  > & { pageSections?: ServicePageSections };
+
+const RANKING_ICONS: Record<string, JSX.Element> = {
+  gbp: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z" />,
+  citations: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />,
+  onpage: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />,
+  reviews: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />,
+};
 
 export default function CityServicePage() {
   const params = useParams();
@@ -47,18 +62,44 @@ export default function CityServicePage() {
   }, [slug]);
 
   const pageSections = service?.pageSections || {};
+  const copyVars = {
+    city: formattedCity,
+    service: service?.title || "",
+    description: service?.description || "",
+  };
+  const cityHero = { ...DEFAULT_CITY_HERO, ...(service?.cityHero || {}) };
+  const t = (template?: string) => fillCityCopy(template, copyVars);
+
   const engagementStrategies = useMemo(() => {
+    const fromService = service?.engagementStrategies;
+    if (Array.isArray(fromService) && fromService.length > 0) {
+      return fromService.map((s, i) => ({
+        id: String(s.strategyId || s.title || i),
+        title: s.title,
+        description: s.description || "",
+        calloutTitle: s.calloutTitle || "",
+        calloutText: s.calloutText || "",
+      }));
+    }
     const fromCms =
       pageSections.cityEngagement || pageSections.engagementStrategies;
     return Array.isArray(fromCms) && fromCms.length > 0
       ? fromCms
       : defaultCityEngagementStrategies;
-  }, [pageSections.cityEngagement, pageSections.engagementStrategies]);
+  }, [service?.engagementStrategies, pageSections.cityEngagement, pageSections.engagementStrategies]);
 
   const cityFaqs = useMemo(() => {
-    const faqs = pageSections.cityFaqs;
-    return Array.isArray(faqs) && faqs.length > 0 ? faqs : undefined;
-  }, [pageSections.cityFaqs]);
+    const source =
+      (Array.isArray(service?.cityFaqs) && service.cityFaqs.length > 0
+        ? service.cityFaqs
+        : Array.isArray(pageSections.cityFaqs) && pageSections.cityFaqs.length > 0
+          ? pageSections.cityFaqs
+          : DEFAULT_CITY_FAQS);
+    return source.map((faq) => ({
+      question: fillCityCopy(faq.question, copyVars),
+      answer: fillCityCopy(faq.answer, copyVars),
+    }));
+  }, [service?.cityFaqs, pageSections.cityFaqs, copyVars.city, copyVars.service]);
 
   useEffect(() => {
     setActiveTab(0);
@@ -90,20 +131,19 @@ export default function CityServicePage() {
           <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className={`text-center max-w-3xl mx-auto transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
               <div className="inline-flex items-center gap-2 border border-[#00E1FF]/20 bg-[#00E1FF]/5 backdrop-blur-sm rounded-full px-5 py-2 mb-8 shadow-[0_0_15px_rgba(0,225,255,0.1)]">
-                <span className="text-sm font-bold bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text uppercase tracking-[0.2em]">{service.title} in {formattedCity}</span>
+                <span className="text-sm font-bold bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text uppercase tracking-[0.2em]">{t(cityHero.eyebrowTemplate)}</span>
               </div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-[1.1]">
-                {service.title} Services in
-                <span className="bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text block mt-2">{formattedCity}</span>
+                {t(cityHero.headlineTemplate)}
               </h1>
               <p className="text-white/60 text-lg leading-relaxed mb-8 max-w-lg mx-auto">
-                {service.description} We are the trusted local partner for businesses in {formattedCity}.
+                {t(cityHero.subheadingTemplate)}
               </p>
               <button 
                 onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
                 className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] hover:opacity-90 text-white px-7 py-4 rounded-xl font-semibold text-base transition-all duration-300 shadow-lg shadow-[#00E1FF]/25"
               >
-                Request a Free Quote
+                {cityHero.ctaLabel || "Request a Free Quote"}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
@@ -118,14 +158,14 @@ export default function CityServicePage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <div>
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0d1117] mb-6 leading-[1.1] tracking-tight">
-                  Why Choose Us for {service.title} in {formattedCity}?
+                  {t(cityHero.whyChooseHeadingTemplate)}
                 </h2>
                 <div className="w-20 h-1 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full mb-8 shadow-sm"></div>
                 <p className="text-lg text-gray-600 leading-relaxed mb-6 font-light">
                   {service.overview}
                 </p>
                 <p className="text-lg text-gray-600 leading-relaxed font-light">
-                  Our team is dedicated to providing high-quality digital solutions tailored specifically for the {formattedCity} market. Let us help you dominate your local industry.
+                  {t(cityHero.whyChooseBodyTemplate)}
                 </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
@@ -148,7 +188,7 @@ export default function CityServicePage() {
         <section className="py-20 lg:py-28 bg-gray-50 border-t border-gray-100">
           <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0d1117] text-center mb-16">
-              How Will We Increase Engagement Through <span className="relative inline-block"><span className="relative z-10">{service.title}</span><span className="absolute bottom-1 left-0 w-full h-3 bg-gradient-to-r from-[#00E1FF]/30 to-[#0055FF]/30 -z-10"></span></span>
+              {t(cityHero.engagementHeadingTemplate)}
             </h2>
             
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-start">
@@ -214,43 +254,22 @@ export default function CityServicePage() {
             <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center max-w-3xl mx-auto mb-16">
                 <h4 className="text-[#0055FF] font-bold tracking-[0.2em] uppercase text-sm mb-4">
-                  What We Optimize
+                  {cityHero.rankingEyebrow || "What We Optimize"}
                 </h4>
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0d1117] mb-6 leading-tight">
-                  Dominating the <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00E1FF] to-[#0055FF]">{formattedCity}</span> Search Results
+                  {t(cityHero.rankingHeadingTemplate)}
                 </h2>
                 <p className="text-gray-600 text-lg font-light">
-                  Ranking in the local map pack requires a precise, technical approach. Here is exactly what we optimize to push your business to the top of Google.
+                  {cityHero.rankingDescription}
                 </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {[
-                  {
-                    title: "Google Business Profile",
-                    desc: "Full optimization of your GBP, including categories, attributes, products, and regular geo-tagged posts to boost relevance.",
-                    icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  },
-                  {
-                    title: "Local Citations",
-                    desc: "Building consistent NAP (Name, Address, Phone) citations across high-authority directories specifically relevant to your area.",
-                    icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                  },
-                  {
-                    title: "On-Page Localization",
-                    desc: "Injecting hyper-local keywords, schema markup, and neighborhood references directly into your website's architecture.",
-                    icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                  },
-                  {
-                    title: "Review Management",
-                    desc: "Implementing automated systems to generate positive reviews from your best clients, a major ranking signal for local SEO.",
-                    icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                  }
-                ].map((item, i) => (
+                {(cityHero.rankingItems || []).map((item, i) => (
                   <div key={i} className="bg-white border border-gray-100 rounded-2xl p-8 hover:shadow-[0_20px_40px_-15px_rgba(0,85,255,0.1)] transition-all duration-300 group">
                     <div className="w-12 h-12 rounded-xl bg-gray-50 text-[#0055FF] flex items-center justify-center mb-6 group-hover:bg-[#0055FF] group-hover:text-white transition-colors duration-300">
                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        {item.icon}
+                        {RANKING_ICONS[item.iconKey || "gbp"] || RANKING_ICONS.gbp}
                       </svg>
                     </div>
                     <h3 className="text-xl font-bold text-[#0d1117] mb-3 group-hover:text-[#0055FF] transition-colors">{item.title}</h3>
@@ -273,30 +292,28 @@ export default function CityServicePage() {
                 <div className="relative z-10 p-6 sm:p-12 lg:p-16 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
                   <div>
                     <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-6 leading-tight">
-                      Ready to Capture the <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00E1FF] to-[#0055FF]">{formattedCity}</span> Market?
+                      {t(cityHero.advantageHeadingTemplate)}
                     </h2>
                     <p className="text-gray-300 text-lg font-light mb-8 leading-relaxed max-w-lg">
-                      46% of all Google searches have local intent. If you aren&apos;t visible when local customers search for your services, you&apos;re handing revenue directly to your competitors. Let&apos;s fix that.
+                      {cityHero.advantageBody}
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4">
                       <button onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))} className="bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-white px-8 py-4 rounded-full font-bold text-sm shadow-[0_8px_20px_rgba(0,85,255,0.2)] hover:shadow-[0_12px_25px_rgba(0,85,255,0.4)] hover:-translate-y-0.5 transition-all duration-300 w-full sm:w-auto flex justify-center items-center text-center">
-                        Get a Free Local SEO Audit
+                        {cityHero.advantageCtaPrimary}
                       </button>
                       <button onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))} className="bg-white/10 text-white border border-white/20 px-8 py-4 rounded-full font-bold text-sm hover:bg-white hover:text-[#0f172a] transition-all duration-300 w-full sm:w-auto flex justify-center items-center text-center">
-                        Speak with a Strategist
+                        {cityHero.advantageCtaSecondary}
                       </button>
                     </div>
                   </div>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 lg:mt-0">
-                    <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 text-center">
-                      <div className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#00E1FF] to-[#0055FF] mb-2">97%</div>
-                      <div className="text-gray-300 text-sm font-medium">Of people learn more about a local company online than anywhere else.</div>
-                    </div>
-                    <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 text-center sm:translate-y-6">
-                      <div className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#00E1FF] to-[#0055FF] mb-2">88%</div>
-                      <div className="text-gray-300 text-sm font-medium">Of local mobile searches result in a call or visit within 24 hours.</div>
-                    </div>
+                    {(cityHero.advantageStats || []).map((stat, i) => (
+                      <div key={stat.value} className={`bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 text-center${i === 1 ? " sm:translate-y-6" : ""}`}>
+                        <div className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#00E1FF] to-[#0055FF] mb-2">{stat.value}</div>
+                        <div className="text-gray-300 text-sm font-medium">{stat.label}</div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -312,17 +329,17 @@ export default function CityServicePage() {
               {/* Left Column */}
               <div className="lg:col-span-7 lg:pr-8">
                 <h4 className="text-[#00E1FF] font-bold tracking-[0.2em] uppercase text-sm mb-4">
-                  About {formattedCity}
+                  {t(cityHero.aboutEyebrowTemplate)}
                 </h4>
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0d1117] mb-8 leading-[1.1] tracking-tight">
-                  {service.title} for {formattedCity} Businesses
+                  {t(cityHero.aboutHeadingTemplate)}
                 </h2>
                 <p className="text-lg text-gray-600 leading-relaxed mb-12 font-light">
-                  {formattedCity} is a highly competitive digital market, with hundreds of thousands of businesses all fighting for the same Google searches. A generic digital presence won&apos;t cut it here. VynTech Solutions builds custom, conversion-focused {service.title.toLowerCase()} campaigns for {formattedCity} businesses that are engineered to rank, load fast, and turn visitors into paying customers. We understand the {formattedCity} market deeply. Our strategies are tailored to local neighbourhoods and business verticals, so you&apos;re not just getting traffic, you&apos;re getting the right traffic. With five-star reviews and clients across every major industry, we&apos;re the agency that {formattedCity} businesses trust to grow online.
+                  {t(cityHero.aboutBodyTemplate)}
                 </p>
 
                 <h3 className="text-xl font-bold text-[#0d1117] mb-6">
-                  Industries We Serve in {formattedCity}
+                  {t(cityHero.industriesHeadingTemplate)}
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   {[
@@ -349,23 +366,18 @@ export default function CityServicePage() {
               <div className="lg:col-span-5 relative">
                 <div className="bg-white rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-gray-100/60 p-8 sm:p-10 sticky top-32">
                   <h3 className="text-2xl lg:text-3xl font-extrabold text-[#0d1117] mb-8 leading-[1.2] tracking-tight">
-                    Why {formattedCity} Businesses Choose VynTech
+                    {t(cityHero.sidebarHeadingTemplate)}
                   </h3>
                   
                   <ul className="space-y-6 mb-10">
-                    {[
-                      `${formattedCity}'s leading ${service.title.toLowerCase()} agency`,
-                      `Custom strategies engineered to dominate the ${formattedCity} market`,
-                      `Local market expertise and dedicated support`,
-                      `Mobile-first approach, capturing local smartphone searches`
-                    ].map((item, idx) => (
+                    {(cityHero.sidebarItems || []).map((item, idx) => (
                       <li key={idx} className="flex items-start gap-4">
                         <div className="w-6 h-6 rounded-full bg-[#0055FF] flex items-center justify-center shrink-0 mt-0.5">
                           <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                           </svg>
                         </div>
-                        <span className="text-gray-700 text-sm sm:text-base">{item}</span>
+                        <span className="text-gray-700 text-sm sm:text-base">{t(item)}</span>
                       </li>
                     ))}
                   </ul>
@@ -374,14 +386,14 @@ export default function CityServicePage() {
                     <svg className="w-5 h-5 text-[#00E1FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    Mon to Fri: 9:00 AM to 6:00 PM EST
+                    {cityHero.hoursText}
                   </div>
 
                   <button 
                     onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
                     className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-white py-4 rounded-xl font-bold hover:shadow-[0_4px_20px_rgba(0,85,255,0.3)] transition-all duration-300 group"
                   >
-                    Get a Free {formattedCity} Quote
+                    {t(cityHero.quoteCtaTemplate)}
                     <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
@@ -398,6 +410,9 @@ export default function CityServicePage() {
           formattedCity={formattedCity}
           serviceTitle={service.title}
           faqs={cityFaqs}
+          eyebrow={cityHero.faqEyebrow}
+          heading={cityHero.faqHeading}
+          intro={t(cityHero.faqIntroTemplate)}
         />
 
         {/* Local CTA */}
@@ -405,16 +420,16 @@ export default function CityServicePage() {
           <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at center, rgba(0,85,255,0.15) 0%, transparent 60%)' }} />
           <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4">
-              Ready to Grow Your Business in {formattedCity}?
+              {t(cityHero.bottomCtaHeadingTemplate)}
             </h2>
             <p className="text-lg text-gray-300 mb-6 max-w-2xl mx-auto">
-              Contact us today to discuss your {service.title.toLowerCase()} project. We provide custom quotes and transparent timelines.
+              {t(cityHero.bottomCtaBodyTemplate)}
             </p>
             <button 
               onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
               className="bg-white text-[#0d1117] px-8 py-3 rounded-full font-bold text-base hover:bg-gradient-to-r hover:from-[#00E1FF] hover:to-[#0055FF] hover:text-white hover:shadow-[0_0_30px_rgba(0,225,255,0.4)] hover:-translate-y-1 transition-all duration-300 shadow-xl"
             >
-              Let&apos;s Talk Business
+              {cityHero.bottomCtaLabel}
             </button>
           </div>
         </section>

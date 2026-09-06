@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_sections_city_faqs",
+  "info": {
+    "displayName": "City FAQ",
+    "description": "One question/answer used on city landing pages",
+    "icon": "question"
+  },
+  "options": {},
+  "attributes": {
+    "question": {
+      "type": "string",
+      "required": true
+    },
+    "answer": {
+      "type": "text",
+      "required": true
+    }
+  }
+}

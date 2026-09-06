@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_sections_engagement_strategies",
+  "info": {
+    "displayName": "Engagement Strategy",
+    "description": "One strategy card used on city landing pages",
+    "icon": "compass"
+  },
+  "options": {},
+  "attributes": {
+    "strategyId": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "calloutTitle": {
+      "type": "string"
+    },
+    "calloutText": {
+      "type": "text"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_sections_mobile_tabs_blocks",
+  "info": {
+    "displayName": "Mobile Tabs Block",
+    "description": "What We Offer tabbed section used on the Mobile App Development service page",
+    "icon": "tabs"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "tabs": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.mobile-tab"
+    }
+  }
+}

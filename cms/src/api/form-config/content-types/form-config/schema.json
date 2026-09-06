@@ -25,6 +25,12 @@
     },
     "timelineOptions": {
       "type": "json"
+    },
+    "pageBenefits": {
+      "type": "json"
+    },
+    "pageStats": {
+      "type": "json"
     }
   }
 }

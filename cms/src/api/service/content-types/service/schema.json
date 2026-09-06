@@ -93,6 +93,10 @@
       "repeatable": true,
       "component": "shared.case-study"
     },
+    "caseStudiesHeading": {
+      "type": "string",
+      "default": "Case Studies"
+    },
     "seo": {
       "type": "component",
       "repeatable": false,
@@ -186,6 +190,41 @@
       "type": "component",
       "repeatable": false,
       "component": "sections.uiux-engagements-block"
+    },
+    "mobileTabsBlock": {
+      "type": "component",
+      "repeatable": false,
+      "component": "sections.mobile-tabs-block"
+    },
+    "techStackBlock": {
+      "type": "component",
+      "repeatable": false,
+      "component": "sections.tech-stack-block"
+    },
+    "localSeoBlock": {
+      "type": "component",
+      "repeatable": false,
+      "component": "sections.local-seo-block"
+    },
+    "canadaCitiesBlock": {
+      "type": "component",
+      "repeatable": false,
+      "component": "sections.canada-cities-block"
+    },
+    "cityHero": {
+      "type": "component",
+      "repeatable": false,
+      "component": "sections.city-hero"
+    },
+    "engagementStrategies": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.engagement-strategy"
+    },
+    "cityFaqs": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.city-faq"
     },
     "canadaCities": {
       "type": "json"

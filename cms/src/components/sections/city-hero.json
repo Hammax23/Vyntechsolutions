@@ -1,0 +1,125 @@
+{
+  "collectionName": "components_sections_city_heroes",
+  "info": {
+    "displayName": "City Page Copy",
+    "description": "All city-landing copy. Use {city}, {service}, and {description} placeholders.",
+    "icon": "picture"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrowTemplate": {
+      "type": "string",
+      "default": "{service} in {city}"
+    },
+    "headlineTemplate": {
+      "type": "string",
+      "default": "{service} Services in {city}"
+    },
+    "subheadingTemplate": {
+      "type": "text",
+      "default": "{description} We are the trusted local partner for businesses in {city}."
+    },
+    "ctaLabel": {
+      "type": "string",
+      "default": "Request a Free Quote"
+    },
+    "whyChooseHeadingTemplate": {
+      "type": "string",
+      "default": "Why Choose Us for {service} in {city}?"
+    },
+    "whyChooseBodyTemplate": {
+      "type": "text",
+      "default": "Our team is dedicated to providing high-quality digital solutions tailored specifically for the {city} market. Let us help you dominate your local industry."
+    },
+    "engagementHeadingTemplate": {
+      "type": "string",
+      "default": "How Will We Increase Engagement Through {service}"
+    },
+    "aboutEyebrowTemplate": {
+      "type": "string",
+      "default": "About {city}"
+    },
+    "aboutHeadingTemplate": {
+      "type": "string",
+      "default": "{service} for {city} Businesses"
+    },
+    "aboutBodyTemplate": {
+      "type": "text"
+    },
+    "industriesHeadingTemplate": {
+      "type": "string",
+      "default": "Industries We Serve in {city}"
+    },
+    "sidebarHeadingTemplate": {
+      "type": "string",
+      "default": "Why {city} Businesses Choose VynTech"
+    },
+    "sidebarItems": {
+      "type": "json"
+    },
+    "hoursText": {
+      "type": "string",
+      "default": "Mon to Fri: 9:00 AM to 6:00 PM EST"
+    },
+    "quoteCtaTemplate": {
+      "type": "string",
+      "default": "Get a Free {city} Quote"
+    },
+    "bottomCtaHeadingTemplate": {
+      "type": "string",
+      "default": "Ready to Grow Your Business in {city}?"
+    },
+    "bottomCtaBodyTemplate": {
+      "type": "text",
+      "default": "Contact us today to discuss your {service} project. We provide custom quotes and transparent timelines."
+    },
+    "bottomCtaLabel": {
+      "type": "string",
+      "default": "Let's Talk Business"
+    },
+    "faqEyebrow": {
+      "type": "string",
+      "default": "FAQ"
+    },
+    "faqHeading": {
+      "type": "string",
+      "default": "Frequently asked questions"
+    },
+    "faqIntroTemplate": {
+      "type": "text",
+      "default": "Everything you need to know about our {service} services in {city}."
+    },
+    "rankingEyebrow": {
+      "type": "string",
+      "default": "What We Optimize"
+    },
+    "rankingHeadingTemplate": {
+      "type": "string",
+      "default": "Dominating the {city} Search Results"
+    },
+    "rankingDescription": {
+      "type": "text"
+    },
+    "rankingItems": {
+      "type": "json"
+    },
+    "advantageHeadingTemplate": {
+      "type": "string",
+      "default": "Ready to Capture the {city} Market?"
+    },
+    "advantageBody": {
+      "type": "text"
+    },
+    "advantageCtaPrimary": {
+      "type": "string",
+      "default": "Get a Free Local SEO Audit"
+    },
+    "advantageCtaSecondary": {
+      "type": "string",
+      "default": "Speak with a Strategist"
+    },
+    "advantageStats": {
+      "type": "json"
+    }
+  }
+}

@@ -71,6 +71,8 @@ export default function LetsTalkBusinessPage() {
   const [budgetRanges, setBudgetRanges] = useState<string[]>(DEFAULT_BUDGET_OPTIONS);
   const [timelineOptions, setTimelineOptions] = useState<string[]>(DEFAULT_TIMELINE_OPTIONS);
   const [hearAboutOptions, setHearAboutOptions] = useState<string[]>(DEFAULT_HEAR_ABOUT);
+  const [pageBenefits, setPageBenefits] = useState(benefits);
+  const [pageStats, setPageStats] = useState(stats);
   const [contactEmail, setContactEmail] = useState(COMPANY_EMAIL);
   const [contactPhoneDisplay, setContactPhoneDisplay] = useState(COMPANY_PHONE_DISPLAY);
   const [contactPhoneTel, setContactPhoneTel] = useState(COMPANY_PHONE_TEL);
@@ -114,6 +116,28 @@ export default function LetsTalkBusinessPage() {
         }
         if (Array.isArray(formConfig?.hearAbout) && formConfig.hearAbout.length) {
           setHearAboutOptions(formConfig.hearAbout.map(String));
+        }
+        if (Array.isArray(formConfig?.pageBenefits) && formConfig.pageBenefits.length) {
+          setPageBenefits(
+            formConfig.pageBenefits
+              .filter((b): b is { icon?: string; title: string; description?: string } =>
+                typeof b === "object" && b !== null && "title" in b
+              )
+              .map((b) => ({
+                icon: String(b.icon || "clock"),
+                title: String(b.title),
+                description: String(b.description || ""),
+              }))
+          );
+        }
+        if (Array.isArray(formConfig?.pageStats) && formConfig.pageStats.length) {
+          setPageStats(
+            formConfig.pageStats
+              .filter((s): s is { value: string; label: string } =>
+                typeof s === "object" && s !== null && "value" in s && "label" in s
+              )
+              .map((s) => ({ value: String(s.value), label: String(s.label) }))
+          );
         }
         if (org?.email) setContactEmail(resolveCompanyEmail(String(org.email)));
         if (org?.phone) {
@@ -444,7 +468,7 @@ export default function LetsTalkBusinessPage() {
                 <div className={`bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460] rounded-3xl p-8 transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
                   <h3 className="text-xl font-semibold text-white mb-6">What You&apos;ll Get</h3>
                   <div className="space-y-6">
-                    {benefits.map((benefit, index) => (
+                    {pageBenefits.map((benefit, index) => (
                       <div key={index} className="flex items-start gap-4">
                         <div className="w-12 h-12 bg-[#262b3f]/20 rounded-xl flex items-center justify-center text-white flex-shrink-0">
                           <BenefitIcon type={benefit.icon} />
@@ -453,6 +477,14 @@ export default function LetsTalkBusinessPage() {
                           <h4 className="font-semibold text-white mb-1">{benefit.title}</h4>
                           <p className="text-white/60 text-sm">{benefit.description}</p>
                         </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 mt-8 pt-6 border-t border-white/10">
+                    {pageStats.map((stat) => (
+                      <div key={stat.label}>
+                        <div className="text-white text-xl font-bold">{stat.value}</div>
+                        <div className="text-white/50 text-xs">{stat.label}</div>
                       </div>
                     ))}
                   </div>

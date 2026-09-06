@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_sections_tech_stack_blocks",
+  "info": {
+    "displayName": "Tech Stack Block",
+    "description": "Categorized technology stack tabs used across service pages",
+    "icon": "layer-group"
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": "Technology Stack"
+    },
+    "description": {
+      "type": "text"
+    },
+    "categories": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.tech-stack-category"
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "collectionName": "components_sections_local_seo_blocks",
+  "info": {
+    "displayName": "Local SEO Block",
+    "description": "Why Our Local SEO Works section on the SEO Digital Marketing service page",
+    "icon": "search"
+  },
+  "options": {},
+  "attributes": {
+    "whyHeading": {
+      "type": "string",
+      "default": "Why Our Local SEO Works"
+    },
+    "whyParagraphs": {
+      "type": "json"
+    },
+    "stats": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.stat"
+    },
+    "specialistsEyebrow": {
+      "type": "string",
+      "default": "Local SEO Specialists"
+    },
+    "citiesHeading": {
+      "type": "string"
+    },
+    "citiesDescription": {
+      "type": "text"
+    },
+    "cities": {
+      "type": "json"
+    },
+    "ctaHeading": {
+      "type": "string"
+    },
+    "ctaBody": {
+      "type": "text"
+    },
+    "ctaLabel": {
+      "type": "string",
+      "default": "Request a Free Quote"
+    }
+  }
+}

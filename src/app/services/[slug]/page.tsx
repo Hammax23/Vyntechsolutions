@@ -35,6 +35,12 @@ function resolveCanadaCities(
   service: ServiceData,
   pageSections: ServicePageSections
 ): { heading?: string; description?: string; cities: string[] } | null {
+  const cmsBlock = (service as ServiceData & {
+    canadaCitiesBlock?: { heading?: string; description?: string; cities?: string[] };
+  }).canadaCitiesBlock;
+  if (cmsBlock?.cities?.length) {
+    return { heading: cmsBlock.heading, description: cmsBlock.description, cities: cmsBlock.cities };
+  }
   const raw = pageSections.canadaCities || (service as ServiceData & { canadaCities?: ServicePageSections["canadaCities"] | string[] }).canadaCities;
   if (!raw) return null;
   if (Array.isArray(raw)) {
@@ -42,6 +48,31 @@ function resolveCanadaCities(
   }
   if (raw.cities?.length) return raw;
   return null;
+}
+
+function resolveTechStackData(
+  service: ServiceData | null | undefined,
+  pageSections: ServicePageSections
+): ServicePageSections["techStack"] | undefined {
+  const cmsBlock = (service as ServiceData & {
+    techStackBlock?: {
+      heading?: string;
+      description?: string;
+      categories?: Array<{ categoryId?: string; id?: string; name: string; items?: Array<{ name: string; logo?: string }> }>;
+    };
+  } | null | undefined)?.techStackBlock;
+  if (cmsBlock?.categories?.length) {
+    return {
+      heading: cmsBlock.heading,
+      description: cmsBlock.description,
+      categories: cmsBlock.categories.map((c, i) => ({
+        id: String(c.categoryId || c.id || `cat-${i}`),
+        name: c.name,
+        items: (c.items || []).map((it) => ({ name: it.name, logo: it.logo })),
+      })),
+    };
+  }
+  return (service?.techStack || pageSections.techStack) as ServicePageSections["techStack"] | undefined;
 }
 
 // Icon component
@@ -2985,9 +3016,25 @@ export default function ServicePage() {
         </section>
 
         {/* Mobile Services Interactive Tab Section (What We Offer for Mobile App Development page) */}
-        {pageSections.mobileTabs && (
-          <MobileDevServicesTabSection data={pageSections.mobileTabs} />
-        )}
+        {(() => {
+          const cms = (service as ServiceData & { mobileTabsBlock?: NonNullable<ServicePageSections["mobileTabs"]> & { tabs?: Array<{ tabId?: string; id?: string; name: string; highlightText?: string; title: string; description?: string; points?: Array<{ title: string; text?: string }> }> } }).mobileTabsBlock;
+          const data = cms?.tabs?.length
+            ? {
+                eyebrow: cms.eyebrow,
+                heading: cms.heading,
+                description: cms.description,
+                tabs: cms.tabs.map((t, i) => ({
+                  id: String(t.tabId || t.id || `tab-${i}`),
+                  name: t.name,
+                  highlightText: t.highlightText,
+                  title: t.title,
+                  description: t.description || "",
+                  points: (t.points || []).map((p) => ({ title: p.title, text: p.text || "" })),
+                })),
+              }
+            : pageSections.mobileTabs;
+          return data ? <MobileDevServicesTabSection data={data} /> : null;
+        })()}
 
         {/* UI/UX Engagements Section - Only for UI/UX Design */}
         {(() => {
@@ -3111,7 +3158,7 @@ export default function ServicePage() {
         {service.caseStudies?.length ? (
           <section className="py-16 bg-white border-t border-gray-100">
             <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
-              <h2 className="text-3xl font-bold text-[#0f172a] text-center mb-10">Case Studies</h2>
+              <h2 className="text-3xl font-bold text-[#0f172a] text-center mb-10">{(service as ServiceData & { caseStudiesHeading?: string }).caseStudiesHeading || "Case Studies"}</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {service.caseStudies.map((cs, i) => (
                   <div
@@ -3131,7 +3178,11 @@ export default function ServicePage() {
         ) : null}
 
         {/* Local SEO Services Section */}
-        {pageSections.localSeo && (
+        {(() => {
+          const cms = (service as ServiceData & { localSeoBlock?: NonNullable<ServicePageSections["localSeo"]> }).localSeoBlock;
+          const localSeo = cms && (cms.whyHeading || cms.cities?.length || cms.stats?.length) ? cms : pageSections.localSeo;
+          if (!localSeo) return null;
+          return (
           <>
             <section className="py-20 bg-white border-t border-gray-100">
               <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12">
@@ -3139,17 +3190,17 @@ export default function ServicePage() {
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
                     <div>
                       <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0f172a] mb-4 leading-tight">
-                        {pageSections.localSeo.whyHeading || "Why Our Local SEO Works"}
+                        {localSeo.whyHeading || "Why Our Local SEO Works"}
                       </h2>
                       <div className="w-16 h-1 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full mb-6" />
                       <div className="space-y-4 text-gray-600 text-sm sm:text-base leading-relaxed">
-                        {(pageSections.localSeo.whyParagraphs || []).map((para, i) => (
+                        {(localSeo.whyParagraphs || []).map((para, i) => (
                           <p key={i}>{para}</p>
                         ))}
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
-                      {(pageSections.localSeo.stats || []).map((stat) => (
+                      {(localSeo.stats || []).map((stat) => (
                         <div
                           key={stat.label}
                           className="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col gap-1 shadow-sm hover:shadow-xl hover:border-[#00E1FF]/40 hover:-translate-y-1 transition-all duration-300"
@@ -3169,22 +3220,22 @@ export default function ServicePage() {
                   <div className="flex items-center justify-center gap-4 mb-6">
                     <div className="w-12 h-[2px] bg-gradient-to-r from-[#00E1FF] to-[#0055FF]" />
                     <span className="text-[#0055FF] text-xs font-bold uppercase tracking-[0.2em]">
-                      {pageSections.localSeo.specialistsEyebrow || "Local SEO Specialists"}
+                      {localSeo.specialistsEyebrow || "Local SEO Specialists"}
                     </span>
                     <div className="w-12 h-[2px] bg-gradient-to-l from-[#00E1FF] to-[#0055FF]" />
                   </div>
                   <h2 className="text-4xl sm:text-5xl font-bold text-[#0f172a] mb-8 leading-[1.15] tracking-tight">
-                    {pageSections.localSeo.citiesHeading || "Local SEO Services Toronto & Across Canada"}
+                    {localSeo.citiesHeading || "Local SEO Services Toronto & Across Canada"}
                   </h2>
-                  {pageSections.localSeo.citiesDescription && (
+                  {localSeo.citiesDescription && (
                     <p className="text-gray-500 text-lg leading-relaxed max-w-2xl mx-auto font-light">
-                      {pageSections.localSeo.citiesDescription}
+                      {localSeo.citiesDescription}
                     </p>
                   )}
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-24 border-t border-b border-gray-100 py-12 relative">
                   <div className="absolute inset-0 bg-gradient-to-r from-[#00E1FF]/5 via-[#0055FF]/5 to-transparent blur-2xl -z-10" />
-                  {(pageSections.localSeo.cities || []).map((city) => (
+                  {(localSeo.cities || []).map((city) => (
                     <Link
                       href={`/services/${slug}/${city.toLowerCase().replace(/ /g, "-")}`}
                       key={city}
@@ -3204,11 +3255,11 @@ export default function ServicePage() {
                   <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#00E1FF]/10 to-transparent rounded-full blur-3xl pointer-events-none" />
                   <div className="max-w-xl relative z-10">
                     <h3 className="text-2xl font-bold text-[#0f172a] mb-3 tracking-tight">
-                      {pageSections.localSeo.ctaHeading || "Ready to Grow Your Organic Traffic?"}
+                      {localSeo.ctaHeading || "Ready to Grow Your Organic Traffic?"}
                     </h3>
-                    {pageSections.localSeo.ctaBody && (
+                    {localSeo.ctaBody && (
                       <p className="text-gray-600 text-sm leading-relaxed font-light">
-                        {pageSections.localSeo.ctaBody}
+                        {localSeo.ctaBody}
                       </p>
                     )}
                   </div>
@@ -3216,7 +3267,7 @@ export default function ServicePage() {
                     onClick={() => window.dispatchEvent(new CustomEvent("openLetsTalkBusiness"))}
                     className="relative z-10 shrink-0 inline-flex items-center justify-center gap-3 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] hover:opacity-90 text-white px-8 py-4 rounded-full font-medium text-sm transition-all duration-300 shadow-[0_8px_20px_rgba(0,85,255,0.2)] hover:-translate-y-0.5 hover:shadow-[0_12px_25px_rgba(0,85,255,0.3)]"
                   >
-                    {pageSections.localSeo.ctaLabel || "Request a Free Quote"}
+                    {localSeo.ctaLabel || "Request a Free Quote"}
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
@@ -3225,7 +3276,8 @@ export default function ServicePage() {
               </div>
             </section>
           </>
-        )}
+          );
+        })()}
 
         {/* How We Deliver Section (ONLY for Web Development Service Page, directly after Process section) */}
         {service.deliverySteps && service.deliverySteps.length > 0 && (

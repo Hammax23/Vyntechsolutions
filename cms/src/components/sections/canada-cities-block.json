@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_sections_canada_cities_blocks",
+  "info": {
+    "displayName": "Canada Cities Block",
+    "description": "List of Canadian cities where the service is offered",
+    "icon": "globe"
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "cities": {
+      "type": "json"
+    }
+  }
+}

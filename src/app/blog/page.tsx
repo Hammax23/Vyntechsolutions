@@ -15,6 +15,9 @@ export default function BlogPage() {
   const [categories, setCategories] = useState(defaultCategories);
   const [heroHeading, setHeroHeading] = useState("");
   const [heroBody, setHeroBody] = useState("");
+  const [ctaHeading, setCtaHeading] = useState("Have a Project in Mind?");
+  const [ctaBody, setCtaBody] = useState("Let's discuss how we can help build your software solution.");
+  const [ctaLabel, setCtaLabel] = useState("Get in Touch");
 
   useEffect(() => {
     let cancelled = false;
@@ -61,6 +64,10 @@ export default function BlogPage() {
             "Practical insights on software development, technology decisions, and building digital products."
           );
         }
+        const sections = (page?.sections || {}) as Record<string, unknown>;
+        if (sections.ctaHeading) setCtaHeading(String(sections.ctaHeading));
+        if (sections.ctaBody) setCtaBody(String(sections.ctaBody));
+        if (sections.ctaLabel) setCtaLabel(String(sections.ctaLabel));
       })
       .catch(() => {});
     return () => {
@@ -214,17 +221,17 @@ export default function BlogPage() {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 bg-gradient-to-r from-[#262b3f]/20 to-transparent rounded-2xl p-6 md:p-8">
               <div>
                 <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-                  Have a Project in Mind?
+                  {ctaHeading}
                 </h2>
                 <p className="text-white/70 text-sm">
-                  Let&apos;s discuss how we can help build your software solution.
+                  {ctaBody}
                 </p>
               </div>
               <button
                 onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
                 className="inline-flex items-center justify-center gap-2 bg-[#262b3f] hover:bg-[#0055FF] text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 whitespace-nowrap"
               >
-                Get in Touch
+                {ctaLabel}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>

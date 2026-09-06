@@ -1,0 +1,34 @@
+{
+  "collectionName": "components_sections_mobile_tabs",
+  "info": {
+    "displayName": "Mobile Tab",
+    "description": "One tab in the mobile app development What We Offer section",
+    "icon": "mobile"
+  },
+  "options": {},
+  "attributes": {
+    "tabId": {
+      "type": "string",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "highlightText": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "points": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.mobile-tab-point"
+    }
+  }
+}

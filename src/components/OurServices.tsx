@@ -104,6 +104,7 @@ export default function OurServices() {
   const [subheading, setSubheading] = useState("Transforming Modern Businesses");
   const [body, setBody] = useState(DEFAULT_SERVICES_BODY);
   const [cards, setCards] = useState<ServiceCard[]>(serviceCards);
+  const [learnMoreLabel, setLearnMoreLabel] = useState("Learn More");
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(true);
 
@@ -140,6 +141,7 @@ export default function OurServices() {
         if (hp.servicesHeading) setHeading(String(hp.servicesHeading));
         if (hp.servicesSubheading) setSubheading(String(hp.servicesSubheading));
         if (hp.servicesBody) setBody(String(hp.servicesBody));
+        if (hp.servicesLearnMoreLabel) setLearnMoreLabel(String(hp.servicesLearnMoreLabel));
         // Prefer editor-controlled list from Strapi homepage
         const cmsCards = Array.isArray(hp.serviceCards) ? hp.serviceCards : null;
         if (cmsCards && cmsCards.length) {
@@ -664,7 +666,7 @@ export default function OurServices() {
                   <span
                     className="mt-6 inline-flex items-center gap-2 text-[13px] font-bold tracking-[0.08em] uppercase text-black transition-colors duration-500 group-hover:text-white"
                   >
-                    Learn More
+                    {learnMoreLabel}
                     <svg
                       aria-hidden
                       viewBox="0 0 16 16"

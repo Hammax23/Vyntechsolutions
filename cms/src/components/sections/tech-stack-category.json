@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_sections_tech_stack_categories",
+  "info": {
+    "displayName": "Tech Stack Category",
+    "icon": "folder"
+  },
+  "options": {},
+  "attributes": {
+    "categoryId": {
+      "type": "string",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.tech-stack-item"
+    }
+  }
+}

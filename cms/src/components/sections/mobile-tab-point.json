@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_sections_mobile_tab_points",
+  "info": {
+    "displayName": "Mobile Tab Point",
+    "icon": "bulletList"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "text": {
+      "type": "text"
+    }
+  }
+}

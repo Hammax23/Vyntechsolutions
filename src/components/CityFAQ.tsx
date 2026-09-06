@@ -11,55 +11,39 @@ interface CityFAQProps {
   formattedCity: string;
   serviceTitle: string;
   faqs?: CityFAQItem[];
+  eyebrow?: string;
+  heading?: string;
+  intro?: string;
 }
 
-export default function CityFAQ({ formattedCity, serviceTitle, faqs }: CityFAQProps) {
+export default function CityFAQ({
+  formattedCity,
+  serviceTitle,
+  faqs,
+  eyebrow = "FAQ",
+  heading = "Frequently asked questions",
+  intro,
+}: CityFAQProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const toggleAccordion = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-  const defaultFaqs: CityFAQItem[] = [
-    {
-      question: `Why do I need professional ${serviceTitle} services in ${formattedCity}?`,
-      answer: `${formattedCity} is a highly competitive market. Having a professional ${serviceTitle} strategy ensures your business stands out locally, attracts the right audience, and converts visitors into loyal customers.`,
-    },
-    {
-      question: `How long does a typical ${serviceTitle} project take?`,
-      answer:
-        "The timeline depends on the scope and complexity of your requirements. Once we evaluate your business goals during our free consultation, we provide a clear, transparent timeline with milestones.",
-    },
-    {
-      question: `Do you have experience working with businesses in ${formattedCity}?`,
-      answer: `Yes, we have extensive experience working with companies across ${formattedCity} in various industries. We understand the local market dynamics and tailor our strategies to match regional consumer behavior.`,
-    },
-    {
-      question: `What makes VynTech Solutions different from other agencies in ${formattedCity}?`,
-      answer:
-        "We don't just deliver a service; we act as your technology partner. Our team focuses on ROI-driven results, transparent communication, and building long-term scalable solutions for your business.",
-    },
-    {
-      question: "How do we get started?",
-      answer:
-        "Getting started is easy! Simply reach out to us using the 'Let's Talk Business' button below. We'll schedule a free consultation to discuss your needs and outline the perfect strategy.",
-    },
-  ];
-
-  const faqData = faqs && faqs.length > 0 ? faqs : defaultFaqs;
+  const faqData = faqs && faqs.length > 0 ? faqs : [];
 
   return (
     <section className="w-full bg-white py-16 md:py-24 border-t border-slate-100">
       <div className="max-w-[760px] mx-auto px-5 sm:px-6">
         <div className="text-center mb-12 md:mb-14">
           <p className="text-[11px] font-semibold tracking-[0.18em] uppercase text-[#0055FF] mb-3">
-            FAQ
+            {eyebrow}
           </p>
           <h2 className="text-[28px] sm:text-4xl font-semibold tracking-tight text-[#0f172a] mb-3">
-            Frequently asked questions
+            {heading}
           </h2>
           <p className="text-slate-500 text-[15px] sm:text-base max-w-xl mx-auto leading-relaxed">
-            Everything you need to know about our {serviceTitle} services in {formattedCity}.
+            {intro || `Everything you need to know about our ${serviceTitle} services in ${formattedCity}.`}
           </p>
         </div>
 
