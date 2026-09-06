@@ -10,6 +10,7 @@ import FAQ from "@/components/FAQ";
 import HowWeWork from "@/components/HowWeWork";
 import { servicesData, type ServiceData } from "@/data/servicesData";
 import type { ServicePageSections } from "@/data/servicePageSections";
+import { toParagraphs, toLines } from "@/lib/richtext";
 
 const HERO_VARIANT_BY_SLUG: Record<string, string> = {
   "web-development": "browser",
@@ -222,7 +223,7 @@ const WebDevDeliveryModelSection = ({
   // Only render if we have Strapi content for this section
   if (!heading || !steps || steps.length === 0) return null;
 
-  const sectionDescription = description ? description.split('\n\n') : [];
+  const sectionDescription = toParagraphs(description);
 
   return (
     <section className="py-20 bg-white border-t border-gray-100">
@@ -3305,7 +3306,7 @@ export default function ServicePage() {
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3.5 sm:gap-5">
                       {cards.map((card, i) => {
                         const path = iconPaths[card.icon] || iconPaths.chart;
-                        const lines = card.label.split("\n");
+                        const lines = toLines(card.label);
                         return (
                           <div key={i} className="bg-white rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-lg hover:border-[#00E1FF]/40 transition-all duration-300 min-h-[130px] sm:min-h-[160px] border border-gray-100 group">
                             <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#0f172a] group-hover:text-[#00E1FF] transition-colors mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
