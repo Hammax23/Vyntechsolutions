@@ -162,6 +162,31 @@
       "repeatable": false,
       "component": "sections.seo-packages-block"
     },
+    "cloudIncludedBlock": {
+      "type": "component",
+      "repeatable": false,
+      "component": "sections.cloud-included-block"
+    },
+    "aiMlGridBlock": {
+      "type": "component",
+      "repeatable": false,
+      "component": "sections.ai-ml-grid-block"
+    },
+    "devopsGridBlock": {
+      "type": "component",
+      "repeatable": false,
+      "component": "sections.devops-grid-block"
+    },
+    "ecommerceServicesBlock": {
+      "type": "component",
+      "repeatable": false,
+      "component": "sections.ecommerce-services-block"
+    },
+    "uiuxEngagementsBlock": {
+      "type": "component",
+      "repeatable": false,
+      "component": "sections.uiux-engagements-block"
+    },
     "canadaCities": {
       "type": "json"
     }

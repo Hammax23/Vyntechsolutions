@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_sections_cloud_included_blocks",
+  "info": {
+    "displayName": "Cloud Included Block",
+    "description": "Enterprise cloud deliverables block used on the Cloud Solutions service page",
+    "icon": "server"
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": "Enterprise Cloud Deliverables"
+    },
+    "description": {
+      "type": "text"
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.cloud-included-item"
+    }
+  }
+}

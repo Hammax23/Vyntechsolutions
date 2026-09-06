@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_sections_ai_ml_items",
+  "info": {
+    "displayName": "AI/ML Grid Item",
+    "icon": "cube"
+  },
+  "options": {},
+  "attributes": {
+    "itemId": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    }
+  }
+}

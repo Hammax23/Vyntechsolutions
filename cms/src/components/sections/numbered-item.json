@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_sections_numbered_items",
+  "info": {
+    "displayName": "Numbered Grid Item",
+    "description": "Item with 01/02/03 number label used in DevOps and Ecommerce service grids",
+    "icon": "hashtag"
+  },
+  "options": {},
+  "attributes": {
+    "num": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "desc": {
+      "type": "text"
+    }
+  }
+}

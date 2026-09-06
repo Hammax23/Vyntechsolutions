@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_sections_uiux_engagements_blocks",
+  "info": {
+    "displayName": "UI/UX Engagements Block",
+    "description": "Types of UI/UX engagements block used on the UI/UX Design service page",
+    "icon": "layout"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "string"
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.uiux-engagement"
+    }
+  }
+}

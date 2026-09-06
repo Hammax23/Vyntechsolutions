@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_sections_uiux_engagements",
+  "info": {
+    "displayName": "UI/UX Engagement Item",
+    "icon": "paint-brush"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    }
+  }
+}

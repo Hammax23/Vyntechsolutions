@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_sections_ecommerce_services_blocks",
+  "info": {
+    "displayName": "Ecommerce Services Block",
+    "description": "End-to-end ecommerce services grid used on the Ecommerce Solutions service page",
+    "icon": "shopping-cart"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.numbered-item"
+    }
+  }
+}

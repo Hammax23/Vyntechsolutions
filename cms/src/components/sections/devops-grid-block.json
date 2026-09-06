@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_sections_devops_grid_blocks",
+  "info": {
+    "displayName": "DevOps Grid Block",
+    "description": "Comprehensive DevOps services grid used on the DevOps & CI/CD service page",
+    "icon": "gear"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.numbered-item"
+    }
+  }
+}

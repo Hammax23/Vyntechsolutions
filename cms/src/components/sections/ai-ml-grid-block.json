@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_sections_ai_ml_grid_blocks",
+  "info": {
+    "displayName": "AI/ML Grid Block",
+    "description": "Enterprise AI & ML capabilities grid used on the AI/ML Solutions service page",
+    "icon": "layer"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "string"
+    },
+    "intro": {
+      "type": "json"
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.ai-ml-item"
+    }
+  }
+}

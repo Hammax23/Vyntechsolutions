@@ -2990,15 +2990,19 @@ export default function ServicePage() {
         )}
 
         {/* UI/UX Engagements Section - Only for UI/UX Design */}
-        {pageSections.uiuxEngagements && (
-          <UiUxEngagementsSection data={pageSections.uiuxEngagements} />
-        )}
+        {(() => {
+          const cms = (service as ServiceData & { uiuxEngagementsBlock?: NonNullable<ServicePageSections["uiuxEngagements"]> }).uiuxEngagementsBlock;
+          const data = cms?.items?.length ? cms : pageSections.uiuxEngagements;
+          return data ? <UiUxEngagementsSection data={data} /> : null;
+        })()}
 
 
         {/* E-commerce Services Section - Only for E-commerce Solutions */}
-        {pageSections.ecommerceServices && (
-          <EcommerceServicesSection data={pageSections.ecommerceServices} />
-        )}
+        {(() => {
+          const cms = (service as ServiceData & { ecommerceServicesBlock?: NonNullable<ServicePageSections["ecommerceServices"]> }).ecommerceServicesBlock;
+          const data = cms?.items?.length ? cms : pageSections.ecommerceServices;
+          return data ? <EcommerceServicesSection data={data} /> : null;
+        })()}
 
         {/* SEO Packages Section */}
         {(() => {
@@ -3234,19 +3238,49 @@ export default function ServicePage() {
         )}
 
         {/* What's Included Section (ONLY for Cloud Solutions Service Page, directly after Process section) */}
-        {pageSections.cloudIncluded && (
-          <CloudIncludedSection data={pageSections.cloudIncluded} />
-        )}
+        {(() => {
+          const cms = (service as ServiceData & { cloudIncludedBlock?: NonNullable<ServicePageSections["cloudIncluded"]> & { items?: Array<{ id?: string; itemId?: string; title: string; description?: string; points?: string[] }> } }).cloudIncludedBlock;
+          const hasCms = cms?.items?.length;
+          const data = hasCms
+            ? {
+                heading: cms!.heading,
+                description: cms!.description,
+                items: cms!.items!.map((it, i) => ({
+                  id: String(it.id || it.itemId || `cloud-${i}`),
+                  title: it.title,
+                  description: it.description || "",
+                  points: it.points || [],
+                })),
+              }
+            : pageSections.cloudIncluded;
+          return data ? <CloudIncludedSection data={data} /> : null;
+        })()}
 
         {/* Enterprise AI/ML Capabilities Grid (ONLY for AI/ML Solutions Service Page, directly after Process section) */}
-        {pageSections.aiMlGrid && (
-          <AiMlServicesGridSection data={pageSections.aiMlGrid} />
-        )}
+        {(() => {
+          const cms = (service as ServiceData & { aiMlGridBlock?: NonNullable<ServicePageSections["aiMlGrid"]> & { items?: Array<{ id?: string; itemId?: string; title: string; description?: string }> } }).aiMlGridBlock;
+          const hasCms = cms?.items?.length;
+          const data = hasCms
+            ? {
+                eyebrow: cms!.eyebrow,
+                heading: cms!.heading,
+                intro: cms!.intro,
+                items: cms!.items!.map((it, i) => ({
+                  id: String(it.id || it.itemId || `ai-${i}`),
+                  title: it.title,
+                  description: it.description || "",
+                })),
+              }
+            : pageSections.aiMlGrid;
+          return data ? <AiMlServicesGridSection data={data} /> : null;
+        })()}
 
         {/* Comprehensive DevOps Services Section (ONLY for DevOps & CI/CD Service Page) */}
-        {pageSections.devopsGrid && (
-          <DevOpsServicesGridSection data={pageSections.devopsGrid} />
-        )}
+        {(() => {
+          const cms = (service as ServiceData & { devopsGridBlock?: NonNullable<ServicePageSections["devopsGrid"]> }).devopsGridBlock;
+          const data = cms?.items?.length ? cms : pageSections.devopsGrid;
+          return data ? <DevOpsServicesGridSection data={data} /> : null;
+        })()}
 
         {/* Categorized Tech Stack */}
         {service.showTechStack !== false && techStackData?.categories?.length ? (

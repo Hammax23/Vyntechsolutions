@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_sections_cloud_included_items",
+  "info": {
+    "displayName": "Cloud Included Item",
+    "icon": "cloud"
+  },
+  "options": {},
+  "attributes": {
+    "itemId": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "points": {
+      "type": "json"
+    }
+  }
+}

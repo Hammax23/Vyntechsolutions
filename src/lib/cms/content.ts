@@ -20,6 +20,11 @@ const SERVICE_POPULATE: Record<string, string> = {
   "populate[deliverySteps]": "true",
   "populate[faqs]": "true",
   "populate[seoPackagesBlock][populate][packages]": "true",
+  "populate[cloudIncludedBlock][populate][items]": "true",
+  "populate[aiMlGridBlock][populate][items]": "true",
+  "populate[devopsGridBlock][populate][items]": "true",
+  "populate[ecommerceServicesBlock][populate][items]": "true",
+  "populate[uiuxEngagementsBlock][populate][items]": "true",
   ...SEO_POPULATE,
 };
 
@@ -168,6 +173,34 @@ export type CmsService = {
       features?: string[];
     }>;
   };
+  cloudIncludedBlock?: {
+    heading?: string;
+    description?: string;
+    items?: Array<{ itemId?: string; title: string; description?: string; points?: string[] }>;
+  };
+  aiMlGridBlock?: {
+    eyebrow?: string;
+    heading?: string;
+    intro?: string[];
+    items?: Array<{ itemId?: string; title: string; description?: string }>;
+  };
+  devopsGridBlock?: {
+    eyebrow?: string;
+    heading?: string;
+    description?: string;
+    items?: Array<{ num?: string; title: string; desc?: string }>;
+  };
+  ecommerceServicesBlock?: {
+    eyebrow?: string;
+    heading?: string;
+    description?: string;
+    items?: Array<{ num?: string; title: string; desc?: string }>;
+  };
+  uiuxEngagementsBlock?: {
+    eyebrow?: string;
+    heading?: string;
+    items?: Array<{ title: string; description?: string }>;
+  };
   canadaCities?: string[] | Record<string, unknown>;
 };
 
@@ -230,6 +263,21 @@ function mapService(entry: Record<string, unknown>, fallbackSlug?: string, local
     seoPackagesBlock: isObjectPopulated(entry.seoPackagesBlock)
       ? (entry.seoPackagesBlock as CmsService["seoPackagesBlock"])
       : localFallback?.seoPackagesBlock,
+    cloudIncludedBlock: isObjectPopulated(entry.cloudIncludedBlock)
+      ? (entry.cloudIncludedBlock as CmsService["cloudIncludedBlock"])
+      : localFallback?.cloudIncludedBlock,
+    aiMlGridBlock: isObjectPopulated(entry.aiMlGridBlock)
+      ? (entry.aiMlGridBlock as CmsService["aiMlGridBlock"])
+      : localFallback?.aiMlGridBlock,
+    devopsGridBlock: isObjectPopulated(entry.devopsGridBlock)
+      ? (entry.devopsGridBlock as CmsService["devopsGridBlock"])
+      : localFallback?.devopsGridBlock,
+    ecommerceServicesBlock: isObjectPopulated(entry.ecommerceServicesBlock)
+      ? (entry.ecommerceServicesBlock as CmsService["ecommerceServicesBlock"])
+      : localFallback?.ecommerceServicesBlock,
+    uiuxEngagementsBlock: isObjectPopulated(entry.uiuxEngagementsBlock)
+      ? (entry.uiuxEngagementsBlock as CmsService["uiuxEngagementsBlock"])
+      : localFallback?.uiuxEngagementsBlock,
     canadaCities: isArrayPopulated(entry.canadaCities) || isObjectPopulated(entry.canadaCities)
       ? (entry.canadaCities as CmsService["canadaCities"])
       : localFallback?.canadaCities,
