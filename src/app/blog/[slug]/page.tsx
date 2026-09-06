@@ -12,6 +12,12 @@ export default function BlogPostPage() {
   const slug = params.slug as string;
   const [post, setPost] = useState<BlogPost | undefined>(getPostBySlug(slug));
   const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>(getRelatedPosts(slug, 3));
+  const [relatedHeading, setRelatedHeading] = useState("Related Articles");
+  const [ctaHeading, setCtaHeading] = useState("Need Help With Your Project?");
+  const [ctaBody, setCtaBody] = useState("Let's discuss how we can help build your software solution.");
+  const [ctaLabel, setCtaLabel] = useState("Get in Touch");
+  const [notFoundHeading, setNotFoundHeading] = useState("Article Not Found");
+  const [notFoundLink, setNotFoundLink] = useState("Back to Blog");
 
   useEffect(() => {
     let cancelled = false;
@@ -21,6 +27,19 @@ export default function BlogPostPage() {
         if (cancelled || !data?.post) return;
         setPost(data.post);
         if (data.related) setRelatedPosts(data.related);
+      })
+      .catch(() => {});
+    fetch("/api/cms/content?type=static-page&slug=blog")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (cancelled) return;
+        const sections = (data?.page?.sections || {}) as Record<string, unknown>;
+        if (sections.relatedHeading) setRelatedHeading(String(sections.relatedHeading));
+        if (sections.postCtaHeading) setCtaHeading(String(sections.postCtaHeading));
+        if (sections.postCtaBody) setCtaBody(String(sections.postCtaBody));
+        if (sections.postCtaLabel) setCtaLabel(String(sections.postCtaLabel));
+        if (sections.notFoundHeading) setNotFoundHeading(String(sections.notFoundHeading));
+        if (sections.notFoundLink) setNotFoundLink(String(sections.notFoundLink));
       })
       .catch(() => {});
     return () => {
@@ -34,9 +53,9 @@ export default function BlogPostPage() {
         <Navbar />
         <main className="min-h-screen bg-white flex items-center justify-center">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-[#1a1a2e] mb-4">Article Not Found</h1>
+            <h1 className="text-4xl font-bold text-[#1a1a2e] mb-4">{notFoundHeading}</h1>
             <Link href="/blog" className="text-[#262b3f] hover:underline">
-              Back to Blog
+              {notFoundLink}
             </Link>
           </div>
         </main>
@@ -120,7 +139,7 @@ export default function BlogPostPage() {
         {relatedPosts.length > 0 && (
           <section className="py-12 bg-[#f8f9fa]">
             <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
-              <h2 className="text-xl font-bold text-[#1a1a2e] mb-6">Related Articles</h2>
+              <h2 className="text-xl font-bold text-[#1a1a2e] mb-6">{relatedHeading}</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 {relatedPosts.map((relatedPost) => (
                   <Link
@@ -146,17 +165,17 @@ export default function BlogPostPage() {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 bg-gradient-to-r from-[#262b3f]/20 to-transparent rounded-2xl p-6 md:p-8">
               <div>
                 <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-                  Need Help With Your Project?
+                  {ctaHeading}
                 </h2>
                 <p className="text-white/70 text-sm">
-                  Let&apos;s discuss how we can help build your software solution.
+                  {ctaBody}
                 </p>
               </div>
               <Link
                 href="/lets-talk-business"
                 className="inline-flex items-center justify-center gap-2 bg-[#262b3f] hover:bg-[#0055FF] text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 whitespace-nowrap"
               >
-                Get in Touch
+                {ctaLabel}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>

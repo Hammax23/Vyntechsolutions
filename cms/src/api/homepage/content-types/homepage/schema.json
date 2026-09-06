@@ -67,6 +67,10 @@
     "industriesSubheading": {
       "type": "string"
     },
+    "industriesViewLabel": {
+      "type": "string",
+      "default": "View"
+    },
     "partnersHeading": {
       "type": "string",
       "default": "Technology Partners"

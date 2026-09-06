@@ -30,6 +30,9 @@
       "type": "component",
       "repeatable": true,
       "component": "shared.nav-link"
+    },
+    "chrome": {
+      "type": "json"
     }
   }
 }

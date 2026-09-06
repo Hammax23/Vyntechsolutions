@@ -31,6 +31,9 @@
     },
     "pageStats": {
       "type": "json"
+    },
+    "labels": {
+      "type": "json"
     }
   }
 }

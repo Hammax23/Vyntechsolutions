@@ -19,6 +19,7 @@ import {
   DEFAULT_TIMELINE_OPTIONS,
   applyFormConfigServices,
 } from "@/lib/form-options";
+import { DEFAULT_CONTACT_PAGE, DEFAULT_NAV_CHROME, mergeCopy } from "@/lib/ui-copy";
 
 const benefits = [
   {
@@ -73,6 +74,9 @@ export default function LetsTalkBusinessPage() {
   const [hearAboutOptions, setHearAboutOptions] = useState<string[]>(DEFAULT_HEAR_ABOUT);
   const [pageBenefits, setPageBenefits] = useState(benefits);
   const [pageStats, setPageStats] = useState(stats);
+  const [pageCopy, setPageCopy] = useState(DEFAULT_CONTACT_PAGE);
+  const [crumbHome, setCrumbHome] = useState(DEFAULT_NAV_CHROME.homeLabel);
+  const [crumbContact, setCrumbContact] = useState(DEFAULT_NAV_CHROME.contactLabel);
   const [contactEmail, setContactEmail] = useState(COMPANY_EMAIL);
   const [contactPhoneDisplay, setContactPhoneDisplay] = useState(COMPANY_PHONE_DISPLAY);
   const [contactPhoneTel, setContactPhoneTel] = useState(COMPANY_PHONE_TEL);
@@ -99,8 +103,10 @@ export default function LetsTalkBusinessPage() {
       fetch("/api/cms/content?type=form-config").then((r) => (r.ok ? r.json() : null)),
       fetch("/api/cms/services").then((r) => (r.ok ? r.json() : null)),
       fetch("/api/cms/content?type=organization").then((r) => (r.ok ? r.json() : null)),
+      fetch("/api/cms/content?type=static-page&slug=lets-talk-business").then((r) => (r.ok ? r.json() : null)),
+      fetch("/api/cms/content?type=navigation").then((r) => (r.ok ? r.json() : null)),
     ])
-      .then(([formDataRes, servicesRes, orgRes]) => {
+      .then(([formDataRes, servicesRes, orgRes, pageRes, navRes]) => {
         if (cancelled) return;
         const formConfig = formDataRes?.formConfig as Record<string, unknown> | undefined;
         const cmsServices = (servicesRes?.services || []) as { slug?: string; title?: string }[];
@@ -144,6 +150,21 @@ export default function LetsTalkBusinessPage() {
           setContactPhoneDisplay(resolveCompanyPhoneDisplay(String(org.phone)));
           setContactPhoneTel(resolveCompanyPhoneTel(String(org.phone)));
         }
+        const page = pageRes?.page as Record<string, unknown> | undefined;
+        const sections = (page?.sections || {}) as Record<string, unknown>;
+        setPageCopy(
+          mergeCopy(DEFAULT_CONTACT_PAGE, {
+            heroHeading: page?.heroHeading,
+            heroBody: page?.heroBody,
+            formHeading: sections.formHeading,
+            formBody: sections.formBody,
+            benefitsHeading: sections.benefitsHeading,
+            talkHeading: sections.talkHeading,
+          })
+        );
+        const navChrome = navRes?.navigation?.chrome as Record<string, unknown> | undefined;
+        if (navChrome?.homeLabel) setCrumbHome(String(navChrome.homeLabel));
+        if (navChrome?.contactLabel) setCrumbContact(String(navChrome.contactLabel));
       })
       .catch(() => {});
     return () => {
@@ -195,17 +216,17 @@ export default function LetsTalkBusinessPage() {
           <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 pt-32 pb-16 text-center">
             <div className={`transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
               <div className="flex items-center gap-2 text-white/50 text-sm mb-8">
-                <Link href="/" className="hover:text-white transition-colors">Home</Link>
+                <Link href="/" className="hover:text-white transition-colors">{crumbHome}</Link>
                 <span>›</span>
-                <span className="text-white">Contact</span>
+                <span className="text-white">{crumbContact}</span>
               </div>
               
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
-                Let&apos;s Talk
+                {pageCopy.heroHeading}
               </h1>
               
               <p className="text-lg sm:text-xl text-white/70 max-w-3xl mx-auto">
-                Tell us about your project, and our experts will craft a customized solution that drives real business results.
+                {pageCopy.heroBody}
               </p>
             </div>
           </div>
@@ -222,10 +243,10 @@ export default function LetsTalkBusinessPage() {
                   <div className={`bg-white rounded-3xl shadow-xl border border-gray-100 p-8 md:p-12 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
                     <div className="mb-10">
                       <h2 className="text-2xl sm:text-3xl font-bold text-[#1a1a2e] mb-3">
-                        Tell Us About Your Project
+                        {pageCopy.formHeading}
                       </h2>
                       <p className="text-gray-600">
-                        Fill out the form below and we&apos;ll get back to you within 24 hours with a customized proposal.
+                        {pageCopy.formBody}
                       </p>
                     </div>
 
@@ -466,7 +487,7 @@ export default function LetsTalkBusinessPage() {
               <div className="lg:col-span-1 space-y-8">
                 {/* Benefits */}
                 <div className={`bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f3460] rounded-3xl p-8 transition-all duration-700 delay-200 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-                  <h3 className="text-xl font-semibold text-white mb-6">What You&apos;ll Get</h3>
+                  <h3 className="text-xl font-semibold text-white mb-6">{pageCopy.benefitsHeading}</h3>
                   <div className="space-y-6">
                     {pageBenefits.map((benefit, index) => (
                       <div key={index} className="flex items-start gap-4">
@@ -492,7 +513,7 @@ export default function LetsTalkBusinessPage() {
 
                 {/* Contact Info */}
                 <div className={`bg-white rounded-3xl border border-gray-100 shadow-lg p-8 transition-all duration-700 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-                  <h3 className="text-xl font-semibold text-[#1a1a2e] mb-6">Prefer to Talk?</h3>
+                  <h3 className="text-xl font-semibold text-[#1a1a2e] mb-6">{pageCopy.talkHeading}</h3>
                   <div className="space-y-4">
                     <a href={`mailto:${contactEmail}`} className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-[#262b3f]/5 transition-colors group">
                       <div className="w-10 h-10 bg-[#262b3f]/10 rounded-lg flex items-center justify-center text-[#262b3f] group-hover:bg-[#262b3f] group-hover:text-white transition-all">

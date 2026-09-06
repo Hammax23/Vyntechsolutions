@@ -167,6 +167,7 @@ export default function IndustriesImpact() {
   const [dragging, setDragging] = useState(false);
   const [eyebrow, setEyebrow] = useState("Industries we serve");
   const [heading, setHeading] = useState("Transforming Industries, Empowering Growth");
+  const [viewLabel, setViewLabel] = useState("View");
   const [items, setItems] = useState<IndustryItem[]>(industries);
   const sectionRef = useRef<HTMLElement>(null);
   const reelRef = useRef<HTMLDivElement>(null);
@@ -206,6 +207,7 @@ export default function IndustriesImpact() {
         const hp = homeData?.homepage as Record<string, unknown> | undefined;
         if (hp?.industriesHeading) setHeading(String(hp.industriesHeading));
         if (hp?.industriesSubheading) setEyebrow(String(hp.industriesSubheading));
+        if (hp?.industriesViewLabel) setViewLabel(String(hp.industriesViewLabel));
         const list = industriesData?.industries as
           | {
               slug?: string;
@@ -431,7 +433,7 @@ export default function IndustriesImpact() {
                 href={current.href}
                 className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#0055FF]"
               >
-                View {current.name}
+                {viewLabel} {current.name}
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>

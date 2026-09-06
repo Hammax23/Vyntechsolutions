@@ -67,6 +67,12 @@
     "cookieCustomizeLabel": {
       "type": "string"
     },
+    "cookieChrome": {
+      "type": "json"
+    },
+    "robotsTxt": {
+      "type": "text"
+    },
     "defaultOgImage": {
       "type": "media",
       "multiple": false,

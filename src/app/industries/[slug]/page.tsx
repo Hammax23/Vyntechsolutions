@@ -11,6 +11,7 @@ import {
   industriesListingDefaults,
   type IndustryData,
 } from "@/data/industriesData";
+import { DEFAULT_NAV_CHROME, mergeCopy } from "@/lib/ui-copy";
 
 const WHY_ICON_PATHS: Record<string, string> = {
   chart:
@@ -80,6 +81,7 @@ export default function IndustryPage() {
   const [industry, setIndustry] = useState<IndustryData | null>(
     industriesData[slug] || null
   );
+  const [navChrome, setNavChrome] = useState(DEFAULT_NAV_CHROME);
 
   useEffect(() => {
     let cancelled = false;
@@ -87,6 +89,14 @@ export default function IndustryPage() {
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
         if (!cancelled && data?.industry) setIndustry(data.industry);
+      })
+      .catch(() => {});
+    fetch("/api/cms/content?type=navigation")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (!cancelled && data?.navigation?.chrome) {
+          setNavChrome(mergeCopy(DEFAULT_NAV_CHROME, data.navigation.chrome));
+        }
       })
       .catch(() => {});
     return () => {
@@ -147,11 +157,11 @@ export default function IndustryPage() {
           <div className="relative z-10 max-w-[1400px] w-full mx-auto px-4 sm:px-6">
             <div className="flex items-center gap-2 text-white/50 text-sm mb-8">
               <Link href="/" className="hover:text-white transition-colors">
-                Home
+                {navChrome.homeLabel}
               </Link>
               <span>›</span>
               <Link href="/industries" className="hover:text-white transition-colors">
-                Industries
+                {navChrome.industriesLabel}
               </Link>
               <span>›</span>
               <span className="text-white">{industry.title}</span>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { DEFAULT_FORM_LABELS, mergeCopy } from "@/lib/ui-copy";
 
 export default function TimedCTAPopup() {
   const pathname = usePathname();
@@ -11,6 +12,7 @@ export default function TimedCTAPopup() {
   const [promoBody, setPromoBody] = useState(
     "to help our experts understand your business objectives and create your customized plan."
   );
+  const [labels, setLabels] = useState(DEFAULT_FORM_LABELS);
   const [formData, setFormData] = useState({
     name: "",
     companyEmail: "",
@@ -28,12 +30,18 @@ export default function TimedCTAPopup() {
 
   useEffect(() => {
     if (hideWidgets) return;
-    fetch("/api/cms/content?type=promos&slot=timed-cta")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
+    Promise.all([
+      fetch("/api/cms/content?type=promos&slot=timed-cta").then((r) => (r.ok ? r.json() : null)),
+      fetch("/api/cms/content?type=form-config").then((r) => (r.ok ? r.json() : null)),
+    ])
+      .then(([data, formRes]) => {
         const promo = data?.promos?.[0];
         if (promo?.heading) setPromoHeading(String(promo.heading));
         if (promo?.body) setPromoBody(String(promo.body));
+        const labelsIn = formRes?.formConfig?.labels;
+        if (labelsIn && typeof labelsIn === "object") {
+          setLabels(mergeCopy(DEFAULT_FORM_LABELS, labelsIn as Record<string, unknown>));
+        }
       })
       .catch(() => {});
   }, [hideWidgets]);
@@ -132,7 +140,7 @@ export default function TimedCTAPopup() {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    placeholder="Name"
+                    placeholder={labels.timedName}
                     required
                     className="w-full px-0 py-3 text-gray-900 placeholder-gray-400 border-0 border-b-2 border-gray-200 focus:border-[#1a1a2e] focus:ring-0 transition-colors duration-200 bg-transparent text-base"
                   />
@@ -143,7 +151,7 @@ export default function TimedCTAPopup() {
                     name="companyEmail"
                     value={formData.companyEmail}
                     onChange={handleChange}
-                    placeholder="Company Email"
+                    placeholder={labels.timedEmail}
                     required
                     className="w-full px-0 py-3 text-gray-900 placeholder-gray-400 border-0 border-b-2 border-gray-200 focus:border-[#1a1a2e] focus:ring-0 transition-colors duration-200 bg-transparent text-base"
                   />
@@ -173,7 +181,7 @@ export default function TimedCTAPopup() {
                     name="phoneNumber"
                     value={formData.phoneNumber}
                     onChange={handleChange}
-                    placeholder="Contact Number"
+                    placeholder={labels.timedPhone}
                     required
                     className="flex-1 px-0 py-3 text-gray-900 placeholder-gray-400 border-0 border-b-2 border-gray-200 focus:border-[#1a1a2e] focus:ring-0 transition-colors duration-200 bg-transparent text-base"
                   />
@@ -184,7 +192,7 @@ export default function TimedCTAPopup() {
                     name="workEmail"
                     value={formData.workEmail}
                     onChange={handleChange}
-                    placeholder="Work Email (Optional)"
+                    placeholder={labels.timedWorkEmail}
                     className="w-full px-0 py-3 text-gray-900 placeholder-gray-400 border-0 border-b-2 border-gray-200 focus:border-[#1a1a2e] focus:ring-0 transition-colors duration-200 bg-transparent text-base"
                   />
                 </div>
@@ -196,7 +204,7 @@ export default function TimedCTAPopup() {
                   name="projectDescription"
                   value={formData.projectDescription}
                   onChange={handleChange}
-                  placeholder="Describe your project (Help us come back better prepared)"
+                  placeholder={labels.timedProject}
                   rows={3}
                   className="w-full px-0 py-3 text-gray-900 placeholder-gray-400 border-0 border-b-2 border-gray-200 focus:border-[#1a1a2e] focus:ring-0 transition-colors duration-200 bg-transparent text-sm sm:text-base resize-none"
                 />
@@ -210,7 +218,7 @@ export default function TimedCTAPopup() {
                   </svg>
                 </div>
                 <p className="text-gray-700 text-xs sm:text-sm">
-                  Fast 2-minute response, fully <span className="font-semibold">NDA-protected</span>.
+                  {labels.timedTrust}
                 </p>
               </div>
 
@@ -219,7 +227,7 @@ export default function TimedCTAPopup() {
                 type="submit"
                 className="w-full bg-[#1a1a2e] hover:bg-[#262b3f] text-white py-3 sm:py-4 rounded-lg font-medium transition-all duration-300 text-sm sm:text-base mt-3 sm:mt-4"
               >
-                Submit Requirements
+                {labels.timedSubmit}
               </button>
             </form>
           </div>

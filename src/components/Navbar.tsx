@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import VynTechLogo from "./VynTechLogo";
+import { DEFAULT_NAV_CHROME, mergeCopy } from "@/lib/ui-copy";
 
 type NavItem = { title: string; slug: string; features?: { title: string }[] };
 type PrimaryLink = { label: string; href: string };
@@ -146,6 +147,7 @@ export default function Navbar() {
   const [industriesPromo, setIndustriesPromo] = useState(
     "Transforming industries with innovative solutions"
   );
+  const [chrome, setChrome] = useState(DEFAULT_NAV_CHROME);
   const [searchItems, setSearchItems] = useState<SearchItem[]>(() =>
     buildSearchItems(defaultNavServices, defaultNavIndustries)
   );
@@ -208,7 +210,9 @@ export default function Navbar() {
 
         const nav = navData?.navigation as {
           primaryLinks?: { label?: string; href?: string }[];
+          chrome?: Record<string, unknown>;
         } | null;
+        if (nav?.chrome) setChrome(mergeCopy(DEFAULT_NAV_CHROME, nav.chrome));
         if (nav?.primaryLinks?.length) {
           const careers = nav.primaryLinks.find((l) =>
             String(l.href || "").toLowerCase().includes("careers")
@@ -385,7 +389,7 @@ export default function Navbar() {
                   onMouseLeave={handleMouseLeave}
                 >
                   <button className="flex items-center gap-1 text-white text-sm font-light hover:text-white/80 transition-colors py-2">
-                    SERVICES
+                    {chrome.servicesLabel}
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
@@ -398,7 +402,7 @@ export default function Navbar() {
                   onMouseLeave={handleMouseLeave}
                 >
                   <button className="flex items-center gap-1 text-white text-sm font-light hover:text-white/80 transition-colors py-2">
-                    INDUSTRIES
+                    {chrome.industriesLabel}
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
@@ -426,7 +430,7 @@ export default function Navbar() {
                 onClick={() => window.dispatchEvent(new CustomEvent("openLetsTalkBusiness"))}
                 className="border border-white text-white px-6 py-2 text-sm font-light tracking-wider hover:bg-white hover:text-black transition-all duration-300"
               >
-                LET&apos;S TALK BUSINESS
+                {chrome.ctaLabel}
               </button>
 
               <button
@@ -482,7 +486,7 @@ export default function Navbar() {
                 onClick={() => toggleMobileAccordion("services")}
                 className="w-full flex items-center justify-between py-4 text-white text-lg font-light tracking-wide"
               >
-                SERVICES
+                {chrome.servicesLabel}
                 <svg
                   className={`w-4 h-4 transform transition-transform duration-300 ${mobileAccordion === "services" ? "rotate-180" : ""}`}
                   fill="none"
@@ -519,7 +523,7 @@ export default function Navbar() {
                 onClick={() => toggleMobileAccordion("industries")}
                 className="w-full flex items-center justify-between py-4 text-white text-lg font-light tracking-wide"
               >
-                INDUSTRIES
+                {chrome.industriesLabel}
                 <svg
                   className={`w-4 h-4 transform transition-transform duration-300 ${mobileAccordion === "industries" ? "rotate-180" : ""}`}
                   fill="none"
@@ -579,7 +583,7 @@ export default function Navbar() {
               }}
               className="block w-full border border-white text-white py-4 text-sm font-light tracking-widest hover:bg-white hover:text-black transition-all duration-300 text-center"
             >
-              LET&apos;S TALK BUSINESS
+              {chrome.ctaLabel}
             </button>
           </div>
 
@@ -636,7 +640,7 @@ export default function Navbar() {
           <div className="max-w-[1400px] mx-auto px-6 py-8">
             <div className="grid grid-cols-12 gap-6">
               <div className="col-span-3 pr-6 flex flex-col border-r border-gray-100">
-                <h3 className="text-xs font-bold text-gray-400 mb-4 uppercase tracking-wider">OUR EXPERTISE</h3>
+                <h3 className="text-xs font-bold text-gray-400 mb-4 uppercase tracking-wider">{chrome.expertiseHeading}</h3>
                 <div className="relative rounded-lg overflow-hidden h-40 mb-6 group cursor-pointer">
                   <Image
                     src="/whatwedo.png"
@@ -646,12 +650,12 @@ export default function Navbar() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                   <p className="absolute bottom-3 left-3 text-white text-sm font-semibold pr-3 leading-tight">
-                    Why data standards matter & why they&apos;re important
+                    {chrome.expertiseBody}
                   </p>
                 </div>
                 <div className="mt-auto">
                   <Link href="/services" className="text-[#00B4FF] text-sm font-semibold hover:underline">
-                    Explore all services &rarr;
+                    {chrome.exploreServices}
                   </Link>
                 </div>
               </div>
@@ -706,7 +710,7 @@ export default function Navbar() {
                       href="/services/tax-accounting"
                       className="w-full bg-[#3B82F6] text-white font-semibold py-3 px-4 rounded-lg hover:bg-blue-500 transition-all duration-300 flex items-center justify-center gap-2 group text-sm shadow-[0_4px_14px_0_rgba(59,130,246,0.39)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.23)] mt-auto"
                     >
-                      <span>View All Services</span>
+                      <span>{chrome.viewAllServices}</span>
                       <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                       </svg>
@@ -728,7 +732,7 @@ export default function Navbar() {
           <div className="max-w-[1400px] mx-auto px-6 py-8">
             <div className="grid grid-cols-12 gap-8">
               <div className="col-span-3 pr-6 flex flex-col border-r border-gray-100">
-                <h3 className="text-xs font-bold text-gray-400 mb-4 uppercase tracking-wider">INDUSTRIES</h3>
+                <h3 className="text-xs font-bold text-gray-400 mb-4 uppercase tracking-wider">{chrome.industriesMenuHeading}</h3>
                 <div className="relative rounded-lg overflow-hidden h-40 mb-6 group cursor-pointer">
                   <Image
                     src="/whowehelp.png"
@@ -743,7 +747,7 @@ export default function Navbar() {
                 </div>
                 <div className="mt-auto">
                   <Link href="/industries" className="text-[#00B4FF] text-sm font-semibold hover:underline">
-                    Explore all industries &rarr;
+                    {chrome.exploreIndustries}
                   </Link>
                 </div>
               </div>
@@ -794,7 +798,7 @@ export default function Navbar() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search pages, services..."
+                  placeholder={chrome.searchPlaceholder}
                   className="w-full bg-white/10 border border-white/20 rounded-full py-5 pl-16 pr-6 text-white text-lg placeholder:text-white/40 focus:outline-none focus:border-white/40 transition-colors"
                 />
                 {searchQuery && (
@@ -831,13 +835,13 @@ export default function Navbar() {
 
               {searchQuery && searchResults.length === 0 && (
                 <div className="mt-6 text-center">
-                  <p className="text-white/50">No results found for &quot;{searchQuery}&quot;</p>
+                  <p className="text-white/50">{chrome.noResultsPrefix} &quot;{searchQuery}&quot;</p>
                 </div>
               )}
 
               {!searchQuery && (
                 <div className="mt-8">
-                  <p className="text-white/40 text-sm mb-4">Quick Links</p>
+                  <p className="text-white/40 text-sm mb-4">{chrome.quickLinks}</p>
                   <div className="flex flex-wrap gap-3">
                     {searchItems.slice(0, 6).map((item, index) => (
                       <button

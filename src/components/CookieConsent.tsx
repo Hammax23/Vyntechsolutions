@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { DEFAULT_COOKIE_CHROME, mergeCopy } from "@/lib/ui-copy";
 
 interface CookiePreferences {
   essential: boolean;
@@ -52,6 +53,7 @@ export default function CookieConsent() {
   );
   const [acceptLabel, setAcceptLabel] = useState("Accept All");
   const [customizeLabel, setCustomizeLabel] = useState("Customize");
+  const [cookieChrome, setCookieChrome] = useState(DEFAULT_COOKIE_CHROME);
   const [preferences, setPreferences] = useState<CookiePreferences>({
     essential: true,
     analytics: false,
@@ -82,6 +84,9 @@ export default function CookieConsent() {
         if (seo.cookieBody) setCookieBody(String(seo.cookieBody));
         if (seo.cookieAcceptLabel) setAcceptLabel(String(seo.cookieAcceptLabel));
         if (seo.cookieCustomizeLabel) setCustomizeLabel(String(seo.cookieCustomizeLabel));
+        if (seo.cookieChrome && typeof seo.cookieChrome === "object") {
+          setCookieChrome(mergeCopy(DEFAULT_COOKIE_CHROME, seo.cookieChrome as Record<string, unknown>));
+        }
       })
       .catch(() => {});
     return () => {
@@ -187,7 +192,7 @@ export default function CookieConsent() {
                   onClick={handleRejectAll}
                   className="px-5 py-2.5 text-[13px] font-medium text-gray-300 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:bg-white/10 hover:border-white/20 hover:text-white transition-all duration-200"
                 >
-                  Reject All
+                  {cookieChrome.rejectLabel}
                 </button>
                 <button
                   onClick={handleAcceptAll}
@@ -223,8 +228,8 @@ export default function CookieConsent() {
             <div className="px-6 pt-4 pb-4 border-b border-white/10">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-xl font-semibold text-white tracking-tight">Privacy Settings</h2>
-                  <p className="text-gray-500 text-sm mt-1">Manage your cookie preferences</p>
+                  <h2 className="text-xl font-semibold text-white tracking-tight">{cookieChrome.settingsTitle}</h2>
+                  <p className="text-gray-500 text-sm mt-1">{cookieChrome.settingsBody}</p>
                 </div>
                 <button 
                   onClick={() => setShowCustomize(false)}
@@ -245,11 +250,11 @@ export default function CookieConsent() {
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                      <h3 className="text-white font-medium text-[15px]">Essential</h3>
-                      <span className="text-[10px] font-medium text-emerald-400/80 bg-emerald-400/10 px-2 py-0.5 rounded-full">Required</span>
+                      <h3 className="text-white font-medium text-[15px]">{cookieChrome.essentialTitle}</h3>
+                      <span className="text-[10px] font-medium text-emerald-400/80 bg-emerald-400/10 px-2 py-0.5 rounded-full">{cookieChrome.requiredLabel}</span>
                     </div>
                     <p className="text-gray-500 text-[13px] mt-1.5 leading-relaxed">
-                      Necessary for the website to function. Cannot be disabled.
+                      {cookieChrome.essentialBody}
                     </p>
                   </div>
                   <IOSToggle enabled={true} onChange={() => {}} disabled={true} />
@@ -262,10 +267,10 @@ export default function CookieConsent() {
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full bg-blue-400" />
-                      <h3 className="text-white font-medium text-[15px]">Analytics</h3>
+                      <h3 className="text-white font-medium text-[15px]">{cookieChrome.analyticsTitle}</h3>
                     </div>
                     <p className="text-gray-500 text-[13px] mt-1.5 leading-relaxed">
-                      Help us understand how visitors interact with our website.
+                      {cookieChrome.analyticsBody}
                     </p>
                   </div>
                   <IOSToggle enabled={preferences.analytics} onChange={() => togglePreference('analytics')} />
@@ -278,10 +283,10 @@ export default function CookieConsent() {
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full bg-purple-400" />
-                      <h3 className="text-white font-medium text-[15px]">Marketing</h3>
+                      <h3 className="text-white font-medium text-[15px]">{cookieChrome.marketingTitle}</h3>
                     </div>
                     <p className="text-gray-500 text-[13px] mt-1.5 leading-relaxed">
-                      Used to display relevant advertisements based on your interests.
+                      {cookieChrome.marketingBody}
                     </p>
                   </div>
                   <IOSToggle enabled={preferences.marketing} onChange={() => togglePreference('marketing')} />
@@ -294,10 +299,10 @@ export default function CookieConsent() {
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full bg-amber-400" />
-                      <h3 className="text-white font-medium text-[15px]">Functional</h3>
+                      <h3 className="text-white font-medium text-[15px]">{cookieChrome.functionalTitle}</h3>
                     </div>
                     <p className="text-gray-500 text-[13px] mt-1.5 leading-relaxed">
-                      Enable personalized features like live chat and social sharing.
+                      {cookieChrome.functionalBody}
                     </p>
                   </div>
                   <IOSToggle enabled={preferences.functional} onChange={() => togglePreference('functional')} />
@@ -312,7 +317,7 @@ export default function CookieConsent() {
                   onClick={handleRejectAll}
                   className="flex-1 px-5 py-3 text-[14px] font-medium text-gray-300 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-all"
                 >
-                  Reject All
+                  {cookieChrome.rejectLabel}
                 </button>
                 <button
                   onClick={handleAcceptAll}
@@ -324,7 +329,7 @@ export default function CookieConsent() {
                   onClick={handleSavePreferences}
                   className="flex-1 px-5 py-3 text-[14px] font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg shadow-blue-500/25 hover:from-blue-400 hover:to-blue-500 transition-all"
                 >
-                  Save Settings
+                  {cookieChrome.saveLabel}
                 </button>
               </div>
             </div>
