@@ -7175,6 +7175,68 @@
     "servicesHeading": "Our Services",
     "servicesSubheading": "Transforming Modern Businesses",
     "servicesBody": "Through Innovation, Technology, and Scalable Digital Solutions",
+    "serviceCards": [
+      {
+        "title": "Generative AI",
+        "description": "We put AI on the jobs your team already does, drafts, support replies, reports, so it saves hours this month, not in a pitch deck.",
+        "href": "/services/ai-ml-solutions",
+        "art": "/services/ribbons/ribbon-1.webp"
+      },
+      {
+        "title": "Mobile App Development",
+        "description": "iOS and Android apps that feel quick on a real phone. We ship, get them on the stores, and stay on for the updates after launch.",
+        "href": "/services/mobile-app-development",
+        "art": "/services/ribbons/ribbon-2.webp"
+      },
+      {
+        "title": "DevOps",
+        "description": "Pipelines, servers, and deploys set up so a release is a normal Tuesday, not a late night scramble hoping nothing breaks.",
+        "href": "/services/devops-cicd",
+        "art": "/services/ribbons/ribbon-3.webp"
+      },
+      {
+        "title": "UI/UX Design",
+        "description": "We sit with how your customers actually click through, then design screens that make the next step obvious. Fewer dead ends, less bounce.",
+        "href": "/services/ui-ux-design",
+        "art": "/services/ribbons/ribbon-4.webp"
+      },
+      {
+        "title": "Web Development",
+        "description": "Sites and web apps in React and Next.js, fast, easy to edit, built to rank. No bloated templates that look fine until you try to grow.",
+        "href": "/services/web-development",
+        "art": "/services/ribbons/ribbon-5.webp"
+      },
+      {
+        "title": "Custom Software Development",
+        "description": "Tools written around how your team already works. If you're living in spreadsheets or fighting a clunky system, we replace that.",
+        "href": "/services/custom-software-development",
+        "art": "/services/ribbons/ribbon-6.webp"
+      },
+      {
+        "title": "Cloud Solutions",
+        "description": "AWS, Azure, or Google Cloud, we move you over, lock it down, and keep an eye on the bill so you're not paying for idle servers.",
+        "href": "/services/cloud-solutions",
+        "art": "/services/ribbons/ribbon-7.webp"
+      },
+      {
+        "title": "Ecommerce Solutions",
+        "description": "Online stores with checkout, payments, and stock that hold up when it's busy. Shopify or custom, whichever fits the catalogue you have.",
+        "href": "/services/ecommerce-solutions",
+        "art": "/services/ribbons/ribbon-8.webp"
+      },
+      {
+        "title": "SEO & Digital Marketing",
+        "description": "We fix the pages Google actually cares about, titles, content, speed, links, so the right searches start showing your site, not a vanity report.",
+        "href": "/services/seo-digital-marketing",
+        "art": "/services/ribbons/ribbon-9.webp"
+      },
+      {
+        "title": "Maintenance & Support",
+        "description": "Updates, backups, and a real person when something's down. We watch the site so you don't find out from a customer.",
+        "href": "/services/maintenance-support",
+        "art": "/services/ribbons/ribbon-10.webp"
+      }
+    ],
     "impactHeading": "Technology That Makes an Impact",
     "partnersHeading": "Technology Partners",
     "insightsHeading": "Featured Insights",

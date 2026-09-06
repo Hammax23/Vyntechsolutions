@@ -140,9 +140,30 @@ export default function OurServices() {
         if (hp.servicesHeading) setHeading(String(hp.servicesHeading));
         if (hp.servicesSubheading) setSubheading(String(hp.servicesSubheading));
         if (hp.servicesBody) setBody(String(hp.servicesBody));
+        // Prefer editor-controlled list from Strapi homepage
+        const cmsCards = Array.isArray(hp.serviceCards) ? hp.serviceCards : null;
+        if (cmsCards && cmsCards.length) {
+          setCards(
+            cmsCards
+              .filter(
+                (c: unknown): c is { title?: string; description?: string; href?: string; art?: string } =>
+                  typeof c === "object" && c !== null
+              )
+              .map((c, i) => {
+                const fallback = serviceCards[i % serviceCards.length];
+                return {
+                  title: withoutWordDash(String(c.title || fallback.title)),
+                  description: withoutWordDash(String(c.description || fallback.description)),
+                  href: String(c.href || fallback.href),
+                  art: String(c.art || fallback.art),
+                };
+              })
+          );
+        }
       })
       .catch(() => { });
 
+    // Fallback: build cards from Strapi service collection when homepage list is not set
     fetch("/api/cms/services")
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
@@ -150,12 +171,15 @@ export default function OurServices() {
           | { slug?: string; title?: string; description?: string; cardImage?: string }[]
           | undefined;
         if (!list?.length) return;
-        const homeServices = list.filter(
-          (s) => s.slug && s.slug !== "tax-accounting" && !String(s.slug).includes("tax")
-        );
-        if (!homeServices.length) return;
-        setCards(
-          homeServices.map((s, i) => {
+        setCards((current) => {
+          // If homepage.serviceCards already set the list, keep it
+          const changedFromDefault = current !== serviceCards;
+          if (changedFromDefault) return current;
+          const homeServices = list.filter(
+            (s) => s.slug && s.slug !== "tax-accounting" && !String(s.slug).includes("tax")
+          );
+          if (!homeServices.length) return current;
+          return homeServices.map((s, i) => {
             const fallback =
               serviceCards.find((c) => c.href.includes(`/${s.slug}`)) ||
               serviceCards[i % serviceCards.length];
@@ -165,8 +189,8 @@ export default function OurServices() {
               href: `/services/${s.slug}`,
               art: String(s.cardImage || fallback.art),
             };
-          })
-        );
+          });
+        });
       })
       .catch(() => { });
   }, []);

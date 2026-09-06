@@ -31,6 +31,9 @@
     "servicesBody": {
       "type": "text"
     },
+    "serviceCards": {
+      "type": "json"
+    },
     "impactEyebrow": {
       "type": "string"
     },
