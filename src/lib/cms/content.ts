@@ -19,6 +19,7 @@ const SERVICE_POPULATE: Record<string, string> = {
   "populate[whyChooseUsCards]": "true",
   "populate[deliverySteps]": "true",
   "populate[faqs]": "true",
+  "populate[seoPackagesBlock][populate][packages]": "true",
   ...SEO_POPULATE,
 };
 
@@ -149,6 +150,24 @@ export type CmsService = {
   showTechStack?: boolean;
   techStack?: Record<string, unknown>;
   pageSections?: Record<string, unknown>;
+  seoPackagesBlock?: {
+    eyebrow?: string;
+    heading?: string;
+    description?: string;
+    footerNote?: string;
+    customPackageText?: string;
+    customPackageCtaLabel?: string;
+    packages?: Array<{
+      name: string;
+      blurb?: string;
+      price: string;
+      priceSuffix?: string;
+      featured?: boolean;
+      featuredBadge?: string;
+      ctaLabel?: string;
+      features?: string[];
+    }>;
+  };
   canadaCities?: string[] | Record<string, unknown>;
 };
 
@@ -208,6 +227,9 @@ function mapService(entry: Record<string, unknown>, fallbackSlug?: string, local
     pageSections: isObjectPopulated(entry.pageSections)
       ? (entry.pageSections as Record<string, unknown>)
       : (localFallback?.pageSections as Record<string, unknown> | undefined),
+    seoPackagesBlock: isObjectPopulated(entry.seoPackagesBlock)
+      ? (entry.seoPackagesBlock as CmsService["seoPackagesBlock"])
+      : localFallback?.seoPackagesBlock,
     canadaCities: isArrayPopulated(entry.canadaCities) || isObjectPopulated(entry.canadaCities)
       ? (entry.canadaCities as CmsService["canadaCities"])
       : localFallback?.canadaCities,

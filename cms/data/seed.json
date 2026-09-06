@@ -4912,6 +4912,65 @@
         ]
       },
       "cardImage": "/services/ribbons/ribbon-9.webp",
+      "seoPackagesBlock": {
+        "eyebrow": "SEO Packages",
+        "heading": "Choose Your Growth Plan",
+        "description": "Transparent pricing with real deliverables. No hidden fees, no long-term contracts.",
+        "footerNote": "All packages include: Google Analytics setup, Search Console integration, and monthly performance reports.",
+        "customPackageText": "Need a custom package?",
+        "customPackageCtaLabel": "Contact us",
+        "packages": [
+          {
+            "name": "Starter",
+            "blurb": "For small businesses getting started with SEO",
+            "price": "$799",
+            "priceSuffix": "/month",
+            "ctaLabel": "Get Started",
+            "features": [
+              "Up to 10 keywords optimized",
+              "Technical SEO audit & fixes",
+              "On-page optimization",
+              "2 blog posts/month",
+              "Google Business Profile setup",
+              "Monthly ranking report"
+            ]
+          },
+          {
+            "name": "Growth",
+            "blurb": "For businesses ready to scale their online presence",
+            "price": "$1,499",
+            "priceSuffix": "/month",
+            "featured": true,
+            "featuredBadge": "MOST POPULAR",
+            "ctaLabel": "Get Started",
+            "features": [
+              "Up to 25 keywords optimized",
+              "Everything in Starter",
+              "4 blog posts/month",
+              "Link building (10 backlinks/month)",
+              "Competitor analysis",
+              "Local SEO optimization",
+              "Bi-weekly strategy calls"
+            ]
+          },
+          {
+            "name": "Enterprise",
+            "blurb": "For large businesses with aggressive growth goals",
+            "price": "$2,999",
+            "priceSuffix": "/month",
+            "ctaLabel": "Get Started",
+            "features": [
+              "Unlimited keywords",
+              "Everything in Growth",
+              "8 blog posts/month",
+              "Link building (25 backlinks/month)",
+              "Google Ads management included",
+              "Dedicated SEO manager",
+              "Weekly strategy calls"
+            ]
+          }
+        ]
+      },
       "deliveryHeading": "How We Deliver SEO/Digital Marketing Services",
       "deliveryDescription": "SEO/Digital Marketing only pays off when the work is fast, secure, easy to use, and built to scale. At VynTech Solutions, our delivery model is structured, outcome-oriented, and refined across 50+ engagements.\\n\\nWe work in clear phases so discovery is thorough, build quality is high, and launches are predictable. Scope, timelines, architecture, and support are defined upfront, which removes ambiguity and gives stakeholders full visibility from day one.",
       "deliverySteps": [

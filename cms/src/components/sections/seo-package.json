@@ -1,0 +1,39 @@
+{
+  "collectionName": "components_sections_seo_packages",
+  "info": {
+    "displayName": "SEO Package",
+    "description": "One pricing tier inside the SEO packages block",
+    "icon": "cash"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "blurb": {
+      "type": "text"
+    },
+    "price": {
+      "type": "string",
+      "required": true
+    },
+    "priceSuffix": {
+      "type": "string"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "featuredBadge": {
+      "type": "string"
+    },
+    "ctaLabel": {
+      "type": "string",
+      "default": "Get Started"
+    },
+    "features": {
+      "type": "json"
+    }
+  }
+}

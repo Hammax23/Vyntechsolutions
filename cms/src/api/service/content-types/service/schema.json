@@ -157,6 +157,11 @@
     "pageSections": {
       "type": "json"
     },
+    "seoPackagesBlock": {
+      "type": "component",
+      "repeatable": false,
+      "component": "sections.seo-packages-block"
+    },
     "canadaCities": {
       "type": "json"
     }

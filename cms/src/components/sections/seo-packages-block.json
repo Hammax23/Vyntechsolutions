@@ -1,0 +1,38 @@
+{
+  "collectionName": "components_sections_seo_packages_blocks",
+  "info": {
+    "displayName": "SEO Packages Block",
+    "description": "Pricing table block used on the SEO Digital Marketing service page",
+    "icon": "grid"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string",
+      "default": "SEO Packages"
+    },
+    "heading": {
+      "type": "string",
+      "default": "Choose Your Growth Plan"
+    },
+    "description": {
+      "type": "text"
+    },
+    "footerNote": {
+      "type": "text"
+    },
+    "customPackageText": {
+      "type": "string",
+      "default": "Need a custom package?"
+    },
+    "customPackageCtaLabel": {
+      "type": "string",
+      "default": "Contact us"
+    },
+    "packages": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.seo-package"
+    }
+  }
+}

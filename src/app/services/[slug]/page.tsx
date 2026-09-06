@@ -3001,25 +3001,29 @@ export default function ServicePage() {
         )}
 
         {/* SEO Packages Section */}
-        {pageSections.seoPackages?.packages?.length ? (
+        {(() => {
+          const cmsBlock = (service as ServiceData & { seoPackagesBlock?: NonNullable<ServicePageSections["seoPackages"]> }).seoPackagesBlock;
+          const seoBlock = cmsBlock?.packages?.length ? cmsBlock : pageSections.seoPackages;
+          if (!seoBlock?.packages?.length) return null;
+          return (
           <section className="py-20 bg-white">
             <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
               <div className="text-center mb-16">
                 <span className="inline-block bg-[#262b3f]/10 text-[#262b3f] text-sm font-semibold px-4 py-2 rounded-full mb-4">
-                  {pageSections.seoPackages.eyebrow || "SEO Packages"}
+                  {seoBlock.eyebrow || "SEO Packages"}
                 </span>
                 <h2 className="text-3xl sm:text-4xl font-bold text-[#1a1a2e] mb-4">
-                  {pageSections.seoPackages.heading || "Choose Your Growth Plan"}
+                  {seoBlock.heading || "Choose Your Growth Plan"}
                 </h2>
-                {pageSections.seoPackages.description && (
+                {seoBlock.description && (
                   <p className="text-gray-600 max-w-2xl mx-auto">
-                    {pageSections.seoPackages.description}
+                    {seoBlock.description}
                   </p>
                 )}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-6 lg:gap-8">
-                {pageSections.seoPackages.packages.map((pkg) => (
+                {seoBlock.packages.map((pkg) => (
                   <div
                     key={pkg.name}
                     className={`relative rounded-2xl p-8 transition-all duration-300 ${
@@ -3048,7 +3052,7 @@ export default function ServicePage() {
                       )}
                     </div>
                     <ul className="space-y-3 mb-8">
-                      {pkg.features.map((feature) => (
+                      {(pkg.features || []).map((feature) => (
                         <li key={feature} className="flex items-start gap-3">
                           <svg className={`w-5 h-5 flex-shrink-0 mt-0.5 ${pkg.featured ? "text-emerald-400" : "text-emerald-500"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -3072,14 +3076,14 @@ export default function ServicePage() {
               </div>
 
               <div className="mt-12 text-center">
-                {pageSections.seoPackages.footerNote && (
-                  <p className="text-gray-500 text-sm mb-4">{pageSections.seoPackages.footerNote}</p>
+                {seoBlock.footerNote && (
+                  <p className="text-gray-500 text-sm mb-4">{seoBlock.footerNote}</p>
                 )}
-                {(pageSections.seoPackages.customPackageText || pageSections.seoPackages.customPackageCtaLabel) && (
+                {(seoBlock.customPackageText || seoBlock.customPackageCtaLabel) && (
                   <p className="text-gray-600 font-medium">
-                    {pageSections.seoPackages.customPackageText || "Need a custom package?"}{" "}
+                    {seoBlock.customPackageText || "Need a custom package?"}{" "}
                     <button onClick={() => window.dispatchEvent(new CustomEvent("openLetsTalkBusiness"))} className="text-[#0055FF] hover:underline">
-                      {pageSections.seoPackages.customPackageCtaLabel || "Contact us"}
+                      {seoBlock.customPackageCtaLabel || "Contact us"}
                     </button>
                     {" "}for a tailored solution.
                   </p>
@@ -3087,7 +3091,8 @@ export default function ServicePage() {
               </div>
             </div>
           </section>
-        ) : null}
+          );
+        })()}
 
 
         {/* How We Work, same oval process as homepage */}
