@@ -102,6 +102,12 @@ export type TaskTimingSummary = {
   firstBlockedAt: string | null;
 };
 
+export function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(bytes < 10 * 1024 ? 1 : 0)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(bytes < 10 * 1024 * 1024 ? 1 : 0)} MB`;
+}
+
 /** Human-readable duration for UI / PDF (no seconds flicker). */
 export function formatDuration(ms: number): string {
   const total = Math.max(0, Math.floor(ms));
@@ -253,6 +259,15 @@ export function mapTask(t: {
   blockedMs?: number;
   createdBy?: { id: string; name: string; color: string };
   assignedTo?: { id: string; name: string; color: string };
+  attachments?: Array<{
+    id: string;
+    taskId: string;
+    fileName: string;
+    mimeType: string;
+    sizeBytes: number;
+    createdAt: Date;
+    uploadedBy?: { id: string; name: string } | null;
+  }>;
 }) {
   const statusChangedAt = t.statusChangedAt || t.createdAt;
   const cycleStartedAt = t.cycleStartedAt || t.createdAt;
@@ -290,6 +305,15 @@ export function mapTask(t: {
     inProgressMs: t.inProgressMs ?? 0,
     blockedMs: t.blockedMs ?? 0,
     timing,
+    attachments: (t.attachments || []).map((a) => ({
+      id: a.id,
+      taskId: a.taskId,
+      fileName: a.fileName,
+      mimeType: a.mimeType,
+      sizeBytes: a.sizeBytes,
+      createdAt: a.createdAt.toISOString(),
+      uploadedBy: a.uploadedBy || null,
+    })),
     createdBy: t.createdBy,
     assignedTo: t.assignedTo,
   };

@@ -1,12 +1,20 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { heatmapTone, isWeekendKey, todayKey, formatDuration } from "@/lib/workflow-progress";
+import { heatmapTone, isWeekendKey, todayKey, formatDuration, formatFileSize } from "@/lib/workflow-progress";
 import { useLivePoll } from "@/hooks/useLivePoll";
 import WorkflowApp from "@/components/workflow/WorkflowApp";
+import { MAX_ATTACHMENT_BYTES, MAX_ATTACHMENTS_PER_TASK } from "@/lib/workflow-attachments-limits";
 
 type StaffRow = { id: string; name: string; email: string; color: string; role: string };
 type Score = { total: number; done: number; percent: number | null };
+type TaskAttachment = {
+  id: string;
+  fileName: string;
+  mimeType: string;
+  sizeBytes: number;
+  uploadedBy?: { id: string; name: string } | null;
+};
 type Task = {
   id: string;
   title: string;
@@ -14,6 +22,7 @@ type Task = {
   status: string;
   priority: string;
   createdBy?: { name: string };
+  attachments?: TaskAttachment[];
   timing?: {
     activeMs: number;
     blockedTotalMs: number;
@@ -61,6 +70,8 @@ function statusDot(status: string) {
   return "bg-slate-600";
 }
 
+type AssignPendingFile = { id: string; file: File; previewUrl: string | null };
+
 export default function TeamProgressSection() {
   const now = new Date();
   const [year, setYear] = useState(now.getFullYear());
@@ -93,6 +104,9 @@ export default function TeamProgressSection() {
     workDate: todayKey(),
     priority: "medium",
   });
+  const [assignFiles, setAssignFiles] = useState<AssignPendingFile[]>([]);
+  const assignFileRef = useRef<HTMLInputElement>(null);
+  const assignFilesRef = useRef<AssignPendingFile[]>([]);
   const [reportMode, setReportMode] = useState<"day" | "range" | "month">("month");
   const [reportStaffId, setReportStaffId] = useState("");
   const [reportDate, setReportDate] = useState(todayKey());
@@ -118,6 +132,50 @@ export default function TeamProgressSection() {
   yearRef.current = year;
   monthRef.current = month;
   selectedRef.current = selected;
+  assignFilesRef.current = assignFiles;
+
+  useEffect(() => {
+    return () => {
+      for (const item of assignFilesRef.current) {
+        if (item.previewUrl) URL.revokeObjectURL(item.previewUrl);
+      }
+    };
+  }, []);
+
+  const fileExtLabel = (name: string) => {
+    const ext = name.includes(".") ? name.split(".").pop()!.toUpperCase() : "FILE";
+    return ext.slice(0, 5);
+  };
+
+  const clearAssignFiles = () => {
+    for (const item of assignFilesRef.current) {
+      if (item.previewUrl) URL.revokeObjectURL(item.previewUrl);
+    }
+    setAssignFiles([]);
+    if (assignFileRef.current) assignFileRef.current.value = "";
+  };
+
+  const addAssignFiles = (list: FileList | File[]) => {
+    const incoming = Array.from(list);
+    if (!incoming.length) return;
+    setAssignFiles((prev) => {
+      const room = Math.max(0, MAX_ATTACHMENTS_PER_TASK - prev.length);
+      const next = incoming.slice(0, room).map((file) => ({
+        id: `${file.name}-${file.size}-${file.lastModified}-${Math.random().toString(36).slice(2, 8)}`,
+        file,
+        previewUrl: file.type.startsWith("image/") ? URL.createObjectURL(file) : null,
+      }));
+      return [...prev, ...next];
+    });
+  };
+
+  const removeAssignFile = (id: string) => {
+    setAssignFiles((prev) => {
+      const target = prev.find((p) => p.id === id);
+      if (target?.previewUrl) URL.revokeObjectURL(target.previewUrl);
+      return prev.filter((p) => p.id !== id);
+    });
+  };
 
   const showToast = useCallback((text: string, kind: "success" | "error" | "info" = "info") => {
     if (toastTimer.current) clearTimeout(toastTimer.current);
@@ -356,18 +414,43 @@ export default function TeamProgressSection() {
       showToast("Select an employee", "error");
       return;
     }
+    for (const item of assignFiles) {
+      if (item.file.size > MAX_ATTACHMENT_BYTES) {
+        showToast(`“${item.file.name}” is larger than 25 MB`, "error");
+        return;
+      }
+    }
+    if (assignFiles.length > MAX_ATTACHMENTS_PER_TASK) {
+      showToast(`Maximum ${MAX_ATTACHMENTS_PER_TASK} attachments per task`, "error");
+      return;
+    }
     setAssigning(true);
     try {
+      const fd = new FormData();
+      fd.append("title", taskForm.title.trim());
+      fd.append("description", taskForm.description || "");
+      fd.append("assignedToId", taskForm.assignedToId);
+      fd.append("workDate", taskForm.workDate);
+      fd.append("priority", taskForm.priority);
+      for (const item of assignFiles) fd.append("files", item.file);
+
       const res = await fetch("/api/admin/workflow/tasks", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(taskForm),
+        body: fd,
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Failed to assign");
+
+      const attached = data.task?.attachments?.length || 0;
       const who = activeStaff.find((s) => s.id === taskForm.assignedToId)?.name || "employee";
-      showToast(`Assigned “${taskForm.title.trim()}” to ${who}`, "success");
+      showToast(
+        attached > 0
+          ? `Assigned “${taskForm.title.trim()}” to ${who} with ${attached} file${attached === 1 ? "" : "s"}`
+          : `Assigned “${taskForm.title.trim()}” to ${who}`,
+        "success"
+      );
       setTaskForm((prev) => ({ ...prev, title: "", description: "" }));
+      clearAssignFiles();
       const ok = await refreshLive();
       if (ok) stampRef.current = "";
       const sel = selectedRef.current;
@@ -622,6 +705,94 @@ export default function TeamProgressSection() {
             </select>
           </div>
         </div>
+        <div>
+          <div className="flex items-end justify-between gap-3 mb-1.5">
+            <label className="block text-white/40 text-[11px]">
+              Attachments
+              <span className="text-white/25 font-normal"> (optional)</span>
+            </label>
+            {assignFiles.length > 0 ? (
+              <button
+                type="button"
+                onClick={clearAssignFiles}
+                className="text-[11px] text-white/40 hover:text-red-500 transition-colors"
+              >
+                Clear all
+              </button>
+            ) : null}
+          </div>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mb-2">
+            <button
+              type="button"
+              onClick={() => assignFileRef.current?.click()}
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-white/15 bg-white/[0.04] text-[12px] text-white/80 hover:bg-white/[0.07] transition-colors"
+            >
+              <svg className="w-3.5 h-3.5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+              </svg>
+              Choose files
+            </button>
+            <input
+              ref={assignFileRef}
+              type="file"
+              multiple
+              className="sr-only"
+              onChange={(e) => {
+                const list = e.target.files;
+                if (list?.length) addAssignFiles(list);
+                e.target.value = "";
+              }}
+            />
+            <span className="text-white/30 text-[11px]">Max 25 MB each · any file type</span>
+          </div>
+          {assignFiles.length > 0 ? (
+            <ul className="space-y-1.5">
+              {assignFiles.map((item) => {
+                const isImage = Boolean(item.previewUrl);
+                return (
+                  <li
+                    key={item.id}
+                    className="group flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.03] pl-1.5 pr-2 py-1.5"
+                  >
+                    <div className="w-11 h-11 shrink-0 rounded-md overflow-hidden bg-white/[0.06] border border-white/10 flex items-center justify-center">
+                      {isImage && item.previewUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={item.previewUrl}
+                          alt=""
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-[9px] font-semibold tracking-wide text-[#0055FF]">
+                          {fileExtLabel(item.file.name)}
+                        </span>
+                      )}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[12px] text-white/85 truncate leading-snug" title={item.file.name}>
+                        {item.file.name}
+                      </p>
+                      <p className="text-[10px] text-white/35 tabular-nums mt-0.5">
+                        {formatFileSize(item.file.size)}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      aria-label={`Remove ${item.file.name}`}
+                      title="Remove"
+                      onClick={() => removeAssignFile(item.id)}
+                      className="shrink-0 w-7 h-7 rounded-md flex items-center justify-center text-white/35 hover:text-red-500 hover:bg-red-500/10 transition-colors"
+                    >
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : null}
+        </div>
         <button
           type="button"
           disabled={assigning || activeStaff.length === 0}
@@ -801,6 +972,102 @@ export default function TeamProgressSection() {
                       <p className="text-white/45 text-xs leading-relaxed line-clamp-2 break-words">{t.description}</p>
                     ) : null}
                     {t.createdBy ? <p className="text-white/35 text-[11px]">from {t.createdBy.name}</p> : null}
+                    <div className="pt-0.5 space-y-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="text-white/35 text-[10px] font-medium uppercase tracking-wide">
+                          Attachments{t.attachments?.length ? ` (${t.attachments.length})` : ""}
+                        </p>
+                        <label className="text-[11px] text-[#7dd3fc] hover:underline cursor-pointer">
+                          Add files
+                          <input
+                            type="file"
+                            multiple
+                            className="hidden"
+                            onChange={async (e) => {
+                              const list = e.target.files;
+                              if (!list?.length) return;
+                              const current = t.attachments?.length || 0;
+                              if (current + list.length > MAX_ATTACHMENTS_PER_TASK) {
+                                showToast(`Maximum ${MAX_ATTACHMENTS_PER_TASK} files per task`, "error");
+                                e.target.value = "";
+                                return;
+                              }
+                              for (const file of Array.from(list)) {
+                                if (file.size > MAX_ATTACHMENT_BYTES) {
+                                  showToast(`“${file.name}” is larger than 25 MB`, "error");
+                                  e.target.value = "";
+                                  return;
+                                }
+                              }
+                              const fd = new FormData();
+                              fd.append("taskId", t.id);
+                              for (const file of Array.from(list)) fd.append("files", file);
+                              const up = await fetch("/api/admin/workflow/attachments", { method: "POST", body: fd });
+                              const upData = await up.json().catch(() => ({}));
+                              e.target.value = "";
+                              if (!up.ok) {
+                                showToast(upData.error || "Upload failed", "error");
+                                return;
+                              }
+                              showToast("Attachment uploaded", "success");
+                              const sel = selectedRef.current;
+                              if (sel) await loadDayTasks(sel.staffId, sel.date);
+                            }}
+                          />
+                        </label>
+                      </div>
+                      {t.attachments && t.attachments.length > 0 ? (
+                        <ul className="space-y-1">
+                          {t.attachments.map((a) => (
+                            <li key={a.id} className="flex items-center gap-2 flex-wrap">
+                              <span className="truncate max-w-[180px] text-[11px] text-white/80" title={a.fileName}>
+                                {a.fileName}
+                              </span>
+                              <span className="text-white/40 tabular-nums text-[10px] shrink-0">
+                                {formatFileSize(a.sizeBytes)}
+                              </span>
+                              <a
+                                href={`/api/admin/workflow/attachments?id=${encodeURIComponent(a.id)}&open=1`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[10px] text-[#7dd3fc] hover:underline shrink-0"
+                              >
+                                Open
+                              </a>
+                              <a
+                                href={`/api/admin/workflow/attachments?id=${encodeURIComponent(a.id)}`}
+                                download={a.fileName}
+                                className="text-[10px] text-[#7dd3fc] hover:underline shrink-0"
+                              >
+                                Download
+                              </a>
+                              <button
+                                type="button"
+                                className="text-[10px] text-red-300/80 hover:underline shrink-0"
+                                onClick={async () => {
+                                  if (!window.confirm("Remove this attachment?")) return;
+                                  const res = await fetch(
+                                    `/api/admin/workflow/attachments?id=${encodeURIComponent(a.id)}`,
+                                    { method: "DELETE" }
+                                  );
+                                  if (!res.ok) {
+                                    showToast("Could not remove attachment", "error");
+                                    return;
+                                  }
+                                  showToast("Attachment removed", "success");
+                                  const sel = selectedRef.current;
+                                  if (sel) await loadDayTasks(sel.staffId, sel.date);
+                                }}
+                              >
+                                Remove
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="text-white/30 text-[11px]">No files yet</p>
+                      )}
+                    </div>
                     {t.timing ? (
                       <div className="pt-0.5">
                         <p className="text-white/35 text-[10px] font-medium uppercase tracking-wide mb-1.5">

@@ -232,6 +232,7 @@ model StaffUser {
 
   createdTasks  WorkflowTask[] @relation("TaskCreator")
   assignedTasks WorkflowTask[] @relation("TaskAssignee")
+  attachments   WorkflowAttachment[]
 }
 
 model WorkflowTask {
@@ -262,8 +263,27 @@ model WorkflowTask {
   blockedMs       Int       @default(0)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+  attachments     WorkflowAttachment[]
 
   @@index([assignedToId, workDate])
   @@index([createdById, workDate])
   @@index([workDate])
+}
+
+model WorkflowAttachment {
+  id           String      @id @default(cuid())
+  taskId       String
+  task         WorkflowTask @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  uploadedById String
+  uploadedBy   StaffUser   @relation(fields: [uploadedById], references: [id], onDelete: Restrict)
+  /// Original file name shown in the UI
+  fileName     String
+  /// Safe name on disk under uploads/workflow
+  storedName   String
+  mimeType     String
+  sizeBytes    Int
+  createdAt    DateTime    @default(now())
+
+  @@index([taskId])
+  @@index([uploadedById])
 }

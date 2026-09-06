@@ -2,11 +2,21 @@
 
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import VynTechLogo from "@/components/VynTechLogo";
-import { heatmapTone, isWeekendKey, todayKey, formatDuration, computeTaskTiming, type TaskTimingSummary } from "@/lib/workflow-progress";
+import { heatmapTone, isWeekendKey, todayKey, formatDuration, formatFileSize, computeTaskTiming, type TaskTimingSummary } from "@/lib/workflow-progress";
 import { useWorkflowTheme, workflowUi } from "@/components/workflow/workflow-theme";
 import { useLivePoll } from "@/hooks/useLivePoll";
+import { MAX_ATTACHMENT_BYTES, MAX_ATTACHMENTS_PER_TASK } from "@/lib/workflow-attachments-limits";
 
 type Staff = { id: string; name: string; email: string; role: string; color: string };
+type WAttachment = {
+  id: string;
+  taskId: string;
+  fileName: string;
+  mimeType: string;
+  sizeBytes: number;
+  createdAt: string;
+  uploadedBy?: { id: string; name: string } | null;
+};
 type WTask = {
   id: string;
   title: string;
@@ -26,6 +36,7 @@ type WTask = {
   inProgressMs?: number;
   blockedMs?: number;
   timing?: TaskTimingSummary;
+  attachments?: WAttachment[];
   createdBy?: { id: string; name: string; color: string };
   assignedTo?: { id: string; name: string; color: string };
 };
@@ -162,8 +173,11 @@ const TaskCard = memo(function TaskCard({
   ui,
   isDark,
   readOnly,
+  attachmentsReadOnly,
+  attachmentBase,
   onPatch,
   onRemove,
+  onAttachmentsChange,
 }: {
   t: WTask;
   showDate?: boolean;
@@ -172,11 +186,19 @@ const TaskCard = memo(function TaskCard({
   ui: Ui;
   isDark: boolean;
   readOnly?: boolean;
+  /** When set, overrides readOnly for file attach/remove only */
+  attachmentsReadOnly?: boolean;
+  attachmentBase: string;
   onPatch: (id: string, body: Record<string, unknown>) => void;
   onRemove: (id: string) => void;
+  onAttachmentsChange: (taskId: string, attachments: WAttachment[]) => void;
 }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [nowTick, setNowTick] = useState(() => Date.now());
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const attachments = t.attachments || [];
+  const filesLocked = attachmentsReadOnly ?? readOnly;
 
   useEffect(() => {
     const id = window.setInterval(() => setNowTick(Date.now()), 30_000);
@@ -204,6 +226,50 @@ const TaskCard = memo(function TaskCard({
     }
     return t.timing || null;
   }, [t, nowTick]);
+
+  const uploadFiles = async (list: FileList | null) => {
+    if (!list?.length || filesLocked) return;
+    if (attachments.length + list.length > MAX_ATTACHMENTS_PER_TASK) {
+      window.alert(`Maximum ${MAX_ATTACHMENTS_PER_TASK} files per task`);
+      return;
+    }
+    for (const file of Array.from(list)) {
+      if (file.size > MAX_ATTACHMENT_BYTES) {
+        window.alert(`“${file.name}” is larger than 25 MB`);
+        return;
+      }
+    }
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("taskId", t.id);
+      for (const file of Array.from(list)) fd.append("files", file);
+      const res = await fetch(attachmentBase, { method: "POST", body: fd });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Upload failed");
+      const next = [...attachments, ...((data.attachments || []) as WAttachment[])];
+      onAttachmentsChange(t.id, next);
+    } catch (e) {
+      window.alert(e instanceof Error ? e.message : "Upload failed");
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  };
+
+  const removeAttachment = async (id: string) => {
+    if (filesLocked) return;
+    if (!window.confirm("Remove this attachment?")) return;
+    const res = await fetch(`${attachmentBase}?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+    if (!res.ok) {
+      window.alert("Could not remove attachment");
+      return;
+    }
+    onAttachmentsChange(
+      t.id,
+      attachments.filter((a) => a.id !== id)
+    );
+  };
 
   return (
     <div className={`${ui.card} border rounded-xl p-3 space-y-2 ${ui.cardHover} transition-colors`}>
@@ -253,6 +319,77 @@ const TaskCard = memo(function TaskCard({
           </div>
         </div>
       ) : null}
+
+      <div className="space-y-1.5">
+        <div className="flex items-center justify-between gap-2">
+          <p className={`text-[10px] font-medium ${ui.faint}`}>
+            Attachments{attachments.length ? ` (${attachments.length})` : ""}
+          </p>
+          {!filesLocked ? (
+            <>
+              <input
+                ref={fileRef}
+                type="file"
+                multiple
+                className="hidden"
+                onChange={(e) => void uploadFiles(e.target.files)}
+              />
+              <button
+                type="button"
+                disabled={uploading || attachments.length >= MAX_ATTACHMENTS_PER_TASK}
+                onClick={() => fileRef.current?.click()}
+                className="text-[10px] text-[#0055FF] hover:underline disabled:opacity-50"
+              >
+                {uploading ? "Uploading…" : "Add files"}
+              </button>
+            </>
+          ) : null}
+        </div>
+        {attachments.length > 0 ? (
+          <ul className="space-y-1">
+            {attachments.map((a) => (
+              <li
+                key={a.id}
+                className={`flex items-center gap-2 rounded-lg border px-2 py-1.5 ${
+                  isDark ? "border-white/10 bg-white/[0.03]" : "border-slate-200 bg-slate-50"
+                }`}
+              >
+                <span className="min-w-0 flex-1 text-[11px] truncate" title={a.fileName}>
+                  {a.fileName}
+                </span>
+                <span className={`text-[10px] shrink-0 tabular-nums ${ui.faint}`}>{formatFileSize(a.sizeBytes)}</span>
+                <a
+                  href={`${attachmentBase}?id=${encodeURIComponent(a.id)}&open=1`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[10px] text-[#0055FF] hover:underline shrink-0"
+                >
+                  Open
+                </a>
+                <a
+                  href={`${attachmentBase}?id=${encodeURIComponent(a.id)}`}
+                  download={a.fileName}
+                  className="text-[10px] text-[#0055FF] hover:underline shrink-0"
+                >
+                  Download
+                </a>
+                {!filesLocked ? (
+                  <button
+                    type="button"
+                    onClick={() => void removeAttachment(a.id)}
+                    className="text-[10px] text-red-500/80 hover:underline shrink-0"
+                  >
+                    Remove
+                  </button>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className={`text-[11px] ${ui.faint}`}>No files yet. PDF, Word, images, and other types welcome.</p>
+        )}
+      </div>
+
       <div className={`flex flex-wrap items-center gap-2 text-[11px] ${ui.muted}`}>
         {showDate ? <span>{t.workDate}</span> : null}
         {t.createdBy && t.createdById !== user.id ? <span>from {t.createdBy.name}</span> : null}
@@ -342,6 +479,7 @@ export default function WorkflowApp({
   onClose?: () => void;
 }) {
   const preview = mode === "admin-preview";
+  const attachmentBase = preview ? "/api/admin/workflow/attachments" : "/api/workflow/attachments";
   const { isDark, toggle, ready: themeReady } = useWorkflowTheme();
   const ui = workflowUi(isDark);
   const titleRef = useRef<HTMLInputElement>(null);
@@ -365,6 +503,8 @@ export default function WorkflowApp({
     priority: "medium",
     assignedToId: user.id,
   });
+  const [pendingFiles, setPendingFiles] = useState<File[]>([]);
+  const createFileRef = useRef<HTMLInputElement>(null);
   const stampRef = useRef("");
   const dateRef = useRef(date);
   const cursorRef = useRef(cursor);
@@ -578,6 +718,11 @@ export default function WorkflowApp({
     await forceLogout();
   };
 
+  const syncAttachments = useCallback((taskId: string, attachments: WAttachment[]) => {
+    setTasks((prev) => prev.map((t) => (t.id === taskId ? { ...t, attachments } : t)));
+    setInbox((prev) => prev.map((t) => (t.id === taskId ? { ...t, attachments } : t)));
+  }, []);
+
   const createTask = async () => {
     if (preview) return;
     if (saving) return;
@@ -586,17 +731,39 @@ export default function WorkflowApp({
       titleRef.current?.focus();
       return;
     }
+    for (const file of pendingFiles) {
+      if (file.size > MAX_ATTACHMENT_BYTES) {
+        setMessage(`“${file.name}” is larger than 25 MB`);
+        return;
+      }
+    }
+    if (pendingFiles.length > MAX_ATTACHMENTS_PER_TASK) {
+      setMessage(`Maximum ${MAX_ATTACHMENTS_PER_TASK} attachments per task`);
+      return;
+    }
     setSaving(true);
     setMessage("");
     try {
-      const res = await fetch("/api/workflow/tasks", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, workDate: date }),
-      });
+      let res: Response;
+      if (pendingFiles.length > 0) {
+        const fd = new FormData();
+        fd.append("title", form.title.trim());
+        fd.append("description", form.description || "");
+        fd.append("priority", form.priority);
+        fd.append("assignedToId", form.assignedToId);
+        fd.append("workDate", date);
+        for (const file of pendingFiles) fd.append("files", file);
+        res = await fetch("/api/workflow/tasks", { method: "POST", body: fd });
+      } else {
+        res = await fetch("/api/workflow/tasks", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...form, workDate: date }),
+        });
+      }
       if (!(await handleAuth(res))) return;
-      if (!res.ok) throw new Error();
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Could not create task");
       const task = data.task as WTask | undefined;
       if (task) {
         if (task.workDate === date && (task.assignedToId === user.id || task.createdById === user.id)) {
@@ -607,12 +774,19 @@ export default function WorkflowApp({
         }
       }
       setForm({ title: "", description: "", priority: "medium", assignedToId: user.id });
+      setPendingFiles([]);
+      if (createFileRef.current) createFileRef.current.value = "";
       const ok = await refreshAll();
       if (ok) stampRef.current = "";
-      setMessage("Task created");
+      const attached = task?.attachments?.length || 0;
+      setMessage(
+        attached > 0
+          ? `Task created with ${attached} file${attached === 1 ? "" : "s"}`
+          : "Task created"
+      );
       titleRef.current?.focus();
-    } catch {
-      setMessage("Could not create task");
+    } catch (e) {
+      setMessage(e instanceof Error ? e.message : "Could not create task");
     } finally {
       setSaving(false);
     }
@@ -942,7 +1116,20 @@ export default function WorkflowApp({
                     >
                       Open {formatDay(t.workDate)}
                     </button>
-                    <TaskCard t={t} showDate user={user} staff={staff} ui={ui} isDark={isDark} readOnly={preview} onPatch={patch} onRemove={remove} />
+                    <TaskCard
+                      t={t}
+                      showDate
+                      user={user}
+                      staff={staff}
+                      ui={ui}
+                      isDark={isDark}
+                      readOnly={preview}
+                      attachmentsReadOnly={false}
+                      attachmentBase={attachmentBase}
+                      onPatch={patch}
+                      onRemove={remove}
+                      onAttachmentsChange={syncAttachments}
+                    />
                   </div>
                 ))
               )}
@@ -986,7 +1173,20 @@ export default function WorkflowApp({
                     <p className={`text-xs ${ui.faint} py-10 text-center`}>No tasks in {STATUS_LABEL[focusCol].toLowerCase()}</p>
                   ) : (
                     byColumn[focusCol].map((t) => (
-                      <TaskCard key={t.id} t={t} user={user} staff={staff} ui={ui} isDark={isDark} readOnly={preview} onPatch={patch} onRemove={remove} />
+                      <TaskCard
+                        key={t.id}
+                        t={t}
+                        user={user}
+                        staff={staff}
+                        ui={ui}
+                        isDark={isDark}
+                        readOnly={preview}
+                        attachmentsReadOnly={false}
+                        attachmentBase={attachmentBase}
+                        onPatch={patch}
+                        onRemove={remove}
+                        onAttachmentsChange={syncAttachments}
+                      />
                     ))
                   )}
                 </div>
@@ -1007,7 +1207,20 @@ export default function WorkflowApp({
                           <p className={`text-xs ${ui.faint} py-8 text-center`}>Empty</p>
                         ) : (
                           list.map((t) => (
-                            <TaskCard key={t.id} t={t} user={user} staff={staff} ui={ui} isDark={isDark} readOnly={preview} onPatch={patch} onRemove={remove} />
+                            <TaskCard
+                        key={t.id}
+                        t={t}
+                        user={user}
+                        staff={staff}
+                        ui={ui}
+                        isDark={isDark}
+                        readOnly={preview}
+                        attachmentsReadOnly={false}
+                        attachmentBase={attachmentBase}
+                        onPatch={patch}
+                        onRemove={remove}
+                        onAttachmentsChange={syncAttachments}
+                      />
                           ))
                         )}
                       </div>
@@ -1021,7 +1234,20 @@ export default function WorkflowApp({
                   <h3 className={`text-xs uppercase tracking-wide ${ui.muted} mb-2`}>Assigned to others ({created.length})</h3>
                   <div className="space-y-2">
                     {created.map((t) => (
-                      <TaskCard key={t.id} t={t} user={user} staff={staff} ui={ui} isDark={isDark} readOnly={preview} onPatch={patch} onRemove={remove} />
+                      <TaskCard
+                        key={t.id}
+                        t={t}
+                        user={user}
+                        staff={staff}
+                        ui={ui}
+                        isDark={isDark}
+                        readOnly={preview}
+                        attachmentsReadOnly={false}
+                        attachmentBase={attachmentBase}
+                        onPatch={patch}
+                        onRemove={remove}
+                        onAttachmentsChange={syncAttachments}
+                      />
                     ))}
                   </div>
                 </div>
@@ -1082,6 +1308,57 @@ export default function WorkflowApp({
             </select>
           </div>
           <p className={`text-[11px] ${ui.faint}`}>Saves on the selected calendar day. Assigned teammates see it in Inbox live.</p>
+          <div>
+            <div className="flex items-center justify-between gap-2 mb-1.5">
+              <label className={`block ${ui.muted} text-xs`}>Attachments</label>
+              <button
+                type="button"
+                onClick={() => createFileRef.current?.click()}
+                className="text-[10px] text-[#0055FF] hover:underline"
+              >
+                Add files
+              </button>
+              <input
+                ref={createFileRef}
+                type="file"
+                multiple
+                className="hidden"
+                onChange={(e) => {
+                  const list = e.target.files;
+                  if (!list?.length) return;
+                  setPendingFiles((prev) => {
+                    const next = [...prev, ...Array.from(list)].slice(0, MAX_ATTACHMENTS_PER_TASK);
+                    return next;
+                  });
+                  e.target.value = "";
+                }}
+              />
+            </div>
+            {pendingFiles.length > 0 ? (
+              <ul className="space-y-1 mb-2">
+                {pendingFiles.map((f, i) => (
+                  <li
+                    key={`${f.name}-${i}`}
+                    className={`flex items-center gap-2 rounded-lg border px-2 py-1.5 text-[11px] ${
+                      isDark ? "border-white/10 bg-white/[0.03]" : "border-slate-200 bg-slate-50"
+                    }`}
+                  >
+                    <span className="truncate flex-1 min-w-0">{f.name}</span>
+                    <span className={`shrink-0 ${ui.faint}`}>{formatFileSize(f.size)}</span>
+                    <button
+                      type="button"
+                      className="text-red-500/80 hover:underline shrink-0"
+                      onClick={() => setPendingFiles((prev) => prev.filter((_, idx) => idx !== i))}
+                    >
+                      Remove
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className={`text-[11px] ${ui.faint} mb-2`}>Optional. PDF, Word, PNG, ZIP, and any other file type.</p>
+            )}
+          </div>
           <button
             type="button"
             disabled={saving}

@@ -43,6 +43,10 @@ yarn-error.log*
 # data files
 /data
 
+# workflow task attachments (keep folder in repo)
+/uploads/workflow/*
+!/uploads/workflow/.gitkeep
+
 # vercel
 .vercel
 

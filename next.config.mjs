@@ -3,6 +3,10 @@ const nextConfig = {
   output: "standalone",
   experimental: {
     serverComponentsExternalPackages: ["@react-pdf/renderer"],
+    // Covers server actions; route handlers on Node read FormData without the 1MB default.
+    serverActions: {
+      bodySizeLimit: "30mb",
+    },
   },
   // Enable compression
   compress: true,

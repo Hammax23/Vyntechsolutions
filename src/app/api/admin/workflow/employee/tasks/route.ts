@@ -8,6 +8,10 @@ export const dynamic = "force-dynamic";
 const includePeople = {
   createdBy: { select: { id: true, name: true, color: true } },
   assignedTo: { select: { id: true, name: true, color: true } },
+  attachments: {
+    include: { uploadedBy: { select: { id: true, name: true } } },
+    orderBy: { createdAt: "asc" as const },
+  },
 };
 
 /** Admin preview of an employee board/inbox — same visibility rules as /workflow for that staff. */

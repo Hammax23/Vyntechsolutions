@@ -56,7 +56,14 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    const toDelete = await prisma.workflowTask.findMany({
+      where,
+      select: { id: true },
+      take: 5000,
+    });
     const result = await prisma.workflowTask.deleteMany({ where });
+    const { removeTaskUploadDir } = await import("@/lib/workflow-attachments");
+    await Promise.all(toDelete.map((t) => removeTaskUploadDir(t.id)));
 
     return NextResponse.json({
       deleted: result.count,
