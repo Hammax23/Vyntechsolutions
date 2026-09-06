@@ -524,12 +524,15 @@ export interface ApiFormConfigFormConfig extends Struct.SingleTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     hearAbout: Schema.Attribute.JSON;
+    labels: Schema.Attribute.JSON;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::form-config.form-config'
     > &
       Schema.Attribute.Private;
+    pageBenefits: Schema.Attribute.JSON;
+    pageStats: Schema.Attribute.JSON;
     publishedAt: Schema.Attribute.DateTime;
     regions: Schema.Attribute.JSON;
     services: Schema.Attribute.JSON;
@@ -555,6 +558,7 @@ export interface ApiGlobalSeoGlobalSeo extends Struct.SingleTypeSchema {
     bingSiteVerification: Schema.Attribute.String;
     cookieAcceptLabel: Schema.Attribute.String;
     cookieBody: Schema.Attribute.Text;
+    cookieChrome: Schema.Attribute.JSON;
     cookieCustomizeLabel: Schema.Attribute.String;
     cookieTitle: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
@@ -578,6 +582,7 @@ export interface ApiGlobalSeoGlobalSeo extends Struct.SingleTypeSchema {
     ogDescription: Schema.Attribute.Text;
     phone: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    robotsTxt: Schema.Attribute.Text;
     siteName: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'VynTech Solutions'>;
@@ -620,6 +625,8 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
     impactStats: Schema.Attribute.Component<'shared.stat', true>;
     industriesHeading: Schema.Attribute.String;
     industriesSubheading: Schema.Attribute.String;
+    industriesViewLabel: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'View'>;
     insightsHeading: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -631,8 +638,11 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
       Schema.Attribute.DefaultTo<'Technology Partners'>;
     publishedAt: Schema.Attribute.DateTime;
     seo: Schema.Attribute.Component<'shared.seo', false>;
+    serviceCards: Schema.Attribute.JSON;
     servicesBody: Schema.Attribute.Text;
     servicesHeading: Schema.Attribute.String;
+    servicesLearnMoreLabel: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Learn More'>;
     servicesSubheading: Schema.Attribute.String;
     techStack: Schema.Attribute.JSON;
     techStackBody: Schema.Attribute.Text;
@@ -784,6 +794,7 @@ export interface ApiNavigationNavigation extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    chrome: Schema.Attribute.JSON;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -930,9 +941,25 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    aiMlGridBlock: Schema.Attribute.Component<
+      'sections.ai-ml-grid-block',
+      false
+    >;
     canadaCities: Schema.Attribute.JSON;
+    canadaCitiesBlock: Schema.Attribute.Component<
+      'sections.canada-cities-block',
+      false
+    >;
     cardImage: Schema.Attribute.String;
     caseStudies: Schema.Attribute.Component<'shared.case-study', true>;
+    caseStudiesHeading: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Case Studies'>;
+    cityFaqs: Schema.Attribute.Component<'sections.city-faq', true>;
+    cityHero: Schema.Attribute.Component<'sections.city-hero', false>;
+    cloudIncludedBlock: Schema.Attribute.Component<
+      'sections.cloud-included-block',
+      false
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -944,6 +971,18 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
     deliveryHeading: Schema.Attribute.String;
     deliverySteps: Schema.Attribute.Component<'sections.delivery-step', true>;
     description: Schema.Attribute.Text;
+    devopsGridBlock: Schema.Attribute.Component<
+      'sections.devops-grid-block',
+      false
+    >;
+    ecommerceServicesBlock: Schema.Attribute.Component<
+      'sections.ecommerce-services-block',
+      false
+    >;
+    engagementStrategies: Schema.Attribute.Component<
+      'sections.engagement-strategy',
+      true
+    >;
     faqs: Schema.Attribute.Component<'shared.faq', true>;
     features: Schema.Attribute.Component<'shared.named-item', true>;
     featuresEyebrow: Schema.Attribute.String;
@@ -972,6 +1011,14 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
       'api::service.service'
     > &
       Schema.Attribute.Private;
+    localSeoBlock: Schema.Attribute.Component<
+      'sections.local-seo-block',
+      false
+    >;
+    mobileTabsBlock: Schema.Attribute.Component<
+      'sections.mobile-tabs-block',
+      false
+    >;
     order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     overview: Schema.Attribute.RichText;
     overviewTagline: Schema.Attribute.Text;
@@ -981,13 +1028,25 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
     processHeading: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     seo: Schema.Attribute.Component<'shared.seo', false>;
+    seoPackagesBlock: Schema.Attribute.Component<
+      'sections.seo-packages-block',
+      false
+    >;
     showTechStack: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
     stats: Schema.Attribute.Component<'shared.stat', true>;
     subtitle: Schema.Attribute.String;
     technologies: Schema.Attribute.JSON;
     techStack: Schema.Attribute.JSON;
+    techStackBlock: Schema.Attribute.Component<
+      'sections.tech-stack-block',
+      false
+    >;
     title: Schema.Attribute.String & Schema.Attribute.Required;
+    uiuxEngagementsBlock: Schema.Attribute.Component<
+      'sections.uiux-engagements-block',
+      false
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
