@@ -30,6 +30,30 @@ const RANKING_ICONS: Record<string, JSX.Element> = {
   reviews: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />,
 };
 
+const INDUSTRY_ICON_PATHS: Record<string, JSX.Element> = {
+  healthcare: (
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+  ),
+  "ecommerce-retail": (
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+  ),
+  "real-estate": (
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+  ),
+  "hospitality-travel": (
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+  ),
+  finance: (
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+  ),
+  education: (
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 14l9-5-9-5-9 5 9 5z M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+  ),
+  default: (
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+  ),
+};
+
 export default function CityServicePage() {
   const params = useParams();
   const slug = params.slug as string;
@@ -235,7 +259,7 @@ export default function CityServicePage() {
                     onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
                     className="flex items-center gap-2 font-bold text-[#0d1117] hover:text-[#0055FF] transition-colors group"
                   >
-                    Contact Us 
+                    {cityHero.contactCtaLabel || "Contact Us"}
                     <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
@@ -342,20 +366,18 @@ export default function CityServicePage() {
                   {t(cityHero.industriesHeadingTemplate)}
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                  {[
-                    { slug: "healthcare", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /> },
-                    { slug: "ecommerce-retail", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /> },
-                    { slug: "real-estate", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /> },
-                    { slug: "hospitality-travel", icon: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /> }
-                  ].map((industry, idx) => (
-                    <Link href={`/industries/${industry.slug}`} key={idx} className="flex items-center gap-3 bg-white border border-gray-100 shadow-sm rounded-xl px-4 py-3 hover:shadow-[0_4px_20px_rgba(0,85,255,0.12)] hover:border-[#0055FF]/30 transition-all duration-300 group cursor-pointer">
+                  {(Array.isArray(cityHero.industries) && cityHero.industries.length
+                    ? cityHero.industries
+                    : DEFAULT_CITY_HERO.industries
+                  ).map((industrySlug, idx) => (
+                    <Link href={`/industries/${industrySlug}`} key={idx} className="flex items-center gap-3 bg-white border border-gray-100 shadow-sm rounded-xl px-4 py-3 hover:shadow-[0_4px_20px_rgba(0,85,255,0.12)] hover:border-[#0055FF]/30 transition-all duration-300 group cursor-pointer">
                       <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center shrink-0 group-hover:bg-gradient-to-br group-hover:from-[#00E1FF] group-hover:to-[#0055FF] transition-all duration-300">
                         <svg className="w-4 h-4 text-gray-500 group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          {industry.icon}
+                          {INDUSTRY_ICON_PATHS[industrySlug] || INDUSTRY_ICON_PATHS.default}
                         </svg>
                       </div>
                       <span className="text-[#0d1117] font-semibold text-sm group-hover:text-[#0055FF] transition-colors">
-                        {industriesData[industry.slug]?.title || industry.slug}
+                        {industriesData[industrySlug]?.title || industrySlug}
                       </span>
                     </Link>
                   ))}

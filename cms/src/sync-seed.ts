@@ -94,7 +94,8 @@ export async function syncSeedIfRequested(strapi: Core.Strapi) {
     uid: any,
     items: Record<string, unknown>[] | undefined,
     slugField = "slug",
-    forceKeys: string[] = []
+    forceKeys: string[] = [],
+    populate?: Record<string, boolean>
   ) {
     if (!items?.length) return;
     for (const item of items) {
@@ -103,14 +104,25 @@ export async function syncSeedIfRequested(strapi: Core.Strapi) {
       try {
         const existing = await strapi.documents(uid).findFirst({
           filters: { [slugField]: slug } as any,
+          ...(populate ? { populate: populate as any } : {}),
         });
         if (!existing) {
-          await strapi.documents(uid).create({ data: item, status: "published" });
+          const { hero, image, ogImage, logo, ...safe } = item as Record<string, unknown>;
+          void hero;
+          void image;
+          void ogImage;
+          void logo;
+          await strapi.documents(uid).create({ data: safe, status: "published" });
           continue;
         }
         const patch = forceKeys.length
           ? mergeForced(existing as Record<string, unknown>, item, forceKeys)
           : mergeMissing(existing as Record<string, unknown>, item);
+        // Never push media relations from seed JSON
+        delete patch.hero;
+        delete patch.image;
+        delete patch.ogImage;
+        delete patch.logo;
         if (Object.keys(patch).length) {
           await strapi.documents(uid).update({
             documentId: existing.documentId,
@@ -142,8 +154,21 @@ export async function syncSeedIfRequested(strapi: Core.Strapi) {
   ]);
 
   await upsertCollection("api::faq.faq", seed.faqs, "question");
-  await upsertCollection("api::service.service", seed.services, "slug", SERVICE_FORCE_KEYS);
-  await upsertCollection("api::industry.industry", seed.industries, "slug", INDUSTRY_FORCE_KEYS);
+  await upsertCollection("api::service.service", seed.services, "slug", SERVICE_FORCE_KEYS, {
+    whyChooseUsCards: true,
+    features: true,
+    process: true,
+    stats: true,
+    faqs: true,
+    caseStudies: true,
+  });
+  await upsertCollection("api::industry.industry", seed.industries, "slug", INDUSTRY_FORCE_KEYS, {
+    heroStats: true,
+    challenges: true,
+    services: true,
+    whyChooseUsCards: true,
+    seo: true,
+  });
   await upsertCollection("api::static-page.static-page", seed.staticPages, "slug", [
     "heroHeading",
     "heroBody",

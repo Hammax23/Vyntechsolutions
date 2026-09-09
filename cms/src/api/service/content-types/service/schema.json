@@ -142,6 +142,18 @@
       "repeatable": true,
       "component": "shared.faq"
     },
+    "faqEyebrow": {
+      "type": "string",
+      "default": "FAQ"
+    },
+    "faqHeading": {
+      "type": "string",
+      "default": "Frequently asked questions"
+    },
+    "faqIntro": {
+      "type": "text",
+      "default": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
+    },
     "ctaHeading": {
       "type": "string"
     },

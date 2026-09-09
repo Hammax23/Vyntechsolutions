@@ -676,6 +676,12 @@ export interface ApiIndustryIndustry extends Struct.CollectionTypeSchema {
     ctaButtonLabel: Schema.Attribute.String;
     ctaHeading: Schema.Attribute.String;
     description: Schema.Attribute.Text;
+    faqEyebrow: Schema.Attribute.String & Schema.Attribute.DefaultTo<'FAQ'>;
+    faqHeading: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Frequently asked questions'>;
+    faqIntro: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.'>;
+    faqs: Schema.Attribute.Component<'shared.faq', true>;
     hero: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     heroCtaLabel: Schema.Attribute.String;
     heroImageUrl: Schema.Attribute.String;
@@ -983,6 +989,11 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
       'sections.engagement-strategy',
       true
     >;
+    faqEyebrow: Schema.Attribute.String & Schema.Attribute.DefaultTo<'FAQ'>;
+    faqHeading: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Frequently asked questions'>;
+    faqIntro: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.'>;
     faqs: Schema.Attribute.Component<'shared.faq', true>;
     features: Schema.Attribute.Component<'shared.named-item', true>;
     featuresEyebrow: Schema.Attribute.String;

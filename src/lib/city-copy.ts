@@ -27,6 +27,8 @@ export const DEFAULT_CITY_HERO = {
   aboutBodyTemplate:
     "{city} is a highly competitive digital market, with hundreds of thousands of businesses all fighting for the same Google searches. A generic digital presence won't cut it here. VynTech Solutions builds custom, conversion-focused {service} campaigns for {city} businesses that are engineered to rank, load fast, and turn visitors into paying customers. We understand the {city} market deeply. Our strategies are tailored to local neighbourhoods and business verticals, so you're not just getting traffic, you're getting the right traffic. With five-star reviews and clients across every major industry, we're the agency that {city} businesses trust to grow online.",
   industriesHeadingTemplate: "Industries We Serve in {city}",
+  industries: ["healthcare", "ecommerce-retail", "real-estate", "hospitality-travel"],
+  contactCtaLabel: "Contact Us",
   sidebarHeadingTemplate: "Why {city} Businesses Choose VynTech",
   sidebarItems: [
     "{city}'s leading {service} agency",

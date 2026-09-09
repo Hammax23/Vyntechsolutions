@@ -20,6 +20,10 @@ export type IndustryData = {
   whyChooseUsSubHeading?: string;
   whyChooseUsSubText?: string;
   whyChooseUsCards?: { icon: string; label: string }[];
+  faqs?: { question: string; answer: string }[];
+  faqEyebrow?: string;
+  faqHeading?: string;
+  faqIntro?: string;
   ctaHeading?: string;
   ctaBody?: string;
   ctaButtonLabel?: string;
@@ -199,13 +203,14 @@ export const industriesData: Record<string, IndustryData> = {
     ctaButtonLabel: "Transform Your Digital Presence",
     icon: "healthcare",
     cardImage: "https://images.unsplash.com/photo-1666214280557-f1b5022eb634?auto=format&fit=crop&w=1600&q=80",
+    heroImage: "https://images.unsplash.com/photo-1666214280557-f1b5022eb634?auto=format&fit=crop&w=1600&q=80",
     highlights: [
       "Patient Portals",
       "Telemedicine",
       "HIPAA Compliance",
       "Healthcare Analytics"
     ],
-    servicesHeading: "Driving Healthcare Innovation with Scalable Solutions",
+    servicesHeading: "Solutions We Deliver",
     ctaBody: "Let's discuss how our healthcare services can help transform your business."
   },
   "finance-banking": {
@@ -332,13 +337,14 @@ export const industriesData: Record<string, IndustryData> = {
     ctaButtonLabel: "Transform Your Digital Presence",
     icon: "finance",
     cardImage: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80",
+    heroImage: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80",
     highlights: [
       "Digital Banking",
       "Payment Solutions",
       "Risk Management",
       "Regulatory Compliance"
     ],
-    servicesHeading: "Secure & Scalable Financial Technology Solutions",
+    servicesHeading: "Solutions We Deliver",
     ctaBody: "Let's discuss how our finance services can help transform your business."
   },
   "ecommerce-retail": {
@@ -465,13 +471,14 @@ export const industriesData: Record<string, IndustryData> = {
     ctaButtonLabel: "Transform Your Digital Presence",
     icon: "ecommerce",
     cardImage: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1600&q=80",
+    heroImage: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1600&q=80",
     highlights: [
       "Online Stores",
       "Inventory Management",
       "POS Systems",
       "Customer Analytics"
     ],
-    servicesHeading: "Transform Retail with Seamless Digital Experiences",
+    servicesHeading: "Solutions We Deliver",
     ctaBody: "Let's discuss how our e-commerce services can help transform your business."
   },
   education: {
@@ -598,13 +605,14 @@ export const industriesData: Record<string, IndustryData> = {
     ctaButtonLabel: "Transform Your Digital Presence",
     icon: "education",
     cardImage: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1600&q=80",
+    heroImage: "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1600&q=80",
     highlights: [
       "LMS Platforms",
       "Virtual Classrooms",
       "Student Portals",
       "EdTech Solutions"
     ],
-    servicesHeading: "Transforming Education Through Technology",
+    servicesHeading: "Solutions We Deliver",
     ctaBody: "Let's discuss how our education services can help transform your business."
   },
   "real-estate": {
@@ -731,13 +739,14 @@ export const industriesData: Record<string, IndustryData> = {
     ctaButtonLabel: "Transform Your Digital Presence",
     icon: "realestate",
     cardImage: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80",
+    heroImage: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80",
     highlights: [
       "Property Listings",
       "CRM Solutions",
       "Virtual Tours",
       "Transaction Management"
     ],
-    servicesHeading: "Digital Solutions for Modern Real Estate",
+    servicesHeading: "Solutions We Deliver",
     ctaBody: "Let's discuss how our real estate services can help transform your business."
   },
   logistics: {
@@ -864,13 +873,14 @@ export const industriesData: Record<string, IndustryData> = {
     ctaButtonLabel: "Transform Your Digital Presence",
     icon: "logistics",
     cardImage: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1600&q=80",
+    heroImage: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1600&q=80",
     highlights: [
       "Fleet Management",
       "Route Optimization",
       "Warehouse Systems",
       "Real-time Tracking"
     ],
-    servicesHeading: "Intelligent Solutions for Supply Chain Excellence",
+    servicesHeading: "Solutions We Deliver",
     ctaBody: "Let's discuss how our logistics services can help transform your business."
   },
   "entertainment-media": {
@@ -997,13 +1007,14 @@ export const industriesData: Record<string, IndustryData> = {
     ctaButtonLabel: "Transform Your Digital Presence",
     icon: "entertainment",
     cardImage: "https://images.unsplash.com/photo-1574267432553-4b4628081c31?auto=format&fit=crop&w=1600&q=80",
+    heroImage: "https://images.unsplash.com/photo-1574267432553-4b4628081c31?auto=format&fit=crop&w=1600&q=80",
     highlights: [
       "Streaming Platforms",
       "Content Management",
       "Digital Publishing",
       "Media Analytics"
     ],
-    servicesHeading: "Engaging Digital Experiences for Modern Audiences",
+    servicesHeading: "Solutions We Deliver",
     ctaBody: "Let's discuss how our entertainment services can help transform your business."
   },
   manufacturing: {
@@ -1130,13 +1141,14 @@ export const industriesData: Record<string, IndustryData> = {
     ctaButtonLabel: "Transform Your Digital Presence",
     icon: "manufacturing",
     cardImage: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1600&q=80",
+    heroImage: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1600&q=80",
     highlights: [
       "IoT Integration",
       "Production Planning",
       "Quality Control",
       "Supply Chain"
     ],
-    servicesHeading: "Smart Manufacturing for the Digital Age",
+    servicesHeading: "Solutions We Deliver",
     ctaBody: "Let's discuss how our manufacturing services can help transform your business."
   },
   "hospitality-travel": {
@@ -1263,13 +1275,14 @@ export const industriesData: Record<string, IndustryData> = {
     ctaButtonLabel: "Transform Your Digital Presence",
     icon: "hospitality",
     cardImage: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1600&q=80",
+    heroImage: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1600&q=80",
     highlights: [
       "Booking Systems",
       "Guest Management",
       "Revenue Optimization",
       "Travel Platforms"
     ],
-    servicesHeading: "Elevating Guest Experiences Through Technology",
+    servicesHeading: "Solutions We Deliver",
     ctaBody: "Let's discuss how our hospitality services can help transform your business."
   },
   telecommunications: {
@@ -1396,13 +1409,14 @@ export const industriesData: Record<string, IndustryData> = {
     ctaButtonLabel: "Transform Your Digital Presence",
     icon: "telecom",
     cardImage: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1600&q=80",
+    heroImage: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1600&q=80",
     highlights: [
       "Network Management",
       "Billing Systems",
       "Customer Portals",
       "5G Solutions"
     ],
-    servicesHeading: "Next-Generation Connectivity Solutions",
+    servicesHeading: "Solutions We Deliver",
     ctaBody: "Let's discuss how our telecommunications services can help transform your business."
   }
 };

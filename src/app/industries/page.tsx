@@ -10,6 +10,8 @@ import {
   type IndustriesListingDefaults,
   type IndustryData,
 } from "@/data/industriesData";
+import { DEFAULT_NAV_CHROME, mergeCopy } from "@/lib/ui-copy";
+import Image from "next/image";
 
 type ListingIndustry = {
   slug: string;
@@ -84,8 +86,11 @@ function mergeListingChrome(
     ctaBody: pick(sections.ctaBody, page.ctaBody) || defaults.ctaBody,
     ctaLabel: pick(sections.ctaLabel, page.ctaLabel) || defaults.ctaLabel,
     ctaHref: pick(sections.ctaHref, page.ctaHref) || defaults.ctaHref,
-    notFoundHeading: defaults.notFoundHeading,
-    notFoundLinkLabel: defaults.notFoundLinkLabel,
+    notFoundHeading:
+      pick(sections.notFoundHeading, page.notFoundHeading) || defaults.notFoundHeading,
+    notFoundLinkLabel:
+      pick(sections.notFoundLinkLabel, page.notFoundLinkLabel) ||
+      defaults.notFoundLinkLabel,
   };
 }
 
@@ -187,6 +192,7 @@ export default function IndustriesPage() {
   const [chrome, setChrome] = useState<IndustriesListingDefaults>(
     industriesListingDefaults
   );
+  const [navChrome, setNavChrome] = useState(DEFAULT_NAV_CHROME);
 
   useEffect(() => {
     setIsVisible(true);
@@ -199,8 +205,14 @@ export default function IndustriesPage() {
       fetch("/api/cms/content?type=page-seo&path=/industries").then((r) =>
         r.ok ? r.json() : null
       ),
+      fetch("/api/cms/content?type=navigation").then((r) =>
+        r.ok ? r.json() : null
+      ),
     ])
-      .then(([industriesRes, staticRes, seoRes]) => {
+      .then(([industriesRes, staticRes, seoRes, navRes]) => {
+        if (navRes?.navigation?.chrome) {
+          setNavChrome(mergeCopy(DEFAULT_NAV_CHROME, navRes.navigation.chrome));
+        }
         const page = staticRes?.page as Record<string, unknown> | undefined;
         const pageSeo = seoRes?.pageSeo as Record<string, unknown> | undefined;
         const seoH1 = typeof pageSeo?.h1 === "string" ? pageSeo.h1.trim() : "";
@@ -274,10 +286,10 @@ export default function IndustriesPage() {
           <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6">
             <div className="flex items-center gap-2 text-white/50 text-sm mb-12">
               <Link href="/" className="hover:text-white transition-colors">
-                Home
+                {navChrome.homeLabel}
               </Link>
               <span>›</span>
-              <span className="text-[#0d9488]">Industries</span>
+              <span className="text-[#0d9488]">{navChrome.industriesLabel}</span>
             </div>
 
             <div
@@ -318,8 +330,20 @@ export default function IndustriesPage() {
                 <Link
                   key={industry.slug}
                   href={`/industries/${industry.slug}`}
-                  className="group bg-white rounded-2xl p-8 border border-gray-100 hover:shadow-xl hover:border-[#0d9488]/30 transition-all duration-300"
+                  className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl hover:border-[#0d9488]/30 transition-all duration-300"
                 >
+                  {industry.cardImage ? (
+                    <div className="relative h-40 w-full bg-gray-100">
+                      <Image
+                        src={industry.cardImage}
+                        alt={industry.title}
+                        fill
+                        className="object-cover"
+                        unoptimized
+                      />
+                    </div>
+                  ) : null}
+                  <div className="p-8">
                   <div className="w-14 h-14 bg-[#0d9488]/10 rounded-xl flex items-center justify-center text-[#0d9488] mb-6 group-hover:bg-[#0d9488] group-hover:text-white transition-all duration-300">
                     <IndustryIcon type={industry.icon} />
                   </div>
@@ -344,6 +368,7 @@ export default function IndustriesPage() {
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
+                  </div>
                   </div>
                 </Link>
               ))}

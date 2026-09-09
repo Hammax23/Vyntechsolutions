@@ -53,19 +53,39 @@ export const HOME_FAQS = [
   },
 ];
 
-export default function FAQ({ faqs }: { faqs?: { question: string; answer: string }[] }) {
+export default function FAQ({
+  faqs,
+  eyebrow: eyebrowProp,
+  heading: headingProp,
+  intro: introProp,
+}: {
+  faqs?: { question: string; answer: string }[];
+  eyebrow?: string;
+  heading?: string;
+  intro?: string;
+}) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const [cmsFaqs, setCmsFaqs] = useState<{ question: string; answer: string }[]>([]);
-  const [eyebrow, setEyebrow] = useState("FAQ");
-  const [heading, setHeading] = useState("Frequently asked questions");
+  const [eyebrow, setEyebrow] = useState(eyebrowProp || "FAQ");
+  const [heading, setHeading] = useState(headingProp || "Frequently asked questions");
   const [intro, setIntro] = useState(
-    "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
+    introProp ||
+      "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
   );
 
   useEffect(() => {
+    if (eyebrowProp) setEyebrow(eyebrowProp);
+    if (headingProp) setHeading(headingProp);
+    if (introProp) setIntro(introProp);
+  }, [eyebrowProp, headingProp, introProp]);
+
+  useEffect(() => {
     let cancelled = false;
+    const hasChrome = Boolean(eyebrowProp || headingProp || introProp);
     Promise.all([
-      fetch("/api/cms/content?type=homepage").then((r) => (r.ok ? r.json() : null)),
+      hasChrome
+        ? Promise.resolve(null)
+        : fetch("/api/cms/content?type=homepage").then((r) => (r.ok ? r.json() : null)),
       faqs?.length
         ? Promise.resolve(null)
         : fetch("/api/cms/content?type=faqs&page=home").then((r) => (r.ok ? r.json() : null)),
@@ -73,9 +93,9 @@ export default function FAQ({ faqs }: { faqs?: { question: string; answer: strin
       .then(([homeData, faqData]) => {
         if (cancelled) return;
         const hp = homeData?.homepage as Record<string, unknown> | undefined;
-        if (hp?.faqEyebrow) setEyebrow(String(hp.faqEyebrow));
-        if (hp?.faqHeading) setHeading(String(hp.faqHeading));
-        if (hp?.faqIntro) setIntro(String(hp.faqIntro));
+        if (!eyebrowProp && hp?.faqEyebrow) setEyebrow(String(hp.faqEyebrow));
+        if (!headingProp && hp?.faqHeading) setHeading(String(hp.faqHeading));
+        if (!introProp && hp?.faqIntro) setIntro(String(hp.faqIntro));
         const list = faqData?.faqs as { question?: string; answer?: string }[] | undefined;
         if (list?.length) {
           setCmsFaqs(
@@ -89,7 +109,7 @@ export default function FAQ({ faqs }: { faqs?: { question: string; answer: strin
     return () => {
       cancelled = true;
     };
-  }, [faqs]);
+  }, [faqs, eyebrowProp, headingProp, introProp]);
 
   const toggleAccordion = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);

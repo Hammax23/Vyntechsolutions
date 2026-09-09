@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import FAQ from "@/components/FAQ";
 import { useEffect, useState } from "react";
 import {
   industriesData,
@@ -12,6 +13,24 @@ import {
   type IndustryData,
 } from "@/data/industriesData";
 import { DEFAULT_NAV_CHROME, mergeCopy } from "@/lib/ui-copy";
+
+const DEFAULT_INDUSTRY_FAQS = [
+  {
+    question: "How long does a typical project take?",
+    answer:
+      "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next.",
+  },
+  {
+    question: "Do you work with businesses across Canada?",
+    answer:
+      "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication.",
+  },
+  {
+    question: "What happens after launch?",
+    answer:
+      "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals.",
+  },
+];
 
 const WHY_ICON_PATHS: Record<string, string> = {
   chart:
@@ -129,8 +148,8 @@ export default function IndustryPage() {
       : `${process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"}${industry.heroImage}`
     : "";
 
-  const solutionsEyebrow = industry.solutionsEyebrow || "What We Deliver";
-  const solutionsHeading = industry.servicesHeading || "Solutions We Deliver";
+  const solutionsEyebrow = industry.solutionsEyebrow || "";
+  const solutionsHeading = industry.servicesHeading || "";
   const solutionsSub = industry.subtitle || "";
   const showWhy =
     Boolean(industry.whyChooseUsHeading) &&
@@ -354,6 +373,18 @@ export default function IndustryPage() {
             </div>
           </section>
         )}
+
+        <FAQ
+          faqs={
+            industry.faqs?.length ? industry.faqs : DEFAULT_INDUSTRY_FAQS
+          }
+          eyebrow={industry.faqEyebrow || "FAQ"}
+          heading={industry.faqHeading || "Frequently asked questions"}
+          intro={
+            industry.faqIntro ||
+            "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
+          }
+        />
 
         {(industry.ctaHeading || industry.ctaBody || industry.ctaButtonLabel) && (
           <section id="contact" className="py-10 bg-[#0f172a]">

@@ -1127,7 +1127,14 @@
             "value": "88%",
             "label": "Of local mobile searches result in a call or visit within 24 hours."
           }
-        ]
+        ],
+        "industries": [
+          "healthcare",
+          "ecommerce-retail",
+          "real-estate",
+          "hospitality-travel"
+        ],
+        "contactCtaLabel": "Contact Us"
       },
       "engagementStrategies": [
         {
@@ -1209,7 +1216,10 @@
           "answer": "Getting started is easy! Simply reach out to us using the 'Let's Talk Business' button below. We'll schedule a free consultation to discuss your needs and outline the perfect strategy."
         }
       ],
-      "caseStudiesHeading": "Case Studies"
+      "caseStudiesHeading": "Case Studies",
+      "faqEyebrow": "FAQ",
+      "faqHeading": "Frequently asked questions",
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
     },
     {
       "title": "Mobile App Development",
@@ -2051,7 +2061,14 @@
             "value": "88%",
             "label": "Of local mobile searches result in a call or visit within 24 hours."
           }
-        ]
+        ],
+        "industries": [
+          "healthcare",
+          "ecommerce-retail",
+          "real-estate",
+          "hospitality-travel"
+        ],
+        "contactCtaLabel": "Contact Us"
       },
       "engagementStrategies": [
         {
@@ -2133,7 +2150,10 @@
           "answer": "Getting started is easy! Simply reach out to us using the 'Let's Talk Business' button below. We'll schedule a free consultation to discuss your needs and outline the perfect strategy."
         }
       ],
-      "caseStudiesHeading": "Case Studies"
+      "caseStudiesHeading": "Case Studies",
+      "faqEyebrow": "FAQ",
+      "faqHeading": "Frequently asked questions",
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
     },
     {
       "title": "Cloud Solutions",
@@ -2937,7 +2957,14 @@
             "value": "88%",
             "label": "Of local mobile searches result in a call or visit within 24 hours."
           }
-        ]
+        ],
+        "industries": [
+          "healthcare",
+          "ecommerce-retail",
+          "real-estate",
+          "hospitality-travel"
+        ],
+        "contactCtaLabel": "Contact Us"
       },
       "engagementStrategies": [
         {
@@ -3019,14 +3046,17 @@
           "answer": "Getting started is easy! Simply reach out to us using the 'Let's Talk Business' button below. We'll schedule a free consultation to discuss your needs and outline the perfect strategy."
         }
       ],
-      "caseStudiesHeading": "Case Studies"
+      "caseStudiesHeading": "Case Studies",
+      "faqEyebrow": "FAQ",
+      "faqHeading": "Frequently asked questions",
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
     },
     {
       "title": "AI/ML Solutions",
-      "subtitle": "AI Integration & Automation",
+      "subtitle": "AI Integration and Automation Services",
       "description": "Practical AI solutions, chatbots, automation, data analysis, and integrating AI APIs into your existing systems.",
       "heroImage": "/services/ai-ml.jpg",
-      "overview": "We help businesses use AI where it actually makes sense. This includes building chatbots, integrating OpenAI/GPT into your apps, automating repetitive tasks, and analyzing data to find useful patterns. We are not here to sell you on AI hype, we focus on practical applications that save time or improve your product.",
+      "overview": "We start by understanding what your business actually requires and build AI automation solutions around that goal, not around whatever's trending. Each project has a dedicated team, clear communication, and full ownership of results from the first prototype to production into the systems you already use.",
       "features": [
         {
           "title": "Chatbots & Assistants",
@@ -3791,7 +3821,14 @@
             "value": "88%",
             "label": "Of local mobile searches result in a call or visit within 24 hours."
           }
-        ]
+        ],
+        "industries": [
+          "healthcare",
+          "ecommerce-retail",
+          "real-estate",
+          "hospitality-travel"
+        ],
+        "contactCtaLabel": "Contact Us"
       },
       "engagementStrategies": [
         {
@@ -3873,7 +3910,10 @@
           "answer": "Getting started is easy! Simply reach out to us using the 'Let's Talk Business' button below. We'll schedule a free consultation to discuss your needs and outline the perfect strategy."
         }
       ],
-      "caseStudiesHeading": "Case Studies"
+      "caseStudiesHeading": "Case Studies",
+      "faqEyebrow": "FAQ",
+      "faqHeading": "Frequently asked questions",
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
     },
     {
       "title": "DevOps & CI/CD",
@@ -4639,7 +4679,14 @@
             "value": "88%",
             "label": "Of local mobile searches result in a call or visit within 24 hours."
           }
-        ]
+        ],
+        "industries": [
+          "healthcare",
+          "ecommerce-retail",
+          "real-estate",
+          "hospitality-travel"
+        ],
+        "contactCtaLabel": "Contact Us"
       },
       "engagementStrategies": [
         {
@@ -4721,7 +4768,10 @@
           "answer": "Getting started is easy! Simply reach out to us using the 'Let's Talk Business' button below. We'll schedule a free consultation to discuss your needs and outline the perfect strategy."
         }
       ],
-      "caseStudiesHeading": "Case Studies"
+      "caseStudiesHeading": "Case Studies",
+      "faqEyebrow": "FAQ",
+      "faqHeading": "Frequently asked questions",
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
     },
     {
       "title": "UI/UX Design",
@@ -5457,7 +5507,14 @@
             "value": "88%",
             "label": "Of local mobile searches result in a call or visit within 24 hours."
           }
-        ]
+        ],
+        "industries": [
+          "healthcare",
+          "ecommerce-retail",
+          "real-estate",
+          "hospitality-travel"
+        ],
+        "contactCtaLabel": "Contact Us"
       },
       "engagementStrategies": [
         {
@@ -5539,7 +5596,10 @@
           "answer": "Getting started is easy! Simply reach out to us using the 'Let's Talk Business' button below. We'll schedule a free consultation to discuss your needs and outline the perfect strategy."
         }
       ],
-      "caseStudiesHeading": "Case Studies"
+      "caseStudiesHeading": "Case Studies",
+      "faqEyebrow": "FAQ",
+      "faqHeading": "Frequently asked questions",
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
     },
     {
       "title": "E-commerce Solutions",
@@ -6295,7 +6355,14 @@
             "value": "88%",
             "label": "Of local mobile searches result in a call or visit within 24 hours."
           }
-        ]
+        ],
+        "industries": [
+          "healthcare",
+          "ecommerce-retail",
+          "real-estate",
+          "hospitality-travel"
+        ],
+        "contactCtaLabel": "Contact Us"
       },
       "engagementStrategies": [
         {
@@ -6377,7 +6444,10 @@
           "answer": "Getting started is easy! Simply reach out to us using the 'Let's Talk Business' button below. We'll schedule a free consultation to discuss your needs and outline the perfect strategy."
         }
       ],
-      "caseStudiesHeading": "Case Studies"
+      "caseStudiesHeading": "Case Studies",
+      "faqEyebrow": "FAQ",
+      "faqHeading": "Frequently asked questions",
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
     },
     {
       "title": "Custom Software Development",
@@ -7069,7 +7139,14 @@
             "value": "88%",
             "label": "Of local mobile searches result in a call or visit within 24 hours."
           }
-        ]
+        ],
+        "industries": [
+          "healthcare",
+          "ecommerce-retail",
+          "real-estate",
+          "hospitality-travel"
+        ],
+        "contactCtaLabel": "Contact Us"
       },
       "engagementStrategies": [
         {
@@ -7151,7 +7228,10 @@
           "answer": "Getting started is easy! Simply reach out to us using the 'Let's Talk Business' button below. We'll schedule a free consultation to discuss your needs and outline the perfect strategy."
         }
       ],
-      "caseStudiesHeading": "Case Studies"
+      "caseStudiesHeading": "Case Studies",
+      "faqEyebrow": "FAQ",
+      "faqHeading": "Frequently asked questions",
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
     },
     {
       "title": "SEO/Digital Marketing",
@@ -7907,7 +7987,14 @@
             "value": "88%",
             "label": "Of local mobile searches result in a call or visit within 24 hours."
           }
-        ]
+        ],
+        "industries": [
+          "healthcare",
+          "ecommerce-retail",
+          "real-estate",
+          "hospitality-travel"
+        ],
+        "contactCtaLabel": "Contact Us"
       },
       "engagementStrategies": [
         {
@@ -7989,7 +8076,10 @@
           "answer": "Getting started is easy! Simply reach out to us using the 'Let's Talk Business' button below. We'll schedule a free consultation to discuss your needs and outline the perfect strategy."
         }
       ],
-      "caseStudiesHeading": "Case Studies"
+      "caseStudiesHeading": "Case Studies",
+      "faqEyebrow": "FAQ",
+      "faqHeading": "Frequently asked questions",
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
     },
     {
       "title": "Maintenance & Support",
@@ -8681,7 +8771,14 @@
             "value": "88%",
             "label": "Of local mobile searches result in a call or visit within 24 hours."
           }
-        ]
+        ],
+        "industries": [
+          "healthcare",
+          "ecommerce-retail",
+          "real-estate",
+          "hospitality-travel"
+        ],
+        "contactCtaLabel": "Contact Us"
       },
       "engagementStrategies": [
         {
@@ -8763,7 +8860,10 @@
           "answer": "Getting started is easy! Simply reach out to us using the 'Let's Talk Business' button below. We'll schedule a free consultation to discuss your needs and outline the perfect strategy."
         }
       ],
-      "caseStudiesHeading": "Case Studies"
+      "caseStudiesHeading": "Case Studies",
+      "faqEyebrow": "FAQ",
+      "faqHeading": "Frequently asked questions",
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
     },
     {
       "title": "Tax & Accounting Services",
@@ -9334,7 +9434,14 @@
             "value": "88%",
             "label": "Of local mobile searches result in a call or visit within 24 hours."
           }
-        ]
+        ],
+        "industries": [
+          "healthcare",
+          "ecommerce-retail",
+          "real-estate",
+          "hospitality-travel"
+        ],
+        "contactCtaLabel": "Contact Us"
       },
       "engagementStrategies": [
         {
@@ -9416,7 +9523,10 @@
           "answer": "Getting started is easy! Simply reach out to us using the 'Let's Talk Business' button below. We'll schedule a free consultation to discuss your needs and outline the perfect strategy."
         }
       ],
-      "caseStudiesHeading": "Case Studies"
+      "caseStudiesHeading": "Case Studies",
+      "faqEyebrow": "FAQ",
+      "faqHeading": "Frequently asked questions",
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
     }
   ],
   "industries": [
@@ -9558,7 +9668,25 @@
         "Healthcare Analytics"
       ],
       "ctaBody": "Let's discuss how our healthcare services can help transform your business.",
-      "servicesHeading": "Driving Healthcare Innovation with Scalable Solutions"
+      "servicesHeading": "Solutions We Deliver",
+      "heroImageUrl": "https://images.unsplash.com/photo-1666214280557-f1b5022eb634?auto=format&fit=crop&w=1600&q=80",
+      "faqEyebrow": "FAQ",
+      "faqHeading": "Frequently asked questions",
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
+      "faqs": [
+        {
+          "question": "How long does a typical project take?",
+          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+        },
+        {
+          "question": "Do you work with businesses across Canada?",
+          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+        },
+        {
+          "question": "What happens after launch?",
+          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+        }
+      ]
     },
     {
       "title": "Finance & Banking",
@@ -9698,7 +9826,25 @@
         "Regulatory Compliance"
       ],
       "ctaBody": "Let's discuss how our finance services can help transform your business.",
-      "servicesHeading": "Secure & Scalable Financial Technology Solutions"
+      "servicesHeading": "Solutions We Deliver",
+      "heroImageUrl": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80",
+      "faqEyebrow": "FAQ",
+      "faqHeading": "Frequently asked questions",
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
+      "faqs": [
+        {
+          "question": "How long does a typical project take?",
+          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+        },
+        {
+          "question": "Do you work with businesses across Canada?",
+          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+        },
+        {
+          "question": "What happens after launch?",
+          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+        }
+      ]
     },
     {
       "title": "E-commerce & Retail",
@@ -9838,7 +9984,25 @@
         "Customer Analytics"
       ],
       "ctaBody": "Let's discuss how our e-commerce services can help transform your business.",
-      "servicesHeading": "Transform Retail with Seamless Digital Experiences"
+      "servicesHeading": "Solutions We Deliver",
+      "heroImageUrl": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1600&q=80",
+      "faqEyebrow": "FAQ",
+      "faqHeading": "Frequently asked questions",
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
+      "faqs": [
+        {
+          "question": "How long does a typical project take?",
+          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+        },
+        {
+          "question": "Do you work with businesses across Canada?",
+          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+        },
+        {
+          "question": "What happens after launch?",
+          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+        }
+      ]
     },
     {
       "title": "Education & E-learning",
@@ -9978,7 +10142,25 @@
         "EdTech Solutions"
       ],
       "ctaBody": "Let's discuss how our education services can help transform your business.",
-      "servicesHeading": "Transforming Education Through Technology"
+      "servicesHeading": "Solutions We Deliver",
+      "heroImageUrl": "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1600&q=80",
+      "faqEyebrow": "FAQ",
+      "faqHeading": "Frequently asked questions",
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
+      "faqs": [
+        {
+          "question": "How long does a typical project take?",
+          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+        },
+        {
+          "question": "Do you work with businesses across Canada?",
+          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+        },
+        {
+          "question": "What happens after launch?",
+          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+        }
+      ]
     },
     {
       "title": "Real Estate & Property",
@@ -10118,7 +10300,25 @@
         "Transaction Management"
       ],
       "ctaBody": "Let's discuss how our real estate services can help transform your business.",
-      "servicesHeading": "Digital Solutions for Modern Real Estate"
+      "servicesHeading": "Solutions We Deliver",
+      "heroImageUrl": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80",
+      "faqEyebrow": "FAQ",
+      "faqHeading": "Frequently asked questions",
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
+      "faqs": [
+        {
+          "question": "How long does a typical project take?",
+          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+        },
+        {
+          "question": "Do you work with businesses across Canada?",
+          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+        },
+        {
+          "question": "What happens after launch?",
+          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+        }
+      ]
     },
     {
       "title": "Logistics & Transportation",
@@ -10258,7 +10458,25 @@
         "Real-time Tracking"
       ],
       "ctaBody": "Let's discuss how our logistics services can help transform your business.",
-      "servicesHeading": "Intelligent Solutions for Supply Chain Excellence"
+      "servicesHeading": "Solutions We Deliver",
+      "heroImageUrl": "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1600&q=80",
+      "faqEyebrow": "FAQ",
+      "faqHeading": "Frequently asked questions",
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
+      "faqs": [
+        {
+          "question": "How long does a typical project take?",
+          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+        },
+        {
+          "question": "Do you work with businesses across Canada?",
+          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+        },
+        {
+          "question": "What happens after launch?",
+          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+        }
+      ]
     },
     {
       "title": "Entertainment & Media",
@@ -10398,7 +10616,25 @@
         "Media Analytics"
       ],
       "ctaBody": "Let's discuss how our entertainment services can help transform your business.",
-      "servicesHeading": "Engaging Digital Experiences for Modern Audiences"
+      "servicesHeading": "Solutions We Deliver",
+      "heroImageUrl": "https://images.unsplash.com/photo-1574267432553-4b4628081c31?auto=format&fit=crop&w=1600&q=80",
+      "faqEyebrow": "FAQ",
+      "faqHeading": "Frequently asked questions",
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
+      "faqs": [
+        {
+          "question": "How long does a typical project take?",
+          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+        },
+        {
+          "question": "Do you work with businesses across Canada?",
+          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+        },
+        {
+          "question": "What happens after launch?",
+          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+        }
+      ]
     },
     {
       "title": "Manufacturing & Industry",
@@ -10538,7 +10774,25 @@
         "Supply Chain"
       ],
       "ctaBody": "Let's discuss how our manufacturing services can help transform your business.",
-      "servicesHeading": "Smart Manufacturing for the Digital Age"
+      "servicesHeading": "Solutions We Deliver",
+      "heroImageUrl": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1600&q=80",
+      "faqEyebrow": "FAQ",
+      "faqHeading": "Frequently asked questions",
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
+      "faqs": [
+        {
+          "question": "How long does a typical project take?",
+          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+        },
+        {
+          "question": "Do you work with businesses across Canada?",
+          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+        },
+        {
+          "question": "What happens after launch?",
+          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+        }
+      ]
     },
     {
       "title": "Hospitality & Travel",
@@ -10678,7 +10932,25 @@
         "Travel Platforms"
       ],
       "ctaBody": "Let's discuss how our hospitality services can help transform your business.",
-      "servicesHeading": "Elevating Guest Experiences Through Technology"
+      "servicesHeading": "Solutions We Deliver",
+      "heroImageUrl": "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1600&q=80",
+      "faqEyebrow": "FAQ",
+      "faqHeading": "Frequently asked questions",
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
+      "faqs": [
+        {
+          "question": "How long does a typical project take?",
+          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+        },
+        {
+          "question": "Do you work with businesses across Canada?",
+          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+        },
+        {
+          "question": "What happens after launch?",
+          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+        }
+      ]
     },
     {
       "title": "Telecommunications",
@@ -10818,7 +11090,25 @@
         "5G Solutions"
       ],
       "ctaBody": "Let's discuss how our telecommunications services can help transform your business.",
-      "servicesHeading": "Next-Generation Connectivity Solutions"
+      "servicesHeading": "Solutions We Deliver",
+      "heroImageUrl": "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1600&q=80",
+      "faqEyebrow": "FAQ",
+      "faqHeading": "Frequently asked questions",
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
+      "faqs": [
+        {
+          "question": "How long does a typical project take?",
+          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+        },
+        {
+          "question": "Do you work with businesses across Canada?",
+          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+        },
+        {
+          "question": "What happens after launch?",
+          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+        }
+      ]
     }
   ],
   "homepage": {
@@ -11739,7 +12029,9 @@
         "ctaHeading": "Ready to Transform Your Industry?",
         "ctaBody": "Let's discuss how our industry expertise and technology solutions can help drive your business forward.",
         "ctaLabel": "Let's Talk Business",
-        "ctaHref": "/lets-talk-business"
+        "ctaHref": "/lets-talk-business",
+        "notFoundHeading": "Industry Not Found",
+        "notFoundLinkLabel": "View All Industries"
       }
     },
     {

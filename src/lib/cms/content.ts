@@ -41,6 +41,7 @@ const INDUSTRY_POPULATE: Record<string, string> = {
   "populate[services]": "true",
   "populate[hero]": "true",
   "populate[whyChooseUsCards]": "true",
+  "populate[faqs]": "true",
   ...SEO_POPULATE,
 };
 
@@ -156,6 +157,9 @@ export type CmsService = {
   processHeading?: string;
   processDescription?: string;
   faqs?: { question: string; answer: string }[];
+  faqEyebrow?: string;
+  faqHeading?: string;
+  faqIntro?: string;
   ctaHeading?: string;
   ctaBody?: string;
   ctaButtonLabel?: string;
@@ -260,6 +264,8 @@ export type CmsService = {
     aboutHeadingTemplate?: string;
     aboutBodyTemplate?: string;
     industriesHeadingTemplate?: string;
+    industries?: string[];
+    contactCtaLabel?: string;
     sidebarHeadingTemplate?: string;
     sidebarItems?: string[];
     hoursText?: string;
@@ -335,6 +341,9 @@ function mapService(entry: Record<string, unknown>, fallbackSlug?: string, local
     faqs: isArrayPopulated(entry.faqs)
       ? (entry.faqs as { question: string; answer: string }[])
       : localFallback?.faqs,
+    faqEyebrow: isPopulated(entry.faqEyebrow) ? String(entry.faqEyebrow) : localFallback?.faqEyebrow,
+    faqHeading: isPopulated(entry.faqHeading) ? String(entry.faqHeading) : localFallback?.faqHeading,
+    faqIntro: isPopulated(entry.faqIntro) ? String(entry.faqIntro) : localFallback?.faqIntro,
     ctaHeading: isPopulated(entry.ctaHeading) ? String(entry.ctaHeading) : localFallback?.ctaHeading,
     ctaBody: isPopulated(entry.ctaBody) ? String(entry.ctaBody) : localFallback?.ctaBody,
     ctaButtonLabel: isPopulated(entry.ctaButtonLabel) ? String(entry.ctaButtonLabel) : localFallback?.ctaButtonLabel,
@@ -466,6 +475,10 @@ export type CmsIndustry = {
   whyChooseUsSubHeading?: string;
   whyChooseUsSubText?: string;
   whyChooseUsCards?: { icon: string; label: string }[];
+  faqs?: { question: string; answer: string }[];
+  faqEyebrow?: string;
+  faqHeading?: string;
+  faqIntro?: string;
   ctaHeading?: string;
   ctaBody?: string;
   ctaButtonLabel?: string;
@@ -491,7 +504,11 @@ function mapIndustry(
     description: isPopulated(entry.description) ? String(entry.description) : (localFallback?.description || ""),
     icon: isPopulated(entry.icon) ? String(entry.icon) : localFallback?.icon,
     cardImage: isPopulated(entry.cardImage) ? String(entry.cardImage) : localFallback?.cardImage,
-    heroImage: heroUrl || localFallback?.heroImage || "",
+    heroImage:
+      heroUrl ||
+      (isPopulated(entry.cardImage) ? String(entry.cardImage) : "") ||
+      localFallback?.heroImage ||
+      "",
     solutionsEyebrow: isPopulated(entry.solutionsEyebrow) ? String(entry.solutionsEyebrow) : localFallback?.solutionsEyebrow,
     challengesHeading: isPopulated(entry.challengesHeading) ? String(entry.challengesHeading) : localFallback?.challengesHeading,
     servicesHeading: isPopulated(entry.servicesHeading) ? String(entry.servicesHeading) : localFallback?.servicesHeading,
@@ -519,6 +536,12 @@ function mapIndustry(
     whyChooseUsCards: Array.isArray(entry.whyChooseUsCards) && entry.whyChooseUsCards.length
       ? (entry.whyChooseUsCards as CmsIndustry["whyChooseUsCards"])
       : localFallback?.whyChooseUsCards,
+    faqs: Array.isArray(entry.faqs) && entry.faqs.length
+      ? (entry.faqs as CmsIndustry["faqs"])
+      : localFallback?.faqs,
+    faqEyebrow: isPopulated(entry.faqEyebrow) ? String(entry.faqEyebrow) : localFallback?.faqEyebrow,
+    faqHeading: isPopulated(entry.faqHeading) ? String(entry.faqHeading) : localFallback?.faqHeading,
+    faqIntro: isPopulated(entry.faqIntro) ? String(entry.faqIntro) : localFallback?.faqIntro,
     ctaHeading: isPopulated(entry.ctaHeading) ? String(entry.ctaHeading) : localFallback?.ctaHeading,
     ctaBody: isPopulated(entry.ctaBody) ? String(entry.ctaBody) : localFallback?.ctaBody,
     ctaButtonLabel: isPopulated(entry.ctaButtonLabel) ? String(entry.ctaButtonLabel) : localFallback?.ctaButtonLabel,

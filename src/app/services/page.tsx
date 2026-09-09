@@ -10,6 +10,8 @@ import {
   type ServicesListingDefaults,
   type ServiceData,
 } from "@/data/servicesData";
+import { DEFAULT_NAV_CHROME, mergeCopy } from "@/lib/ui-copy";
+import Image from "next/image";
 
 type ListingService = {
   slug: string;
@@ -17,6 +19,7 @@ type ListingService = {
   description: string;
   icon: string;
   features: string[];
+  cardImage?: string;
 };
 
 function listingFromData(): ListingService[] {
@@ -26,6 +29,7 @@ function listingFromData(): ListingService[] {
     description: service.description,
     icon: service.icon || "code",
     features: (service.features || []).map((f) => f.title).filter(Boolean),
+    cardImage: service.cardImage,
   }));
 }
 
@@ -244,6 +248,7 @@ export default function ServicesPage() {
   const [chrome, setChrome] = useState<ServicesListingDefaults>(
     servicesListingDefaults
   );
+  const [navChrome, setNavChrome] = useState(DEFAULT_NAV_CHROME);
 
   useEffect(() => {
     setIsVisible(true);
@@ -259,8 +264,14 @@ export default function ServicesPage() {
       fetch("/api/cms/content?type=page-seo&path=/services").then((r) =>
         r.ok ? r.json() : null
       ),
+      fetch("/api/cms/content?type=navigation").then((r) =>
+        r.ok ? r.json() : null
+      ),
     ])
-      .then(([servicesRes, staticRes, promoRes, seoRes]) => {
+      .then(([servicesRes, staticRes, promoRes, seoRes, navRes]) => {
+        if (navRes?.navigation?.chrome) {
+          setNavChrome(mergeCopy(DEFAULT_NAV_CHROME, navRes.navigation.chrome));
+        }
         const page = staticRes?.page as Record<string, unknown> | undefined;
         const promo = promoRes?.promos?.[0] as
           | {
@@ -320,6 +331,7 @@ export default function ServicesPage() {
                 features: features.length
                   ? features
                   : (fallback?.features || []).map((f) => f.title),
+                cardImage: s.cardImage || fallback?.cardImage,
               };
             })
             .filter((s) => s.slug)
@@ -377,11 +389,11 @@ export default function ServicesPage() {
             >
               <div className="flex items-center justify-center gap-2 text-white/60 text-sm mb-8">
                 <Link href="/" className="hover:text-white transition-colors">
-                  Home
+                  {navChrome.homeLabel}
                 </Link>
                 <span>/</span>
                 <span className="bg-gradient-to-r from-[#0055FF] via-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text">
-                  Services
+                  {navChrome.servicesLabel}
                 </span>
               </div>
 
@@ -410,7 +422,7 @@ export default function ServicesPage() {
                 <Link
                   key={service.slug}
                   href={`/services/${service.slug}`}
-                  className={`group relative p-8 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-2xl hover:border-[#00B4FF]/30 transition-all duration-500 ${
+                  className={`group relative overflow-hidden bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-2xl hover:border-[#00B4FF]/30 transition-all duration-500 ${
                     isVisible
                       ? "opacity-100 translate-y-0"
                       : "opacity-0 translate-y-10"
@@ -419,6 +431,18 @@ export default function ServicesPage() {
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
                 >
+                  {service.cardImage ? (
+                    <div className="relative h-36 w-full bg-gray-100">
+                      <Image
+                        src={service.cardImage}
+                        alt={service.title}
+                        fill
+                        className="object-cover"
+                        unoptimized
+                      />
+                    </div>
+                  ) : null}
+                  <div className="p-8">
                   <div className="w-16 h-16 bg-[#00B4FF]/10 rounded-xl flex items-center justify-center text-[#00B4FF] mb-6 group-hover:bg-gradient-to-r group-hover:from-[#0055FF] group-hover:via-[#00B4FF] group-hover:to-[#00E1FF] group-hover:text-white transition-all duration-300">
                     <ServiceIcon type={service.icon} />
                   </div>
@@ -459,6 +483,7 @@ export default function ServicesPage() {
                         d="M14 5l7 7m0 0l-7 7m7-7H3"
                       />
                     </svg>
+                  </div>
                   </div>
 
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#00B4FF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />

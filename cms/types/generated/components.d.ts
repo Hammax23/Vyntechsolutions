@@ -98,6 +98,8 @@ export interface SectionsCityHero extends Struct.ComponentSchema {
       Schema.Attribute.DefaultTo<'Ready to Grow Your Business in {city}?'>;
     bottomCtaLabel: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<"Let's Talk Business">;
+    contactCtaLabel: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Contact Us'>;
     ctaLabel: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Request a Free Quote'>;
     engagementHeadingTemplate: Schema.Attribute.String &
@@ -113,6 +115,10 @@ export interface SectionsCityHero extends Struct.ComponentSchema {
       Schema.Attribute.DefaultTo<'{service} Services in {city}'>;
     hoursText: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Mon to Fri: 9:00 AM to 6:00 PM EST'>;
+    industries: Schema.Attribute.JSON &
+      Schema.Attribute.DefaultTo<
+        ['healthcare', 'ecommerce-retail', 'real-estate', 'hospitality-travel']
+      >;
     industriesHeadingTemplate: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Industries We Serve in {city}'>;
     quoteCtaTemplate: Schema.Attribute.String &

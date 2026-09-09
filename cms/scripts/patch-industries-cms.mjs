@@ -119,8 +119,11 @@ for (const industry of seed.industries || []) {
     continue;
   }
   Object.assign(industry, SHARED, meta, {
-    servicesHeading: industry.subtitle || "Solutions We Deliver",
+    servicesHeading: "Solutions We Deliver",
   });
+  if (industry.cardImage && !industry.heroImageUrl) {
+    industry.heroImageUrl = industry.cardImage;
+  }
   patched += 1;
 }
 

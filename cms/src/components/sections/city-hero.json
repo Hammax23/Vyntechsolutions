@@ -50,6 +50,19 @@
       "type": "string",
       "default": "Industries We Serve in {city}"
     },
+    "industries": {
+      "type": "json",
+      "default": [
+        "healthcare",
+        "ecommerce-retail",
+        "real-estate",
+        "hospitality-travel"
+      ]
+    },
+    "contactCtaLabel": {
+      "type": "string",
+      "default": "Contact Us"
+    },
     "sidebarHeadingTemplate": {
       "type": "string",
       "default": "Why {city} Businesses Choose VynTech"

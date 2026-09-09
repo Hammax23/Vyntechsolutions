@@ -7,6 +7,7 @@ import { useParams } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FAQ from "@/components/FAQ";
+import { DEFAULT_NAV_CHROME, mergeCopy } from "@/lib/ui-copy";
 import HowWeWork from "@/components/HowWeWork";
 import { servicesData, type ServiceData } from "@/data/servicesData";
 import type { ServicePageSections } from "@/data/servicePageSections";
@@ -2552,9 +2553,10 @@ export default function ServicePage() {
   const [service, setService] = useState<ServiceData | null>(servicesData[slug] || null);
   const [isVisible, setIsVisible] = useState(false);
   const [activeFeature, setActiveFeature] = useState(0);
+  const [navChrome, setNavChrome] = useState(DEFAULT_NAV_CHROME);
   const pageSections = service ? resolvePageSections(service) : {};
   const heroVariant = (service?.heroVariant || HERO_VARIANT_BY_SLUG[slug] || "browser") as string;
-  const techStackData = (service?.techStack || pageSections.techStack) as ServicePageSections["techStack"] | undefined;
+  const techStackData = resolveTechStackData(service, pageSections);
   const canadaBlock = service ? resolveCanadaCities(service, pageSections) : null;
 
   useEffect(() => {
@@ -2573,6 +2575,14 @@ export default function ServicePage() {
         }
       })
       .catch(() => { });
+    fetch("/api/cms/content?type=navigation")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (!cancelled && data?.navigation?.chrome) {
+          setNavChrome(mergeCopy(DEFAULT_NAV_CHROME, data.navigation.chrome));
+        }
+      })
+      .catch(() => {});
     return () => {
       cancelled = true;
     };
@@ -2614,9 +2624,9 @@ export default function ServicePage() {
           <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-20">
             {/* Breadcrumb */}
             <div className="flex items-center gap-2 text-white/40 text-sm mb-8">
-              <Link href="/" className="hover:text-white/70 transition-colors">Home</Link>
+              <Link href="/" className="hover:text-white/70 transition-colors">{navChrome.homeLabel}</Link>
               <span>›</span>
-              <Link href="/services" className="hover:text-white/70 transition-colors">Services</Link>
+              <Link href="/services" className="hover:text-white/70 transition-colors">{navChrome.servicesLabel}</Link>
               <span>›</span>
               <span className="text-white/60">{service.title}</span>
             </div>
@@ -3483,7 +3493,12 @@ export default function ServicePage() {
 
 
         {/* FAQ Section */}
-        <FAQ faqs={service.faqs} />
+        <FAQ
+          faqs={service.faqs}
+          eyebrow={service.faqEyebrow}
+          heading={service.faqHeading}
+          intro={service.faqIntro}
+        />
 
         {/* CTA Section - Slim */}
         <section id="contact" className="py-10 bg-[#1a1a2e]">

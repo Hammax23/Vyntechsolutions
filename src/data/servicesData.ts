@@ -36,13 +36,36 @@ export type ServiceData = {
   processHeading?: string;
   processDescription?: string;
   faqs?: { question: string; answer: string }[];
+  faqEyebrow?: string;
+  faqHeading?: string;
+  faqIntro?: string;
   ctaHeading?: string;
   ctaBody?: string;
   ctaButtonLabel?: string;
   showTechStack?: boolean;
   techStack?: ServicePageSections["techStack"];
+  techStackBlock?: ServicePageSections["techStack"] & {
+    categories?: Array<{
+      categoryId?: string;
+      id?: string;
+      name: string;
+      items?: Array<{ name: string; logo?: string }>;
+    }>;
+  };
   pageSections?: ServicePageSections;
   canadaCities?: ServicePageSections["canadaCities"] | string[];
+  cityHero?: Record<string, unknown>;
+  canadaCitiesBlock?: Record<string, unknown>;
+  seoPackagesBlock?: Record<string, unknown>;
+  cloudIncludedBlock?: Record<string, unknown>;
+  aiMlGridBlock?: Record<string, unknown>;
+  devopsGridBlock?: Record<string, unknown>;
+  ecommerceServicesBlock?: Record<string, unknown>;
+  uiuxEngagementsBlock?: Record<string, unknown>;
+  mobileTabsBlock?: Record<string, unknown>;
+  localSeoBlock?: Record<string, unknown>;
+  engagementStrategies?: Record<string, unknown>[];
+  cityFaqs?: { question: string; answer: string }[];
 };
 
 export type ServicesListingDefaults = {
@@ -1369,6 +1392,11 @@ function enrichServices(data: Record<string, ServiceData>): Record<string, Servi
       overviewTagline: service.overviewTagline || DEFAULT_OVERVIEW_TAGLINE,
       processHeading: service.processHeading || "How We Work",
       faqs: service.faqs?.length ? service.faqs : DEFAULT_SERVICE_FAQS,
+      faqEyebrow: service.faqEyebrow || "FAQ",
+      faqHeading: service.faqHeading || "Frequently asked questions",
+      faqIntro:
+        service.faqIntro ||
+        "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
       showTechStack,
       techStack,
       pageSections,
