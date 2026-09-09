@@ -187,13 +187,13 @@ export type CmsService = {
   cloudIncludedBlock?: {
     heading?: string;
     description?: string;
-    items?: Array<{ itemId?: string; title: string; description?: string; points?: string[] }>;
+    items?: Array<{ id?: string; itemId?: string; title: string; description?: string; points?: string[] }>;
   };
   aiMlGridBlock?: {
     eyebrow?: string;
     heading?: string;
     intro?: string[];
-    items?: Array<{ itemId?: string; title: string; description?: string }>;
+    items?: Array<{ id?: string; itemId?: string; title: string; description?: string }>;
   };
   devopsGridBlock?: {
     eyebrow?: string;
@@ -216,8 +216,9 @@ export type CmsService = {
     eyebrow?: string;
     heading?: string;
     description?: string;
-    tabs?: Array<{
+      tabs?: Array<{
       tabId?: string;
+      id?: string;
       name: string;
       highlightText?: string;
       title: string;

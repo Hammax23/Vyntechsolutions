@@ -43,8 +43,10 @@ export type ServiceData = {
   ctaBody?: string;
   ctaButtonLabel?: string;
   showTechStack?: boolean;
-  techStack?: ServicePageSections["techStack"];
-  techStackBlock?: ServicePageSections["techStack"] & {
+  techStack?: ServicePageSections["techStack"] | Record<string, unknown>;
+  techStackBlock?: {
+    heading?: string;
+    description?: string;
     categories?: Array<{
       categoryId?: string;
       id?: string;
@@ -52,20 +54,129 @@ export type ServiceData = {
       items?: Array<{ name: string; logo?: string }>;
     }>;
   };
-  pageSections?: ServicePageSections;
-  canadaCities?: ServicePageSections["canadaCities"] | string[];
-  cityHero?: Record<string, unknown>;
-  canadaCitiesBlock?: Record<string, unknown>;
-  seoPackagesBlock?: Record<string, unknown>;
-  cloudIncludedBlock?: Record<string, unknown>;
-  aiMlGridBlock?: Record<string, unknown>;
-  devopsGridBlock?: Record<string, unknown>;
-  ecommerceServicesBlock?: Record<string, unknown>;
-  uiuxEngagementsBlock?: Record<string, unknown>;
-  mobileTabsBlock?: Record<string, unknown>;
-  localSeoBlock?: Record<string, unknown>;
-  engagementStrategies?: Record<string, unknown>[];
+  pageSections?: ServicePageSections | Record<string, unknown>;
+  canadaCities?: ServicePageSections["canadaCities"] | string[] | Record<string, unknown>;
+  canadaCitiesBlock?: {
+    heading?: string;
+    description?: string;
+    cities?: string[];
+  };
+  seoPackagesBlock?: {
+    eyebrow?: string;
+    heading?: string;
+    description?: string;
+    footerNote?: string;
+    customPackageText?: string;
+    customPackageCtaLabel?: string;
+    packages?: Array<{
+      name: string;
+      blurb?: string;
+      price: string;
+      priceSuffix?: string;
+      featured?: boolean;
+      featuredBadge?: string;
+      ctaLabel?: string;
+      features?: string[];
+    }>;
+  };
+  cloudIncludedBlock?: {
+    heading?: string;
+    description?: string;
+    items?: Array<{ id?: string; itemId?: string; title: string; description?: string; points?: string[] }>;
+  };
+  aiMlGridBlock?: {
+    eyebrow?: string;
+    heading?: string;
+    intro?: string[];
+    items?: Array<{ id?: string; itemId?: string; title: string; description?: string }>;
+  };
+  devopsGridBlock?: {
+    eyebrow?: string;
+    heading?: string;
+    description?: string;
+    items?: Array<{ num?: string; title: string; desc?: string }>;
+  };
+  ecommerceServicesBlock?: {
+    eyebrow?: string;
+    heading?: string;
+    description?: string;
+    items?: Array<{ num?: string; title: string; desc?: string }>;
+  };
+  uiuxEngagementsBlock?: {
+    eyebrow?: string;
+    heading?: string;
+    items?: Array<{ title: string; description?: string }>;
+  };
+  mobileTabsBlock?: {
+    eyebrow?: string;
+    heading?: string;
+    description?: string;
+    tabs?: Array<{
+      tabId?: string;
+      id?: string;
+      name: string;
+      highlightText?: string;
+      title: string;
+      description?: string;
+      points?: Array<{ title: string; text?: string }>;
+    }>;
+  };
+  localSeoBlock?: {
+    whyHeading?: string;
+    whyParagraphs?: string[];
+    stats?: Array<{ value: string; label: string }>;
+    specialistsEyebrow?: string;
+    citiesHeading?: string;
+    citiesDescription?: string;
+    cities?: string[];
+    ctaHeading?: string;
+    ctaBody?: string;
+    ctaLabel?: string;
+  };
+  cityHero?: {
+    eyebrowTemplate?: string;
+    headlineTemplate?: string;
+    subheadingTemplate?: string;
+    ctaLabel?: string;
+    whyChooseHeadingTemplate?: string;
+    whyChooseBodyTemplate?: string;
+    engagementHeadingTemplate?: string;
+    aboutEyebrowTemplate?: string;
+    aboutHeadingTemplate?: string;
+    aboutBodyTemplate?: string;
+    industriesHeadingTemplate?: string;
+    industries?: string[];
+    contactCtaLabel?: string;
+    sidebarHeadingTemplate?: string;
+    sidebarItems?: string[];
+    hoursText?: string;
+    quoteCtaTemplate?: string;
+    bottomCtaHeadingTemplate?: string;
+    bottomCtaBodyTemplate?: string;
+    bottomCtaLabel?: string;
+    faqEyebrow?: string;
+    faqHeading?: string;
+    faqIntroTemplate?: string;
+    rankingEyebrow?: string;
+    rankingHeadingTemplate?: string;
+    rankingDescription?: string;
+    rankingItems?: Array<{ title: string; desc: string; iconKey?: string }>;
+    advantageHeadingTemplate?: string;
+    advantageBody?: string;
+    advantageCtaPrimary?: string;
+    advantageCtaSecondary?: string;
+    advantageStats?: Array<{ value: string; label: string }>;
+  };
+  engagementStrategies?: Array<{
+    strategyId?: string;
+    title: string;
+    description?: string;
+    calloutTitle?: string;
+    calloutText?: string;
+  }>;
   cityFaqs?: { question: string; answer: string }[];
+  caseStudiesHeading?: string;
+  seo?: Record<string, unknown>;
 };
 
 export type ServicesListingDefaults = {
@@ -1362,14 +1473,15 @@ function enrichServices(data: Record<string, ServiceData>): Record<string, Servi
         ? service.showTechStack
         : slug !== "tax-accounting" && slug !== "seo-digital-marketing";
 
+    const sections = (pageSections || {}) as ServicePageSections;
     const techStack =
       service.techStack ||
-      pageSections?.techStack ||
+      sections.techStack ||
       (showTechStack ? defaultTechStack : undefined);
 
     const canadaCities =
       service.canadaCities ||
-      pageSections?.canadaCities;
+      sections.canadaCities;
 
     const whyExtras =
       !service.whyChooseUsHeading
