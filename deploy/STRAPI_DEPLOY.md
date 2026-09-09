@@ -58,3 +58,22 @@ pm2 restart vyntechsolutions
 
 Open `https://cms.vyntechsolutions.ca/admin` and create the SEO expert admin account.
 Editor role should have CRUD on content types (configure in Settings → Roles).
+
+## Fill empty CMS fields from seed (one-shot)
+
+`git pull` updates code only — it does **not** write Industry/Service copy into the production database.
+After schema/seed updates, run once on the VPS:
+
+```bash
+cd /var/www/vyntech
+git pull origin master
+cd cms
+npm install
+npm run build
+# Fills EMPTY fields only from data/seed.json (does not wipe admin edits)
+node ./scripts/run-sync-seed.mjs
+pm2 restart vyntech-strapi
+```
+
+Then in Admin → **02. Industries** → open entry → use **Published** tab → refresh.
+When done, keep `CMS_SYNC_SEED=false` and `CMS_AUTO_SEED=false` in `cms/.env`.
