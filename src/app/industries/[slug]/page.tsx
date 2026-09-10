@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FAQ from "@/components/FAQ";
+import CmsRichText from "@/components/CmsRichText";
 import { useEffect, useState } from "react";
 import {
   industriesData,
@@ -321,9 +322,10 @@ export default function IndustryPage() {
                   </h2>
                   <div className="w-24 h-1 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full mb-8" />
                   {industry.whyChooseUsIntro && (
-                    <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6">
-                      {industry.whyChooseUsIntro}
-                    </p>
+                    <CmsRichText
+                      html={industry.whyChooseUsIntro}
+                      className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6"
+                    />
                   )}
                   {industry.whyChooseUsSubHeading && (
                     <h3 className="text-base sm:text-lg font-bold text-[#0f172a] mb-2">
@@ -331,9 +333,10 @@ export default function IndustryPage() {
                     </h3>
                   )}
                   {industry.whyChooseUsSubText && (
-                    <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
-                      {industry.whyChooseUsSubText}
-                    </p>
+                    <CmsRichText
+                      html={industry.whyChooseUsSubText}
+                      className="text-gray-600 text-sm sm:text-base leading-relaxed"
+                    />
                   )}
                 </div>
 

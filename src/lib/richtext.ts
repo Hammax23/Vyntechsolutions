@@ -42,3 +42,23 @@ export function toLines(input: string | null | undefined): string[] {
   if (!normalized) return [];
   return normalized.split(/\n/).map((line) => line.trim()).filter(Boolean);
 }
+
+/** True when CMS value already contains HTML tags (Strapi richtext). */
+export function looksLikeHtml(input: string | null | undefined): boolean {
+  if (!input) return false;
+  return /<[a-z][\s\S]*>/i.test(String(input));
+}
+
+/**
+ * Minimal sanitizer for trusted CMS HTML (admin-authored).
+ * Strips scripts / inline handlers / javascript: URLs; keeps links and basic formatting.
+ */
+export function sanitizeCmsHtml(input: string | null | undefined): string {
+  if (!input) return "";
+  return String(input)
+    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
+    .replace(/<iframe[\s\S]*?>[\s\S]*?<\/iframe>/gi, "")
+    .replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, "")
+    .replace(/javascript:/gi, "")
+    .replace(/data:/gi, "");
+}

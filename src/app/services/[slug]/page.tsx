@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import FAQ from "@/components/FAQ";
 import { DEFAULT_NAV_CHROME, mergeCopy } from "@/lib/ui-copy";
 import HowWeWork from "@/components/HowWeWork";
+import CmsRichText from "@/components/CmsRichText";
 import { servicesData, type ServiceData } from "@/data/servicesData";
 import type { ServicePageSections } from "@/data/servicePageSections";
 import { toParagraphs, toLines } from "@/lib/richtext";
@@ -3422,9 +3423,21 @@ export default function ServicePage() {
                       {renderHeading(heading)}
                     </h2>
                     <div className="w-24 h-1 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full mb-8" />
-                    <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6">{intro}</p>
-                    <h3 className="text-base sm:text-lg font-bold text-[#0f172a] mb-2">{subHeading}</h3>
-                    <p className="text-gray-600 text-sm sm:text-base leading-relaxed">{subText}</p>
+                    {intro ? (
+                      <CmsRichText
+                        html={intro}
+                        className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6"
+                      />
+                    ) : null}
+                    {subHeading ? (
+                      <h3 className="text-base sm:text-lg font-bold text-[#0f172a] mb-2">{subHeading}</h3>
+                    ) : null}
+                    {subText ? (
+                      <CmsRichText
+                        html={subText}
+                        className="text-gray-600 text-sm sm:text-base leading-relaxed"
+                      />
+                    ) : null}
                   </div>
 
                   {/* Right Column: Cards Grid */}
