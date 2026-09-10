@@ -117,9 +117,17 @@ export function asSeo(raw: unknown): SeoBits {
   };
 }
 
+function normalizeSiteUrl(url: string): string {
+  return url
+    .trim()
+    .replace(/\/$/, "")
+    .replace(/^http:\/\//i, "https://")
+    .replace(/^https:\/\/www\./i, "https://");
+}
+
 function resolveSiteUrl(globalSeo?: Record<string, unknown> | null): string {
   const raw = typeof globalSeo?.siteUrl === "string" ? globalSeo.siteUrl.trim() : "";
-  return (raw || FALLBACK_SITE_URL).replace(/\/$/, "");
+  return normalizeSiteUrl(raw || FALLBACK_SITE_URL);
 }
 
 function resolveSiteName(globalSeo?: Record<string, unknown> | null): string {
@@ -130,8 +138,11 @@ function resolveSiteName(globalSeo?: Record<string, unknown> | null): string {
 function resolveCanonical(siteUrl: string, canonicalOrPath?: string, fallbackPath?: string): string | undefined {
   const value = (canonicalOrPath || fallbackPath || "").trim();
   if (!value) return undefined;
-  if (value.startsWith("http://") || value.startsWith("https://")) return value;
-  return `${siteUrl}${value.startsWith("/") ? value : `/${value}`}`;
+  if (value.startsWith("http://") || value.startsWith("https://")) {
+    return normalizeSiteUrl(value);
+  }
+  const apex = normalizeSiteUrl(siteUrl);
+  return `${apex}${value.startsWith("/") ? value : `/${value}`}`;
 }
 
 function parseMetaRobots(metaRobots?: string, indexable = true): Metadata["robots"] {

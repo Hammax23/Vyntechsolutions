@@ -52,6 +52,18 @@ const nextConfig = {
       },
     ];
   },
+
+  // SEO: www → non-www 301 (backup if nginx misses a host; primary fix is nginx)
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.vyntechsolutions.ca" }],
+        destination: "https://vyntechsolutions.ca/:path*",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
