@@ -150,10 +150,21 @@ export default function OurServices() {
           setCards(
             cmsCards.map((c, i) => {
               const fallback = serviceCards[i % serviceCards.length];
+              const title = withoutWordDash(String(c.title || fallback.title));
+              const byTitle = serviceCards.find(
+                (sc) => sc.title.toLowerCase() === title.toLowerCase()
+              );
+              const hrefRaw = String(c.href || "").trim();
+              const href =
+                hrefRaw && hrefRaw !== "#"
+                  ? hrefRaw.startsWith("/")
+                    ? hrefRaw
+                    : `/${hrefRaw}`
+                  : byTitle?.href || fallback.href;
               return {
-                title: withoutWordDash(String(c.title || fallback.title)),
+                title,
                 description: withoutWordDash(String(c.description || fallback.description)),
-                href: String(c.href || fallback.href),
+                href,
                 art: String(c.art || fallback.art),
               };
             })
@@ -353,7 +364,9 @@ export default function OurServices() {
       s.dragging = true;
       s.moved = false;
       s.snapping = false;
-      s.axis = e.pointerType === "mouse" ? "x" : "";
+      // Wait for movement before locking axis — otherwise every mouse click
+      // disables pointer-events on the card Link and navigation never fires.
+      s.axis = "";
       s.vx = 0;
       s.pointerId = e.pointerId;
       s.lastX = e.clientX;
@@ -361,10 +374,6 @@ export default function OurServices() {
       s.startX = e.clientX;
       s.startY = e.clientY;
       s.startTranslate = s.x;
-      if (e.pointerType === "mouse") {
-        viewport.setPointerCapture(e.pointerId);
-        setDragMode(true);
-      }
     };
 
     const onPointerMove = (e: PointerEvent) => {
@@ -379,6 +388,11 @@ export default function OurServices() {
         if (s.axis === "x") {
           viewport.setPointerCapture(e.pointerId);
           setDragMode(true);
+        } else {
+          // Vertical intent: let the page scroll; abandon slider drag.
+          s.dragging = false;
+          s.pointerId = -1;
+          return;
         }
       }
 
@@ -399,6 +413,7 @@ export default function OurServices() {
     const endDrag = (e: PointerEvent) => {
       if (s.pointerId !== e.pointerId) return;
       const wasHorizontal = s.axis === "x";
+      const didMove = s.moved;
       s.dragging = false;
       s.axis = "";
       setDragMode(false);
@@ -406,7 +421,8 @@ export default function OurServices() {
         viewport.releasePointerCapture(e.pointerId);
       }
       updateScrollButtons();
-      if (!wasHorizontal) return;
+      // Pure click (no drag): leave Link click alone — do not snap.
+      if (!wasHorizontal || !didMove) return;
       if (Math.abs(s.vx) > 0.8) runInertia();
       else snapSlider();
     };
@@ -622,7 +638,7 @@ export default function OurServices() {
                 href={card.href}
                 draggable={false}
                 onDragStart={(e) => e.preventDefault()}
-                className="group relative isolate flex h-[380px] w-[300px] sm:h-[400px] sm:w-[340px] lg:h-[410px] lg:w-[372px] xl:h-[420px] xl:w-[400px] flex-none flex-col overflow-hidden bg-white shadow-[0_8px_28px_rgba(80,70,140,0.08)] transition-[box-shadow,transform] duration-300 hover:-translate-y-1 hover:shadow-[0_22px_55px_rgba(70,50,140,0.28)]"
+                className="group relative isolate flex h-[380px] w-[300px] sm:h-[400px] sm:w-[340px] lg:h-[410px] lg:w-[372px] xl:h-[420px] xl:w-[400px] flex-none flex-col overflow-hidden bg-white shadow-[0_8px_28px_rgba(80,70,140,0.08)] transition-[box-shadow,transform] duration-300 hover:-translate-y-1 hover:shadow-[0_22px_55px_rgba(70,50,140,0.28)] cursor-pointer"
                 style={{ borderRadius: "22px 22px 0 0" }}
               >
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 transition-opacity duration-500 group-hover:opacity-0">
