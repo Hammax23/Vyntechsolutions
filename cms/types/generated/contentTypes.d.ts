@@ -710,9 +710,9 @@ export interface ApiIndustryIndustry extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     whyChooseUsCards: Schema.Attribute.Component<'sections.value-card', true>;
     whyChooseUsHeading: Schema.Attribute.String;
-    whyChooseUsIntro: Schema.Attribute.Text;
+    whyChooseUsIntro: Schema.Attribute.RichText;
     whyChooseUsSubHeading: Schema.Attribute.String;
-    whyChooseUsSubText: Schema.Attribute.Text;
+    whyChooseUsSubText: Schema.Attribute.RichText;
   };
 }
 
@@ -1063,9 +1063,9 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     whyChooseUsCards: Schema.Attribute.Component<'sections.value-card', true>;
     whyChooseUsHeading: Schema.Attribute.String;
-    whyChooseUsIntro: Schema.Attribute.Text;
+    whyChooseUsIntro: Schema.Attribute.RichText;
     whyChooseUsSubHeading: Schema.Attribute.String;
-    whyChooseUsSubText: Schema.Attribute.Text;
+    whyChooseUsSubText: Schema.Attribute.RichText;
   };
 }
 
