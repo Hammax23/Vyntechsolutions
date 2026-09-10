@@ -85,13 +85,12 @@ export default function HeroSection() {
           | {
               heading?: string;
               subtext?: string;
-              mediaUrl?: string;
-              mediaType?: string;
               ctaLabel?: string;
               ctaHref?: string;
             }[]
           | undefined;
         if (cmsSlides?.length) {
+          // Text/CTA from CMS only — hero covers stay static (DEFAULT_HERO_MEDIA).
           setSlides(
             cmsSlides.map((s, i) => ({
               heading: String(s.heading || DEFAULT_SLIDES[i % DEFAULT_SLIDES.length].heading),
@@ -99,14 +98,6 @@ export default function HeroSection() {
               ctaLabel: s.ctaLabel ? String(s.ctaLabel) : undefined,
               ctaHref: s.ctaHref ? String(s.ctaHref) : undefined,
             }))
-          );
-          setHeroMedia(
-            cmsSlides.map((s, i) => {
-              const fallback = DEFAULT_HERO_MEDIA[i % DEFAULT_HERO_MEDIA.length];
-              const src = String(s.mediaUrl || fallback.src);
-              const type = s.mediaType === "image" ? "image" : "video";
-              return { type, src, mobileSrc: src };
-            })
           );
         }
         if (Array.isArray(hp.heroWords) && hp.heroWords.length) {

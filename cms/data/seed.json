@@ -11184,27 +11184,19 @@
     "heroSlides": [
       {
         "heading": "Let's Build\nSomething Extraordinary",
-        "subtext": "As a trusted web development company, VynTech Solutions helps 40+ businesses transform their digital presence. We build websites, apps, and platforms engineered to scale and multiply your growth by 10x.",
-        "mediaUrl": "/hero-tech-city.mp4",
-        "mediaType": "video"
+        "subtext": "As a trusted web development company, VynTech Solutions helps 40+ businesses transform their digital presence. We build websites, apps, and platforms engineered to scale and multiply your growth by 10x."
       },
       {
         "heading": "Build Faster.\nScale Smarter.",
-        "subtext": "VynTech turns your idea into a market-ready product in weeks, not months. From MVPs to enterprise platforms, we build with speed, precision, and quality, never compromising.",
-        "mediaUrl": "/cover1.mp4",
-        "mediaType": "video"
+        "subtext": "VynTech turns your idea into a market-ready product in weeks, not months. From MVPs to enterprise platforms, we build with speed, precision, and quality, never compromising."
       },
       {
         "heading": "Enterprise Solutions.\nStartup Speed.",
-        "subtext": "AI, Cloud, Mobile, and Web. VynTech delivers full-stack expertise under one roof. Enterprise-grade reliability, startup agility, zero compromises. We power your next big idea, from day one.",
-        "mediaUrl": "/your-tech-partner.mp4",
-        "mediaType": "video"
+        "subtext": "AI, Cloud, Mobile, and Web. VynTech delivers full-stack expertise under one roof. Enterprise-grade reliability, startup agility, zero compromises. We power your next big idea, from day one."
       },
       {
         "heading": "Your Tech Partner\nfor Growth",
-        "subtext": "Stop hiring. Start building. Get a dedicated development team that delivers results from day one.",
-        "mediaUrl": "/your-tech-partner.mp4",
-        "mediaType": "video"
+        "subtext": "Stop hiring. Start building. Get a dedicated development team that delivers results from day one."
       }
     ],
     "heroCtaLabel": "GET FREE CONSULTATION",
