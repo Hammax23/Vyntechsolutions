@@ -1,8 +1,8 @@
 {
   "collectionName": "components_sections_uiux_engagements_blocks",
   "info": {
-    "displayName": "UI/UX Engagements Block",
-    "description": "Types of UI/UX engagements block used on the UI/UX Design service page",
+    "displayName": "UI/UX Engagements (UI/UX only)",
+    "description": "ONLY fill on service slug ui-ux-design. Leave empty on all other services.",
     "icon": "layout"
   },
   "options": {},

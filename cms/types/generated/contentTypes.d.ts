@@ -404,7 +404,7 @@ export interface ApiBlogCategoryBlogCategory
 export interface ApiBlogPostBlogPost extends Struct.CollectionTypeSchema {
   collectionName: 'blog_posts';
   info: {
-    description: 'Articles and insights';
+    description: 'Articles and insights \u2014 SEO Expert: use Content for H1\u2013H6, lists, links (Markdown or HTML)';
     displayName: '03. Blog Posts';
     pluralName: 'blog-posts';
     singularName: 'blog-post';
@@ -413,7 +413,8 @@ export interface ApiBlogPostBlogPost extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    author: Schema.Attribute.String;
+    author: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'VynTech Solutions Team'>;
     category: Schema.Attribute.Relation<
       'manyToOne',
       'api::blog-category.blog-category'
@@ -434,10 +435,10 @@ export interface ApiBlogPostBlogPost extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     metaDescription: Schema.Attribute.Text;
     publishedAt: Schema.Attribute.DateTime;
-    readTime: Schema.Attribute.String;
+    readTime: Schema.Attribute.String & Schema.Attribute.DefaultTo<'5 min'>;
     seo: Schema.Attribute.Component<'shared.seo', false>;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
-    tags: Schema.Attribute.JSON;
+    tags: Schema.Attribute.Text;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -627,7 +628,15 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
     industriesSubheading: Schema.Attribute.String;
     industriesViewLabel: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'View'>;
+    insightsEyebrow: Schema.Attribute.String;
     insightsHeading: Schema.Attribute.String;
+    insightsIntro: Schema.Attribute.Text;
+    insightsVideoUrl: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'/meeting.mp4'>;
+    insightsViewAllHref: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'/blog'>;
+    insightsViewAllLabel: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'View all insights'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -636,9 +645,11 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
       Schema.Attribute.Private;
     partnersHeading: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Technology Partners'>;
+    partnersShowHeading: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<true>;
     publishedAt: Schema.Attribute.DateTime;
     seo: Schema.Attribute.Component<'shared.seo', false>;
-    serviceCards: Schema.Attribute.JSON;
+    serviceCards: Schema.Attribute.Component<'home.service-card', true>;
     servicesBody: Schema.Attribute.Text;
     servicesHeading: Schema.Attribute.String;
     servicesLearnMoreLabel: Schema.Attribute.String &
@@ -918,6 +929,7 @@ export interface ApiPromoPromo extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     ctaHref: Schema.Attribute.String;
     ctaLabel: Schema.Attribute.String;
+    eyebrow: Schema.Attribute.String;
     heading: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::promo.promo'> &
@@ -966,12 +978,20 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
       'sections.cloud-included-block',
       false
     >;
+    coreCapabilitiesBlock: Schema.Attribute.Component<
+      'sections.core-capabilities-block',
+      false
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     ctaBody: Schema.Attribute.Text;
     ctaButtonLabel: Schema.Attribute.String;
     ctaHeading: Schema.Attribute.String;
+    customSoftwareServicesBlock: Schema.Attribute.Component<
+      'sections.custom-software-services-block',
+      false
+    >;
     deliveryDescription: Schema.Attribute.Text;
     deliveryEyebrow: Schema.Attribute.String;
     deliveryHeading: Schema.Attribute.String;
@@ -1032,6 +1052,7 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
     >;
     order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     overview: Schema.Attribute.RichText;
+    overviewHeading: Schema.Attribute.String;
     overviewTagline: Schema.Attribute.Text;
     pageSections: Schema.Attribute.JSON;
     process: Schema.Attribute.Component<'shared.process-step', true>;

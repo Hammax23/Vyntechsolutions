@@ -61,6 +61,9 @@
     "overviewTagline": {
       "type": "text"
     },
+    "overviewHeading": {
+      "type": "string"
+    },
     "featuresEyebrow": {
       "type": "string"
     },
@@ -207,6 +210,16 @@
       "type": "component",
       "repeatable": false,
       "component": "sections.mobile-tabs-block"
+    },
+    "customSoftwareServicesBlock": {
+      "type": "component",
+      "repeatable": false,
+      "component": "sections.custom-software-services-block"
+    },
+    "coreCapabilitiesBlock": {
+      "type": "component",
+      "repeatable": false,
+      "component": "sections.core-capabilities-block"
     },
     "techStackBlock": {
       "type": "component",

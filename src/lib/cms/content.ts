@@ -1,4 +1,5 @@
 import { blogPosts, getPostBySlug as getLocalPost, type BlogPost } from "@/data/blogData";
+import { faqsForIndustry } from "@/data/industryFaqs";
 import { strapiFetch, unwrapList, unwrapSingle, type StrapiListResponse, type StrapiSingleResponse } from "@/lib/strapi";
 
 /**
@@ -26,6 +27,8 @@ const SERVICE_POPULATE: Record<string, string> = {
   "populate[ecommerceServicesBlock][populate][items]": "true",
   "populate[uiuxEngagementsBlock][populate][items]": "true",
   "populate[mobileTabsBlock][populate][tabs][populate][points]": "true",
+  "populate[customSoftwareServicesBlock][populate][items]": "true",
+  "populate[coreCapabilitiesBlock][populate][items]": "true",
   "populate[techStackBlock][populate][categories][populate][items]": "true",
   "populate[localSeoBlock][populate][stats]": "true",
   "populate[canadaCitiesBlock]": "true",
@@ -54,6 +57,27 @@ function mapBlog(entry: Record<string, unknown>): CmsBlogPost {
       ? categoryRel
       : categoryRel?.name || "Business";
 
+  const parseTags = (raw: unknown): string[] => {
+    if (Array.isArray(raw)) {
+      return raw.map(String).map((s) => s.trim()).filter(Boolean);
+    }
+    if (typeof raw === "string" && raw.trim()) {
+      const t = raw.trim();
+      if (t.startsWith("[")) {
+        try {
+          const parsed = JSON.parse(t);
+          if (Array.isArray(parsed)) {
+            return parsed.map(String).map((s) => s.trim()).filter(Boolean);
+          }
+        } catch {
+          /* fall through to comma split */
+        }
+      }
+      return t.split(",").map((s) => s.trim()).filter(Boolean);
+    }
+    return [];
+  };
+
   return {
     slug: String(entry.slug || ""),
     title: String(entry.title || ""),
@@ -64,7 +88,7 @@ function mapBlog(entry: Record<string, unknown>): CmsBlogPost {
     ),
     excerpt: String(entry.excerpt || ""),
     category: categoryName,
-    tags: Array.isArray(entry.tags) ? (entry.tags as string[]) : [],
+    tags: parseTags(entry.tags),
     author: String(entry.author || "VynTech Solutions Team"),
     readTime: String(entry.readTime || "5 min"),
     image: String(
@@ -83,6 +107,7 @@ export async function getCmsBlogPosts(): Promise<CmsBlogPost[]> {
   const res = await strapiFetch<StrapiListResponse<Record<string, unknown>>>({
     path: "/api/blog-posts",
     query: {
+      status: "published",
       "populate[category]": "true",
       "populate[cover]": "true",
       ...SEO_POPULATE,
@@ -101,6 +126,7 @@ export async function getCmsBlogPost(slug: string): Promise<CmsBlogPost | null> 
     path: "/api/blog-posts",
     query: {
       "filters[slug][$eq]": slug,
+      status: "published",
       "populate[category]": "true",
       "populate[cover]": "true",
       ...SEO_POPULATE,
@@ -138,6 +164,7 @@ export type CmsService = {
   heroCtaLabel?: string;
   overview: string;
   overviewTagline?: string;
+  overviewHeading?: string;
   featuresEyebrow?: string;
   features: { title: string; description: string; icon: string }[];
   technologies: string[];
@@ -206,6 +233,16 @@ export type CmsService = {
     heading?: string;
     description?: string;
     items?: Array<{ num?: string; title: string; desc?: string }>;
+  };
+  customSoftwareServicesBlock?: {
+    heading?: string;
+    headingAccent?: string;
+    description?: string;
+    items?: Array<{ title: string; description?: string; icon?: string }>;
+  };
+  coreCapabilitiesBlock?: {
+    eyebrow?: string;
+    items?: Array<{ title: string; description?: string; icon?: string }>;
   };
   uiuxEngagementsBlock?: {
     eyebrow?: string;
@@ -316,6 +353,9 @@ function mapService(entry: Record<string, unknown>, fallbackSlug?: string, local
     heroCtaLabel: isPopulated(entry.heroCtaLabel) ? String(entry.heroCtaLabel) : localFallback?.heroCtaLabel,
     overview: isPopulated(entry.overview) ? String(entry.overview) : (localFallback?.overview || ""),
     overviewTagline: isPopulated(entry.overviewTagline) ? String(entry.overviewTagline) : localFallback?.overviewTagline,
+    overviewHeading: isPopulated(entry.overviewHeading)
+      ? String(entry.overviewHeading)
+      : localFallback?.overviewHeading,
     featuresEyebrow: isPopulated(entry.featuresEyebrow) ? String(entry.featuresEyebrow) : localFallback?.featuresEyebrow,
     features: isArrayPopulated(entry.features) ? (entry.features as CmsService["features"]) : (localFallback?.features || []),
     technologies: isArrayPopulated(entry.technologies) ? (entry.technologies as string[]) : (localFallback?.technologies || []),
@@ -373,6 +413,12 @@ function mapService(entry: Record<string, unknown>, fallbackSlug?: string, local
     ecommerceServicesBlock: isObjectPopulated(entry.ecommerceServicesBlock)
       ? (entry.ecommerceServicesBlock as CmsService["ecommerceServicesBlock"])
       : localFallback?.ecommerceServicesBlock,
+    customSoftwareServicesBlock: isObjectPopulated(entry.customSoftwareServicesBlock)
+      ? (entry.customSoftwareServicesBlock as CmsService["customSoftwareServicesBlock"])
+      : localFallback?.customSoftwareServicesBlock,
+    coreCapabilitiesBlock: isObjectPopulated(entry.coreCapabilitiesBlock)
+      ? (entry.coreCapabilitiesBlock as CmsService["coreCapabilitiesBlock"])
+      : localFallback?.coreCapabilitiesBlock,
     uiuxEngagementsBlock: isObjectPopulated(entry.uiuxEngagementsBlock)
       ? (entry.uiuxEngagementsBlock as CmsService["uiuxEngagementsBlock"])
       : localFallback?.uiuxEngagementsBlock,
@@ -539,7 +585,9 @@ function mapIndustry(
       : localFallback?.whyChooseUsCards,
     faqs: Array.isArray(entry.faqs) && entry.faqs.length
       ? (entry.faqs as CmsIndustry["faqs"])
-      : localFallback?.faqs,
+      : localFallback?.faqs?.length
+        ? localFallback.faqs
+        : faqsForIndustry(String(entry.slug || fallbackSlug || "")),
     faqEyebrow: isPopulated(entry.faqEyebrow) ? String(entry.faqEyebrow) : localFallback?.faqEyebrow,
     faqHeading: isPopulated(entry.faqHeading) ? String(entry.faqHeading) : localFallback?.faqHeading,
     faqIntro: isPopulated(entry.faqIntro) ? String(entry.faqIntro) : localFallback?.faqIntro,
@@ -569,7 +617,11 @@ export async function getCmsIndustries(
     return mapIndustry(e, slug, fallback[slug]);
   });
   if (list.length) return list;
-  return Object.entries(fallback).map(([slug, data]) => ({ slug, ...data }));
+  return Object.entries(fallback).map(([slug, data]) => ({
+    slug,
+    ...data,
+    faqs: data.faqs?.length ? data.faqs : faqsForIndustry(slug),
+  }));
 }
 
 export async function getCmsIndustry(
@@ -590,7 +642,12 @@ export async function getCmsIndustry(
   const entry = unwrapList(res)[0];
   if (entry) return mapIndustry(entry, slug, fallback[slug]);
   const local = fallback[slug];
-  return local ? { slug, ...local } : null;
+  if (!local) return null;
+  return {
+    slug,
+    ...local,
+    faqs: local.faqs?.length ? local.faqs : faqsForIndustry(slug),
+  };
 }
 
 export type CmsFaq = { question: string; answer: string; order: number; page?: string };
@@ -653,6 +710,7 @@ export async function getCmsHomepage(): Promise<Record<string, unknown> | null> 
     query: {
       "populate[heroSlides]": "true",
       "populate[impactStats]": "true",
+      "populate[serviceCards]": "true",
       ...SEO_POPULATE,
     },
     tags: ["strapi", "homepage"],
@@ -664,6 +722,7 @@ export async function getCmsBlogCategories(): Promise<{ name: string; slug?: str
   const res = await strapiFetch<StrapiListResponse<Record<string, unknown>>>({
     path: "/api/blog-categories",
     query: {
+      status: "published",
       sort: "name:asc",
       "pagination[pageSize]": 50,
     },

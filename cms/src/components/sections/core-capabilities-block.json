@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_sections_core_capabilities_blocks",
+  "info": {
+    "displayName": "Core Capabilities (Mobile + Custom Software)",
+    "description": "ONLY fill on mobile-app-development or custom-software-development. Leave empty on other services.",
+    "icon": "bulletList"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.named-item"
+    }
+  }
+}

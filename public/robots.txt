@@ -3,28 +3,12 @@
 
 User-agent: *
 Allow: /
-Disallow: /admin
+# Allow required Next.js rendering resources
+Allow: /_next/static/
+Allow: /_next/image/
+Disallow: /admin/
 Disallow: /api/
-Disallow: /_next/
 Disallow: /private/
+Disallow: /_next/
 
-# Crawl-delay for respectful crawling
-Crawl-delay: 1
-
-# Google Bot
-User-agent: Googlebot
-Allow: /
-Disallow: /admin
-Disallow: /api/
-
-# Bing Bot
-User-agent: Bingbot
-Allow: /
-Disallow: /admin
-Disallow: /api/
-
-# Host
-Host: https://vyntechsolutions.ca
-
-# Sitemaps
 Sitemap: https://vyntechsolutions.ca/sitemap.xml

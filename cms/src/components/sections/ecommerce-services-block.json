@@ -1,8 +1,8 @@
 {
   "collectionName": "components_sections_ecommerce_services_blocks",
   "info": {
-    "displayName": "Ecommerce Services Block",
-    "description": "End-to-end ecommerce services grid used on the Ecommerce Solutions service page",
+    "displayName": "Ecommerce Services (Ecommerce only)",
+    "description": "ONLY fill on service slug ecommerce-solutions. Leave empty on all other services.",
     "icon": "shopping-cart"
   },
   "options": {},

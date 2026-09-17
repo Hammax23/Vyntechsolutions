@@ -45,24 +45,6 @@ const TAX_WHY = {
   ],
 };
 
-const DEFAULT_FAQS = [
-  {
-    question: "How long does a typical project take?",
-    answer:
-      "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next.",
-  },
-  {
-    question: "Do you work with businesses across Canada?",
-    answer:
-      "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication.",
-  },
-  {
-    question: "What happens after launch?",
-    answer:
-      "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals.",
-  },
-];
-
 const CHROME = {
   heroCtaLabel: "Get a Free Consultation",
   featuresEyebrow: "What We Offer",
@@ -104,7 +86,6 @@ for (const svc of seed.services || []) {
   const fill = {
     ...CHROME,
     ...why,
-    faqs: DEFAULT_FAQS,
     pageSections: pageSec,
     techStack:
       svc.techStack ||

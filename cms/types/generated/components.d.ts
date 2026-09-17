@@ -13,6 +13,19 @@ export interface HomeHeroSlide extends Struct.ComponentSchema {
   };
 }
 
+export interface HomeServiceCard extends Struct.ComponentSchema {
+  collectionName: 'components_home_service_cards';
+  info: {
+    displayName: 'Service Card';
+  };
+  attributes: {
+    art: Schema.Attribute.String;
+    description: Schema.Attribute.Text;
+    href: Schema.Attribute.String;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface SectionsAiMlGridBlock extends Struct.ComponentSchema {
   collectionName: 'components_sections_ai_ml_grid_blocks';
   info: {
@@ -167,6 +180,35 @@ export interface SectionsCloudIncludedItem extends Struct.ComponentSchema {
   };
 }
 
+export interface SectionsCoreCapabilitiesBlock extends Struct.ComponentSchema {
+  collectionName: 'components_sections_core_capabilities_blocks';
+  info: {
+    description: 'ONLY fill on mobile-app-development or custom-software-development. Leave empty on other services.';
+    displayName: 'Core Capabilities (Mobile + Custom Software)';
+    icon: 'bulletList';
+  };
+  attributes: {
+    eyebrow: Schema.Attribute.String;
+    items: Schema.Attribute.Component<'shared.named-item', true>;
+  };
+}
+
+export interface SectionsCustomSoftwareServicesBlock
+  extends Struct.ComponentSchema {
+  collectionName: 'components_sections_custom_software_services_blocks';
+  info: {
+    description: 'ONLY fill on service slug custom-software-development. Leave empty on all other services.';
+    displayName: 'Custom Software Services (Custom Software only)';
+    icon: 'layer';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    heading: Schema.Attribute.String;
+    headingAccent: Schema.Attribute.String;
+    items: Schema.Attribute.Component<'shared.named-item', true>;
+  };
+}
+
 export interface SectionsDeliveryStep extends Struct.ComponentSchema {
   collectionName: 'components_sections_delivery_steps';
   info: {
@@ -182,8 +224,8 @@ export interface SectionsDeliveryStep extends Struct.ComponentSchema {
 export interface SectionsDevopsGridBlock extends Struct.ComponentSchema {
   collectionName: 'components_sections_devops_grid_blocks';
   info: {
-    description: 'Comprehensive DevOps services grid used on the DevOps & CI/CD service page';
-    displayName: 'DevOps Grid Block';
+    description: 'ONLY fill on service slug devops-cicd. Leave empty on all other services.';
+    displayName: 'DevOps Grid (DevOps service only)';
     icon: 'gear';
   };
   attributes: {
@@ -197,8 +239,8 @@ export interface SectionsDevopsGridBlock extends Struct.ComponentSchema {
 export interface SectionsEcommerceServicesBlock extends Struct.ComponentSchema {
   collectionName: 'components_sections_ecommerce_services_blocks';
   info: {
-    description: 'End-to-end ecommerce services grid used on the Ecommerce Solutions service page';
-    displayName: 'Ecommerce Services Block';
+    description: 'ONLY fill on service slug ecommerce-solutions. Leave empty on all other services.';
+    displayName: 'Ecommerce Services (Ecommerce only)';
     icon: 'shopping-cart';
   };
   attributes: {
@@ -407,8 +449,8 @@ export interface SectionsUiuxEngagement extends Struct.ComponentSchema {
 export interface SectionsUiuxEngagementsBlock extends Struct.ComponentSchema {
   collectionName: 'components_sections_uiux_engagements_blocks';
   info: {
-    description: 'Types of UI/UX engagements block used on the UI/UX Design service page';
-    displayName: 'UI/UX Engagements Block';
+    description: 'ONLY fill on service slug ui-ux-design. Leave empty on all other services.';
+    displayName: 'UI/UX Engagements (UI/UX only)';
     icon: 'layout';
   };
   attributes: {
@@ -569,6 +611,7 @@ declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'home.hero-slide': HomeHeroSlide;
+      'home.service-card': HomeServiceCard;
       'sections.ai-ml-grid-block': SectionsAiMlGridBlock;
       'sections.ai-ml-item': SectionsAiMlItem;
       'sections.canada-cities-block': SectionsCanadaCitiesBlock;
@@ -576,6 +619,8 @@ declare module '@strapi/strapi' {
       'sections.city-hero': SectionsCityHero;
       'sections.cloud-included-block': SectionsCloudIncludedBlock;
       'sections.cloud-included-item': SectionsCloudIncludedItem;
+      'sections.core-capabilities-block': SectionsCoreCapabilitiesBlock;
+      'sections.custom-software-services-block': SectionsCustomSoftwareServicesBlock;
       'sections.delivery-step': SectionsDeliveryStep;
       'sections.devops-grid-block': SectionsDevopsGridBlock;
       'sections.ecommerce-services-block': SectionsEcommerceServicesBlock;

@@ -5,7 +5,7 @@ import type {
   BillingInvoiceStatus,
   BillingLineItem,
 } from "@/lib/admin/billing-invoice-types";
-import { generateInvoiceNumber } from "@/lib/admin/billing-invoice-types";
+import { allocateNextBillingInvoiceNumber } from "@/lib/admin/allocate-billing-invoice-number";
 
 function mapInvoice(record: {
   id: string;
@@ -65,7 +65,7 @@ function normalize(data: BillingInvoiceData) {
     : "draft") as BillingInvoiceStatus;
 
   return {
-    invoiceNumber: data.invoiceNumber || generateInvoiceNumber(),
+    invoiceNumber: data.invoiceNumber?.trim() || "",
     issueDate: data.issueDate ? new Date(data.issueDate) : new Date(),
     dueDate: data.dueDate ? new Date(data.dueDate) : null,
     clientName: data.clientName.trim(),
@@ -102,8 +102,33 @@ export async function POST(request: NextRequest) {
     if (!data.clientName?.trim()) {
       return NextResponse.json({ error: "Client name required" }, { status: 400 });
     }
-    const invoice = await prisma.billingInvoice.create({ data: normalize(data) });
-    return NextResponse.json({ invoice: mapInvoice(invoice) });
+    const payload = normalize(data);
+    const requested = payload.invoiceNumber;
+    if (requested) {
+      const taken = await prisma.billingInvoice.findUnique({
+        where: { invoiceNumber: requested },
+        select: { id: true },
+      });
+      if (taken) {
+        payload.invoiceNumber = await allocateNextBillingInvoiceNumber();
+      }
+    } else {
+      payload.invoiceNumber = await allocateNextBillingInvoiceNumber();
+    }
+
+    // Retry once on rare unique race
+    try {
+      const invoice = await prisma.billingInvoice.create({ data: payload });
+      return NextResponse.json({ invoice: mapInvoice(invoice) });
+    } catch (err: unknown) {
+      const code = (err as { code?: string })?.code;
+      if (code === "P2002") {
+        payload.invoiceNumber = await allocateNextBillingInvoiceNumber();
+        const invoice = await prisma.billingInvoice.create({ data: payload });
+        return NextResponse.json({ invoice: mapInvoice(invoice) });
+      }
+      throw err;
+    }
   } catch (error) {
     console.error("Error creating billing invoice:", error);
     return NextResponse.json({ error: "Failed to create invoice" }, { status: 500 });
@@ -117,9 +142,18 @@ export async function PATCH(request: NextRequest) {
     if (!data.clientName?.trim()) {
       return NextResponse.json({ error: "Client name required" }, { status: 400 });
     }
+    const payload = normalize(data);
+    if (!payload.invoiceNumber) {
+      const existing = await prisma.billingInvoice.findUnique({
+        where: { id: data.id },
+        select: { invoiceNumber: true },
+      });
+      payload.invoiceNumber =
+        existing?.invoiceNumber || (await allocateNextBillingInvoiceNumber());
+    }
     const invoice = await prisma.billingInvoice.update({
       where: { id: data.id },
-      data: normalize(data),
+      data: payload,
     });
     return NextResponse.json({ invoice: mapInvoice(invoice) });
   } catch (error) {

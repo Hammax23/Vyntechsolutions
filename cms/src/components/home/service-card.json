@@ -1,0 +1,11 @@
+{
+  "collectionName": "components_home_service_cards",
+  "info": { "displayName": "Service Card" },
+  "options": {},
+  "attributes": {
+    "title": { "type": "string", "required": true },
+    "description": { "type": "text" },
+    "href": { "type": "string" },
+    "art": { "type": "string" }
+  }
+}

@@ -39,7 +39,8 @@
       "marketingBody": "Used to display relevant advertisements based on your interests.",
       "functionalTitle": "Functional",
       "functionalBody": "Enable personalized features like live chat and social sharing."
-    }
+    },
+    "robotsTxt": "# VynTech Solutions - Canada's Premier Digital Agency\n# https://vyntechsolutions.ca\n\nUser-agent: *\nAllow: /\n# Allow required Next.js rendering resources\nAllow: /_next/static/\nAllow: /_next/image/\nDisallow: /admin/\nDisallow: /api/\nDisallow: /private/\nDisallow: /_next/\n\nSitemap: https://vyntechsolutions.ca/sitemap.xml\n"
   },
   "pageSeos": [
     {
@@ -229,12 +230,7 @@
       "metaDescription": "Discover why businesses choose custom software development over ready-made solutions. Learn about ROI, scalability, and competitive advantages.",
       "excerpt": "Off-the-shelf software seems cheaper upfront, but custom solutions often deliver better ROI. Here's when to build vs buy.",
       "content": "\n## The Build vs Buy Decision\n\nEvery business faces this choice: buy existing software or build something custom. The answer depends on your specific needs, but here's what most people get wrong.\n\n### When Off-the-Shelf Works\n\nReady-made software makes sense when:\n- Your needs are generic (email, basic accounting, project management)\n- You're a small team with standard workflows\n- Budget is extremely limited and time-sensitive\n\n### When Custom Software Wins\n\nCustom development becomes the better choice when:\n\n**1. Your Process Is Your Advantage**\n\nIf your business does something differently than competitors, and that difference matters, generic software forces you to change your process. Custom software adapts to you.\n\n**2. Integration Requirements**\n\nMost businesses run 10+ software tools. Off-the-shelf products rarely talk to each other well. Custom software can connect everything into one workflow.\n\n**3. Scaling Costs**\n\nSaaS pricing usually scales with users or usage. At some point, monthly fees exceed what custom development would cost, and you'd own the result.\n\n**4. Data Ownership**\n\nWith custom software, your data stays on your servers. You control security, backups, and compliance. No vendor lock-in.\n\n### Real Cost Comparison\n\nA typical SaaS tool costs $50-200/user/month. For a 50-person company:\n- SaaS: $30,000-120,000/year, ongoing forever\n- Custom: $80,000-150,000 one-time, plus maintenance\n\nBy year three, custom often costs less. By year five, significantly less.\n\n### The Right Approach\n\nStart with off-the-shelf for non-critical functions. Invest in custom development for core business processes where software directly impacts revenue or efficiency.\n\nMost successful companies use both, they just know which is which.\n    ",
-      "tags": [
-        "custom software",
-        "software development",
-        "business solutions",
-        "ROI"
-      ],
+      "tags": "custom software, software development, business solutions, ROI",
       "author": "VynTech Solutions Team",
       "readTime": "5 min",
       "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
@@ -252,12 +248,7 @@
       "metaDescription": "Web app or mobile app first? Compare development costs, user reach, and maintenance to make the right choice for your startup or business.",
       "excerpt": "Startups often debate web vs mobile. The answer is usually simpler than you think, and it's not always mobile first.",
       "content": "\n## The Platform Decision\n\n\"Should we build a mobile app or web app first?\" We hear this from almost every startup. Here's how to decide.\n\n### Start With Web (Usually)\n\nFor most B2B products and many B2C products, web should come first:\n\n**Faster Development**\nWeb apps typically take 30-50% less time to build than native mobile apps. One codebase works everywhere.\n\n**Easier Updates**\nPush changes instantly. No app store approval process. Fix bugs in minutes, not days.\n\n**Better for Validation**\nTest your idea faster. Pivot without rebuilding everything. Users can try without downloading anything.\n\n**SEO Benefits**\nWeb apps get indexed by search engines. Free organic traffic. Mobile apps don't.\n\n### Start With Mobile When...\n\nMobile-first makes sense in specific cases:\n\n- Camera/GPS/sensors are core features\n- Offline functionality is essential\n- Push notifications drive engagement\n- Your audience lives on mobile (certain consumer apps)\n\n### The Progressive Web App Middle Ground\n\nPWAs give you mobile app features (offline, push notifications, home screen icon) with web app benefits. For many products, this is the right first step.\n\n### Our Recommendation\n\n1. Build a responsive web app first\n2. Validate your core product\n3. Add PWA features\n4. Build native mobile only when you have proven demand\n\nThis approach minimizes risk and maximizes learning speed. You can always build mobile later, but you can't get back the money spent on a mobile app nobody uses.\n\n### Cost Comparison\n\n- Web app: $40,000-100,000\n- iOS app: $50,000-150,000\n- Android app: $50,000-150,000\n- PWA: $50,000-120,000\n\nBuilding web first lets you validate before tripling your investment.\n    ",
-      "tags": [
-        "web development",
-        "mobile app development",
-        "startup",
-        "product strategy"
-      ],
+      "tags": "web development, mobile app development, startup, product strategy",
       "author": "VynTech Solutions Team",
       "readTime": "6 min",
       "image": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80",
@@ -275,13 +266,7 @@
       "metaDescription": "Learn how to select the best technology stack for your startup. Compare React, Node.js, Python, and other technologies for different use cases.",
       "excerpt": "Your tech stack affects development speed, hiring, and scalability. Here's how to choose without overengineering.",
       "content": "\n## Choosing Your Tech Stack\n\nThe tech stack decision paralyzes many founders. Here's the practical approach.\n\n### The Only Rule That Matters\n\n**Use what your team knows.**\n\nA great developer using familiar tools will outperform a great developer learning new tools. Speed matters more than theoretical perfection.\n\n### If You're Starting Fresh\n\nFor most web applications in 2024:\n\n**Frontend:**\n- React or Next.js (largest ecosystem, easiest hiring)\n- TypeScript (catches bugs, better developer experience)\n- Tailwind CSS (fast styling, consistent design)\n\n**Backend:**\n- Node.js for JavaScript teams\n- Python/Django for data-heavy apps\n- Go for high-performance requirements\n\n**Database:**\n- PostgreSQL (handles 90% of use cases well)\n- MongoDB only if you truly have unstructured data\n\n**Infrastructure:**\n- Vercel or Netlify for frontend\n- AWS or Google Cloud for backend\n- Start simple, optimize later\n\n### Common Mistakes\n\n**1. Overengineering**\nYou don't need Kubernetes on day one. You don't need microservices for an MVP. Start simple.\n\n**2. Chasing Trends**\nThat new framework might be exciting, but can you hire developers who know it? Will it exist in 3 years?\n\n**3. Premature Optimization**\nBuild for 1,000 users first. Scale when you actually have scaling problems.\n\n### Our Standard Stack\n\nFor most client projects, we use:\n- Next.js (React framework)\n- TypeScript\n- PostgreSQL\n- Tailwind CSS\n- Vercel or AWS\n\nThis stack is boring, and that's the point. Boring technology is reliable, well-documented, and easy to maintain.\n\n### When to Deviate\n\nConsider alternatives when:\n- Your app has specific performance requirements (games, real-time trading)\n- You're building in a specialized domain (ML, blockchain)\n- Your team has deep expertise in something else\n\nOtherwise, go with proven tools and focus on building your product.\n    ",
-      "tags": [
-        "tech stack",
-        "startup development",
-        "React",
-        "Node.js",
-        "software architecture"
-      ],
+      "tags": "tech stack, startup development, React, Node.js, software architecture",
       "author": "VynTech Solutions Team",
       "readTime": "7 min",
       "image": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80",
@@ -299,12 +284,7 @@
       "metaDescription": "Get realistic MVP development costs and timelines. Learn what affects pricing and how to budget for your minimum viable product.",
       "excerpt": "How long does an MVP take? What does it cost? Here are real numbers based on 50+ projects.",
       "content": "\n## MVP Development Reality Check\n\nEveryone wants to know: \"How much will my app cost?\" Here's the honest answer.\n\n### What's an MVP?\n\nA Minimum Viable Product is the simplest version that delivers core value. It's not:\n- A prototype (that's just a demo)\n- A complete product (that comes later)\n- A proof of concept (that's for internal validation)\n\nAn MVP is something real users can actually use.\n\n### Realistic Timelines\n\n**Simple MVP (8-12 weeks)**\n- 5-10 screens\n- Basic user authentication\n- Core functionality only\n- Simple database\n- One platform (web or mobile)\n\n**Medium MVP (12-20 weeks)**\n- 10-20 screens\n- User roles and permissions\n- Third-party integrations\n- Payment processing\n- Admin dashboard\n\n**Complex MVP (20-30 weeks)**\n- 20+ screens\n- Real-time features\n- Complex business logic\n- Multiple integrations\n- Advanced security requirements\n\n### Realistic Costs\n\nBased on North American development rates:\n\n- Simple MVP: $40,000-80,000\n- Medium MVP: $80,000-150,000\n- Complex MVP: $150,000-300,000\n\nOffshore development costs 40-60% less but often takes longer and requires more management.\n\n### What Affects Cost\n\n**Scope (biggest factor)**\nEvery feature adds weeks. Ruthlessly cut features for your first version.\n\n**Design Requirements**\nCustom design costs more than templates. For MVPs, start simple.\n\n**Technical Complexity**\nReal-time features, complex algorithms, and third-party integrations all add cost.\n\n**Team Location**\nNorth American developers: $150-250/hour\nEastern European: $50-100/hour\nSouth Asian: $25-50/hour\n\n### How to Budget\n\n1. Define your core use case (one sentence)\n2. List only features that use case requires\n3. Get 3 quotes from development teams\n4. Add 30% buffer for unexpected issues\n5. Plan for post-launch iteration\n\n### Common Mistake\n\nBuilding too much before validating. Spend 60% of your budget on version 1, save 40% for improvements based on real user feedback.\n    ",
-      "tags": [
-        "MVP development",
-        "startup costs",
-        "software budgeting",
-        "product development"
-      ],
+      "tags": "MVP development, startup costs, software budgeting, product development",
       "author": "VynTech Solutions Team",
       "readTime": "6 min",
       "image": "https://images.unsplash.com/photo-1553484771-371a605b060b?w=800&q=80",
@@ -322,12 +302,7 @@
       "metaDescription": "Understand API integrations without the technical jargon. Learn how connecting your business tools saves time and reduces errors.",
       "excerpt": "APIs connect your business tools. Here's what that means for your operations and how to think about integration projects.",
       "content": "\n## APIs Explained Simply\n\nYour business probably runs on multiple software tools that don't talk to each other. APIs fix that.\n\n### What's an API?\n\nAPI stands for Application Programming Interface. Think of it as a translator that lets different software systems share information automatically.\n\n**Without API:**\nYou manually export data from System A, reformat it, and import it into System B. Every day. Forever.\n\n**With API:**\nSystem A automatically sends data to System B whenever something changes. No manual work.\n\n### Real Examples\n\n**CRM + Email Marketing**\nWhen a new customer signs up in your CRM, they're automatically added to your email list with the right tags.\n\n**E-commerce + Accounting**\nEvery sale automatically creates an invoice in your accounting software. No manual entry.\n\n**HR System + Payroll**\nTime-off requests approved in HR flow directly to payroll calculations.\n\n### Why Integrate?\n\n**Save Time**\nManual data entry takes hours. APIs work in seconds.\n\n**Reduce Errors**\nHumans make typos. APIs don't.\n\n**Real-Time Data**\nMake decisions based on current information, not yesterday's export.\n\n**Scale Operations**\nHandle 10x the volume without hiring 10x the staff.\n\n### Integration Options\n\n**1. Native Integrations**\nMany tools have built-in connections. Check if your software already supports this.\n\n**2. Zapier/Make**\nNo-code tools that connect 5,000+ apps. Good for simple workflows.\n\n**3. Custom Integration**\nBuilt specifically for your needs. More powerful, more expensive.\n\n### What to Expect\n\n**Timeline:** 2-8 weeks depending on complexity\n**Cost:** $5,000-50,000 for custom integrations\n\n### Questions to Ask\n\nBefore starting an integration project:\n1. What data needs to move between systems?\n2. How often does it need to sync?\n3. What happens when something fails?\n4. Who maintains it long-term?\n\nIntegration projects pay for themselves quickly, usually within 6-12 months through time savings alone.\n    ",
-      "tags": [
-        "API integration",
-        "business automation",
-        "software integration",
-        "workflow automation"
-      ],
+      "tags": "API integration, business automation, software integration, workflow automation",
       "author": "VynTech Solutions Team",
       "readTime": "5 min",
       "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80",
@@ -345,13 +320,7 @@
       "metaDescription": "Planning a website redesign? Use this checklist to ensure your new site performs better, ranks higher, and converts more visitors.",
       "excerpt": "Website redesigns often hurt performance. Follow this checklist to make sure yours actually improves things.",
       "content": "\n## The Website Redesign Checklist\n\nMost redesigns fail because teams focus on looks and forget function. Use this checklist.\n\n### Before You Start\n\n**1. Document Current Performance**\nExport your Google Analytics data. Note current rankings for important keywords. You need baselines to measure improvement.\n\n**2. List What's Working**\nDon't redesign pages that already convert well. Keep what works.\n\n**3. Identify Real Problems**\n\"It looks dated\" isn't enough. What specific business problems will the redesign solve?\n\n### Planning Phase\n\n**4. Define Success Metrics**\nHow will you know the redesign worked? Pick 2-3 measurable goals.\n\n**5. Map User Journeys**\nWhat do visitors actually do on your site? Design for their needs, not your org chart.\n\n**6. Content Inventory**\nList every page. Decide: keep, update, merge, or delete. Most sites have 30% dead content.\n\n### Design Phase\n\n**7. Mobile First**\n60%+ of traffic is mobile. Design for phones first, then expand to desktop.\n\n**8. Page Speed Budget**\nSet a target: under 3 seconds on mobile. Test every page.\n\n**9. Accessibility**\nWCAG compliance isn't optional. Check contrast, alt text, keyboard navigation.\n\n### Development Phase\n\n**10. URL Structure**\nChanging URLs kills SEO. Keep them the same, or set up 301 redirects for every page.\n\n**11. Technical SEO**\nMeta titles, descriptions, schema markup, sitemap, robots.txt. All must transfer correctly.\n\n**12. Forms and Tracking**\nTest every form. Verify analytics, conversion tracking, and CRM integrations.\n\n### Launch Phase\n\n**13. Staged Rollout**\nDon't launch everything at once. Start with less important pages, verify everything works.\n\n**14. Monitor Everything**\nWatch analytics daily for two weeks. Look for traffic drops, conversion changes, error pages.\n\n**15. Redirect Audit**\nCheck for 404 errors. Fix broken links. Search Console will show issues.\n\n### Post-Launch\n\nCompare performance at 30, 60, and 90 days. If metrics dropped, diagnose and fix immediately.\n\nA good redesign improves metrics within 90 days. If yours didn't, something went wrong.\n    ",
-      "tags": [
-        "website redesign",
-        "web design",
-        "UX design",
-        "SEO",
-        "conversion optimization"
-      ],
+      "tags": "website redesign, web design, UX design, SEO, conversion optimization",
       "author": "VynTech Solutions Team",
       "readTime": "8 min",
       "image": "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=800&q=80",
@@ -899,16 +868,20 @@
       ],
       "faqs": [
         {
-          "question": "How long does a typical project take?",
-          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+          "question": "How long does a custom website take to build?",
+          "answer": "Most marketing and brochure sites launch in 4–8 weeks. Larger web apps, portals, or multi-language builds are planned in milestones so you always know scope, timeline, and next deliverables."
         },
         {
-          "question": "Do you work with businesses across Canada?",
-          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+          "question": "Do you build SEO-ready websites for Canadian businesses?",
+          "answer": "Yes. We structure pages for Core Web Vitals, clean URLs, schema-ready markup, and local SEO signals so your site is ready for Canadian search and Google Business Profile growth."
         },
         {
-          "question": "What happens after launch?",
-          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+          "question": "Can you redesign an existing website without losing rankings?",
+          "answer": "We plan migrations carefully: URL mapping, redirects, content parity, and performance checks so redesigns protect equity while improving conversion and speed."
+        },
+        {
+          "question": "What stack do you use for web development?",
+          "answer": "We typically use modern stacks like Next.js, React, Node, and headless CMS options when they fit the project — chosen for performance, maintainability, and your team's long-term needs."
         }
       ],
       "cardImage": "/services/ribbons/ribbon-5.webp",
@@ -1219,7 +1192,8 @@
       "caseStudiesHeading": "Case Studies",
       "faqEyebrow": "FAQ",
       "faqHeading": "Frequently asked questions",
-      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
+      "overviewHeading": "Web Development"
     },
     {
       "title": "Mobile App Development",
@@ -1561,6 +1535,36 @@
             "Edmonton",
             "Hamilton"
           ]
+        },
+        "coreCapabilities": {
+          "eyebrow": "Our Core Capabilities",
+          "items": [
+            {
+              "title": "Cloud Native",
+              "icon": "multicloud",
+              "description": "Cloud-native applications engineered to scale dynamically with demand."
+            },
+            {
+              "title": "Mobile Builds",
+              "icon": "mobile",
+              "description": "iOS and Android builds with smooth cross-platform execution."
+            },
+            {
+              "title": "UI & UX Experience",
+              "icon": "prototype",
+              "description": "Interfaces built for rapid adoption and long-term user engagement."
+            },
+            {
+              "title": "API Integrations",
+              "icon": "security",
+              "description": "Secure API links into ERP, CRM, and existing tools."
+            },
+            {
+              "title": "Data Compliance",
+              "icon": "security",
+              "description": "Compliance with Canadian data laws like PIPEDA, CPPA, Quebec Law 25, PHIPA for healthcare."
+            }
+          ]
         }
       },
       "techStack": {
@@ -1734,16 +1738,20 @@
       ],
       "faqs": [
         {
-          "question": "How long does a typical project take?",
-          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+          "question": "Do you build native iOS, Android, or cross-platform apps?",
+          "answer": "All three. We deliver Swift/SwiftUI and Kotlin/Compose native apps when performance matters most, and React Native when shared code and faster iteration are the priority."
         },
         {
-          "question": "Do you work with businesses across Canada?",
-          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+          "question": "How long does a mobile app project usually take?",
+          "answer": "A focused MVP often ships in 8–14 weeks. Complex apps with integrations, offline mode, or multi-role workflows are phased so each release is testable and store-ready."
         },
         {
-          "question": "What happens after launch?",
-          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+          "question": "Do you handle App Store and Google Play submission?",
+          "answer": "Yes. We prepare store listings, privacy disclosures, build pipelines, and review compliance so submissions are smooth for Canadian and international releases."
+        },
+        {
+          "question": "Can you integrate our app with CRM, ERP, or payment systems?",
+          "answer": "Absolutely. Secure API integrations with CRM, ERP, payments, and analytics are part of most builds so your app plugs into existing business systems."
         }
       ],
       "cardImage": "/services/ribbons/ribbon-2.webp",
@@ -2153,7 +2161,38 @@
       "caseStudiesHeading": "Case Studies",
       "faqEyebrow": "FAQ",
       "faqHeading": "Frequently asked questions",
-      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
+      "overviewHeading": "Mobile App Development",
+      "coreCapabilitiesBlock": {
+        "eyebrow": "Our Core Capabilities",
+        "items": [
+          {
+            "title": "Cloud Native",
+            "icon": "multicloud",
+            "description": "Cloud-native applications engineered to scale dynamically with demand."
+          },
+          {
+            "title": "Mobile Builds",
+            "icon": "mobile",
+            "description": "iOS and Android builds with smooth cross-platform execution."
+          },
+          {
+            "title": "UI & UX Experience",
+            "icon": "prototype",
+            "description": "Interfaces built for rapid adoption and long-term user engagement."
+          },
+          {
+            "title": "API Integrations",
+            "icon": "security",
+            "description": "Secure API links into ERP, CRM, and existing tools."
+          },
+          {
+            "title": "Data Compliance",
+            "icon": "security",
+            "description": "Compliance with Canadian data laws like PIPEDA, CPPA, Quebec Law 25, PHIPA for healthcare."
+          }
+        ]
+      }
     },
     {
       "title": "Cloud Solutions",
@@ -2649,16 +2688,20 @@
       ],
       "faqs": [
         {
-          "question": "How long does a typical project take?",
-          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+          "question": "Which clouds do you work with?",
+          "answer": "AWS, Azure, and Google Cloud. We design architectures that match your compliance, cost, and growth goals rather than forcing a single vendor."
         },
         {
-          "question": "Do you work with businesses across Canada?",
-          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+          "question": "Can you migrate us from on-prem or another cloud with minimal downtime?",
+          "answer": "Yes. We plan cutovers with staging, data validation, rollback paths, and phased traffic moves so migrations stay controlled and measurable."
         },
         {
-          "question": "What happens after launch?",
-          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+          "question": "How do you keep cloud costs under control?",
+          "answer": "Right-sizing, autoscaling, reserved capacity where it pays off, observability, and clear budgets. We review spend against usage so you are not paying for idle resources."
+        },
+        {
+          "question": "Do your cloud setups support Canadian data residency needs?",
+          "answer": "We can design region and compliance-aware architectures (including PIPEDA considerations) so data location, access, and encryption match your policy requirements."
         }
       ],
       "cardImage": "/services/ribbons/ribbon-7.webp",
@@ -3049,7 +3092,8 @@
       "caseStudiesHeading": "Case Studies",
       "faqEyebrow": "FAQ",
       "faqHeading": "Frequently asked questions",
-      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
+      "overviewHeading": "Cloud Solutions"
     },
     {
       "title": "AI/ML Solutions",
@@ -3529,16 +3573,20 @@
       ],
       "faqs": [
         {
-          "question": "How long does a typical project take?",
-          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+          "question": "What kinds of AI/ML projects do you deliver?",
+          "answer": "Chatbots and assistants, recommendation systems, document intelligence, forecasting, computer vision, and workflow automation tailored to real business outcomes."
         },
         {
-          "question": "Do you work with businesses across Canada?",
-          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+          "question": "Do we need our own large dataset to start?",
+          "answer": "Not always. We assess data readiness first, then use existing systems, APIs, and carefully scoped models — including fine-tuning or retrieval-augmented approaches when appropriate."
         },
         {
-          "question": "What happens after launch?",
-          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+          "question": "How do you keep AI solutions secure and compliant?",
+          "answer": "Access controls, data minimization, audit logging, and clear retention policies. We design with Canadian privacy expectations in mind and avoid unnecessary data exposure."
+        },
+        {
+          "question": "Can AI integrate with our current software stack?",
+          "answer": "Yes. We typically connect models and agents to CRMs, support tools, databases, and internal APIs so AI sits inside existing workflows instead of as a disconnected demo."
         }
       ],
       "cardImage": "/services/ribbons/ribbon-1.webp",
@@ -3913,7 +3961,8 @@
       "caseStudiesHeading": "Case Studies",
       "faqEyebrow": "FAQ",
       "faqHeading": "Frequently asked questions",
-      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
+      "overviewHeading": "AI/ML Solutions"
     },
     {
       "title": "DevOps & CI/CD",
@@ -4390,16 +4439,20 @@
       ],
       "faqs": [
         {
-          "question": "How long does a typical project take?",
-          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+          "question": "What does a typical CI/CD engagement include?",
+          "answer": "Pipeline design, automated tests, secure secrets, staging/production promotion, and rollout strategies (blue-green or canary) so releases are frequent and low-risk."
         },
         {
-          "question": "Do you work with businesses across Canada?",
-          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+          "question": "Do you use Infrastructure as Code?",
+          "answer": "Yes. Terraform and related IaC tooling keep environments versioned, repeatable, and reviewable — reducing snowflake servers and manual drift."
         },
         {
-          "question": "What happens after launch?",
-          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+          "question": "How quickly can you improve our release process?",
+          "answer": "Many teams see faster, safer deploys within a few sprints once pipelines, environments, and quality gates are standardized."
+        },
+        {
+          "question": "Can you add monitoring and alerting with DevOps work?",
+          "answer": "Yes. Observability (logs, metrics, traces, and alerts) is part of mature delivery so incidents are visible before customers feel them."
         }
       ],
       "cardImage": "/services/ribbons/ribbon-3.webp",
@@ -4771,7 +4824,8 @@
       "caseStudiesHeading": "Case Studies",
       "faqEyebrow": "FAQ",
       "faqHeading": "Frequently asked questions",
-      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
+      "overviewHeading": "DevOps & CI/CD"
     },
     {
       "title": "UI/UX Design",
@@ -5233,16 +5287,20 @@
       ],
       "faqs": [
         {
-          "question": "How long does a typical project take?",
-          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+          "question": "What is included in a UI/UX engagement?",
+          "answer": "Discovery, user flows, wireframes, high-fidelity UI, interactive prototypes, and design systems — scoped to product, web, or mobile needs."
         },
         {
-          "question": "Do you work with businesses across Canada?",
-          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+          "question": "Do you work with existing development teams?",
+          "answer": "Yes. We hand off Figma specs, components, and interaction notes so engineers can implement cleanly without guesswork."
         },
         {
-          "question": "What happens after launch?",
-          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+          "question": "How do you validate designs before build?",
+          "answer": "Through prototypes, usability reviews, and stakeholder walkthroughs so major UX issues are caught before engineering cost locks in."
+        },
+        {
+          "question": "Can you redesign only key conversion pages?",
+          "answer": "Absolutely. Many clients start with homepage, pricing, or checkout flows to lift conversion quickly, then expand into a full system."
         }
       ],
       "cardImage": "/services/ribbons/ribbon-4.webp",
@@ -5599,7 +5657,8 @@
       "caseStudiesHeading": "Case Studies",
       "faqEyebrow": "FAQ",
       "faqHeading": "Frequently asked questions",
-      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
+      "overviewHeading": "UI/UX Design"
     },
     {
       "title": "E-commerce Solutions",
@@ -6076,16 +6135,20 @@
       ],
       "faqs": [
         {
-          "question": "How long does a typical project take?",
-          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+          "question": "Which ecommerce platforms do you support?",
+          "answer": "Shopify, WooCommerce, Magento, and custom storefronts. We recommend based on catalog size, integrations, and growth plans — not a one-size platform pitch."
         },
         {
-          "question": "Do you work with businesses across Canada?",
-          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+          "question": "Can you migrate my store without losing SEO or order history?",
+          "answer": "Yes. We map URLs, products, customers, and redirects carefully, then verify indexing and checkout flows before and after cutover."
         },
         {
-          "question": "What happens after launch?",
-          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+          "question": "Do you handle payments, shipping, and tax for Canadian stores?",
+          "answer": "We integrate payment gateways, shipping carriers, and tax/shipping rules suited to Canadian retail so checkout stays accurate and conversion-friendly."
+        },
+        {
+          "question": "How long does an ecommerce build take?",
+          "answer": "A focused storefront can launch in 6–10 weeks. Multi-warehouse, B2B pricing, or complex ERP sync projects are phased by catalog and integration priority."
         }
       ],
       "cardImage": "/services/ribbons/ribbon-8.webp",
@@ -6447,7 +6510,8 @@
       "caseStudiesHeading": "Case Studies",
       "faqEyebrow": "FAQ",
       "faqHeading": "Frequently asked questions",
-      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
+      "overviewHeading": "E-commerce Solutions"
     },
     {
       "title": "Custom Software Development",
@@ -6714,6 +6778,73 @@
             "Edmonton",
             "Hamilton"
           ]
+        },
+        "customSoftwareServices": {
+          "heading": "Software Services",
+          "headingAccent": "we provide",
+          "description": "A business needs strategy as well as a tech team to know the market trends. If you have decided to start a software business, VynTech Solutions can become your roadmap to the destination. Here are the software development services that we provide.",
+          "items": [
+            {
+              "title": "Custom Software Development",
+              "icon": "code",
+              "description": "It is a good catch to have own software to keep your audience on a single platform. So, it will be easy to target them through new services, updates and customized solutions. We offer custom and innovative software development services, from ideation to deployment tailored to objectives helping businesses grow."
+            },
+            {
+              "title": "Custom Crm Development Services",
+              "icon": "code",
+              "description": "At VynTech Solutions, you won't get the pre-designed softwares for your new and unique business. Our in-house team of software development experts build custom solutions to meet the specific needs and requirements of a business. Unique ideas deserve unique solutions."
+            },
+            {
+              "title": "Enterprise Software Development Company",
+              "icon": "enterprise",
+              "description": "We have latest enterprise solutions to give robust and scalable solutions. Technology has ruled the market for years so it is an impressive decision to have software for your business. We specialize in offering full-service software development, to design, build, and deploy that function seamlessly without any problem."
+            },
+            {
+              "title": "Software Consulting Services",
+              "icon": "strategy",
+              "description": "We leverage the power of software development to give smooth and secure experience that deliver captivating user experiences across platforms. Even after launching your product, we won't leave you. In fact, you will get regular updates from our company regarding updates."
+            },
+            {
+              "title": "Software Integration Services",
+              "icon": "integration",
+              "description": "With Software integration services, we give extraordinary experience by connecting your systems and apps using latest technology. These softwares can help you to reach your audience easily without focussing on the device type as we develop software for every business."
+            },
+            {
+              "title": "API Development Services",
+              "icon": "api",
+              "description": "With our powerful API development services, we grow your online ecosystem using powerful and flexible features to develop result-oriented solutions for your specific business requirements. We have a track record of doing business honestly so you can trust us for your dream project. Your dream is our responsibility."
+            }
+          ]
+        },
+        "coreCapabilities": {
+          "eyebrow": "Our Core Capabilities",
+          "items": [
+            {
+              "title": "Enterprise Architecture",
+              "icon": "enterprise",
+              "description": "Scalable systems engineered to support complex operations and growth."
+            },
+            {
+              "title": "Legacy Modernization",
+              "icon": "migrate",
+              "description": "Upgrading outdated platforms to modern technology stacks securely."
+            },
+            {
+              "title": "Workflow Automation",
+              "icon": "speed",
+              "description": "Replacing manual tasks with automated business workflows."
+            },
+            {
+              "title": "Custom Integrations",
+              "icon": "integration",
+              "description": "Connecting ERPs, CRMs, and third-party APIs seamlessly."
+            },
+            {
+              "title": "Enterprise Security",
+              "icon": "security",
+              "description": "Robust data protection adhering to ISO standards and PIPEDA."
+            }
+          ]
         }
       },
       "techStack": {
@@ -6887,16 +7018,20 @@
       ],
       "faqs": [
         {
-          "question": "How long does a typical project take?",
-          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+          "question": "When should I choose custom software instead of SaaS?",
+          "answer": "When off-the-shelf tools force awkward workarounds, limit integrations, or cannot match your workflow, compliance, or competitive edge."
         },
         {
-          "question": "Do you work with businesses across Canada?",
-          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+          "question": "How do you scope a custom software project?",
+          "answer": "Discovery workshops, prioritized requirements, architecture options, and a phased roadmap so you ship value early instead of waiting for a giant big-bang release."
         },
         {
-          "question": "What happens after launch?",
-          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+          "question": "Can you modernize legacy systems?",
+          "answer": "Yes. We stabilize, wrap, or rebuild legacy platforms in stages — including API layers and data migration — so operations keep running during the upgrade."
+        },
+        {
+          "question": "Who owns the code and IP?",
+          "answer": "Clients retain ownership of the custom work delivered under agreement. We document repositories, environments, and handoff so your team is never locked out."
         }
       ],
       "cardImage": "/services/ribbons/ribbon-6.webp",
@@ -7231,7 +7366,75 @@
       "caseStudiesHeading": "Case Studies",
       "faqEyebrow": "FAQ",
       "faqHeading": "Frequently asked questions",
-      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
+      "overviewHeading": "Custom Software Development",
+      "customSoftwareServicesBlock": {
+        "heading": "Software Services",
+        "headingAccent": "we provide",
+        "description": "A business needs strategy as well as a tech team to know the market trends. If you have decided to start a software business, VynTech Solutions can become your roadmap to the destination. Here are the software development services that we provide.",
+        "items": [
+          {
+            "title": "Custom Software Development",
+            "icon": "code",
+            "description": "It is a good catch to have own software to keep your audience on a single platform. So, it will be easy to target them through new services, updates and customized solutions. We offer custom and innovative software development services, from ideation to deployment tailored to objectives helping businesses grow."
+          },
+          {
+            "title": "Custom Crm Development Services",
+            "icon": "code",
+            "description": "At VynTech Solutions, you won't get the pre-designed softwares for your new and unique business. Our in-house team of software development experts build custom solutions to meet the specific needs and requirements of a business. Unique ideas deserve unique solutions."
+          },
+          {
+            "title": "Enterprise Software Development Company",
+            "icon": "enterprise",
+            "description": "We have latest enterprise solutions to give robust and scalable solutions. Technology has ruled the market for years so it is an impressive decision to have software for your business. We specialize in offering full-service software development, to design, build, and deploy that function seamlessly without any problem."
+          },
+          {
+            "title": "Software Consulting Services",
+            "icon": "strategy",
+            "description": "We leverage the power of software development to give smooth and secure experience that deliver captivating user experiences across platforms. Even after launching your product, we won't leave you. In fact, you will get regular updates from our company regarding updates."
+          },
+          {
+            "title": "Software Integration Services",
+            "icon": "integration",
+            "description": "With Software integration services, we give extraordinary experience by connecting your systems and apps using latest technology. These softwares can help you to reach your audience easily without focussing on the device type as we develop software for every business."
+          },
+          {
+            "title": "API Development Services",
+            "icon": "api",
+            "description": "With our powerful API development services, we grow your online ecosystem using powerful and flexible features to develop result-oriented solutions for your specific business requirements. We have a track record of doing business honestly so you can trust us for your dream project. Your dream is our responsibility."
+          }
+        ]
+      },
+      "coreCapabilitiesBlock": {
+        "eyebrow": "Our Core Capabilities",
+        "items": [
+          {
+            "title": "Enterprise Architecture",
+            "icon": "enterprise",
+            "description": "Scalable systems engineered to support complex operations and growth."
+          },
+          {
+            "title": "Legacy Modernization",
+            "icon": "migrate",
+            "description": "Upgrading outdated platforms to modern technology stacks securely."
+          },
+          {
+            "title": "Workflow Automation",
+            "icon": "speed",
+            "description": "Replacing manual tasks with automated business workflows."
+          },
+          {
+            "title": "Custom Integrations",
+            "icon": "integration",
+            "description": "Connecting ERPs, CRMs, and third-party APIs seamlessly."
+          },
+          {
+            "title": "Enterprise Security",
+            "icon": "security",
+            "description": "Robust data protection adhering to ISO standards and PIPEDA."
+          }
+        ]
+      }
     },
     {
       "title": "SEO/Digital Marketing",
@@ -7499,16 +7702,20 @@
       ],
       "faqs": [
         {
-          "question": "How long does a typical project take?",
-          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+          "question": "How long before SEO results show?",
+          "answer": "Technical and on-page wins can appear within weeks. Competitive keyword growth is usually measured over 3–6 months of consistent content, authority, and local optimization."
         },
         {
-          "question": "Do you work with businesses across Canada?",
-          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+          "question": "Do you offer local SEO for Canadian cities?",
+          "answer": "Yes. We optimize Google Business Profile, local pages, citations, and city-focused content for markets like Toronto, Vancouver, Calgary, Ottawa, and beyond."
         },
         {
-          "question": "What happens after launch?",
-          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+          "question": "What is included in your SEO packages?",
+          "answer": "Technical audits, keyword strategy, on-page optimization, content guidance, reporting, and optional link/authority work depending on the package you select."
+        },
+        {
+          "question": "Will you work with our existing website and CMS?",
+          "answer": "Yes. We adapt to your current stack and prioritize fixes that unblock rankings and conversion without unnecessary rebuilds."
         }
       ],
       "techStack": {
@@ -8079,7 +8286,8 @@
       "caseStudiesHeading": "Case Studies",
       "faqEyebrow": "FAQ",
       "faqHeading": "Frequently asked questions",
-      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
+      "overviewHeading": "SEO/Digital Marketing"
     },
     {
       "title": "Maintenance & Support",
@@ -8519,16 +8727,20 @@
       ],
       "faqs": [
         {
-          "question": "How long does a typical project take?",
-          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+          "question": "What does ongoing maintenance cover?",
+          "answer": "Updates, uptime monitoring, security patches, backups, performance checks, and prioritized bug fixes so your site or app stays healthy after launch."
         },
         {
-          "question": "Do you work with businesses across Canada?",
-          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+          "question": "Do you support products you did not originally build?",
+          "answer": "Often yes. We start with a health audit, stabilize critical issues, then move into a predictable support retainer."
         },
         {
-          "question": "What happens after launch?",
-          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+          "question": "What are typical response times?",
+          "answer": "Response and resolution targets depend on the plan and severity. Critical production issues are prioritized first; enhancements follow an agreed backlog cadence."
+        },
+        {
+          "question": "Can maintenance include small feature improvements?",
+          "answer": "Yes. Many retainers reserve hours each month for minor enhancements, content updates, and conversion tweaks — not only break/fix work."
         }
       ],
       "cardImage": "/services/ribbons/ribbon-10.webp",
@@ -8863,7 +9075,8 @@
       "caseStudiesHeading": "Case Studies",
       "faqEyebrow": "FAQ",
       "faqHeading": "Frequently asked questions",
-      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
+      "overviewHeading": "Maintenance & Support"
     },
     {
       "title": "Tax & Accounting Services",
@@ -9046,16 +9259,20 @@
       "processDescription": "A clear, collaborative process from discovery to launch — so you always know what happens next.",
       "faqs": [
         {
-          "question": "How long does a typical project take?",
-          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+          "question": "Which tax and accounting services do you provide?",
+          "answer": "Personal and corporate tax filings, bookkeeping, CRA correspondence support, payroll setup guidance, and year-round advisory for Canadian businesses and individuals."
         },
         {
-          "question": "Do you work with businesses across Canada?",
-          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+          "question": "Do you work with CRA filings and compliance deadlines?",
+          "answer": "Yes. We plan around filing calendars, organize records, and help you meet deadlines with clear checklists and proactive reminders."
         },
         {
-          "question": "What happens after launch?",
-          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+          "question": "Can startups and small businesses use your services?",
+          "answer": "Absolutely. We support sole proprietors, corporations, and growing teams that need accurate books without a full in-house finance department."
+        },
+        {
+          "question": "How do engagements usually start?",
+          "answer": "With a discovery call, document checklist, and scoped engagement — so scope, timeline, and deliverables are clear before work begins."
         }
       ],
       "techStack": {
@@ -9526,7 +9743,8 @@
       "caseStudiesHeading": "Case Studies",
       "faqEyebrow": "FAQ",
       "faqHeading": "Frequently asked questions",
-      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
+      "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
+      "overviewHeading": "Tax & Accounting Services"
     }
   ],
   "industries": [
@@ -9675,16 +9893,20 @@
       "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
       "faqs": [
         {
-          "question": "How long does a typical project take?",
-          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+          "question": "Do you build HIPAA / PHIPA-aware healthcare software?",
+          "answer": "Yes. We design with Canadian privacy expectations in mind — access controls, audit trails, encryption, and workflows that support PHIPA/PIPEDA-aligned handling of patient and clinic data."
         },
         {
-          "question": "Do you work with businesses across Canada?",
-          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+          "question": "What healthcare solutions do you typically deliver?",
+          "answer": "Patient portals, booking systems, telehealth experiences, clinic operations tools, integrations with EMR/EHR workflows, and internal dashboards that reduce admin load."
         },
         {
-          "question": "What happens after launch?",
-          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+          "question": "Can you integrate with our existing clinic systems?",
+          "answer": "Usually yes. We start with an integration map, then connect scheduling, billing, CRM, or lab systems through secure APIs so staff are not stuck in duplicate entry."
+        },
+        {
+          "question": "How long does a healthcare digital project take?",
+          "answer": "Focused portals or booking tools often launch in 6–12 weeks. Multi-location platforms with complex compliance and integrations are phased so each release is usable and auditable."
         }
       ]
     },
@@ -9833,16 +10055,20 @@
       "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
       "faqs": [
         {
-          "question": "How long does a typical project take?",
-          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+          "question": "Do you work with banks, fintechs, and accounting firms?",
+          "answer": "Yes. We build customer portals, onboarding flows, reporting dashboards, and internal tools for regulated and finance-adjacent teams across Canada."
         },
         {
-          "question": "Do you work with businesses across Canada?",
-          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+          "question": "How do you approach security for financial products?",
+          "answer": "Least-privilege access, encryption in transit and at rest, audit logging, secure auth, and careful handling of PII — reviewed against your compliance requirements."
         },
         {
-          "question": "What happens after launch?",
-          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+          "question": "Can you modernize legacy finance portals?",
+          "answer": "Yes. We stabilize what works, wrap APIs where needed, and rebuild high-friction journeys in stages so customers and staff keep operating during the upgrade."
+        },
+        {
+          "question": "What is a typical timeline for a fintech MVP?",
+          "answer": "A scoped MVP can ship in 8–14 weeks when requirements and compliance boundaries are clear. Larger platforms are delivered in milestones with measurable risk controls."
         }
       ]
     },
@@ -9991,16 +10217,20 @@
       "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
       "faqs": [
         {
-          "question": "How long does a typical project take?",
-          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+          "question": "Which ecommerce platforms do you support for retail?",
+          "answer": "Shopify, WooCommerce, Magento, and custom storefronts. We recommend based on catalog size, omnichannel needs, and integration complexity — not a one-platform pitch."
         },
         {
-          "question": "Do you work with businesses across Canada?",
-          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+          "question": "Can you connect inventory, POS, and shipping systems?",
+          "answer": "Yes. ERP, POS, warehouse, and carrier integrations are common so stock, orders, and fulfillment stay in sync across channels."
         },
         {
-          "question": "What happens after launch?",
-          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+          "question": "Do you optimize for conversion as well as build?",
+          "answer": "Absolutely. We focus on speed, checkout clarity, mobile UX, and analytics so the store sells — not just looks modern."
+        },
+        {
+          "question": "How do Canadian tax and shipping rules get handled?",
+          "answer": "We configure tax, shipping, and payment setups suited to Canadian retail operations and validate checkout paths before launch."
         }
       ]
     },
@@ -10149,16 +10379,20 @@
       "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
       "faqs": [
         {
-          "question": "How long does a typical project take?",
-          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+          "question": "What education platforms do you build?",
+          "answer": "Learning portals, enrollment flows, student/parent dashboards, admin tools, and content delivery experiences for schools, colleges, and training providers."
         },
         {
-          "question": "Do you work with businesses across Canada?",
-          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+          "question": "Can you integrate with LMS or student information systems?",
+          "answer": "Yes. We connect to LMS, SIS, payment, and CRM tools so admissions, learning, and support teams work from consistent data."
         },
         {
-          "question": "What happens after launch?",
-          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+          "question": "How do you keep education products accessible?",
+          "answer": "We design for clear UX, responsive layouts, and practical accessibility patterns so learners on different devices and abilities can participate."
+        },
+        {
+          "question": "What is a realistic timeline for an education portal?",
+          "answer": "A focused enrollment or learning portal often launches in 6–12 weeks. Multi-role campuses with complex permissions are phased by user journey priority."
         }
       ]
     },
@@ -10307,16 +10541,20 @@
       "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
       "faqs": [
         {
-          "question": "How long does a typical project take?",
-          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+          "question": "Do you build listing sites and agent portals?",
+          "answer": "Yes. Property listing sites, search experiences, agent dashboards, lead capture, and CRM-connected workflows for brokerages and developers."
         },
         {
-          "question": "Do you work with businesses across Canada?",
-          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+          "question": "Can you sync listings from MLS or internal feeds?",
+          "answer": "Where APIs and licensing allow, we integrate listing feeds and keep details, photos, and status updates consistent across your site."
         },
         {
-          "question": "What happens after launch?",
-          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+          "question": "How do you improve lead conversion for real estate?",
+          "answer": "Fast search, clear property pages, mobile-first inquiry flows, and CRM routing so agents respond while interest is hot."
+        },
+        {
+          "question": "Do you support property management tools as well?",
+          "answer": "We build tenant portals, maintenance request flows, and owner reporting when property ops need digital workflows beyond marketing sites."
         }
       ]
     },
@@ -10465,16 +10703,20 @@
       "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
       "faqs": [
         {
-          "question": "How long does a typical project take?",
-          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+          "question": "What logistics software do you typically deliver?",
+          "answer": "Dispatch tools, tracking portals, warehouse/ops dashboards, route-support workflows, and customer shipment visibility experiences."
         },
         {
-          "question": "Do you work with businesses across Canada?",
-          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+          "question": "Can you integrate with carriers and ERP systems?",
+          "answer": "Yes. Carrier APIs, ERP, WMS, and notification systems are common so orders, inventory, and status updates stay aligned."
         },
         {
-          "question": "What happens after launch?",
-          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+          "question": "How do you handle real-time tracking experiences?",
+          "answer": "We design status pipelines, map/timeline views, and reliable event ingestion so customers and ops teams see trustworthy updates."
+        },
+        {
+          "question": "What timeline should we expect for a logistics MVP?",
+          "answer": "A focused tracking or dispatch MVP often ships in 8–14 weeks. Multi-warehouse platforms are delivered in phases tied to operational priority."
         }
       ]
     },
@@ -10623,16 +10865,20 @@
       "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
       "faqs": [
         {
-          "question": "How long does a typical project take?",
-          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+          "question": "Do you build streaming, content, and fan engagement platforms?",
+          "answer": "Yes. Content sites, membership experiences, media libraries, event/ticket-adjacent flows, and engagement features for entertainment brands."
         },
         {
-          "question": "Do you work with businesses across Canada?",
-          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+          "question": "How do you keep media sites fast under traffic spikes?",
+          "answer": "Caching, CDN-friendly architecture, optimized media delivery, and scalable hosting patterns so premieres and campaigns do not melt the site."
         },
         {
-          "question": "What happens after launch?",
-          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+          "question": "Can you support subscriptions and paywalled content?",
+          "answer": "We implement auth, entitlements, payments, and content gating so paying members get reliable access and clear upgrade paths."
+        },
+        {
+          "question": "Do you work with creative and marketing teams?",
+          "answer": "Yes. We hand off editable CMS structures and component systems so campaigns can ship without engineering bottlenecks for every content change."
         }
       ]
     },
@@ -10781,16 +11027,20 @@
       "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
       "faqs": [
         {
-          "question": "How long does a typical project take?",
-          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+          "question": "What manufacturing digital solutions do you deliver?",
+          "answer": "Operations dashboards, supplier/customer portals, inventory visibility tools, quality tracking workflows, and internal process automation."
         },
         {
-          "question": "Do you work with businesses across Canada?",
-          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+          "question": "Can you connect plant systems and ERP data?",
+          "answer": "Where integrations are available, we connect ERP, MES, IoT, and reporting layers so leadership sees live operational truth — not spreadsheet lag."
         },
         {
-          "question": "What happens after launch?",
-          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+          "question": "How do you reduce downtime with software?",
+          "answer": "Better alerts, maintenance workflows, and visibility into bottlenecks help teams act before small issues become line stoppages."
+        },
+        {
+          "question": "What does a manufacturing pilot usually look like?",
+          "answer": "Start with one plant or one workflow (quality, inventory, or supplier portal), prove ROI in weeks, then expand to other lines or sites."
         }
       ]
     },
@@ -10939,16 +11189,20 @@
       "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
       "faqs": [
         {
-          "question": "How long does a typical project take?",
-          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+          "question": "Do you build booking and guest experience platforms?",
+          "answer": "Yes. Booking flows, property sites, guest portals, loyalty experiences, and ops dashboards for hotels, travel brands, and hospitality groups."
         },
         {
-          "question": "Do you work with businesses across Canada?",
-          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+          "question": "Can you integrate PMS, channel managers, and payments?",
+          "answer": "We connect property management, channel, CRM, and payment systems so reservations, rates, and guest data stay consistent."
         },
         {
-          "question": "What happens after launch?",
-          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+          "question": "How do you improve direct bookings?",
+          "answer": "Faster pages, clearer rate presentation, mobile checkout, and trust signals that reduce OTA dependency without hurting occupancy."
+        },
+        {
+          "question": "What timeline fits a hospitality website rebuild?",
+          "answer": "Many property sites launch in 4–8 weeks. Multi-property platforms with deep PMS integrations are phased by brand and booking priority."
         }
       ]
     },
@@ -11097,16 +11351,20 @@
       "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
       "faqs": [
         {
-          "question": "How long does a typical project take?",
-          "answer": "Timelines depend on scope. Most websites launch in 4–8 weeks; larger apps and platforms are planned in clear milestones so you always know what's next."
+          "question": "What telecom digital products do you build?",
+          "answer": "Customer portals, plan comparison/checkout flows, support tools, outage/status experiences, and internal ops dashboards for telecom teams."
         },
         {
-          "question": "Do you work with businesses across Canada?",
-          "answer": "Yes. We serve clients nationwide from discovery through launch and ongoing support, with remote collaboration and clear communication."
+          "question": "Can you integrate BSS/OSS or CRM systems?",
+          "answer": "Yes where APIs allow. We map billing, provisioning, CRM, and support systems so customers get accurate account and service status."
         },
         {
-          "question": "What happens after launch?",
-          "answer": "We offer maintenance, monitoring, and iterative improvements so your product stays fast, secure, and aligned with your goals."
+          "question": "How do you handle high-volume customer self-serve?",
+          "answer": "Clear information architecture, robust auth, caching, and resilient APIs so account, billing, and support journeys stay fast at peak load."
+        },
+        {
+          "question": "Do you support both B2C and B2B telecom journeys?",
+          "answer": "We design separate flows for consumers and business accounts when needs differ — quotes, multi-seat management, and enterprise onboarding included."
         }
       ]
     }
@@ -11381,7 +11639,13 @@
       }
     ],
     "servicesLearnMoreLabel": "Learn More",
-    "industriesViewLabel": "View"
+    "industriesViewLabel": "View",
+    "insightsEyebrow": "Insights",
+    "insightsIntro": "Ideas, playbooks, and updates from the VynTech team.",
+    "insightsVideoUrl": "/meeting.mp4",
+    "insightsViewAllLabel": "View all insights",
+    "insightsViewAllHref": "/blog",
+    "partnersShowHeading": true
   },
   "navigation": {
     "primaryLinks": [
@@ -11690,7 +11954,8 @@
       "ctaLabel": "Boost with SEO",
       "ctaHref": "/services/seo-digital-marketing",
       "active": true,
-      "priority": 5
+      "priority": 5,
+      "eyebrow": "Search visibility"
     },
     {
       "name": "Timed CTA Popup",
@@ -11856,6 +12121,37 @@
       "heroHeading": "We Build Software That Drives Growth",
       "heroBody": "VynTech Solutions is a full-service software development company helping businesses transform ideas into powerful digital products.",
       "sections": {
+        "missionEyebrow": "Our Mission",
+        "heroCtaLabel": "Start a Project",
+        "missionCtaLabel": "Work With Us",
+        "breadcrumbLabel": "About",
+        "ctaEmailLabel": "Email Us",
+        "ctaHeading": "Ready to Build Something Extraordinary?",
+        "ctaBody": "Let's discuss your project and explore how we can help you achieve your goals.",
+        "ctaButtonLabel": "Start Your Project",
+        "ctaEmail": "info@vyntechsolutions.ca",
+        "missionStats": [
+          {
+            "title": "Web Design & Development",
+            "label": "50+ custom websites delivered for businesses like yours",
+            "value": "💻"
+          },
+          {
+            "title": "SEO & Digital Marketing",
+            "label": "300% average traffic growth, real results you can measure",
+            "value": "📈"
+          },
+          {
+            "title": "UI/UX",
+            "label": "Branding trusted by 40+ businesses",
+            "value": "🎨"
+          },
+          {
+            "title": "AI & ML",
+            "label": "Automation strategies built to save you hours, every week.",
+            "value": "🤖"
+          }
+        ],
         "missionHeading": "Empowering Businesses Through Innovative Technology",
         "missionBody": "We believe every business deserves access to world-class software. Our mission is to bridge the gap between visionary ideas and technical execution, delivering solutions that are not just functional, but transformative.",
         "missionBody2": "Whether you're a startup validating your first MVP or an enterprise modernizing legacy systems, we bring the same level of dedication, expertise, and passion to every project.",
@@ -11903,36 +12199,7 @@
             "title": "Launch & Scale",
             "description": "Launch day isn't the finish line it's the starting point. We test rigorously, deploy without disruption, and stick around to optimize, support, and scale your product long after it goes live."
           }
-        ],
-        "missionEyebrow": "Our Mission",
-        "heroCtaLabel": "Start a Project",
-        "missionCtaLabel": "Work With Us",
-        "missionStats": [
-          {
-            "title": "Web Design & Development",
-            "label": "50+ custom websites delivered for businesses like yours",
-            "value": "💻"
-          },
-          {
-            "title": "SEO & Digital Marketing",
-            "label": "300% average traffic growth, real results you can measure",
-            "value": "📈"
-          },
-          {
-            "title": "UI/UX",
-            "label": "Branding trusted by 40+ businesses",
-            "value": "🎨"
-          },
-          {
-            "title": "AI & ML",
-            "label": "Automation strategies built to save you hours, every week.",
-            "value": "🤖"
-          }
-        ],
-        "ctaHeading": "Ready to Build Something Extraordinary?",
-        "ctaBody": "Let's discuss your project and explore how we can help you achieve your goals.",
-        "ctaButtonLabel": "Start Your Project",
-        "ctaEmail": "info@vyntechsolutions.ca"
+        ]
       }
     },
     {
@@ -11987,7 +12254,13 @@
         "postCtaBody": "Let's discuss how we can help build your software solution.",
         "postCtaLabel": "Get in Touch",
         "notFoundHeading": "Article Not Found",
-        "notFoundLink": "Back to Blog"
+        "notFoundLink": "Back to Blog",
+        "featuredLabel": "Featured",
+        "allCategoryLabel": "All",
+        "emptyCategoryHeading": "No articles in this category",
+        "emptyCategoryBody": "Try selecting a different category",
+        "emptyPostsMessage": "No blog posts yet.",
+        "breadcrumbLabel": "Blog"
       }
     },
     {

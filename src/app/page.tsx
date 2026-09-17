@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { getCmsFaqs } from "@/lib/cms/content";
 import { getStructuredDataForPath, metadataForHome } from "@/lib/cms/metadata";
 import { faqSchema } from "@/lib/seo.config";
+import { loadHomeCmsBundle } from "@/lib/cms/home-bundle";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import LogoCarousel from "@/components/LogoCarousel";
@@ -18,17 +18,17 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const [structuredData, cmsFaqs] = await Promise.all([
+  const [structuredData, cms] = await Promise.all([
     getStructuredDataForPath("/"),
-    getCmsFaqs("home"),
+    loadHomeCmsBundle(),
   ]);
 
   const faqJsonLd =
-    cmsFaqs.length > 0
+    cms.faqs.length > 0
       ? {
           "@context": "https://schema.org",
           "@type": "FAQPage",
-          mainEntity: cmsFaqs.map((f) => ({
+          mainEntity: cms.faqs.map((f) => ({
             "@type": "Question",
             name: f.question,
             acceptedAnswer: {
@@ -38,6 +38,8 @@ export default async function Home() {
           })),
         }
       : faqSchema;
+
+  const hp = cms.homepage;
 
   return (
     <main>
@@ -52,14 +54,23 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <Navbar />
-      <HeroSection />
-      <LogoCarousel />
-      <OurServices />
-      <TechnologyStack />
-      <TechnologyImpact />
-      <IndustriesImpact />
-      <FeaturedInsights />
-      <FAQ />
+      <HeroSection initialHomepage={hp} />
+      <LogoCarousel initialHomepage={hp} initialLogos={cms.logos} />
+      <OurServices
+        initialHomepage={hp}
+        initialServices={cms.services}
+        initialRankingPromo={cms.googleRankingPromo}
+      />
+      <TechnologyStack initialHomepage={hp} />
+      <TechnologyImpact initialHomepage={hp} />
+      <IndustriesImpact initialHomepage={hp} initialIndustries={cms.industries} />
+      <FeaturedInsights initialHomepage={hp} initialPosts={cms.posts} />
+      <FAQ
+        faqs={cms.faqs}
+        eyebrow={hp?.faqEyebrow ? String(hp.faqEyebrow) : undefined}
+        heading={hp?.faqHeading ? String(hp.faqHeading) : undefined}
+        intro={hp?.faqIntro ? String(hp.faqIntro) : undefined}
+      />
       <Footer />
     </main>
   );

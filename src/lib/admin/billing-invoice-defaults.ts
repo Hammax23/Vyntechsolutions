@@ -1,13 +1,16 @@
 import type { BillingInvoiceData } from "./billing-invoice-types";
-import { DEFAULT_PAYMENT_TERMS, generateInvoiceNumber } from "./billing-invoice-types";
+import {
+  DEFAULT_PAYMENT_TERMS,
+  nextInvoiceNumberFromExisting,
+} from "./billing-invoice-types";
 
-export function createDefaultBillingInvoice(): BillingInvoiceData {
+export function createDefaultBillingInvoice(existingNumbers: string[] = []): BillingInvoiceData {
   const today = new Date();
   const due = new Date(today);
   due.setDate(due.getDate() + 15);
 
   return {
-    invoiceNumber: generateInvoiceNumber(),
+    invoiceNumber: nextInvoiceNumberFromExisting(existingNumbers),
     issueDate: today.toISOString().split("T")[0],
     dueDate: due.toISOString().split("T")[0],
     clientName: "",

@@ -97,14 +97,93 @@ function withoutWordDash(text: string) {
     .replace(/(\w)-(\w)/g, "$1 $2");
 }
 
-export default function OurServices() {
+type OurServicesProps = {
+  initialHomepage?: Record<string, unknown> | null;
+  initialServices?: { slug?: string; title?: string; description?: string; cardImage?: string }[] | null;
+  initialRankingPromo?: Record<string, unknown> | null;
+};
+
+function mapCmsServiceCards(
+  cmsCards: Array<{ title?: string; description?: string; href?: string; art?: string }>
+): ServiceCard[] {
+  return cmsCards.map((c, i) => {
+    const fallback = serviceCards[i % serviceCards.length];
+    const title = withoutWordDash(String(c.title || fallback.title));
+    const byTitle = serviceCards.find((sc) => sc.title.toLowerCase() === title.toLowerCase());
+    const hrefRaw = String(c.href || "").trim();
+    const href =
+      hrefRaw && hrefRaw !== "#"
+        ? hrefRaw.startsWith("/")
+          ? hrefRaw
+          : `/${hrefRaw}`
+        : byTitle?.href || fallback.href;
+    return {
+      title,
+      description: withoutWordDash(String(c.description || fallback.description)),
+      href,
+      art: String(c.art || fallback.art),
+    };
+  });
+}
+
+function mapServicesCollection(
+  list: { slug?: string; title?: string; description?: string; cardImage?: string }[]
+): ServiceCard[] {
+  const homeServices = list.filter(
+    (s) => s.slug && s.slug !== "tax-accounting" && !String(s.slug).includes("tax")
+  );
+  if (!homeServices.length) return serviceCards;
+  return homeServices.map((s, i) => {
+    const fallback =
+      serviceCards.find((c) => c.href.includes(`/${s.slug}`)) ||
+      serviceCards[i % serviceCards.length];
+    return {
+      title: withoutWordDash(String(s.title || fallback.title)),
+      description: withoutWordDash(String(s.description || fallback.description)),
+      href: `/services/${s.slug}`,
+      art: String(s.cardImage || fallback.art),
+    };
+  });
+}
+
+export default function OurServices({
+  initialHomepage = null,
+  initialServices = null,
+  initialRankingPromo = null,
+}: OurServicesProps) {
+  const seedCards = (() => {
+    const cmsCards = Array.isArray(initialHomepage?.serviceCards)
+      ? (initialHomepage!.serviceCards as Array<{
+          title?: string;
+          description?: string;
+          href?: string;
+          art?: string;
+        }>)
+      : null;
+    if (cmsCards?.length) return mapCmsServiceCards(cmsCards);
+    if (initialServices?.length) return mapServicesCollection(initialServices);
+    return serviceCards;
+  })();
+
   const [isVisible, setIsVisible] = useState(false);
   const [cardsVisible, setCardsVisible] = useState(false);
-  const [heading, setHeading] = useState("Our Services");
-  const [subheading, setSubheading] = useState("Transforming Modern Businesses");
-  const [body, setBody] = useState(DEFAULT_SERVICES_BODY);
-  const [cards, setCards] = useState<ServiceCard[]>(serviceCards);
-  const [learnMoreLabel, setLearnMoreLabel] = useState("Learn More");
+  const [heading, setHeading] = useState(
+    initialHomepage?.servicesHeading ? String(initialHomepage.servicesHeading) : "Our Services"
+  );
+  const [subheading, setSubheading] = useState(
+    initialHomepage?.servicesSubheading
+      ? String(initialHomepage.servicesSubheading)
+      : "Transforming Modern Businesses"
+  );
+  const [body, setBody] = useState(
+    initialHomepage?.servicesBody ? String(initialHomepage.servicesBody) : DEFAULT_SERVICES_BODY
+  );
+  const [cards, setCards] = useState<ServiceCard[]>(seedCards);
+  const [learnMoreLabel, setLearnMoreLabel] = useState(
+    initialHomepage?.servicesLearnMoreLabel
+      ? String(initialHomepage.servicesLearnMoreLabel)
+      : "Learn More"
+  );
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(true);
 
@@ -133,6 +212,7 @@ export default function OurServices() {
   const useFancyHeading = heading === "Our Services";
 
   useEffect(() => {
+    if (initialHomepage) return;
     fetch("/api/cms/content?type=homepage")
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
@@ -142,38 +222,16 @@ export default function OurServices() {
         if (hp.servicesSubheading) setSubheading(String(hp.servicesSubheading));
         if (hp.servicesBody) setBody(String(hp.servicesBody));
         if (hp.servicesLearnMoreLabel) setLearnMoreLabel(String(hp.servicesLearnMoreLabel));
-        // Prefer editor-controlled list from Strapi homepage
         const cmsCards = Array.isArray(hp.serviceCards)
           ? (hp.serviceCards as Array<{ title?: string; description?: string; href?: string; art?: string }>)
           : null;
         if (cmsCards && cmsCards.length) {
-          setCards(
-            cmsCards.map((c, i) => {
-              const fallback = serviceCards[i % serviceCards.length];
-              const title = withoutWordDash(String(c.title || fallback.title));
-              const byTitle = serviceCards.find(
-                (sc) => sc.title.toLowerCase() === title.toLowerCase()
-              );
-              const hrefRaw = String(c.href || "").trim();
-              const href =
-                hrefRaw && hrefRaw !== "#"
-                  ? hrefRaw.startsWith("/")
-                    ? hrefRaw
-                    : `/${hrefRaw}`
-                  : byTitle?.href || fallback.href;
-              return {
-                title,
-                description: withoutWordDash(String(c.description || fallback.description)),
-                href,
-                art: String(c.art || fallback.art),
-              };
-            })
-          );
+          setCards(mapCmsServiceCards(cmsCards));
         }
       })
       .catch(() => { });
 
-    // Fallback: build cards from Strapi service collection when homepage list is not set
+    if (initialServices?.length) return;
     fetch("/api/cms/services")
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
@@ -182,28 +240,13 @@ export default function OurServices() {
           | undefined;
         if (!list?.length) return;
         setCards((current) => {
-          // If homepage.serviceCards already set the list, keep it
           const changedFromDefault = current !== serviceCards;
           if (changedFromDefault) return current;
-          const homeServices = list.filter(
-            (s) => s.slug && s.slug !== "tax-accounting" && !String(s.slug).includes("tax")
-          );
-          if (!homeServices.length) return current;
-          return homeServices.map((s, i) => {
-            const fallback =
-              serviceCards.find((c) => c.href.includes(`/${s.slug}`)) ||
-              serviceCards[i % serviceCards.length];
-            return {
-              title: withoutWordDash(String(s.title || fallback.title)),
-              description: withoutWordDash(String(s.description || fallback.description)),
-              href: `/services/${s.slug}`,
-              art: String(s.cardImage || fallback.art),
-            };
-          });
+          return mapServicesCollection(list);
         });
       })
       .catch(() => { });
-  }, []);
+  }, [initialHomepage, initialServices]);
 
   useEffect(() => {
     const observerOptions = {
@@ -527,7 +570,7 @@ export default function OurServices() {
               </p>
             </div>
             <div className={`flex justify-end items-start transition-all duration-700 delay-150 ${isVisible ? "opacity-100" : "opacity-0"}`}>
-              <GoogleRankingPromo />
+              <GoogleRankingPromo initialPromo={initialRankingPromo} />
             </div>
           </div>
 
@@ -557,7 +600,7 @@ export default function OurServices() {
                 </p>
               </div>
               <div className={`flex justify-end ${isVisible ? "opacity-100" : "opacity-0"}`}>
-                <GoogleRankingPromo />
+                <GoogleRankingPromo initialPromo={initialRankingPromo} />
               </div>
             </div>
           </div>
@@ -584,7 +627,7 @@ export default function OurServices() {
               {body}
             </p>
             <div className={`flex justify-center mt-5 ${isVisible ? "opacity-100" : "opacity-0"}`}>
-              <GoogleRankingPromo compact />
+              <GoogleRankingPromo compact initialPromo={initialRankingPromo} />
             </div>
           </div>
         </div>

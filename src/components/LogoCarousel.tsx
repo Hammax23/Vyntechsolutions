@@ -119,10 +119,60 @@ function MarqueeRow({
   );
 }
 
-export default function LogoCarousel() {
-  const [logos, setLogos] = useState<ClientLogo[]>(DEFAULT_LOGOS);
+export default function LogoCarousel({
+  initialHomepage = null,
+  initialLogos = null,
+}: {
+  initialHomepage?: Record<string, unknown> | null;
+  initialLogos?: Record<string, unknown>[] | null;
+}) {
+  const seedLogos = (() => {
+    if (!initialLogos?.length) return DEFAULT_LOGOS;
+    return initialLogos.map((item) => {
+      const name = String(item.name || "Client");
+      const fromMedia =
+        item.logo && typeof item.logo === "object" && (item.logo as { url?: string }).url
+          ? String((item.logo as { url?: string }).url)
+          : undefined;
+      return {
+        name,
+        logoUrl: resolveLogoUrl(name, item.logoUrl ? String(item.logoUrl) : fromMedia),
+      };
+    });
+  })();
+
+  const [logos, setLogos] = useState<ClientLogo[]>(seedLogos);
+  const [heading, setHeading] = useState(
+    initialHomepage?.partnersHeading
+      ? String(initialHomepage.partnersHeading)
+      : "Technology Partners"
+  );
+  const [showHeading, setShowHeading] = useState(
+    typeof initialHomepage?.partnersShowHeading === "boolean"
+      ? Boolean(initialHomepage.partnersShowHeading)
+      : true
+  );
 
   useEffect(() => {
+    if (initialHomepage) {
+      // logos already seeded when initialLogos provided
+      if (initialLogos?.length) return;
+    }
+    if (!initialHomepage) {
+      fetch("/api/cms/content?type=homepage")
+        .then((r) => (r.ok ? r.json() : null))
+        .then((data) => {
+          const hp = data?.homepage as Record<string, unknown> | undefined;
+          if (!hp) return;
+          if (hp.partnersHeading) setHeading(String(hp.partnersHeading));
+          if (typeof hp.partnersShowHeading === "boolean") {
+            setShowHeading(hp.partnersShowHeading);
+          }
+        })
+        .catch(() => {});
+    }
+
+    if (initialLogos?.length) return;
     fetch("/api/cms/content?type=client-logos")
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
@@ -144,10 +194,17 @@ export default function LogoCarousel() {
         setLogos(fromCms);
       })
       .catch(() => {});
-  }, []);
+  }, [initialHomepage, initialLogos]);
 
   return (
     <section className="w-full bg-white py-7 md:py-9 overflow-hidden border-y border-slate-200">
+      {showHeading && heading ? (
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 mb-5 md:mb-6">
+          <p className="text-center text-sm font-semibold tracking-wide text-slate-500 uppercase">
+            {heading}
+          </p>
+        </div>
+      ) : null}
       <div className="relative">
         <div className="absolute left-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-24 md:w-40 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />

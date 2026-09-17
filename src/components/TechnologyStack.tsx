@@ -184,16 +184,44 @@ function resolveTool(name: string): Tool {
   return logo ? { name, logo } : { name };
 }
 
-export default function TechnologyStack() {
-  const [stackTabs, setStackTabs] = useState(tabs);
-  const [active, setActive] = useState(tabs[0].id);
-  const [eyebrow, setEyebrow] = useState("Tech stack");
-  const [heading, setHeading] = useState("Technology stack");
+export default function TechnologyStack({
+  initialHomepage = null,
+}: {
+  initialHomepage?: Record<string, unknown> | null;
+}) {
+  const seedTabs = (() => {
+    const cmsStack = initialHomepage?.techStack as
+      | { id?: string; label?: string; tools?: string[] }[]
+      | undefined;
+    if (!Array.isArray(cmsStack) || !cmsStack.length) return tabs;
+    const next = cmsStack
+      .filter((t) => t.label && Array.isArray(t.tools) && t.tools.length)
+      .map((t, i) => ({
+        id: String(t.id || `tab-${i}`),
+        label: String(t.label),
+        tools: t.tools!.map((name) => resolveTool(String(name))),
+      }));
+    return next.length ? next : tabs;
+  })();
+
+  const [stackTabs, setStackTabs] = useState(seedTabs);
+  const [active, setActive] = useState(seedTabs[0].id);
+  const [eyebrow, setEyebrow] = useState(
+    initialHomepage?.techStackEyebrow ? String(initialHomepage.techStackEyebrow) : "Tech stack"
+  );
+  const [heading, setHeading] = useState(
+    initialHomepage?.techStackHeading
+      ? String(initialHomepage.techStackHeading)
+      : "Technology stack"
+  );
   const [body, setBody] = useState(
-    "React, Next.js, Node.js, and cloud platforms we use to build websites, mobile apps, and custom software for every business."
+    initialHomepage?.techStackBody
+      ? String(initialHomepage.techStackBody)
+      : "React, Next.js, Node.js, and cloud platforms we use to build websites, mobile apps, and custom software for every business."
   );
 
   useEffect(() => {
+    if (initialHomepage) return;
     let cancelled = false;
     fetch("/api/cms/content?type=homepage")
       .then((r) => (r.ok ? r.json() : null))
@@ -225,7 +253,7 @@ export default function TechnologyStack() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [initialHomepage]);
 
   const current = useMemo(
     () => stackTabs.find((c) => c.id === active) ?? stackTabs[0],

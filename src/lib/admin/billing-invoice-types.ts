@@ -78,10 +78,24 @@ export function formatCad(amount: number): string {
   return `$${amount.toLocaleString("en-CA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
-export function generateInvoiceNumber(): string {
+/** Next INV-{year}-{n} from existing numbers (same calendar year, sequential). */
+export function nextInvoiceNumberFromExisting(existing: string[]): string {
   const year = new Date().getFullYear();
-  const suffix = Math.floor(1000 + Math.random() * 9000);
-  return `INV-${year}-${suffix}`;
+  let max = 0;
+  for (const raw of existing) {
+    const m = String(raw || "")
+      .trim()
+      .match(/^INV-(\d{4})-(\d+)$/i);
+    if (!m) continue;
+    if (Number(m[1]) !== year) continue;
+    max = Math.max(max, Number(m[2]));
+  }
+  return `INV-${year}-${max + 1}`;
+}
+
+/** @deprecated prefer nextInvoiceNumberFromExisting with DB/list numbers */
+export function generateInvoiceNumber(): string {
+  return nextInvoiceNumberFromExisting([]);
 }
 
 function round2(n: number) {

@@ -11,7 +11,7 @@ import {
   BILLING_STATUSES,
   calculateBillingTotals,
   formatCad,
-  generateInvoiceNumber,
+  nextInvoiceNumberFromExisting,
   lineAmount,
 } from "@/lib/admin/billing-invoice-types";
 import { createDefaultBillingInvoice } from "@/lib/admin/billing-invoice-defaults";
@@ -34,6 +34,11 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
   const [saving, setSaving] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | BillingInvoiceStatus>("all");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
 
   const totals = useMemo(() => calculateBillingTotals(form), [form]);
   const verifyUrl = useMemo(() => {
@@ -42,13 +47,57 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
     return getDocumentVerifyUrl(form.invoiceNumber, origin);
   }, [form.invoiceNumber]);
 
+  const filteredInvoices = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    return invoices.filter((inv) => {
+      if (statusFilter !== "all" && inv.status !== statusFilter) return false;
+      if (dateFrom && inv.issueDate && inv.issueDate < dateFrom) return false;
+      if (dateTo && inv.issueDate && inv.issueDate > dateTo) return false;
+      if (!q) return true;
+      const haystack = [
+        inv.invoiceNumber,
+        inv.clientName,
+        inv.companyName,
+        inv.clientEmail,
+        inv.clientPhone,
+        inv.projectTitle,
+        inv.status,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [invoices, searchQuery, statusFilter, dateFrom, dateTo]);
+
+  const hasActiveFilters =
+    Boolean(searchQuery.trim()) ||
+    statusFilter !== "all" ||
+    Boolean(dateFrom) ||
+    Boolean(dateTo);
+
+  const clearFilters = () => {
+    setSearchQuery("");
+    setStatusFilter("all");
+    setDateFrom("");
+    setDateTo("");
+  };
+
   const load = useCallback(async () => {
     setLoading(true);
     try {
       const res = await fetch("/api/admin/billing-invoices");
       if (res.ok) {
         const data = await res.json();
-        setInvoices(data.invoices || []);
+        const list = (data.invoices || []) as BillingInvoiceData[];
+        setInvoices(list);
+        setForm((prev) => {
+          if (prev.id) return prev;
+          return {
+            ...prev,
+            invoiceNumber: nextInvoiceNumberFromExisting(list.map((i) => i.invoiceNumber)),
+          };
+        });
       }
     } catch {
       setMessage("Failed to load invoices");
@@ -86,7 +135,9 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
   };
 
   const reset = () => {
-    setForm(createDefaultBillingInvoice());
+    setForm(
+      createDefaultBillingInvoice(invoices.map((i) => i.invoiceNumber))
+    );
     setMessage("");
   };
 
@@ -207,13 +258,94 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
               + New
             </button>
           </div>
+
+          <div className="p-3 border-b border-white/10 space-y-2">
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search #, client, company…"
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-xs placeholder-white/30 outline-none focus:border-[#00B4FF]/50"
+            />
+            <div className="flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={() => setShowFilters((v) => !v)}
+                className="text-[11px] text-[#00B4FF] hover:text-[#00E1FF]"
+              >
+                {showFilters ? "Hide filters" : "Advanced filters"}
+              </button>
+              {hasActiveFilters && (
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="text-[11px] text-white/50 hover:text-white/80"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+            {showFilters && (
+              <div className="space-y-2 pt-1">
+                <div>
+                  <label className="block text-white/40 text-[10px] mb-1">Status</label>
+                  <select
+                    value={statusFilter}
+                    onChange={(e) =>
+                      setStatusFilter(e.target.value as "all" | BillingInvoiceStatus)
+                    }
+                    className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-white text-xs outline-none focus:border-[#00B4FF]/50"
+                  >
+                    <option value="all" className="bg-[#0a0a1a]">
+                      All statuses
+                    </option>
+                    {BILLING_STATUSES.map((s) => (
+                      <option key={s.value} value={s.value} className="bg-[#0a0a1a]">
+                        {s.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-white/40 text-[10px] mb-1">From</label>
+                    <input
+                      type="date"
+                      value={dateFrom}
+                      onChange={(e) => setDateFrom(e.target.value)}
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-white text-xs outline-none focus:border-[#00B4FF]/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-white/40 text-[10px] mb-1">To</label>
+                    <input
+                      type="date"
+                      value={dateTo}
+                      onChange={(e) => setDateTo(e.target.value)}
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-white text-xs outline-none focus:border-[#00B4FF]/50"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+            <p className="text-white/35 text-[10px]">
+              {loading
+                ? "…"
+                : `${filteredInvoices.length} of ${invoices.length} invoice${
+                    invoices.length === 1 ? "" : "s"
+                  }`}
+            </p>
+          </div>
+
           <div className="max-h-[420px] overflow-y-auto">
             {loading ? (
               <p className="p-3 text-white/40 text-sm">Loading...</p>
             ) : invoices.length === 0 ? (
               <p className="p-3 text-white/40 text-sm">No client invoices yet</p>
+            ) : filteredInvoices.length === 0 ? (
+              <p className="p-3 text-white/40 text-sm">No invoices match your search</p>
             ) : (
-              invoices.map((inv) => (
+              filteredInvoices.map((inv) => (
                 <button
                   key={inv.id}
                   onClick={() => select(inv)}
@@ -232,6 +364,9 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
                   </div>
                   <p className="text-white text-sm truncate">{inv.clientName}</p>
                   <p className="text-white/40 text-xs">{inv.invoiceNumber}</p>
+                  {inv.companyName ? (
+                    <p className="text-white/30 text-[11px] truncate">{inv.companyName}</p>
+                  ) : null}
                 </button>
               ))
             )}
@@ -301,9 +436,14 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
             </button>
           )}
           <button
-            onClick={() => set("invoiceNumber", generateInvoiceNumber())}
+            onClick={() =>
+              set(
+                "invoiceNumber",
+                nextInvoiceNumberFromExisting(invoices.map((i) => i.invoiceNumber))
+              )
+            }
             className="px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white/60 text-xs rounded-lg ml-auto"
-            title="Generate new invoice number"
+            title="Next sequential invoice number"
           >
             New #
           </button>

@@ -58,11 +58,35 @@ const getIsMobile = () => {
   return window.innerWidth < 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 };
 
-export default function HeroSection() {
-  const [slides, setSlides] = useState<HeroSlide[]>(DEFAULT_SLIDES);
+export default function HeroSection({
+  initialHomepage = null,
+}: {
+  initialHomepage?: Record<string, unknown> | null;
+}) {
+  const seedSlides = (() => {
+    const cmsSlides = initialHomepage?.heroSlides as
+      | { heading?: string; subtext?: string; ctaLabel?: string; ctaHref?: string }[]
+      | undefined;
+    if (!cmsSlides?.length) return DEFAULT_SLIDES;
+    return cmsSlides.map((s, i) => ({
+      heading: String(s.heading || DEFAULT_SLIDES[i % DEFAULT_SLIDES.length].heading),
+      subtext: String(s.subtext || DEFAULT_SLIDES[i % DEFAULT_SLIDES.length].subtext),
+      ctaLabel: s.ctaLabel ? String(s.ctaLabel) : undefined,
+      ctaHref: s.ctaHref ? String(s.ctaHref) : undefined,
+    }));
+  })();
+  const seedWords =
+    Array.isArray(initialHomepage?.heroWords) && (initialHomepage!.heroWords as unknown[]).length
+      ? (initialHomepage!.heroWords as unknown[]).map((w) => String(w))
+      : DEFAULT_WORDS;
+  const seedCta = initialHomepage?.heroCtaLabel
+    ? String(initialHomepage.heroCtaLabel)
+    : DEFAULT_CTA;
+
+  const [slides, setSlides] = useState<HeroSlide[]>(seedSlides);
   const [heroMedia, setHeroMedia] = useState<HeroMediaItem[]>(DEFAULT_HERO_MEDIA);
-  const [heroWords, setHeroWords] = useState<string[]>(DEFAULT_WORDS);
-  const [ctaLabel, setCtaLabel] = useState(DEFAULT_CTA);
+  const [heroWords, setHeroWords] = useState<string[]>(seedWords);
+  const [ctaLabel, setCtaLabel] = useState(seedCta);
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
@@ -74,6 +98,7 @@ export default function HeroSection() {
   const slidesLengthRef = useRef(slides.length);
 
   useEffect(() => {
+    if (initialHomepage) return;
     let cancelled = false;
     fetch("/api/cms/content?type=homepage")
       .then((r) => (r.ok ? r.json() : null))
@@ -90,7 +115,6 @@ export default function HeroSection() {
             }[]
           | undefined;
         if (cmsSlides?.length) {
-          // Text/CTA from CMS only — hero covers stay static (DEFAULT_HERO_MEDIA).
           setSlides(
             cmsSlides.map((s, i) => ({
               heading: String(s.heading || DEFAULT_SLIDES[i % DEFAULT_SLIDES.length].heading),
@@ -109,7 +133,7 @@ export default function HeroSection() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [initialHomepage]);
 
   useEffect(() => {
     slidesLengthRef.current = slides.length;

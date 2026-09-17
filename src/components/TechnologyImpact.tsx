@@ -69,19 +69,50 @@ function StatCell({
   );
 }
 
-export default function TechnologyImpact() {
+export default function TechnologyImpact({
+  initialHomepage = null,
+}: {
+  initialHomepage?: Record<string, unknown> | null;
+}) {
+  const seedStats = (() => {
+    const cmsStats = initialHomepage?.impactStats as { value?: string; label?: string }[] | undefined;
+    if (!cmsStats?.length) return DEFAULT_STATS;
+    return cmsStats.map((s, i) => {
+      const parsed = parseStatValue(String(s.value || "0"));
+      return {
+        id: i + 1,
+        number: parsed.number,
+        suffix: parsed.suffix,
+        label: String(s.label || DEFAULT_STATS[i % DEFAULT_STATS.length].label),
+      };
+    });
+  })();
+
   const [isVisible, setIsVisible] = useState(false);
-  const [eyebrow, setEyebrow] = useState("Proven delivery");
-  const [heading, setHeading] = useState("Turning technology into\nreal business impact");
-  const [body, setBody] = useState(
-    "We don't just build software we build outcomes. Every project is guided by one question: Does this genuinely move your business forward? That focus is what turns technology into growth, and growth into lasting success."
+  const [eyebrow, setEyebrow] = useState(
+    initialHomepage?.impactEyebrow ? String(initialHomepage.impactEyebrow) : "Proven delivery"
   );
-  const [ctaLabel, setCtaLabel] = useState("About VynTech");
-  const [ctaHref, setCtaHref] = useState("/about");
-  const [stats, setStats] = useState<ImpactStat[]>(DEFAULT_STATS);
+  const [heading, setHeading] = useState(
+    initialHomepage?.impactHeading
+      ? String(initialHomepage.impactHeading)
+      : "Turning technology into\nreal business impact"
+  );
+  const [body, setBody] = useState(
+    initialHomepage?.impactBody
+      ? String(initialHomepage.impactBody)
+      : "We don't just build software we build outcomes. Every project is guided by one question: Does this genuinely move your business forward? That focus is what turns technology into growth, and growth into lasting success."
+  );
+  const [ctaLabel, setCtaLabel] = useState(
+    initialHomepage?.impactCtaLabel ? String(initialHomepage.impactCtaLabel) : "About VynTech"
+  );
+  const [ctaHref, setCtaHref] = useState(
+    initialHomepage?.impactCtaHref ? String(initialHomepage.impactCtaHref) : "/about"
+  );
+  const [stats, setStats] = useState<ImpactStat[]>(seedStats);
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    if (initialHomepage) return;
     let cancelled = false;
     fetch("/api/cms/content?type=homepage")
       .then((r) => (r.ok ? r.json() : null))
@@ -113,7 +144,7 @@ export default function TechnologyImpact() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [initialHomepage]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(

@@ -1,3 +1,52 @@
+export type BlogListingChrome = {
+  heroHeading: string;
+  heroBody: string;
+  ctaHeading: string;
+  ctaBody: string;
+  ctaLabel: string;
+  featuredLabel: string;
+  allCategoryLabel: string;
+  emptyCategoryHeading: string;
+  emptyCategoryBody: string;
+  emptyPostsMessage: string;
+  breadcrumbLabel: string;
+};
+
+export type BlogDetailChrome = {
+  relatedHeading: string;
+  ctaHeading: string;
+  ctaBody: string;
+  ctaLabel: string;
+  notFoundHeading: string;
+  notFoundLink: string;
+  breadcrumbLabel: string;
+};
+
+export const blogListingDefaults: BlogListingChrome = {
+  heroHeading: "Blog",
+  heroBody:
+    "Practical insights on software development, technology decisions, and building digital products.",
+  ctaHeading: "Have a Project in Mind?",
+  ctaBody: "Let's discuss how we can help build your software solution.",
+  ctaLabel: "Get in Touch",
+  featuredLabel: "Featured",
+  allCategoryLabel: "All",
+  emptyCategoryHeading: "No articles in this category",
+  emptyCategoryBody: "Try selecting a different category",
+  emptyPostsMessage: "No blog posts yet.",
+  breadcrumbLabel: "Blog",
+};
+
+export const blogDetailDefaults: BlogDetailChrome = {
+  relatedHeading: "Related Articles",
+  ctaHeading: "Need Help With Your Project?",
+  ctaBody: "Let's discuss how we can help build your software solution.",
+  ctaLabel: "Get in Touch",
+  notFoundHeading: "Article Not Found",
+  notFoundLink: "Back to Blog",
+  breadcrumbLabel: "Blog",
+};
+
 // Blog Data with SEO Optimized Content
 export interface BlogPost {
   slug: string;

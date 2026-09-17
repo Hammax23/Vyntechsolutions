@@ -1,0 +1,14 @@
+---
+description: Each industry page must keep its own unique FAQs in Strapi
+alwaysApply: true
+---
+
+# Industry FAQs: unique per industry
+
+Every industry (`healthcare`, `finance-banking`, etc.) has **its own** FAQs in Strapi (`industry.faqs`).
+
+1. **Never** reuse one shared/generic FAQ list across all industries.
+2. Edit/seed FAQs **per slug** (see `cms/scripts/patch-industry-faqs.mjs`).
+3. Homepage/global FAQ collection is separate — do not replace industry-page FAQs with it.
+4. Industry listing + detail pages load CMS via SSR bundles (`loadIndustryDetailBundle` / `loadIndustriesListingBundle`) — no client fetch flash of local defaults.
+5. SEO can edit each industry’s FAQs in Strapi Admin → **02. Industries** → that industry → FAQs.

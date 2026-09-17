@@ -106,6 +106,9 @@ async function main() {
         "faqHeading",
         "faqIntro",
         "faqs",
+        "technologies",
+        "technologiesHeading",
+        "highlights",
       ];
       const patch = mergeMissing(existing, item);
       for (const key of FORCE_INDUSTRY) {
@@ -142,6 +145,10 @@ async function main() {
     cityFaqs: true,
     techStackBlock: { populate: { categories: { populate: ["items"] } } },
     canadaCitiesBlock: true,
+    customSoftwareServicesBlock: { populate: ["items"] },
+    coreCapabilitiesBlock: { populate: ["items"] },
+    ecommerceServicesBlock: { populate: ["items"] },
+    mobileTabsBlock: { populate: { tabs: { populate: ["points"] } } },
   };
 
   for (const item of seed.services || []) {
@@ -162,7 +169,7 @@ async function main() {
         continue;
       }
       const patch = mergeMissing(existing, item);
-      for (const key of ["faqEyebrow", "faqHeading", "faqIntro"]) {
+      for (const key of ["faqEyebrow", "faqHeading", "faqIntro", "overviewHeading", "faqs"]) {
         if (item[key] !== undefined) patch[key] = item[key];
       }
       if (item.slug === "ai-ml-solutions") {
@@ -196,6 +203,12 @@ async function main() {
       if (existing.techStackBlock?.categories?.length) delete patch.techStackBlock;
       if (existing.seoPackagesBlock?.packages?.length) delete patch.seoPackagesBlock;
       if (existing.mobileTabsBlock?.tabs?.length) delete patch.mobileTabsBlock;
+      if (existing.customSoftwareServicesBlock?.items?.length) {
+        delete patch.customSoftwareServicesBlock;
+      }
+      if (existing.coreCapabilitiesBlock?.items?.length) {
+        delete patch.coreCapabilitiesBlock;
+      }
       if (existing.pageSections && Object.keys(existing.pageSections).length) {
         delete patch.pageSections;
       }
@@ -251,6 +264,167 @@ async function main() {
       }
     } catch (err) {
       console.warn("FAILED static-page industries:", err?.message || err);
+    }
+  }
+
+  const blogStatic = (seed.staticPages || []).find((p) => p.slug === "blog");
+  if (blogStatic) {
+    try {
+      const existing = await strapi.documents("api::static-page.static-page").findFirst({
+        filters: { slug: "blog" },
+      });
+      if (existing) {
+        const patch = mergeMissing(existing, blogStatic);
+        if (blogStatic.sections) patch.sections = blogStatic.sections;
+        if (blogStatic.heroHeading) patch.heroHeading = blogStatic.heroHeading;
+        if (blogStatic.heroBody) patch.heroBody = blogStatic.heroBody;
+        delete patch.heroimage;
+        if (Object.keys(patch).length) {
+          await strapi.documents("api::static-page.static-page").update({
+            documentId: existing.documentId,
+            data: patch,
+            status: "published",
+          });
+          console.log("updated static-page blog:", Object.keys(patch).join(", "));
+          updated++;
+        }
+      } else {
+        await strapi.documents("api::static-page.static-page").create({
+          data: blogStatic,
+          status: "published",
+        });
+        console.log("created static-page blog");
+        updated++;
+      }
+    } catch (err) {
+      console.warn("FAILED static-page blog:", err?.message || err);
+    }
+  }
+
+  const aboutStatic = (seed.staticPages || []).find((p) => p.slug === "about");
+  if (aboutStatic) {
+    try {
+      const existing = await strapi.documents("api::static-page.static-page").findFirst({
+        filters: { slug: "about" },
+      });
+      if (existing) {
+        const patch = mergeMissing(existing, aboutStatic);
+        if (aboutStatic.sections) patch.sections = aboutStatic.sections;
+        if (aboutStatic.heroHeading) patch.heroHeading = aboutStatic.heroHeading;
+        if (aboutStatic.heroBody) patch.heroBody = aboutStatic.heroBody;
+        delete patch.heroimage;
+        if (Object.keys(patch).length) {
+          await strapi.documents("api::static-page.static-page").update({
+            documentId: existing.documentId,
+            data: patch,
+            status: "published",
+          });
+          console.log("updated static-page about:", Object.keys(patch).join(", "));
+          updated++;
+        }
+      } else {
+        await strapi.documents("api::static-page.static-page").create({
+          data: aboutStatic,
+          status: "published",
+        });
+        console.log("created static-page about");
+        updated++;
+      }
+    } catch (err) {
+      console.warn("FAILED static-page about:", err?.message || err);
+    }
+  }
+
+  // Homepage: fill empty + force new insight/partner chrome fields
+  if (seed.homepage) {
+    try {
+      const existing = await strapi.documents("api::homepage.homepage").findFirst({
+        populate: {
+          heroSlides: true,
+          impactStats: true,
+          serviceCards: true,
+          seo: true,
+        },
+      });
+      const FORCE_HP = [
+        "insightsEyebrow",
+        "insightsIntro",
+        "insightsVideoUrl",
+        "insightsViewAllLabel",
+        "insightsViewAllHref",
+        "partnersShowHeading",
+        "partnersHeading",
+      ];
+      if (!existing) {
+        await strapi.documents("api::homepage.homepage").create({
+          data: seed.homepage,
+          status: "published",
+        });
+        console.log("created homepage");
+        updated++;
+      } else {
+        const patch = mergeMissing(existing, seed.homepage);
+        for (const key of FORCE_HP) {
+          if (seed.homepage[key] !== undefined) patch[key] = seed.homepage[key];
+        }
+        // Prefer structured service cards from seed when empty
+        if (
+          (!existing.serviceCards || existing.serviceCards.length === 0) &&
+          Array.isArray(seed.homepage.serviceCards)
+        ) {
+          patch.serviceCards = seed.homepage.serviceCards;
+        }
+        delete patch.hero;
+        if (Object.keys(patch).length) {
+          await strapi.documents("api::homepage.homepage").update({
+            documentId: existing.documentId,
+            data: patch,
+            status: "published",
+          });
+          console.log("updated homepage:", Object.keys(patch).join(", "));
+          updated++;
+        } else {
+          skipped++;
+        }
+      }
+    } catch (err) {
+      console.warn("FAILED homepage:", err?.message || err);
+    }
+  }
+
+  // Promos: fill empty fields (incl. google-ranking eyebrow)
+  for (const item of seed.promos || []) {
+    const name = item.name;
+    if (!name) continue;
+    try {
+      const existing = await strapi.documents("api::promo.promo").findFirst({
+        filters: { name },
+      });
+      if (!existing) {
+        await strapi.documents("api::promo.promo").create({
+          data: item,
+          status: "published",
+        });
+        console.log(`created promo ${name}`);
+        updated++;
+        continue;
+      }
+      const patch = mergeMissing(existing, item);
+      if (item.eyebrow !== undefined && !existing.eyebrow) patch.eyebrow = item.eyebrow;
+      if (item.ctaHref !== undefined && !existing.ctaHref) patch.ctaHref = item.ctaHref;
+      if (!Object.keys(patch).length) {
+        skipped++;
+        continue;
+      }
+      await strapi.documents("api::promo.promo").update({
+        documentId: existing.documentId,
+        data: patch,
+        status: "published",
+      });
+      console.log(`updated promo ${name}:`, Object.keys(patch).join(", "));
+      updated++;
+    } catch (err) {
+      console.warn(`FAILED promo ${name}:`, err?.message || err);
     }
   }
 

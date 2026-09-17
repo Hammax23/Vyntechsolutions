@@ -37,6 +37,9 @@
     "ctaHref": {
       "type": "string"
     },
+    "eyebrow": {
+      "type": "string"
+    },
     "active": {
       "type": "boolean",
       "default": true

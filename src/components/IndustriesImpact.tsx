@@ -160,15 +160,58 @@ function shortestDelta(from: number, to: number, count: number) {
   return d;
 }
 
-export default function IndustriesImpact() {
+export default function IndustriesImpact({
+  initialHomepage = null,
+  initialIndustries = null,
+}: {
+  initialHomepage?: Record<string, unknown> | null;
+  initialIndustries?: Record<string, unknown>[] | null;
+}) {
+  const seedItems = (() => {
+    if (!initialIndustries?.length) return industries;
+    const bySlug = new Map(industries.map((i) => [i.slug, i]));
+    const mapped = initialIndustries
+      .filter((i) => i.slug)
+      .map((i, idx) => {
+        const local = bySlug.get(String(i.slug)) || industries[idx % industries.length];
+        const name = String(i.title || i.name || local.name);
+        const line = String(
+          i.subtitle || i.shortDescription || i.description || local.line
+        );
+        const image = String(i.cardImage || local.image);
+        return {
+          ...local,
+          id: idx + 1,
+          slug: String(i.slug),
+          name,
+          line,
+          image,
+          href: `/industries/${i.slug}`,
+        };
+      });
+    return mapped.length ? mapped : industries;
+  })();
+
   const [isVisible, setIsVisible] = useState(false);
   const [position, setPosition] = useState(0);
   const [paused, setPaused] = useState(false);
   const [dragging, setDragging] = useState(false);
-  const [eyebrow, setEyebrow] = useState("Industries we serve");
-  const [heading, setHeading] = useState("Transforming Industries, Empowering Growth");
-  const [viewLabel, setViewLabel] = useState("View");
-  const [items, setItems] = useState<IndustryItem[]>(industries);
+  const [eyebrow, setEyebrow] = useState(
+    initialHomepage?.industriesSubheading
+      ? String(initialHomepage.industriesSubheading)
+      : "Industries we serve"
+  );
+  const [heading, setHeading] = useState(
+    initialHomepage?.industriesHeading
+      ? String(initialHomepage.industriesHeading)
+      : "Transforming Industries, Empowering Growth"
+  );
+  const [viewLabel, setViewLabel] = useState(
+    initialHomepage?.industriesViewLabel
+      ? String(initialHomepage.industriesViewLabel)
+      : "View"
+  );
+  const [items, setItems] = useState<IndustryItem[]>(seedItems);
   const sectionRef = useRef<HTMLElement>(null);
   const reelRef = useRef<HTMLDivElement>(null);
   const positionRef = useRef(0);
@@ -197,10 +240,15 @@ export default function IndustriesImpact() {
   };
 
   useEffect(() => {
+    if (initialHomepage && initialIndustries) return;
     let cancelled = false;
     Promise.all([
-      fetch("/api/cms/content?type=homepage").then((r) => (r.ok ? r.json() : null)),
-      fetch("/api/cms/industries").then((r) => (r.ok ? r.json() : null)),
+      initialHomepage
+        ? Promise.resolve({ homepage: initialHomepage })
+        : fetch("/api/cms/content?type=homepage").then((r) => (r.ok ? r.json() : null)),
+      initialIndustries
+        ? Promise.resolve({ industries: initialIndustries })
+        : fetch("/api/cms/industries").then((r) => (r.ok ? r.json() : null)),
     ])
       .then(([homeData, industriesData]) => {
         if (cancelled) return;
@@ -245,7 +293,7 @@ export default function IndustriesImpact() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [initialHomepage, initialIndustries]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(

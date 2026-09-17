@@ -1,8 +1,8 @@
 {
   "collectionName": "components_sections_devops_grid_blocks",
   "info": {
-    "displayName": "DevOps Grid Block",
-    "description": "Comprehensive DevOps services grid used on the DevOps & CI/CD service page",
+    "displayName": "DevOps Grid (DevOps service only)",
+    "description": "ONLY fill on service slug devops-cicd. Leave empty on all other services.",
     "icon": "gear"
   },
   "options": {},

@@ -32,7 +32,9 @@
       "type": "text"
     },
     "serviceCards": {
-      "type": "json"
+      "type": "component",
+      "repeatable": true,
+      "component": "home.service-card"
     },
     "servicesLearnMoreLabel": {
       "type": "string",
@@ -58,8 +60,26 @@
     "impactCtaHref": {
       "type": "string"
     },
+    "insightsEyebrow": {
+      "type": "string"
+    },
     "insightsHeading": {
       "type": "string"
+    },
+    "insightsIntro": {
+      "type": "text"
+    },
+    "insightsVideoUrl": {
+      "type": "string",
+      "default": "/meeting.mp4"
+    },
+    "insightsViewAllLabel": {
+      "type": "string",
+      "default": "View all insights"
+    },
+    "insightsViewAllHref": {
+      "type": "string",
+      "default": "/blog"
     },
     "industriesHeading": {
       "type": "string"
@@ -74,6 +94,10 @@
     "partnersHeading": {
       "type": "string",
       "default": "Technology Partners"
+    },
+    "partnersShowHeading": {
+      "type": "boolean",
+      "default": true
     },
     "faqEyebrow": {
       "type": "string"

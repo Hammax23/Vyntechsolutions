@@ -15,17 +15,34 @@ const CHART_HEIGHTS = [32, 48, 58, 70, 82, 96];
 
 interface GoogleRankingPromoProps {
   compact?: boolean;
+  initialPromo?: Record<string, unknown> | null;
 }
 
-export default function GoogleRankingPromo({ compact = false }: GoogleRankingPromoProps) {
+export default function GoogleRankingPromo({
+  compact = false,
+  initialPromo = null,
+}: GoogleRankingPromoProps) {
   const [stepIndex, setStepIndex] = useState(0);
   const [chartProgress, setChartProgress] = useState(0);
   const [mounted, setMounted] = useState(false);
-  const [title, setTitle] = useState("Get your Website");
-  const [subtitle, setSubtitle] = useState("Google RANKING");
-  const [cta, setCta] = useState("Boost with SEO");
+  const [title, setTitle] = useState(
+    initialPromo?.heading ? String(initialPromo.heading) : "Get your Website"
+  );
+  const [subtitle, setSubtitle] = useState(
+    initialPromo?.body ? String(initialPromo.body) : "Google RANKING"
+  );
+  const [cta, setCta] = useState(
+    initialPromo?.ctaLabel ? String(initialPromo.ctaLabel) : "Boost with SEO"
+  );
+  const [ctaHref, setCtaHref] = useState(
+    initialPromo?.ctaHref ? String(initialPromo.ctaHref) : "/services/seo-digital-marketing"
+  );
+  const [eyebrow, setEyebrow] = useState(
+    initialPromo?.eyebrow ? String(initialPromo.eyebrow) : "Search visibility"
+  );
 
   useEffect(() => {
+    if (initialPromo) return;
     fetch("/api/cms/content?type=promos&slot=google-ranking")
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
@@ -33,9 +50,11 @@ export default function GoogleRankingPromo({ compact = false }: GoogleRankingPro
         if (promo?.heading) setTitle(String(promo.heading));
         if (promo?.body) setSubtitle(String(promo.body));
         if (promo?.ctaLabel) setCta(String(promo.ctaLabel));
+        if (promo?.ctaHref) setCtaHref(String(promo.ctaHref));
+        if (promo?.eyebrow) setEyebrow(String(promo.eyebrow));
       })
       .catch(() => {});
-  }, []);
+  }, [initialPromo]);
 
   useEffect(() => {
     setMounted(true);
@@ -67,9 +86,9 @@ export default function GoogleRankingPromo({ compact = false }: GoogleRankingPro
 
   return (
     <Link
-      href="/services/seo-digital-marketing"
+      href={ctaHref || "/services/seo-digital-marketing"}
       className={`group block seo-ranking-float ${compact ? "w-full max-w-[300px] mx-auto" : "w-[248px] xl:w-[268px]"}`}
-      aria-label="Get your website Google ranking, SEO and digital marketing services"
+      aria-label={`${title} ${subtitle}`.trim() || "SEO and digital marketing services"}
     >
       <div className="relative">
         <div className="absolute -inset-2 rounded-2xl bg-gradient-to-br from-[#4285F4]/15 to-[#34A853]/10 blur-lg opacity-60 group-hover:opacity-90 transition-opacity" />
@@ -100,7 +119,7 @@ export default function GoogleRankingPromo({ compact = false }: GoogleRankingPro
 
               <div className="flex-1 min-w-0">
                 <p className="text-[9px] font-bold uppercase tracking-widest text-gray-400 leading-none mb-1">
-                  Search visibility
+                  {eyebrow}
                 </p>
                 <div
                   key={stepIndex}

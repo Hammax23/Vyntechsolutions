@@ -1,0 +1,17 @@
+---
+description: Never flash local fallback CMS copy — server-fetch then pass initial props
+alwaysApply: true
+---
+
+# CMS content: no fallback flash
+
+When editing pages/components that show Strapi (or any CMS) copy:
+
+1. **Never** paint local/default marketing text first, then replace it after a client `fetch` — that causes a 1–3s flash of old content.
+2. **Do** load CMS data in a Server Component (`page.tsx` / `layout.tsx`) with `getCms…` / bundle helpers (e.g. `loadHomeCmsBundle`).
+3. **Pass** data into client components as `initial*` props; initialize `useState` from those props.
+4. **Skip** client `useEffect` CMS fetches when `initial*` props are already present (client fetch only as fallback when props are missing).
+5. Prefer a **shared shell** for Navbar/Footer (layout fetch + context) so every page gets the same rule.
+6. If data is still loading with no SSR payload, show a **neutral skeleton** — not stale hardcoded copy.
+
+Rule of thumb: first HTML paint must already be CMS content (or skeleton), never outdated fallback.

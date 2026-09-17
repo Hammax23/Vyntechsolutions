@@ -1,0 +1,14 @@
+---
+description: Blog posts must stay fully SEO-editable in Strapi with H1–H6 rich content
+globs: src/app/blog/**/*.{tsx,ts},src/components/Blog*.tsx,src/lib/cms/blog-bundle.ts,cms/src/api/blog-post/**/*
+alwaysApply: false
+---
+
+# Blog: SEO Expert–friendly, nothing missing
+
+1. **All blog copy** (title, excerpt, content, tags, author, readTime, SEO, listing chrome) lives in Strapi — **03. Blog Posts**, **04. Blog Categories**, Static Page `blog`.
+2. **Content body** must render **H1–H6**, lists, links, bold — both Strapi richtext **HTML** and **Markdown** (`#` / `##` / `###`). Use `CmsRichText` / `cmsBodyToHtml`; never a fragile line-by-line parser that drops headings.
+3. **Tags** are comma-separated text (or JSON array); `mapBlog` must accept both.
+4. **SSR only** for listing/detail (`loadBlogListingBundle` / `loadBlogDetailBundle` + `initial*` props) — no client-fetch flash of local defaults.
+5. Do not hardcode article body or CTA chrome; edit Static Page `blog` sections instead.
+6. After schema/content changes, remind SEO to **Publish** in Strapi Admin.

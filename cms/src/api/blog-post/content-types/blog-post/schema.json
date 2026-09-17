@@ -5,7 +5,7 @@
     "singularName": "blog-post",
     "pluralName": "blog-posts",
     "displayName": "03. Blog Posts",
-    "description": "Articles and insights"
+    "description": "Articles and insights — SEO Expert: use Content for H1–H6, lists, links (Markdown or HTML)"
   },
   "options": {
     "draftAndPublish": true
@@ -30,13 +30,15 @@
       "type": "richtext"
     },
     "tags": {
-      "type": "json"
+      "type": "text"
     },
     "author": {
-      "type": "string"
+      "type": "string",
+      "default": "VynTech Solutions Team"
     },
     "readTime": {
-      "type": "string"
+      "type": "string",
+      "default": "5 min"
     },
     "image": {
       "type": "string"

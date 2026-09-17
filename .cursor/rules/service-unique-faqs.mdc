@@ -1,0 +1,14 @@
+---
+description: Each service page must keep its own unique FAQs in Strapi
+alwaysApply: true
+---
+
+# Service FAQs: unique per service
+
+Every service (`web-development`, `mobile-app-development`, etc.) has **its own** FAQs in Strapi (`service.faqs`).
+
+1. **Never** reuse one shared/generic FAQ list across all services.
+2. **Never** patch empty FAQs with a global `DEFAULT_FAQS` that makes every page identical.
+3. Edit/seed FAQs **per slug** (see `SERVICE_FAQS_BY_SLUG` / `cms/scripts/patch-service-faqs.mjs`).
+4. Homepage/global FAQ collection is separate — do not replace service-page FAQs with it.
+5. SEO can edit each service’s FAQs in Strapi Admin → **01. Services** → that service → FAQs.
