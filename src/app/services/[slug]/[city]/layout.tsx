@@ -24,8 +24,12 @@ export async function generateMetadata({
     };
   }
 
-  const title = `${service.title} Services in ${formattedCity} | VynTech Solutions`;
+  const cityOverrides = service.cityOverrides?.[params.city.toLowerCase()] || {};
+  const overrideSeo = cityOverrides.seo || {};
+
+  const title = (overrideSeo.title as string) || `${service.title} Services in ${formattedCity} | VynTech Solutions`;
   const description =
+    (overrideSeo.description as string) ||
     service.description?.trim() ||
     `Leading ${service.title.toLowerCase()} services in ${formattedCity}. We help businesses grow with custom digital solutions tailored to the local market.`;
 

@@ -253,7 +253,7 @@ export type CmsService = {
     eyebrow?: string;
     heading?: string;
     description?: string;
-      tabs?: Array<{
+    tabs?: Array<{
       tabId?: string;
       id?: string;
       name: string;
@@ -333,6 +333,7 @@ export type CmsService = {
   }>;
   cityFaqs?: Array<{ question: string; answer: string }>;
   canadaCities?: string[] | Record<string, unknown>;
+  cityOverrides?: Record<string, any>;
 };
 
 function mapService(entry: Record<string, unknown>, fallbackSlug?: string, localFallback?: CmsService): CmsService {
@@ -446,6 +447,9 @@ function mapService(entry: Record<string, unknown>, fallbackSlug?: string, local
     canadaCities: isArrayPopulated(entry.canadaCities) || isObjectPopulated(entry.canadaCities)
       ? (entry.canadaCities as CmsService["canadaCities"])
       : localFallback?.canadaCities,
+    cityOverrides: isObjectPopulated(entry.cityOverrides)
+      ? (entry.cityOverrides as CmsService["cityOverrides"])
+      : localFallback?.cityOverrides,
   };
 }
 

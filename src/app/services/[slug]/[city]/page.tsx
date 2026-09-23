@@ -86,15 +86,33 @@ export default function CityServicePage() {
   }, [slug]);
 
   const pageSections = service?.pageSections || {};
+  const cityOverrides = service?.cityOverrides?.[cityParam.toLowerCase()] || {};
+  
   const copyVars = {
     city: formattedCity,
     service: service?.title || "",
     description: service?.description || "",
   };
-  const cityHero = { ...DEFAULT_CITY_HERO, ...(service?.cityHero || {}) };
+  
+  const cityHero = { 
+    ...DEFAULT_CITY_HERO, 
+    ...(service?.cityHero || {}), 
+    ...(cityOverrides.cityHero || {}) 
+  };
   const t = (template?: string) => fillCityCopy(template, copyVars);
 
   const engagementStrategies = useMemo(() => {
+    const override = cityOverrides.engagementStrategies;
+    if (Array.isArray(override) && override.length > 0) {
+      return override.map((s, i) => ({
+        id: String(s.strategyId || s.title || i),
+        title: s.title,
+        description: s.description || "",
+        calloutTitle: s.calloutTitle || "",
+        calloutText: s.calloutText || "",
+        heading: s.heading,
+      }));
+    }
     const fromService = service?.engagementStrategies;
     if (Array.isArray(fromService) && fromService.length > 0) {
       return fromService.map((s, i) => ({
@@ -103,18 +121,29 @@ export default function CityServicePage() {
         description: s.description || "",
         calloutTitle: s.calloutTitle || "",
         calloutText: s.calloutText || "",
+        heading: s.heading,
       }));
     }
     const fromCms =
       pageSections.cityEngagement || pageSections.engagementStrategies;
     return Array.isArray(fromCms) && fromCms.length > 0
-      ? fromCms
-      : defaultCityEngagementStrategies;
-  }, [service?.engagementStrategies, pageSections.cityEngagement, pageSections.engagementStrategies]);
+      ? fromCms.map((s: any, i: number) => ({
+        id: String(s.strategyId || s.title || i),
+        title: s.title,
+        description: s.description || "",
+        calloutTitle: s.calloutTitle || "",
+        calloutText: s.calloutText || "",
+        heading: s.heading,
+      }))
+      : defaultCityEngagementStrategies.map(s => ({ ...s, heading: s.title }));
+  }, [cityOverrides.engagementStrategies, service?.engagementStrategies, pageSections.cityEngagement, pageSections.engagementStrategies]);
 
   const cityFaqs = useMemo(() => {
+    const override = cityOverrides.cityFaqs;
     const source =
-      (Array.isArray(service?.cityFaqs) && service.cityFaqs.length > 0
+      (Array.isArray(override) && override.length > 0
+        ? override
+        : Array.isArray(service?.cityFaqs) && service.cityFaqs.length > 0
         ? service.cityFaqs
         : Array.isArray(pageSections.cityFaqs) && pageSections.cityFaqs.length > 0
           ? pageSections.cityFaqs
@@ -123,7 +152,7 @@ export default function CityServicePage() {
       question: fillCityCopy(faq.question, copyVars),
       answer: fillCityCopy(faq.answer, copyVars),
     }));
-  }, [service?.cityFaqs, pageSections.cityFaqs, copyVars.city, copyVars.service]);
+  }, [cityOverrides.cityFaqs, service?.cityFaqs, pageSections.cityFaqs, copyVars.city, copyVars.service]);
 
   useEffect(() => {
     setActiveTab(0);
@@ -149,29 +178,56 @@ export default function CityServicePage() {
     <>
       <Navbar />
       <main className="min-h-screen bg-white">
-        {/* Simple Local Hero */}
-        <section className="relative pt-28 pb-16 bg-[#0d1117] overflow-hidden">
-          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at top right, rgba(0,225,255,0.1) 0%, transparent 50%), radial-gradient(circle at bottom left, rgba(0,85,255,0.1) 0%, transparent 50%)' }} />
+        {/* Premium Local Hero */}
+        <section className="relative pt-32 pb-24 lg:pt-48 lg:pb-32 bg-[#05050A] overflow-hidden border-b border-white/5">
+          {/* Advanced Background Effects */}
+          <div className="absolute inset-0 opacity-10 mix-blend-soft-light pointer-events-none" style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')" }}></div>
+          
+          {/* Subtle Grid */}
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] [mask-image:radial-gradient(ellipse_at_center,black,transparent_80%)] pointer-events-none" />
+          
+          {/* Ambient Glows */}
+          <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[#00E1FF]/15 blur-[120px] mix-blend-screen pointer-events-none" />
+          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-[#0055FF]/20 blur-[120px] mix-blend-screen pointer-events-none" />
+          
           <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div className={`text-center max-w-3xl mx-auto transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-              <div className="inline-flex items-center gap-2 border border-[#00E1FF]/20 bg-[#00E1FF]/5 backdrop-blur-sm rounded-full px-5 py-2 mb-8 shadow-[0_0_15px_rgba(0,225,255,0.1)]">
-                <span className="text-sm font-bold bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text uppercase tracking-[0.2em]">{t(cityHero.eyebrowTemplate)}</span>
+            <div className={`text-center max-w-4xl mx-auto transition-all duration-1000 ease-out ${isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-12 scale-95"}`}>
+              
+              {/* Premium Eyebrow Badge */}
+              <div className="inline-flex items-center gap-3 border border-white/10 bg-white/[0.02] backdrop-blur-xl rounded-full px-5 py-2 mb-10 shadow-[0_0_30px_rgba(0,225,255,0.05)] hover:bg-white/[0.04] hover:border-white/20 transition-all cursor-default">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00E1FF] opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00E1FF]"></span>
+                </span>
+                <span className="text-[13px] font-bold text-gray-200 uppercase tracking-[0.3em]">
+                  {t(cityHero.eyebrowTemplate)}
+                </span>
               </div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-[1.1]">
+              
+              {/* Main Headline */}
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-gray-400 mb-8 leading-[1.05] tracking-tight pb-2">
                 {t(cityHero.headlineTemplate)}
               </h1>
-              <p className="text-white/60 text-lg leading-relaxed mb-8 max-w-lg mx-auto">
+              
+              {/* Subheading */}
+              <p className="text-gray-400 text-lg sm:text-xl leading-relaxed mb-12 max-w-2xl mx-auto font-light">
                 {t(cityHero.subheadingTemplate)}
               </p>
-              <button 
-                onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
-                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] hover:opacity-90 text-white px-7 py-4 rounded-xl font-semibold text-base transition-all duration-300 shadow-lg shadow-[#00E1FF]/25"
-              >
-                {cityHero.ctaLabel || "Request a Free Quote"}
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </button>
+              
+              {/* CTA Group */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
+                <button 
+                  onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
+                  className="group relative inline-flex items-center justify-center gap-3 bg-white text-[#05050A] px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(255,255,255,0.2)] overflow-hidden w-full sm:w-auto"
+                >
+                  <span className="relative z-10">{cityHero.ctaLabel || "Request a Free Quote"}</span>
+                  <svg className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                  <div className="absolute inset-0 bg-gradient-to-r from-gray-100 to-gray-300 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                </button>
+              </div>
+
             </div>
           </div>
         </section>
@@ -185,15 +241,17 @@ export default function CityServicePage() {
                   {t(cityHero.whyChooseHeadingTemplate)}
                 </h2>
                 <div className="w-20 h-1 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full mb-8 shadow-sm"></div>
-                <p className="text-lg text-gray-600 leading-relaxed mb-6 font-light">
-                  {service.overview}
-                </p>
-                <p className="text-lg text-gray-600 leading-relaxed font-light">
-                  {t(cityHero.whyChooseBodyTemplate)}
-                </p>
+                <p 
+                  className="text-lg text-gray-600 leading-relaxed mb-6 font-light" 
+                  dangerouslySetInnerHTML={{ __html: t(cityHero.overviewTemplate) || service.overview || "" }}
+                />
+                <p 
+                  className="text-lg text-gray-600 leading-relaxed font-light" 
+                  dangerouslySetInnerHTML={{ __html: t(cityHero.whyChooseBodyTemplate) || "" }}
+                />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                {service.features?.slice(0, 4).map((feature, idx) => (
+                {(cityOverrides.features || service.features)?.slice(0, 4).map((feature, idx) => (
                   <div key={idx} className="bg-white border border-gray-100 shadow-sm rounded-2xl p-5 sm:p-8 hover:shadow-[0_20px_40px_-15px_rgba(0,85,255,0.15)] hover:border-[#00E1FF]/30 transition-all duration-500 group">
                     <div className="w-10 h-10 sm:w-14 sm:h-14 bg-gray-50 rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-[#0055FF]/5 transition-colors">
                       <div className="w-4 h-4 sm:w-6 sm:h-6 rounded-full bg-gradient-to-r from-[#00E1FF] to-[#0055FF] opacity-90 group-hover:scale-110 transition-transform"></div>
@@ -241,7 +299,7 @@ export default function CityServicePage() {
               {/* Content Area */}
               <div className="lg:col-span-8 lg:pl-12">
                 <h3 className="text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#00E1FF] to-[#0055FF] mb-6 tracking-tight">
-                  {activeStrategy.title}
+                  {activeStrategy.heading || activeStrategy.title}
                 </h3>
                 <p className="text-gray-600 text-lg leading-relaxed mb-10 font-light">
                   {activeStrategy.description}
@@ -283,9 +341,10 @@ export default function CityServicePage() {
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0d1117] mb-6 leading-tight">
                   {t(cityHero.rankingHeadingTemplate)}
                 </h2>
-                <p className="text-gray-600 text-lg font-light">
-                  {cityHero.rankingDescription}
-                </p>
+                <p 
+                  className="text-gray-600 text-lg font-light"
+                  dangerouslySetInnerHTML={{ __html: cityHero.rankingDescription || "" }}
+                />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -318,9 +377,10 @@ export default function CityServicePage() {
                     <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-6 leading-tight">
                       {t(cityHero.advantageHeadingTemplate)}
                     </h2>
-                    <p className="text-gray-300 text-lg font-light mb-8 leading-relaxed max-w-lg">
-                      {cityHero.advantageBody}
-                    </p>
+                    <p 
+                      className="text-gray-300 text-lg font-light mb-8 leading-relaxed max-w-lg"
+                      dangerouslySetInnerHTML={{ __html: cityHero.advantageBody || "" }}
+                    />
                     <div className="flex flex-col sm:flex-row gap-4">
                       <button onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))} className="bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-white px-8 py-4 rounded-full font-bold text-sm shadow-[0_8px_20px_rgba(0,85,255,0.2)] hover:shadow-[0_12px_25px_rgba(0,85,255,0.4)] hover:-translate-y-0.5 transition-all duration-300 w-full sm:w-auto flex justify-center items-center text-center">
                         {cityHero.advantageCtaPrimary}
@@ -358,9 +418,13 @@ export default function CityServicePage() {
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0d1117] mb-8 leading-[1.1] tracking-tight">
                   {t(cityHero.aboutHeadingTemplate)}
                 </h2>
-                <p className="text-lg text-gray-600 leading-relaxed mb-12 font-light">
-                  {t(cityHero.aboutBodyTemplate)}
-                </p>
+                <div className="text-lg text-gray-600 leading-relaxed mb-12 font-light space-y-4">
+                  {t(cityHero.aboutBodyTemplate)
+                    ?.split("\n\n")
+                    .map((p, i) => (
+                      <p key={i} dangerouslySetInnerHTML={{ __html: p }} />
+                    ))}
+                </div>
 
                 <h3 className="text-xl font-bold text-[#0d1117] mb-6">
                   {t(cityHero.industriesHeadingTemplate)}
@@ -399,7 +463,7 @@ export default function CityServicePage() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                           </svg>
                         </div>
-                        <span className="text-gray-700 text-sm sm:text-base">{t(item)}</span>
+                        <span className="text-gray-700 text-sm sm:text-base" dangerouslySetInnerHTML={{ __html: t(item) }} />
                       </li>
                     ))}
                   </ul>
