@@ -36,10 +36,22 @@ function resolvePageSections(service: ServiceData): ServicePageSections {
     {}) as ServicePageSections;
 }
 
+/** Location / city grid + city landing URLs — only these service pages. */
+const LOCATION_CITY_SERVICE_SLUGS = new Set([
+  "web-development",
+  "seo-digital-marketing",
+]);
+
+export function serviceAllowsLocationCities(slug: string): boolean {
+  return LOCATION_CITY_SERVICE_SLUGS.has(slug);
+}
+
 function resolveCanadaCities(
   service: ServiceData,
-  pageSections: ServicePageSections
+  pageSections: ServicePageSections,
+  slug: string
 ): { heading?: string; description?: string; cities: string[] } | null {
+  if (!serviceAllowsLocationCities(slug)) return null;
   const cmsBlock = (service as ServiceData & {
     canadaCitiesBlock?: { heading?: string; description?: string; cities?: string[] };
   }).canadaCitiesBlock;
@@ -2401,7 +2413,7 @@ export default function ServiceDetailClient({
   const pageSections = service ? resolvePageSections(service) : {};
   const heroVariant = (service?.heroVariant || HERO_VARIANT_BY_SLUG[slug] || "browser") as string;
   const techStackData = resolveTechStackData(service, pageSections);
-  const canadaBlock = service ? resolveCanadaCities(service, pageSections) : null;
+  const canadaBlock = service ? resolveCanadaCities(service, pageSections, slug) : null;
 
   useEffect(() => {
     setIsVisible(true);

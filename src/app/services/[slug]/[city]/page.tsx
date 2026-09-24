@@ -65,14 +65,18 @@ export default function CityServicePage() {
         .join(" ")
     : "";
 
+  const locationAllowed =
+    slug === "web-development" || slug === "seo-digital-marketing";
+
   const [service, setService] = useState<ServiceWithSections | null>(
-    (servicesData[slug] as ServiceWithSections) || null
+    locationAllowed ? (servicesData[slug] as ServiceWithSections) || null : null
   );
   const [isVisible, setIsVisible] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
     setIsVisible(true);
+    if (!locationAllowed) return;
     let cancelled = false;
     fetch(`/api/cms/services/${slug}`)
       .then((r) => (r.ok ? r.json() : null))
@@ -83,7 +87,24 @@ export default function CityServicePage() {
     return () => {
       cancelled = true;
     };
-  }, [slug]);
+  }, [slug, locationAllowed]);
+
+  if (!locationAllowed) {
+    return (
+      <>
+        <Navbar />
+        <main className="min-h-screen bg-white flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-[#1a1a2e] mb-4">Page Not Found</h1>
+            <Link href="/services" className="text-[#262b3f] hover:underline">
+              View All Services
+            </Link>
+          </div>
+        </main>
+        <Footer />
+      </>
+    );
+  }
 
   const pageSections = service?.pageSections || {};
   const cityOverrides = service?.cityOverrides?.[cityParam.toLowerCase()] || {};

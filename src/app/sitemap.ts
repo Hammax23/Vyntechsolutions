@@ -120,8 +120,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ])
   );
 
+  const LOCATION_CITY_SERVICE_SLUGS = new Set([
+    "web-development",
+    "seo-digital-marketing",
+  ]);
+
   const cityUrls: MetadataRoute.Sitemap = [];
   for (const slug of serviceSlugs) {
+    if (!LOCATION_CITY_SERVICE_SLUGS.has(slug)) continue;
     const cities = collectCitiesForService(slug, cmsCitiesBySlug.get(slug));
     for (const city of cities) {
       const citySlug = cityToSlug(city);

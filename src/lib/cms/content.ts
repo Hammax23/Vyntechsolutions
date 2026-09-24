@@ -341,9 +341,12 @@ function mapService(entry: Record<string, unknown>, fallbackSlug?: string, local
   const isArrayPopulated = (val: unknown) => Array.isArray(val) && val.length > 0;
   const isObjectPopulated = (val: unknown) =>
     val !== null && typeof val === "object" && !Array.isArray(val) && Object.keys(val as object).length > 0;
+  const slug = String(entry.slug || fallbackSlug || "");
+  const allowLocationCities =
+    slug === "web-development" || slug === "seo-digital-marketing";
 
   return {
-    slug: String(entry.slug || fallbackSlug || ""),
+    slug,
     title: isPopulated(entry.title) ? String(entry.title) : (localFallback?.title || ""),
     subtitle: isPopulated(entry.subtitle) ? String(entry.subtitle) : (localFallback?.subtitle || ""),
     description: isPopulated(entry.description) ? String(entry.description) : (localFallback?.description || ""),
@@ -432,9 +435,11 @@ function mapService(entry: Record<string, unknown>, fallbackSlug?: string, local
     localSeoBlock: isObjectPopulated(entry.localSeoBlock)
       ? (entry.localSeoBlock as CmsService["localSeoBlock"])
       : localFallback?.localSeoBlock,
-    canadaCitiesBlock: isObjectPopulated(entry.canadaCitiesBlock)
-      ? (entry.canadaCitiesBlock as CmsService["canadaCitiesBlock"])
-      : localFallback?.canadaCitiesBlock,
+    canadaCitiesBlock: allowLocationCities
+      ? isObjectPopulated(entry.canadaCitiesBlock)
+        ? (entry.canadaCitiesBlock as CmsService["canadaCitiesBlock"])
+        : localFallback?.canadaCitiesBlock
+      : undefined,
     cityHero: isObjectPopulated(entry.cityHero)
       ? (entry.cityHero as CmsService["cityHero"])
       : localFallback?.cityHero,
@@ -444,9 +449,11 @@ function mapService(entry: Record<string, unknown>, fallbackSlug?: string, local
     cityFaqs: isArrayPopulated(entry.cityFaqs)
       ? (entry.cityFaqs as CmsService["cityFaqs"])
       : localFallback?.cityFaqs,
-    canadaCities: isArrayPopulated(entry.canadaCities) || isObjectPopulated(entry.canadaCities)
-      ? (entry.canadaCities as CmsService["canadaCities"])
-      : localFallback?.canadaCities,
+    canadaCities: allowLocationCities
+      ? isArrayPopulated(entry.canadaCities) || isObjectPopulated(entry.canadaCities)
+        ? (entry.canadaCities as CmsService["canadaCities"])
+        : localFallback?.canadaCities
+      : undefined,
     cityOverrides: isObjectPopulated(entry.cityOverrides)
       ? (entry.cityOverrides as CmsService["cityOverrides"])
       : localFallback?.cityOverrides,

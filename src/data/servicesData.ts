@@ -3508,9 +3508,11 @@ function enrichServices(data: Record<string, ServiceData>): Record<string, Servi
       sections.techStack ||
       (showTechStack ? defaultTechStack : undefined);
 
-    const canadaCities =
-      service.canadaCities ||
-      sections.canadaCities;
+    const allowLocationCities =
+      slug === "web-development" || slug === "seo-digital-marketing";
+    const canadaCities = allowLocationCities
+      ? service.canadaCities || sections.canadaCities
+      : undefined;
 
     const whyExtras =
       !service.whyChooseUsHeading
