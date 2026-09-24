@@ -89,36 +89,22 @@ export default function CityServicePage() {
     };
   }, [slug, locationAllowed]);
 
-  if (!locationAllowed) {
-    return (
-      <>
-        <Navbar />
-        <main className="min-h-screen bg-white flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-[#1a1a2e] mb-4">Page Not Found</h1>
-            <Link href="/services" className="text-[#262b3f] hover:underline">
-              View All Services
-            </Link>
-          </div>
-        </main>
-        <Footer />
-      </>
-    );
-  }
-
   const pageSections = service?.pageSections || {};
   const cityOverrides = service?.cityOverrides?.[cityParam.toLowerCase()] || {};
-  
-  const copyVars = {
-    city: formattedCity,
-    service: service?.title || "",
-    description: service?.description || "",
-  };
-  
-  const cityHero = { 
-    ...DEFAULT_CITY_HERO, 
-    ...(service?.cityHero || {}), 
-    ...(cityOverrides.cityHero || {}) 
+
+  const copyVars = useMemo(
+    () => ({
+      city: formattedCity,
+      service: service?.title || "",
+      description: service?.description || "",
+    }),
+    [formattedCity, service?.title, service?.description]
+  );
+
+  const cityHero = {
+    ...DEFAULT_CITY_HERO,
+    ...(service?.cityHero || {}),
+    ...(cityOverrides.cityHero || {}),
   };
   const t = (template?: string) => fillCityCopy(template, copyVars);
 
@@ -173,11 +159,28 @@ export default function CityServicePage() {
       question: fillCityCopy(faq.question, copyVars),
       answer: fillCityCopy(faq.answer, copyVars),
     }));
-  }, [cityOverrides.cityFaqs, service?.cityFaqs, pageSections.cityFaqs, copyVars.city, copyVars.service]);
+  }, [cityOverrides.cityFaqs, service?.cityFaqs, pageSections.cityFaqs, copyVars]);
 
   useEffect(() => {
     setActiveTab(0);
   }, [slug, engagementStrategies]);
+
+  if (!locationAllowed) {
+    return (
+      <>
+        <Navbar />
+        <main className="min-h-screen bg-white flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-[#1a1a2e] mb-4">Page Not Found</h1>
+            <Link href="/services" className="text-[#262b3f] hover:underline">
+              View All Services
+            </Link>
+          </div>
+        </main>
+        <Footer />
+      </>
+    );
+  }
 
   if (!service) {
     return (
