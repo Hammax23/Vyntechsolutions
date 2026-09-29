@@ -24,7 +24,7 @@
       "type": "string"
     },
     "heroBody": {
-      "type": "text"
+      "type": "richtext"
     },
     "body": {
       "type": "richtext"

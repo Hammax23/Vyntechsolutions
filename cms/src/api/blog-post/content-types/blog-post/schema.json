@@ -24,13 +24,13 @@
       "type": "text"
     },
     "excerpt": {
-      "type": "text"
+      "type": "richtext"
     },
     "content": {
       "type": "richtext"
     },
     "tags": {
-      "type": "text"
+      "type": "string"
     },
     "author": {
       "type": "string",

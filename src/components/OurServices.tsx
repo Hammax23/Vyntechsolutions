@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import Image from "next/image";
+import { cmsInlineToHtml } from "@/lib/richtext";
 
 const GoogleRankingPromo = dynamic(() => import("@/components/GoogleRankingPromo"), {
   ssr: false,
@@ -565,9 +566,11 @@ export default function OurServices({
               <h3 className="mt-1.5 sm:mt-2 text-xl sm:text-2xl md:text-3xl font-light text-[#1a1a2e]" style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>
                 {subheading}
               </h3>
-              <p className="mt-2 sm:mt-2.5 text-base sm:text-lg md:text-xl text-gray-600" style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>
-                {body}
-              </p>
+              <p
+                className="mt-2 sm:mt-2.5 text-base sm:text-lg md:text-xl text-gray-600 [&_a]:underline [&_a]:underline-offset-2"
+                style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}
+                dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(body) }}
+              />
             </div>
             <div className={`flex justify-end items-start transition-all duration-700 delay-150 ${isVisible ? "opacity-100" : "opacity-0"}`}>
               <GoogleRankingPromo initialPromo={initialRankingPromo} />
@@ -595,9 +598,11 @@ export default function OurServices({
                   </h2>
                 )}
                 <h3 className="mt-1.5 text-2xl md:text-3xl font-light text-[#1a1a2e]" style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>{subheading}</h3>
-                <p className="mt-2 text-base sm:text-lg text-gray-600" style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>
-                  {body}
-                </p>
+                <p
+                  className="mt-2 text-base sm:text-lg text-gray-600 [&_a]:underline [&_a]:underline-offset-2"
+                  style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}
+                  dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(body) }}
+                />
               </div>
               <div className={`flex justify-end ${isVisible ? "opacity-100" : "opacity-0"}`}>
                 <GoogleRankingPromo initialPromo={initialRankingPromo} />
@@ -623,9 +628,11 @@ export default function OurServices({
               </h2>
             )}
             <h3 className="mt-1.5 sm:mt-2 text-xl sm:text-2xl font-light text-[#1a1a2e]" style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>{subheading}</h3>
-            <p className="mt-2 text-base sm:text-lg text-gray-600" style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}>
-              {body}
-            </p>
+            <p
+              className="mt-2 text-base sm:text-lg text-gray-600 [&_a]:underline [&_a]:underline-offset-2"
+              style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}
+              dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(body) }}
+            />
             <div className={`flex justify-center mt-5 ${isVisible ? "opacity-100" : "opacity-0"}`}>
               <GoogleRankingPromo compact initialPromo={initialRankingPromo} />
             </div>
@@ -715,10 +722,9 @@ export default function OurServices({
                     {card.title}
                   </h4>
                   <p
-                    className="mt-4 text-[15px] sm:text-base leading-[1.7] text-black/90 transition-colors duration-500 group-hover:text-white"
-                  >
-                    {card.description}
-                  </p>
+                    className="mt-4 text-[15px] sm:text-base leading-[1.7] text-black/90 transition-colors duration-500 group-hover:text-white [&_a]:underline [&_a]:underline-offset-2"
+                    dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(card.description) }}
+                  />
                   <span
                     className="mt-6 inline-flex items-center gap-2 text-[13px] font-bold tracking-[0.08em] uppercase text-black transition-colors duration-500 group-hover:text-white"
                   >

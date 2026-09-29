@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { cmsInlineToHtml } from "@/lib/richtext";
 
 const D = "https://cdn.jsdelivr.net/gh/devicons/devicon/icons";
 const S = "https://cdn.simpleicons.org";
@@ -277,7 +278,10 @@ export default function TechnologyStack({
           >
             {heading}
           </h2>
-          <p className="text-[15px] text-slate-500 max-w-2xl mx-auto leading-relaxed">{body}</p>
+          <p
+            className="text-[15px] text-slate-500 max-w-2xl mx-auto leading-relaxed [&_a]:underline [&_a]:underline-offset-2"
+            dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(body) }}
+          />
         </div>
 
         <div

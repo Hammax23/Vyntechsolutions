@@ -59,7 +59,7 @@
       "type": "string"
     },
     "cookieBody": {
-      "type": "text"
+      "type": "richtext"
     },
     "cookieAcceptLabel": {
       "type": "string"

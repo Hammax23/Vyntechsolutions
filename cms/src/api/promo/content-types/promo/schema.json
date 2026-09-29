@@ -29,7 +29,7 @@
       "type": "string"
     },
     "body": {
-      "type": "text"
+      "type": "richtext"
     },
     "ctaLabel": {
       "type": "string"

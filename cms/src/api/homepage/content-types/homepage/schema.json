@@ -29,7 +29,7 @@
       "type": "string"
     },
     "servicesBody": {
-      "type": "text"
+      "type": "richtext"
     },
     "serviceCards": {
       "type": "component",
@@ -47,7 +47,7 @@
       "type": "string"
     },
     "impactBody": {
-      "type": "text"
+      "type": "richtext"
     },
     "impactStats": {
       "type": "component",
@@ -67,7 +67,7 @@
       "type": "string"
     },
     "insightsIntro": {
-      "type": "text"
+      "type": "richtext"
     },
     "insightsVideoUrl": {
       "type": "string",
@@ -106,7 +106,7 @@
       "type": "string"
     },
     "faqIntro": {
-      "type": "text"
+      "type": "richtext"
     },
     "techStackEyebrow": {
       "type": "string"
@@ -115,7 +115,7 @@
       "type": "string"
     },
     "techStackBody": {
-      "type": "text"
+      "type": "richtext"
     },
     "techStack": {
       "type": "json"

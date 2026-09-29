@@ -20,6 +20,7 @@ import {
   applyFormConfigServices,
 } from "@/lib/form-options";
 import { DEFAULT_CONTACT_PAGE, DEFAULT_NAV_CHROME, mergeCopy } from "@/lib/ui-copy";
+import { cmsInlineToHtml } from "@/lib/richtext";
 
 const benefits = [
   {
@@ -225,9 +226,12 @@ export default function LetsTalkBusinessPage() {
                 {pageCopy.heroHeading}
               </h1>
               
-              <p className="text-lg sm:text-xl text-white/70 max-w-3xl mx-auto">
-                {pageCopy.heroBody}
-              </p>
+              <div
+                className="text-lg sm:text-xl text-white/70 max-w-3xl mx-auto [&_a]:text-[#00E1FF] [&_a]:underline"
+                dangerouslySetInnerHTML={{
+                  __html: cmsInlineToHtml(String(pageCopy.heroBody || "")),
+                }}
+              />
             </div>
           </div>
         </section>

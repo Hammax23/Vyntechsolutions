@@ -126,7 +126,12 @@ export default function BlogListingClient({
                   <h2 className="text-2xl md:text-3xl font-bold text-[#1a1a2e] mb-3 group-hover:text-[#262b3f] transition-colors">
                     {featuredPost.title}
                   </h2>
-                  <p className="text-gray-600 mb-4">{featuredPost.excerpt}</p>
+                  <div
+                    className="text-gray-600 mb-4 [&_a]:text-[#0055FF] [&_a]:underline"
+                    dangerouslySetInnerHTML={{
+                      __html: cmsInlineToHtml(featuredPost.excerpt),
+                    }}
+                  />
                   <span className="text-sm text-gray-500">{featuredPost.author}</span>
                 </div>
               </div>
@@ -162,9 +167,12 @@ export default function BlogListingClient({
                       <h3 className="text-lg font-semibold text-[#1a1a2e] mb-2 group-hover:text-[#262b3f] transition-colors line-clamp-2">
                         {post.title}
                       </h3>
-                      <p className="text-gray-600 text-sm line-clamp-2">
-                        {post.excerpt}
-                      </p>
+                      <div
+                        className="text-gray-600 text-sm line-clamp-2 [&_a]:text-[#0055FF] [&_a]:underline"
+                        dangerouslySetInnerHTML={{
+                          __html: cmsInlineToHtml(post.excerpt),
+                        }}
+                      />
                     </div>
                   </Link>
                 ))}

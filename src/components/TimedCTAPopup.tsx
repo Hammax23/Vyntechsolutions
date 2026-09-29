@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { DEFAULT_FORM_LABELS, mergeCopy } from "@/lib/ui-copy";
+import { cmsInlineToHtml } from "@/lib/richtext";
 
 export default function TimedCTAPopup() {
   const pathname = usePathname();
@@ -124,9 +125,10 @@ export default function TimedCTAPopup() {
             <div className="mb-5 sm:mb-8 pr-6">
               <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 leading-relaxed">
                 <span className="text-gray-900">{promoHeading}</span>{" "}
-                <span className="text-gray-500 font-normal">
-                  {promoBody}
-                </span>
+                <span
+                  className="text-gray-500 font-normal [&_a]:text-[#0055FF] [&_a]:underline"
+                  dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(promoBody) }}
+                />
               </h2>
             </div>
 

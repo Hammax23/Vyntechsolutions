@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { cmsInlineToHtml } from "@/lib/richtext";
 
 type ImpactStat = { id: number; number: string; suffix: string; label: string };
 
@@ -195,7 +196,10 @@ export default function TechnologyImpact({
           </div>
 
           <div className="max-w-[440px] lg:pb-1">
-            <p className="text-[15px] sm:text-base text-slate-400 leading-relaxed mb-7">{body}</p>
+            <p
+              className="text-[15px] sm:text-base text-slate-400 leading-relaxed mb-7 [&_a]:underline [&_a]:underline-offset-2 [&_a]:text-white/80"
+              dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(body) }}
+            />
             <Link
               href={ctaHref}
               className="inline-flex items-center gap-2 border border-white/20 text-white px-6 py-2.5 text-[12px] font-medium tracking-[0.14em] uppercase hover:bg-white hover:text-[#07101C] transition-colors duration-300"

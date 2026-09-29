@@ -25,10 +25,10 @@
       "type": "string"
     },
     "tagline": {
-      "type": "text"
+      "type": "richtext"
     },
     "address": {
-      "type": "text"
+      "type": "string"
     },
     "geoLatitude": {
       "type": "string"

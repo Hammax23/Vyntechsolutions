@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { blogPosts, type BlogPost } from "@/data/blogData";
+import { cmsInlineToHtml } from "@/lib/richtext";
 
 function buildInsights(posts: BlogPost[]) {
   const palette = [
@@ -126,9 +127,10 @@ export default function FeaturedInsights({
             {heading}
           </h2>
           {intro ? (
-            <p className="mt-4 text-white/60 text-base sm:text-lg max-w-2xl mx-auto">
-              {intro}
-            </p>
+            <p
+              className="mt-4 text-white/60 text-base sm:text-lg max-w-2xl mx-auto [&_a]:underline [&_a]:underline-offset-2 [&_a]:text-white/80"
+              dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(intro) }}
+            />
           ) : null}
         </div>
 

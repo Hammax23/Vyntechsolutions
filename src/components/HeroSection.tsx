@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { cmsInlineToHtml } from "@/lib/richtext";
 
 type HeroMediaItem = {
   type: "video" | "image";
@@ -367,10 +368,9 @@ export default function HeroSection({
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-                    className="text-white/90 text-lg md:text-xl font-light mb-8 max-w-2xl mx-auto"
-                  >
-                    {activeSlide.subtext}
-                  </motion.p>
+                    className="text-white/90 text-lg md:text-xl font-light mb-8 max-w-2xl mx-auto [&_a]:underline [&_a]:underline-offset-2 [&_a]:text-white"
+                    dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(activeSlide.subtext) }}
+                  />
                 </>
               )}
             </div>

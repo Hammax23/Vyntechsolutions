@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { cmsInlineToHtml } from "@/lib/richtext";
 
 const RANK_STEPS = [
   { position: 48, label: "Page 5" },
@@ -88,7 +89,7 @@ export default function GoogleRankingPromo({
     <Link
       href={ctaHref || "/services/seo-digital-marketing"}
       className={`group block seo-ranking-float ${compact ? "w-full max-w-[300px] mx-auto" : "w-[248px] xl:w-[268px]"}`}
-      aria-label={`${title} ${subtitle}`.trim() || "SEO and digital marketing services"}
+      aria-label={`${title} ${subtitle.replace(/<[^>]+>/g, " ")}`.replace(/\s+/g, " ").trim() || "SEO and digital marketing services"}
     >
       <div className="relative">
         <div className="absolute -inset-2 rounded-2xl bg-gradient-to-br from-[#4285F4]/15 to-[#34A853]/10 blur-lg opacity-60 group-hover:opacity-90 transition-opacity" />
@@ -159,9 +160,10 @@ export default function GoogleRankingPromo({
             <div>
               <p className="text-xs font-semibold text-[#1a1a2e] leading-tight">{title}</p>
               <p className="text-sm font-bold leading-tight mt-0.5">
-                <span className="bg-gradient-to-r from-[#4285F4] via-[#0055FF] to-[#34A853] bg-clip-text text-transparent seo-ranking-shimmer-text">
-                  {subtitle}
-                </span>
+                <span
+                  className="bg-gradient-to-r from-[#4285F4] via-[#0055FF] to-[#34A853] bg-clip-text text-transparent seo-ranking-shimmer-text [&_a]:underline"
+                  dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(subtitle) }}
+                />
               </p>
               <span className="inline-flex items-center gap-1 mt-1.5 text-[10px] font-bold text-[#0055FF] group-hover:gap-1.5 transition-all">
                 {cta}

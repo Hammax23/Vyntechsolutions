@@ -314,7 +314,12 @@ export default function CareersPage() {
                         <h3 className="text-lg font-semibold text-[#1a1a2e] mb-2">{card.title}</h3>
                       ) : null}
                       {card.description ? (
-                        <p className="text-gray-600 text-sm">{card.description}</p>
+                        <div
+                          className="text-gray-600 text-sm [&_a]:text-[#0055FF] [&_a]:underline"
+                          dangerouslySetInnerHTML={{
+                            __html: cmsInlineToHtml(card.description),
+                          }}
+                        />
                       ) : null}
                     </div>
                   ))}
@@ -333,7 +338,12 @@ export default function CareersPage() {
                     <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">{chrome.ctaHeading}</h2>
                   ) : null}
                   {chrome.ctaBody ? (
-                    <p className="text-white/70 text-sm">{chrome.ctaBody}</p>
+                    <div
+                      className="text-white/70 text-sm [&_a]:text-[#00E1FF] [&_a]:underline"
+                      dangerouslySetInnerHTML={{
+                        __html: cmsInlineToHtml(chrome.ctaBody),
+                      }}
+                    />
                   ) : null}
                 </div>
                 {chrome.ctaLabel ? (

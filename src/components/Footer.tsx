@@ -4,6 +4,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import VynTechLogo from "./VynTechLogo";
+import { cmsInlineToHtml } from "@/lib/richtext";
 
 type NavLink = { label: string; href: string };
 type FooterGroup = { title: string; links: NavLink[] };
@@ -260,7 +261,10 @@ export default function Footer() {
               <VynTechLogo darkText className="!gap-2" />
             </div>
 
-            <p className="text-[#4A5568] text-sm leading-relaxed mb-4 md:mb-8">{tagline}</p>
+            <p
+              className="text-[#4A5568] text-sm leading-relaxed mb-4 md:mb-8 [&_a]:underline [&_a]:underline-offset-2"
+              dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(tagline) }}
+            />
 
             <div className="hidden md:block">
               <div className="mb-8">

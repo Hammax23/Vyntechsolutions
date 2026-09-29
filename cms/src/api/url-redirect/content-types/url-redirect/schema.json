@@ -31,10 +31,10 @@
       "default": true
     },
     "interlinking": {
-      "type": "text"
+      "type": "richtext"
     },
     "notes": {
-      "type": "text"
+      "type": "richtext"
     }
   }
 }

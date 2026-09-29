@@ -424,7 +424,7 @@ export interface ApiBlogPostBlogPost extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    excerpt: Schema.Attribute.Text;
+    excerpt: Schema.Attribute.RichText;
     featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     image: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -438,7 +438,7 @@ export interface ApiBlogPostBlogPost extends Struct.CollectionTypeSchema {
     readTime: Schema.Attribute.String & Schema.Attribute.DefaultTo<'5 min'>;
     seo: Schema.Attribute.Component<'shared.seo', false>;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
-    tags: Schema.Attribute.Text;
+    tags: Schema.Attribute.String;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -491,7 +491,7 @@ export interface ApiFaqFaq extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    answer: Schema.Attribute.Text & Schema.Attribute.Required;
+    answer: Schema.Attribute.RichText & Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -558,7 +558,7 @@ export interface ApiGlobalSeoGlobalSeo extends Struct.SingleTypeSchema {
   attributes: {
     bingSiteVerification: Schema.Attribute.String;
     cookieAcceptLabel: Schema.Attribute.String;
-    cookieBody: Schema.Attribute.Text;
+    cookieBody: Schema.Attribute.RichText;
     cookieChrome: Schema.Attribute.JSON;
     cookieCustomizeLabel: Schema.Attribute.String;
     cookieTitle: Schema.Attribute.String;
@@ -614,11 +614,11 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
       Schema.Attribute.Private;
     faqEyebrow: Schema.Attribute.String;
     faqHeading: Schema.Attribute.String;
-    faqIntro: Schema.Attribute.Text;
+    faqIntro: Schema.Attribute.RichText;
     heroCtaLabel: Schema.Attribute.String;
     heroSlides: Schema.Attribute.Component<'home.hero-slide', true>;
     heroWords: Schema.Attribute.JSON;
-    impactBody: Schema.Attribute.Text;
+    impactBody: Schema.Attribute.RichText;
     impactCtaHref: Schema.Attribute.String;
     impactCtaLabel: Schema.Attribute.String;
     impactEyebrow: Schema.Attribute.String;
@@ -630,7 +630,7 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
       Schema.Attribute.DefaultTo<'View'>;
     insightsEyebrow: Schema.Attribute.String;
     insightsHeading: Schema.Attribute.String;
-    insightsIntro: Schema.Attribute.Text;
+    insightsIntro: Schema.Attribute.RichText;
     insightsVideoUrl: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'/meeting.mp4'>;
     insightsViewAllHref: Schema.Attribute.String &
@@ -650,13 +650,13 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     seo: Schema.Attribute.Component<'shared.seo', false>;
     serviceCards: Schema.Attribute.Component<'home.service-card', true>;
-    servicesBody: Schema.Attribute.Text;
+    servicesBody: Schema.Attribute.RichText;
     servicesHeading: Schema.Attribute.String;
     servicesLearnMoreLabel: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Learn More'>;
     servicesSubheading: Schema.Attribute.String;
     techStack: Schema.Attribute.JSON;
-    techStackBody: Schema.Attribute.Text;
+    techStackBody: Schema.Attribute.RichText;
     techStackEyebrow: Schema.Attribute.String;
     techStackHeading: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
@@ -845,7 +845,7 @@ export interface ApiOrganizationProfileOrganizationProfile
     draftAndPublish: true;
   };
   attributes: {
-    address: Schema.Attribute.Text;
+    address: Schema.Attribute.String;
     copyrightText: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -870,7 +870,7 @@ export interface ApiOrganizationProfileOrganizationProfile
     ratingValue: Schema.Attribute.Decimal;
     reviewCount: Schema.Attribute.Integer;
     sameAs: Schema.Attribute.JSON;
-    tagline: Schema.Attribute.Text;
+    tagline: Schema.Attribute.RichText;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -923,7 +923,7 @@ export interface ApiPromoPromo extends Struct.CollectionTypeSchema {
   };
   attributes: {
     active: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
-    body: Schema.Attribute.Text;
+    body: Schema.Attribute.RichText;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -971,7 +971,7 @@ export interface ApiRedirectChainRedirectChain
       'api::redirect-chain.redirect-chain'
     > &
       Schema.Attribute.Private;
-    notes: Schema.Attribute.Text;
+    notes: Schema.Attribute.RichText;
     publishedAt: Schema.Attribute.DateTime;
     startPath: Schema.Attribute.String & Schema.Attribute.Required;
     steps: Schema.Attribute.JSON;
@@ -1141,7 +1141,7 @@ export interface ApiStaticPageStaticPage extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    heroBody: Schema.Attribute.Text;
+    heroBody: Schema.Attribute.RichText;
     heroHeading: Schema.Attribute.String;
     heroimage: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -1180,14 +1180,14 @@ export interface ApiUrlRedirectUrlRedirect extends Struct.CollectionTypeSchema {
     fromPath: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
-    interlinking: Schema.Attribute.Text;
+    interlinking: Schema.Attribute.RichText;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::url-redirect.url-redirect'
     > &
       Schema.Attribute.Private;
-    notes: Schema.Attribute.Text;
+    notes: Schema.Attribute.RichText;
     publishedAt: Schema.Attribute.DateTime;
     redirectType: Schema.Attribute.Enumeration<['permanent', 'temporary']> &
       Schema.Attribute.Required &

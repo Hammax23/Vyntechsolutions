@@ -9,7 +9,7 @@ export interface HomeHeroSlide extends Struct.ComponentSchema {
     ctaHref: Schema.Attribute.String;
     ctaLabel: Schema.Attribute.String;
     heading: Schema.Attribute.String & Schema.Attribute.Required;
-    subtext: Schema.Attribute.Text;
+    subtext: Schema.Attribute.RichText;
   };
 }
 
@@ -20,7 +20,7 @@ export interface HomeServiceCard extends Struct.ComponentSchema {
   };
   attributes: {
     art: Schema.Attribute.String;
-    description: Schema.Attribute.Text;
+    description: Schema.Attribute.RichText;
     href: Schema.Attribute.String;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };

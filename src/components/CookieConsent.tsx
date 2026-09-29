@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { DEFAULT_COOKIE_CHROME, mergeCopy } from "@/lib/ui-copy";
+import { cmsInlineToHtml } from "@/lib/richtext";
 
 interface CookiePreferences {
   essential: boolean;
@@ -168,9 +169,10 @@ export default function CookieConsent() {
                   <h3 className="text-white font-semibold text-[15px] tracking-tight mb-1.5">
                     {cookieTitle}
                   </h3>
-                  <p className="text-gray-400 text-[13px] leading-relaxed">
-                    {cookieBody}
-                  </p>
+                  <p
+                    className="text-gray-400 text-[13px] leading-relaxed [&_a]:underline [&_a]:underline-offset-2 [&_a]:text-gray-300"
+                    dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(cookieBody) }}
+                  />
                 </div>
               </div>
 

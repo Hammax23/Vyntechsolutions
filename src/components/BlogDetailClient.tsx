@@ -71,7 +71,10 @@ export default function BlogDetailClient({
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
                 {post.title}
               </h1>
-              <p className="text-white/70 mb-6">{post.excerpt}</p>
+              <div
+                className="text-white/70 mb-6 [&_a]:text-[#00E1FF] [&_a]:underline"
+                dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(post.excerpt) }}
+              />
               <div className="flex flex-wrap items-center gap-3 text-white/60 text-sm">
                 <span>{post.author}</span>
                 {post.readTime ? (
@@ -127,9 +130,12 @@ export default function BlogDetailClient({
                     <h3 className="text-lg font-semibold text-[#1a1a2e] mt-2 mb-2 line-clamp-2">
                       {relatedPost.title}
                     </h3>
-                    <p className="text-gray-600 text-sm line-clamp-2">
-                      {relatedPost.excerpt}
-                    </p>
+                    <div
+                      className="text-gray-600 text-sm line-clamp-2 [&_a]:text-[#0055FF] [&_a]:underline"
+                      dangerouslySetInnerHTML={{
+                        __html: cmsInlineToHtml(relatedPost.excerpt),
+                      }}
+                    />
                   </Link>
                 ))}
               </div>
