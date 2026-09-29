@@ -48,7 +48,7 @@ export interface SectionsAiMlItem extends Struct.ComponentSchema {
     icon: 'cube';
   };
   attributes: {
-    description: Schema.Attribute.Text;
+    description: Schema.Attribute.RichText;
     itemId: Schema.Attribute.String;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };
@@ -63,7 +63,7 @@ export interface SectionsCanadaCitiesBlock extends Struct.ComponentSchema {
   };
   attributes: {
     cities: Schema.Attribute.JSON;
-    description: Schema.Attribute.Text;
+    description: Schema.Attribute.RichText;
     heading: Schema.Attribute.String;
   };
 }
@@ -76,7 +76,7 @@ export interface SectionsCityFaq extends Struct.ComponentSchema {
     icon: 'question';
   };
   attributes: {
-    answer: Schema.Attribute.Text & Schema.Attribute.Required;
+    answer: Schema.Attribute.RichText & Schema.Attribute.Required;
     question: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
@@ -89,12 +89,12 @@ export interface SectionsCityHero extends Struct.ComponentSchema {
     icon: 'picture';
   };
   attributes: {
-    aboutBodyTemplate: Schema.Attribute.Text;
+    aboutBodyTemplate: Schema.Attribute.RichText;
     aboutEyebrowTemplate: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'About {city}'>;
     aboutHeadingTemplate: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'{service} for {city} Businesses'>;
-    advantageBody: Schema.Attribute.Text;
+    advantageBody: Schema.Attribute.RichText;
     advantageCtaPrimary: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Get a Free Local SEO Audit'>;
     advantageCtaSecondary: Schema.Attribute.String &
@@ -102,7 +102,7 @@ export interface SectionsCityHero extends Struct.ComponentSchema {
     advantageHeadingTemplate: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Ready to Capture the {city} Market?'>;
     advantageStats: Schema.Attribute.JSON;
-    bottomCtaBodyTemplate: Schema.Attribute.Text &
+    bottomCtaBodyTemplate: Schema.Attribute.RichText &
       Schema.Attribute.DefaultTo<'Contact us today to discuss your {service} project. We provide custom quotes and transparent timelines.'>;
     bottomCtaHeadingTemplate: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Ready to Grow Your Business in {city}?'>;
@@ -119,7 +119,7 @@ export interface SectionsCityHero extends Struct.ComponentSchema {
     faqEyebrow: Schema.Attribute.String & Schema.Attribute.DefaultTo<'FAQ'>;
     faqHeading: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Frequently asked questions'>;
-    faqIntroTemplate: Schema.Attribute.Text &
+    faqIntroTemplate: Schema.Attribute.RichText &
       Schema.Attribute.DefaultTo<'Everything you need to know about our {service} services in {city}.'>;
     headlineTemplate: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'{service} Services in {city}'>;
@@ -133,7 +133,7 @@ export interface SectionsCityHero extends Struct.ComponentSchema {
       Schema.Attribute.DefaultTo<'Industries We Serve in {city}'>;
     quoteCtaTemplate: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Get a Free {city} Quote'>;
-    rankingDescription: Schema.Attribute.Text;
+    rankingDescription: Schema.Attribute.RichText;
     rankingEyebrow: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'What We Optimize'>;
     rankingHeadingTemplate: Schema.Attribute.String &
@@ -142,9 +142,9 @@ export interface SectionsCityHero extends Struct.ComponentSchema {
     sidebarHeadingTemplate: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Why {city} Businesses Choose VynTech'>;
     sidebarItems: Schema.Attribute.JSON;
-    subheadingTemplate: Schema.Attribute.Text &
+    subheadingTemplate: Schema.Attribute.RichText &
       Schema.Attribute.DefaultTo<'{description} We are the trusted local partner for businesses in {city}.'>;
-    whyChooseBodyTemplate: Schema.Attribute.Text &
+    whyChooseBodyTemplate: Schema.Attribute.RichText &
       Schema.Attribute.DefaultTo<'Our team is dedicated to providing high-quality digital solutions tailored specifically for the {city} market. Let us help you dominate your local industry.'>;
     whyChooseHeadingTemplate: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Why Choose Us for {service} in {city}?'>;
@@ -159,7 +159,7 @@ export interface SectionsCloudIncludedBlock extends Struct.ComponentSchema {
     icon: 'server';
   };
   attributes: {
-    description: Schema.Attribute.Text;
+    description: Schema.Attribute.RichText;
     heading: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Enterprise Cloud Deliverables'>;
     items: Schema.Attribute.Component<'sections.cloud-included-item', true>;
@@ -173,7 +173,7 @@ export interface SectionsCloudIncludedItem extends Struct.ComponentSchema {
     icon: 'cloud';
   };
   attributes: {
-    description: Schema.Attribute.Text;
+    description: Schema.Attribute.RichText;
     itemId: Schema.Attribute.String;
     points: Schema.Attribute.JSON;
     title: Schema.Attribute.String & Schema.Attribute.Required;
@@ -202,7 +202,7 @@ export interface SectionsCustomSoftwareServicesBlock
     icon: 'layer';
   };
   attributes: {
-    description: Schema.Attribute.Text;
+    description: Schema.Attribute.RichText;
     heading: Schema.Attribute.String;
     headingAccent: Schema.Attribute.String;
     items: Schema.Attribute.Component<'shared.named-item', true>;
@@ -216,7 +216,7 @@ export interface SectionsDeliveryStep extends Struct.ComponentSchema {
     icon: 'list';
   };
   attributes: {
-    content: Schema.Attribute.Text;
+    content: Schema.Attribute.RichText;
     title: Schema.Attribute.String;
   };
 }
@@ -229,7 +229,7 @@ export interface SectionsDevopsGridBlock extends Struct.ComponentSchema {
     icon: 'gear';
   };
   attributes: {
-    description: Schema.Attribute.Text;
+    description: Schema.Attribute.RichText;
     eyebrow: Schema.Attribute.String;
     heading: Schema.Attribute.String;
     items: Schema.Attribute.Component<'sections.numbered-item', true>;
@@ -244,7 +244,7 @@ export interface SectionsEcommerceServicesBlock extends Struct.ComponentSchema {
     icon: 'shopping-cart';
   };
   attributes: {
-    description: Schema.Attribute.Text;
+    description: Schema.Attribute.RichText;
     eyebrow: Schema.Attribute.String;
     heading: Schema.Attribute.String;
     items: Schema.Attribute.Component<'sections.numbered-item', true>;
@@ -259,9 +259,9 @@ export interface SectionsEngagementStrategy extends Struct.ComponentSchema {
     icon: 'compass';
   };
   attributes: {
-    calloutText: Schema.Attribute.Text;
+    calloutText: Schema.Attribute.RichText;
     calloutTitle: Schema.Attribute.String;
-    description: Schema.Attribute.Text;
+    description: Schema.Attribute.RichText;
     strategyId: Schema.Attribute.String;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };
@@ -276,9 +276,9 @@ export interface SectionsLocalSeoBlock extends Struct.ComponentSchema {
   };
   attributes: {
     cities: Schema.Attribute.JSON;
-    citiesDescription: Schema.Attribute.Text;
+    citiesDescription: Schema.Attribute.RichText;
     citiesHeading: Schema.Attribute.String;
-    ctaBody: Schema.Attribute.Text;
+    ctaBody: Schema.Attribute.RichText;
     ctaHeading: Schema.Attribute.String;
     ctaLabel: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Request a Free Quote'>;
@@ -299,7 +299,7 @@ export interface SectionsMobileTab extends Struct.ComponentSchema {
     icon: 'mobile';
   };
   attributes: {
-    description: Schema.Attribute.Text;
+    description: Schema.Attribute.RichText;
     highlightText: Schema.Attribute.String;
     name: Schema.Attribute.String & Schema.Attribute.Required;
     points: Schema.Attribute.Component<'sections.mobile-tab-point', true>;
@@ -315,7 +315,7 @@ export interface SectionsMobileTabPoint extends Struct.ComponentSchema {
     icon: 'bulletList';
   };
   attributes: {
-    text: Schema.Attribute.Text;
+    text: Schema.Attribute.RichText;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
@@ -328,7 +328,7 @@ export interface SectionsMobileTabsBlock extends Struct.ComponentSchema {
     icon: 'tabs';
   };
   attributes: {
-    description: Schema.Attribute.Text;
+    description: Schema.Attribute.RichText;
     eyebrow: Schema.Attribute.String;
     heading: Schema.Attribute.String;
     tabs: Schema.Attribute.Component<'sections.mobile-tab', true>;
@@ -343,7 +343,7 @@ export interface SectionsNumberedItem extends Struct.ComponentSchema {
     icon: 'hashtag';
   };
   attributes: {
-    desc: Schema.Attribute.Text;
+    desc: Schema.Attribute.RichText;
     num: Schema.Attribute.String;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };
@@ -357,7 +357,7 @@ export interface SectionsSeoPackage extends Struct.ComponentSchema {
     icon: 'cash';
   };
   attributes: {
-    blurb: Schema.Attribute.Text;
+    blurb: Schema.Attribute.RichText;
     ctaLabel: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Get Started'>;
     featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
@@ -381,10 +381,10 @@ export interface SectionsSeoPackagesBlock extends Struct.ComponentSchema {
       Schema.Attribute.DefaultTo<'Contact us'>;
     customPackageText: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Need a custom package?'>;
-    description: Schema.Attribute.Text;
+    description: Schema.Attribute.RichText;
     eyebrow: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'SEO Packages'>;
-    footerNote: Schema.Attribute.Text;
+    footerNote: Schema.Attribute.RichText;
     heading: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Choose Your Growth Plan'>;
     packages: Schema.Attribute.Component<'sections.seo-package', true>;
@@ -403,7 +403,7 @@ export interface SectionsTechStackBlock extends Struct.ComponentSchema {
       'sections.tech-stack-category',
       true
     >;
-    description: Schema.Attribute.Text;
+    description: Schema.Attribute.RichText;
     heading: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Technology Stack'>;
   };
@@ -441,7 +441,7 @@ export interface SectionsUiuxEngagement extends Struct.ComponentSchema {
     icon: 'paint-brush';
   };
   attributes: {
-    description: Schema.Attribute.Text;
+    description: Schema.Attribute.RichText;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
@@ -479,7 +479,7 @@ export interface SharedCaseStudy extends Struct.ComponentSchema {
   };
   attributes: {
     industry: Schema.Attribute.String;
-    result: Schema.Attribute.Text;
+    result: Schema.Attribute.RichText;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
@@ -492,7 +492,7 @@ export interface SharedFaq extends Struct.ComponentSchema {
     icon: 'question';
   };
   attributes: {
-    answer: Schema.Attribute.Text & Schema.Attribute.Required;
+    answer: Schema.Attribute.RichText & Schema.Attribute.Required;
     question: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
@@ -514,7 +514,7 @@ export interface SharedNamedItem extends Struct.ComponentSchema {
     displayName: 'Named Item';
   };
   attributes: {
-    description: Schema.Attribute.Text;
+    description: Schema.Attribute.RichText;
     icon: Schema.Attribute.String;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };
@@ -561,7 +561,7 @@ export interface SharedProcessStep extends Struct.ComponentSchema {
     displayName: 'Process Step';
   };
   attributes: {
-    description: Schema.Attribute.Text;
+    description: Schema.Attribute.RichText;
     step: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }

@@ -12,7 +12,7 @@
       "required": true
     },
     "blurb": {
-      "type": "text"
+      "type": "richtext"
     },
     "price": {
       "type": "string",

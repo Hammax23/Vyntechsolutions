@@ -11,7 +11,7 @@
       "type": "string"
     },
     "description": {
-      "type": "text"
+      "type": "richtext"
     },
     "cities": {
       "type": "json"

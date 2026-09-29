@@ -15,13 +15,13 @@
       "required": true
     },
     "description": {
-      "type": "text"
+      "type": "richtext"
     },
     "calloutTitle": {
       "type": "string"
     },
     "calloutText": {
-      "type": "text"
+      "type": "richtext"
     }
   }
 }

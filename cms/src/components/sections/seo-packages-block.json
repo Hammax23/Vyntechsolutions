@@ -16,10 +16,10 @@
       "default": "Choose Your Growth Plan"
     },
     "description": {
-      "type": "text"
+      "type": "richtext"
     },
     "footerNote": {
-      "type": "text"
+      "type": "richtext"
     },
     "customPackageText": {
       "type": "string",

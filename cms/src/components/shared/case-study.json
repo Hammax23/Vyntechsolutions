@@ -5,6 +5,6 @@
   "attributes": {
     "title": { "type": "string", "required": true },
     "industry": { "type": "string" },
-    "result": { "type": "text" }
+    "result": { "type": "richtext" }
   }
 }

@@ -288,7 +288,12 @@ export default function CityServicePage() {
                       <div className="w-4 h-4 sm:w-6 sm:h-6 rounded-full bg-gradient-to-r from-[#00E1FF] to-[#0055FF] opacity-90 group-hover:scale-110 transition-transform"></div>
                     </div>
                     <h3 className="text-lg sm:text-xl font-bold text-[#0d1117] mb-2 sm:mb-3">{feature.title}</h3>
-                    <p className="text-gray-500 leading-relaxed text-sm sm:text-base font-light">{feature.description}</p>
+                    <div
+                      className={`text-gray-500 leading-relaxed text-sm sm:text-base font-light ${CMS_LINK}`}
+                      dangerouslySetInnerHTML={{
+                        __html: cmsInlineToHtml(feature.description || ""),
+                      }}
+                    />
                   </div>
                 ))}
               </div>
@@ -332,18 +337,24 @@ export default function CityServicePage() {
                 <h3 className="text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#00E1FF] to-[#0055FF] mb-6 tracking-tight">
                   {activeStrategy.heading || activeStrategy.title}
                 </h3>
-                <p className="text-gray-600 text-lg leading-relaxed mb-10 font-light">
-                  {activeStrategy.description}
-                </p>
+                <div
+                  className={`text-gray-600 text-lg leading-relaxed mb-10 font-light ${CMS_LINK}`}
+                  dangerouslySetInnerHTML={{
+                    __html: cmsInlineToHtml(activeStrategy.description || ""),
+                  }}
+                />
                 
                 {/* Callout Box */}
                 <div className="border-l-[4px] border-[#0055FF] bg-gradient-to-r from-white to-gray-50/50 p-8 shadow-sm rounded-r-2xl">
                   <h4 className="text-[#0055FF] font-extrabold text-lg mb-2">
                     {activeStrategy.calloutTitle}
                   </h4>
-                  <p className="text-gray-600 mb-6 font-light">
-                    {activeStrategy.calloutText}
-                  </p>
+                  <div
+                    className={`text-gray-600 mb-6 font-light ${CMS_LINK}`}
+                    dangerouslySetInnerHTML={{
+                      __html: cmsInlineToHtml(activeStrategy.calloutText || ""),
+                    }}
+                  />
                   <button 
                     onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
                     className="flex items-center gap-2 font-bold text-[#0d1117] hover:text-[#0055FF] transition-colors group"

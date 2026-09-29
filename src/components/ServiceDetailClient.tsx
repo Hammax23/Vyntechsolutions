@@ -17,6 +17,25 @@ import {
   resolveServiceOverviewHeading,
 } from "@/lib/service-headings";
 
+/** CMS richtext / Markdown snippet with clickable internal links */
+function CmsText({
+  html,
+  className = "",
+  as: Tag = "div",
+}: {
+  html?: string | null;
+  className?: string;
+  as?: "div" | "p" | "span";
+}) {
+  if (!html?.trim()) return null;
+  return (
+    <Tag
+      className={`[&_a]:text-[#0055FF] [&_a]:underline [&_a]:underline-offset-2 ${className}`}
+      dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(html) }}
+    />
+  );
+}
+
 const HERO_VARIANT_BY_SLUG: Record<string, string> = {
   "web-development": "browser",
   "mobile-app-development": "mobile",
@@ -185,9 +204,10 @@ const CategorizedTechStack = ({
             {data.heading || "Technology Stack"}
           </h2>
           {data.description && (
-            <p className="text-white/60 text-sm sm:text-base leading-relaxed max-w-3xl mx-auto">
-              {data.description}
-            </p>
+            <CmsText
+              html={data.description}
+              className="text-white/60 text-sm sm:text-base leading-relaxed max-w-3xl mx-auto [&_a]:text-[#00E1FF]"
+            />
           )}
         </div>
 
@@ -348,7 +368,9 @@ const WebDevDeliveryModelSection = ({
 
                   {isOpen && (
                     <div className="px-6 pb-6 text-gray-300 text-sm sm:text-base leading-relaxed border-t border-white/10 pt-4">
-                      {phase.content}
+                      {phase.content ? (
+                        <CmsText html={phase.content} className="text-gray-300 text-sm sm:text-base leading-relaxed" />
+                      ) : null}
                     </div>
                   )}
                 </div>
@@ -413,9 +435,10 @@ const CloudIncludedSection = ({ data }: { data: NonNullable<ServicePageSections[
           </h2>
           <div className="w-20 sm:w-24 h-1 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full mb-3 sm:mb-4" />
           {data.description && (
-            <p className="text-gray-600 text-xs sm:text-base leading-relaxed px-2">
-              {data.description}
-            </p>
+            <CmsText
+              html={data.description}
+              className="text-gray-600 text-xs sm:text-base leading-relaxed px-2"
+            />
           )}
         </div>
 
@@ -459,9 +482,10 @@ const CloudIncludedSection = ({ data }: { data: NonNullable<ServicePageSections[
 
                 {isOpen && (
                   <div className="px-4 pb-4 pt-2 border-t border-gray-100 bg-[#f8fafc]">
-                    <p className="text-gray-600 text-xs sm:text-sm leading-relaxed mb-4">
-                      {item.description}
-                    </p>
+                    <CmsText
+                      html={item.description}
+                      className="text-gray-600 text-xs sm:text-sm leading-relaxed mb-4"
+                    />
                     <div className="space-y-2.5">
                       {item.points.map((pt, pIdx) => (
                         <div key={pIdx} className="flex items-center gap-2.5">
@@ -525,7 +549,10 @@ const CloudIncludedSection = ({ data }: { data: NonNullable<ServicePageSections[
 
             <div className="col-span-7 bg-[#f8fafc] border border-gray-200 text-[#0f172a] rounded-2xl p-10 flex flex-col justify-center shadow-inner">
               <h3 className="text-3xl font-extrabold text-[#0f172a] mb-4">{current?.title}</h3>
-              <p className="text-gray-600 text-base leading-relaxed mb-8">{current?.description}</p>
+              <CmsText
+                html={current?.description}
+                className="text-gray-600 text-base leading-relaxed mb-8"
+              />
               <div className="space-y-4">
                 {current?.points.map((pt, pIdx) => (
                   <div key={pIdx} className="flex items-center gap-3.5">
@@ -629,9 +656,10 @@ const AiMlServicesGridSection = ({ data }: { data: NonNullable<ServicePageSectio
                       </h3>
                     </div>
                   </div>
-                  <p className="text-gray-700 text-xs sm:text-base leading-relaxed">
-                    {svc.description}
-                  </p>
+                  <CmsText
+                    html={svc.description}
+                    className="text-gray-700 text-xs sm:text-base leading-relaxed"
+                  />
                 </div>
               );
             })}
@@ -663,9 +691,10 @@ const DevOpsServicesGridSection = ({ data }: { data: NonNullable<ServicePageSect
           </h2>
           <div className="w-20 h-1 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full mb-6" />
           {data.description && (
-            <p className="text-gray-600 max-w-3xl text-sm sm:text-base leading-relaxed">
-              {data.description}
-            </p>
+            <CmsText
+              html={data.description}
+              className="text-gray-600 max-w-3xl text-sm sm:text-base leading-relaxed"
+            />
           )}
         </div>
 
@@ -1242,7 +1271,7 @@ const CustomSoftwareServicesSection = ({
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full mb-8 mx-auto" />
           {data.description ? (
-            <p className="text-gray-600 text-lg leading-relaxed">{data.description}</p>
+            <CmsText html={data.description} className="text-gray-600 text-lg leading-relaxed" />
           ) : null}
         </div>
 
@@ -1262,7 +1291,7 @@ const CustomSoftwareServicesSection = ({
               <h3 className="text-xl font-bold text-[#0f172a] mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#00E1FF] group-hover:to-[#0055FF] transition-all">
                 {srv.title}
               </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">{srv.description}</p>
+              <CmsText html={srv.description} className="text-gray-600 text-sm leading-relaxed" />
             </div>
           ))}
         </div>
@@ -1308,9 +1337,10 @@ const EcommerceServicesSection = ({ data }: { data: NonNullable<ServicePageSecti
             {data.heading || "End-to-End Ecommerce Development Services"}
           </h2>
           {data.description && (
-          <p className={`text-gray-500 max-w-xl text-sm sm:text-base leading-relaxed transition-all duration-700 delay-200 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
-            {data.description}
-          </p>
+          <CmsText
+            html={data.description}
+            className={`text-gray-500 max-w-xl text-sm sm:text-base leading-relaxed transition-all duration-700 delay-200 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+          />
           )}
         </div>
 
@@ -1345,9 +1375,10 @@ const EcommerceServicesSection = ({ data }: { data: NonNullable<ServicePageSecti
               </h3>
 
               {/* Description */}
-              <p className="relative z-10 text-gray-500 text-sm leading-relaxed group-hover:text-gray-600 transition-colors duration-300">
-                {item.desc}
-              </p>
+              <CmsText
+                html={item.desc}
+                className="relative z-10 text-gray-500 text-sm leading-relaxed group-hover:text-gray-600 transition-colors duration-300"
+              />
 
               {/* Learn More link, slides in on hover */}
               <div className="relative z-10 mt-5 overflow-hidden h-5">
@@ -1439,9 +1470,10 @@ const UiUxEngagementsSection = ({ data }: { data: NonNullable<ServicePageSection
                 <h3 className="relative z-10 text-base font-bold text-[#0f172a] mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#00E1FF] group-hover:to-[#0055FF] transition-all">
                   {item.title}
                 </h3>
-                <p className="relative z-10 text-gray-500 text-sm leading-relaxed group-hover:text-gray-600 transition-colors duration-300">
-                  {item.description}
-                </p>
+                <CmsText
+                  html={item.description}
+                  className="relative z-10 text-gray-500 text-sm leading-relaxed group-hover:text-gray-600 transition-colors duration-300"
+                />
 
                 {/* Bottom arrow, slides in on hover */}
                 <div className="relative z-10 mt-5 flex items-center gap-1.5 overflow-hidden">
@@ -2097,6 +2129,18 @@ const MobileDevServicesTabSection = ({ data }: { data: NonNullable<ServicePageSe
   const current = tabs[activeTab];
 
   const renderDescription = (desc: string, highlight: string) => {
+    if (!desc) return null;
+    // Richtext / Markdown links — prefer full CMS rendering
+    if (/<[a-z][\s\S]*>/i.test(desc) || /\[[^\]]+\]\((https?:\/\/|\/)/.test(desc)) {
+      return (
+        <CmsText
+          html={desc}
+          as="span"
+          className="[&_a]:text-[#00E1FF]"
+        />
+      );
+    }
+    if (!highlight) return desc;
     const parts = desc.split(highlight);
     if (parts.length < 2) return desc;
     return (
@@ -2122,9 +2166,10 @@ const MobileDevServicesTabSection = ({ data }: { data: NonNullable<ServicePageSe
             {data.heading || "Mobile App Development Services"}
           </h2>
           {data.description && (
-          <p className="text-gray-400 text-xs sm:text-base max-w-2xl mx-auto leading-relaxed">
-            {data.description}
-          </p>
+          <CmsText
+            html={data.description}
+            className="text-gray-400 text-xs sm:text-base max-w-2xl mx-auto leading-relaxed [&_a]:text-[#00E1FF]"
+          />
           )}
         </div>
 
@@ -2196,10 +2241,10 @@ const MobileDevServicesTabSection = ({ data }: { data: NonNullable<ServicePageSe
                           <path strokeLinecap="round" strokeLinejoin="round" d="M1.5 12.75l6 6" />
                         </svg>
                       </div>
-                      <p className="text-gray-300 text-xs sm:text-base leading-relaxed">
+                      <div className="text-gray-300 text-xs sm:text-base leading-relaxed">
                         <strong className="text-white font-bold">{pt.title}: </strong>
-                        {pt.text}
-                      </p>
+                        <CmsText html={pt.text} as="span" className="[&_a]:text-[#00E1FF]" />
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -2245,7 +2290,10 @@ const CoreCapabilitiesSection = ({
 
             <div>
               <h3 className="text-sm font-bold text-[#0f172a] mb-2">{item.title}</h3>
-              <p className="text-sm text-gray-600 leading-relaxed font-normal">{item.description}</p>
+              <CmsText
+                html={item.description}
+                className="text-sm text-gray-600 leading-relaxed font-normal"
+              />
             </div>
           </div>
         ))}
@@ -3043,7 +3091,10 @@ export default function ServiceDetailClient({
                     <div className="mb-6">
                       <h3 className={`text-xl font-bold mb-2 ${pkg.featured ? "text-white" : "text-[#1a1a2e]"}`}>{pkg.name}</h3>
                       {pkg.blurb && (
-                        <p className={`text-sm ${pkg.featured ? "text-white/60" : "text-gray-500"}`}>{pkg.blurb}</p>
+                        <CmsText
+                          html={pkg.blurb}
+                          className={`text-sm ${pkg.featured ? "text-white/60 [&_a]:text-[#00E1FF]" : "text-gray-500"}`}
+                        />
                       )}
                     </div>
                     <div className="mb-6">
@@ -3119,7 +3170,10 @@ export default function ServiceDetailClient({
                     {cs.industry ? (
                       <p className="text-xs text-[#0055FF] font-medium mb-2">{cs.industry}</p>
                     ) : null}
-                    <p className="text-gray-600 text-sm leading-relaxed">{cs.result}</p>
+                    <CmsText
+                      html={cs.result}
+                      className="text-gray-600 text-sm leading-relaxed"
+                    />
                   </div>
                 ))}
               </div>

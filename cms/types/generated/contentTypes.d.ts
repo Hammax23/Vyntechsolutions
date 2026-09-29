@@ -1020,18 +1020,18 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    ctaBody: Schema.Attribute.Text;
+    ctaBody: Schema.Attribute.RichText;
     ctaButtonLabel: Schema.Attribute.String;
     ctaHeading: Schema.Attribute.String;
     customSoftwareServicesBlock: Schema.Attribute.Component<
       'sections.custom-software-services-block',
       false
     >;
-    deliveryDescription: Schema.Attribute.Text;
+    deliveryDescription: Schema.Attribute.RichText;
     deliveryEyebrow: Schema.Attribute.String;
     deliveryHeading: Schema.Attribute.String;
     deliverySteps: Schema.Attribute.Component<'sections.delivery-step', true>;
-    description: Schema.Attribute.Text;
+    description: Schema.Attribute.RichText;
     devopsGridBlock: Schema.Attribute.Component<
       'sections.devops-grid-block',
       false
@@ -1047,7 +1047,7 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
     faqEyebrow: Schema.Attribute.String & Schema.Attribute.DefaultTo<'FAQ'>;
     faqHeading: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Frequently asked questions'>;
-    faqIntro: Schema.Attribute.Text &
+    faqIntro: Schema.Attribute.RichText &
       Schema.Attribute.DefaultTo<'Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.'>;
     faqs: Schema.Attribute.Component<'shared.faq', true>;
     features: Schema.Attribute.Component<'shared.named-item', true>;
@@ -1088,10 +1088,10 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
     order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     overview: Schema.Attribute.RichText;
     overviewHeading: Schema.Attribute.String;
-    overviewTagline: Schema.Attribute.Text;
+    overviewTagline: Schema.Attribute.RichText;
     pageSections: Schema.Attribute.JSON;
     process: Schema.Attribute.Component<'shared.process-step', true>;
-    processDescription: Schema.Attribute.Text;
+    processDescription: Schema.Attribute.RichText;
     processHeading: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     seo: Schema.Attribute.Component<'shared.seo', false>;

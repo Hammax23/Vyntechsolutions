@@ -10,7 +10,7 @@
       "type": "string"
     },
     "content": {
-      "type": "text"
+      "type": "richtext"
     }
   }
 }

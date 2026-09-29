@@ -27,7 +27,7 @@
       "type": "string"
     },
     "citiesDescription": {
-      "type": "text"
+      "type": "richtext"
     },
     "cities": {
       "type": "json"
@@ -36,7 +36,7 @@
       "type": "string"
     },
     "ctaBody": {
-      "type": "text"
+      "type": "richtext"
     },
     "ctaLabel": {
       "type": "string",

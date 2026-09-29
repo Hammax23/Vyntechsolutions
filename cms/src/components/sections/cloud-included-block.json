@@ -12,7 +12,7 @@
       "default": "Enterprise Cloud Deliverables"
     },
     "description": {
-      "type": "text"
+      "type": "richtext"
     },
     "items": {
       "type": "component",

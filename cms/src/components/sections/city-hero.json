@@ -16,7 +16,7 @@
       "default": "{service} Services in {city}"
     },
     "subheadingTemplate": {
-      "type": "text",
+      "type": "richtext",
       "default": "{description} We are the trusted local partner for businesses in {city}."
     },
     "ctaLabel": {
@@ -28,7 +28,7 @@
       "default": "Why Choose Us for {service} in {city}?"
     },
     "whyChooseBodyTemplate": {
-      "type": "text",
+      "type": "richtext",
       "default": "Our team is dedicated to providing high-quality digital solutions tailored specifically for the {city} market. Let us help you dominate your local industry."
     },
     "engagementHeadingTemplate": {
@@ -44,7 +44,7 @@
       "default": "{service} for {city} Businesses"
     },
     "aboutBodyTemplate": {
-      "type": "text"
+      "type": "richtext"
     },
     "industriesHeadingTemplate": {
       "type": "string",
@@ -83,7 +83,7 @@
       "default": "Ready to Grow Your Business in {city}?"
     },
     "bottomCtaBodyTemplate": {
-      "type": "text",
+      "type": "richtext",
       "default": "Contact us today to discuss your {service} project. We provide custom quotes and transparent timelines."
     },
     "bottomCtaLabel": {
@@ -99,7 +99,7 @@
       "default": "Frequently asked questions"
     },
     "faqIntroTemplate": {
-      "type": "text",
+      "type": "richtext",
       "default": "Everything you need to know about our {service} services in {city}."
     },
     "rankingEyebrow": {
@@ -111,7 +111,7 @@
       "default": "Dominating the {city} Search Results"
     },
     "rankingDescription": {
-      "type": "text"
+      "type": "richtext"
     },
     "rankingItems": {
       "type": "json"
@@ -121,7 +121,7 @@
       "default": "Ready to Capture the {city} Market?"
     },
     "advantageBody": {
-      "type": "text"
+      "type": "richtext"
     },
     "advantageCtaPrimary": {
       "type": "string",

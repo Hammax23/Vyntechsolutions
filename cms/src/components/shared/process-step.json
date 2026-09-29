@@ -4,6 +4,6 @@
   "options": {},
   "attributes": {
     "step": { "type": "string", "required": true },
-    "description": { "type": "text" }
+    "description": { "type": "richtext" }
   }
 }
