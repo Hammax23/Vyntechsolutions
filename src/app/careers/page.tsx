@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { cmsInlineToHtml } from "@/lib/richtext";
 
 interface JobPosition {
   id: string;
@@ -187,7 +188,12 @@ export default function CareersPage() {
                   {heroHeading}
                 </h1>
               ) : null}
-              {heroBody ? <p className="text-white/70 leading-relaxed">{heroBody}</p> : null}
+              {heroBody ? (
+                <div
+                  className="text-white/70 leading-relaxed [&_a]:text-[#00E1FF] [&_a]:underline"
+                  dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(heroBody) }}
+                />
+              ) : null}
             </div>
           </div>
         </section>
@@ -382,7 +388,12 @@ export default function CareersPage() {
             <div className="p-6 overflow-y-auto max-h-[60vh] space-y-6">
               <div>
                 <h3 className="text-sm font-semibold text-[#1a1a2e] uppercase tracking-wider mb-3">About the Role</h3>
-                <p className="text-gray-600 leading-relaxed">{selectedPosition.description}</p>
+                <div
+                  className="text-gray-600 leading-relaxed [&_a]:text-[#0055FF] [&_a]:underline"
+                  dangerouslySetInnerHTML={{
+                    __html: cmsInlineToHtml(selectedPosition.description),
+                  }}
+                />
               </div>
             </div>
             <div className="p-6 border-t border-gray-100 bg-gray-50">

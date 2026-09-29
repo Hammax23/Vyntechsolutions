@@ -14,6 +14,10 @@ import {
 import CityFAQ from "@/components/CityFAQ";
 import { DEFAULT_CITY_FAQS, DEFAULT_CITY_HERO, fillCityCopy } from "@/lib/city-copy";
 import type { CmsService } from "@/lib/cms/content";
+import { cmsBodyToHtml, cmsInlineToHtml } from "@/lib/richtext";
+
+const CMS_LINK =
+  "[&_a]:text-[#0055FF] [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:opacity-80";
 
 type ServiceWithSections = ServiceData &
   Partial<
@@ -265,15 +269,18 @@ export default function CityServicePage() {
                   {t(cityHero.whyChooseHeadingTemplate)}
                 </h2>
                 <div className="w-20 h-1 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full mb-8 shadow-sm"></div>
-                <p 
-                  className="text-lg text-gray-600 leading-relaxed mb-6 font-light" 
-                  dangerouslySetInnerHTML={{ __html: t(cityHero.overviewTemplate) || service.overview || "" }}
+                <div
+                  className={`text-lg text-gray-600 leading-relaxed mb-6 font-light ${CMS_LINK}`}
+                  dangerouslySetInnerHTML={{
+                    __html: cmsBodyToHtml(t(cityHero.overviewTemplate) || service.overview || ""),
+                  }}
                 />
-                <p 
-                  className="text-lg text-gray-600 leading-relaxed font-light" 
-                  dangerouslySetInnerHTML={{ __html: t(cityHero.whyChooseBodyTemplate) || "" }}
-                />
-              </div>
+                <div
+                  className={`text-lg text-gray-600 leading-relaxed font-light ${CMS_LINK}`}
+                  dangerouslySetInnerHTML={{
+                    __html: cmsBodyToHtml(t(cityHero.whyChooseBodyTemplate) || ""),
+                  }}
+                />              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 {(cityOverrides.features || service.features)?.slice(0, 4).map((feature, idx) => (
                   <div key={idx} className="bg-white border border-gray-100 shadow-sm rounded-2xl p-5 sm:p-8 hover:shadow-[0_20px_40px_-15px_rgba(0,85,255,0.15)] hover:border-[#00E1FF]/30 transition-all duration-500 group">
@@ -365,11 +372,12 @@ export default function CityServicePage() {
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0d1117] mb-6 leading-tight">
                   {t(cityHero.rankingHeadingTemplate)}
                 </h2>
-                <p 
-                  className="text-gray-600 text-lg font-light"
-                  dangerouslySetInnerHTML={{ __html: cityHero.rankingDescription || "" }}
-                />
-              </div>
+                <div
+                  className={`text-gray-600 text-lg font-light ${CMS_LINK}`}
+                  dangerouslySetInnerHTML={{
+                    __html: cmsBodyToHtml(cityHero.rankingDescription || ""),
+                  }}
+                />              </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {(cityHero.rankingItems || []).map((item, i) => (
@@ -401,11 +409,12 @@ export default function CityServicePage() {
                     <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-6 leading-tight">
                       {t(cityHero.advantageHeadingTemplate)}
                     </h2>
-                    <p 
-                      className="text-gray-300 text-lg font-light mb-8 leading-relaxed max-w-lg"
-                      dangerouslySetInnerHTML={{ __html: cityHero.advantageBody || "" }}
-                    />
-                    <div className="flex flex-col sm:flex-row gap-4">
+                    <div
+                      className={`text-gray-300 text-lg font-light mb-8 leading-relaxed max-w-lg ${CMS_LINK} [&_a]:text-[#00E1FF]`}
+                      dangerouslySetInnerHTML={{
+                        __html: cmsBodyToHtml(cityHero.advantageBody || ""),
+                      }}
+                    />                    <div className="flex flex-col sm:flex-row gap-4">
                       <button onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))} className="bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-white px-8 py-4 rounded-full font-bold text-sm shadow-[0_8px_20px_rgba(0,85,255,0.2)] hover:shadow-[0_12px_25px_rgba(0,85,255,0.4)] hover:-translate-y-0.5 transition-all duration-300 w-full sm:w-auto flex justify-center items-center text-center">
                         {cityHero.advantageCtaPrimary}
                       </button>
@@ -442,11 +451,14 @@ export default function CityServicePage() {
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0d1117] mb-8 leading-[1.1] tracking-tight">
                   {t(cityHero.aboutHeadingTemplate)}
                 </h2>
-                <div className="text-lg text-gray-600 leading-relaxed mb-12 font-light space-y-4">
+                <div className={`text-lg text-gray-600 leading-relaxed mb-12 font-light space-y-4 ${CMS_LINK}`}>
                   {t(cityHero.aboutBodyTemplate)
                     ?.split("\n\n")
                     .map((p, i) => (
-                      <p key={i} dangerouslySetInnerHTML={{ __html: p }} />
+                      <div
+                        key={i}
+                        dangerouslySetInnerHTML={{ __html: cmsBodyToHtml(p) }}
+                      />
                     ))}
                 </div>
 
@@ -487,8 +499,10 @@ export default function CityServicePage() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                           </svg>
                         </div>
-                        <span className="text-gray-700 text-sm sm:text-base" dangerouslySetInnerHTML={{ __html: t(item) }} />
-                      </li>
+                        <span
+                          className={`text-gray-700 text-sm sm:text-base ${CMS_LINK}`}
+                          dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(t(item)) }}
+                        />                      </li>
                     ))}
                   </ul>
 

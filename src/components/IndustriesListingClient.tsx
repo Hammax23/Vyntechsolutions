@@ -8,6 +8,7 @@ import {
   type IndustriesListingDefaults,
 } from "@/data/industriesData";
 import { DEFAULT_NAV_CHROME } from "@/lib/ui-copy";
+import { cmsInlineToHtml } from "@/lib/richtext";
 import Image from "next/image";
 import type { ListingIndustryCard } from "@/lib/cms/industry-bundle";
 
@@ -150,9 +151,10 @@ export default function IndustriesListingClient({
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
                 {accentLastWord(chrome.heroHeading, "text-[#0d9488]")}
               </h1>
-              <p className="text-lg text-white/70 mb-8 leading-relaxed">
-                {chrome.heroBody}
-              </p>
+              <div
+                className="text-lg text-white/70 mb-8 leading-relaxed [&_a]:text-[#00E1FF] [&_a]:underline"
+                dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(chrome.heroBody) }}
+              />
               <Link
                 href="#industries"
                 className="inline-flex items-center gap-2 bg-[#0d9488] hover:bg-[#0f766e] text-white px-8 py-4 rounded-lg font-medium transition-all duration-300"
@@ -200,9 +202,12 @@ export default function IndustriesListingClient({
                   <h3 className="text-xl font-semibold text-[#1a1a2e] mb-3 group-hover:text-[#0d9488] transition-colors">
                     {industry.title}
                   </h3>
-                  <p className="text-gray-600 mb-4 leading-relaxed">
-                    {industry.description}
-                  </p>
+                  <div
+                    className="text-gray-600 mb-4 leading-relaxed [&_a]:text-[#0055FF] [&_a]:underline"
+                    dangerouslySetInnerHTML={{
+                      __html: cmsInlineToHtml(industry.description),
+                    }}
+                  />
                   <div className="flex flex-wrap gap-2 mb-4">
                     {industry.highlights.slice(0, 3).map((highlight, i) => (
                       <span
@@ -248,7 +253,10 @@ export default function IndustriesListingClient({
                 <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
                   {chrome.ctaHeading}
                 </h2>
-                <p className="text-white/70 text-lg mb-8">{chrome.ctaBody}</p>
+                <div
+                  className="text-white/70 text-lg mb-8 [&_a]:text-[#00E1FF] [&_a]:underline"
+                  dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(chrome.ctaBody) }}
+                />
                 <Link
                   href={chrome.ctaHref}
                   className="inline-flex items-center gap-2 bg-[#0d9488] hover:bg-[#0f766e] text-white px-8 py-4 rounded-lg font-medium transition-all duration-300"

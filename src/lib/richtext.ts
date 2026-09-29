@@ -82,14 +82,37 @@ function inlineMarkdownToHtml(text: string): string {
   return out;
 }
 
+/** Convert leftover Markdown links inside already-HTML CMS strings. */
+function convertMarkdownLinksInHtml(html: string): string {
+  return html.replace(
+    /\[([^\]]+)\]\((https?:\/\/[^)\s]+|\/[^)\s]*)\)/g,
+    '<a href="$2" rel="noopener noreferrer">$1</a>'
+  );
+}
+
+/**
+ * Inline CMS snippets (hero lines, FAQ answers, sidebar items) —
+ * Markdown links/bold without wrapping in block `<p>` tags.
+ */
+export function cmsInlineToHtml(input: string | null | undefined): string {
+  const raw = normalizeNewlines(input).trim();
+  if (!raw) return "";
+  if (looksLikeHtml(raw)) {
+    return convertMarkdownLinksInHtml(sanitizeCmsHtml(raw));
+  }
+  return inlineMarkdownToHtml(raw.replace(/\n+/g, " "));
+}
+
 /**
  * Convert Markdown-ish CMS blog body to safe HTML (h1–h6, lists, paragraphs).
- * If input already looks like HTML, sanitize and return as-is.
+ * If input already looks like HTML, sanitize and still convert any leftover [text](url).
  */
 export function cmsBodyToHtml(input: string | null | undefined): string {
   const raw = normalizeNewlines(input).trim();
   if (!raw) return "";
-  if (looksLikeHtml(raw)) return sanitizeCmsHtml(raw);
+  if (looksLikeHtml(raw)) {
+    return convertMarkdownLinksInHtml(sanitizeCmsHtml(raw));
+  }
 
   const lines = raw.split("\n");
   const html: string[] = [];

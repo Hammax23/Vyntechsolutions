@@ -12,6 +12,7 @@ import {
 } from "@/data/servicesData";
 import { DEFAULT_NAV_CHROME, mergeCopy } from "@/lib/ui-copy";
 import Image from "next/image";
+import { cmsInlineToHtml } from "@/lib/richtext";
 
 type ListingService = {
   slug: string;
@@ -422,9 +423,10 @@ export default function ServicesListingClient({
                 )}
               </h1>
 
-              <p className="text-lg sm:text-xl text-white/70 max-w-3xl mx-auto">
-                {chrome.heroBody}
-              </p>
+              <div
+                className="text-lg sm:text-xl text-white/70 max-w-3xl mx-auto [&_a]:text-[#00E1FF] [&_a]:underline"
+                dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(chrome.heroBody) }}
+              />
             </div>
           </div>
         </section>
@@ -465,9 +467,12 @@ export default function ServicesListingClient({
                     {service.title}
                   </h3>
 
-                  <p className="text-gray-600 mb-6 line-clamp-2">
-                    {service.description}
-                  </p>
+                  <div
+                    className="text-gray-600 mb-6 line-clamp-2 [&_a]:text-[#0055FF] [&_a]:underline"
+                    dangerouslySetInnerHTML={{
+                      __html: cmsInlineToHtml(service.description),
+                    }}
+                  />
 
                   <div className="flex flex-wrap gap-2 mb-6">
                     {service.features.slice(0, 3).map((feature, idx) => (
@@ -582,7 +587,10 @@ export default function ServicesListingClient({
                   chrome.ctaHeading
                 )}
               </h2>
-              <p className="text-white/70 text-lg mb-10">{chrome.ctaBody}</p>
+              <div
+                className="text-white/70 text-lg mb-10 [&_a]:text-[#00E1FF] [&_a]:underline"
+                dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(chrome.ctaBody) }}
+              />
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   href={chrome.ctaHref || "/lets-talk-business"}

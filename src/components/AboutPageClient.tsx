@@ -8,6 +8,7 @@ import TechnologyImpact from "@/components/TechnologyImpact";
 import CmsRichText from "@/components/CmsRichText";
 import type { AboutPageChrome } from "@/data/aboutPageDefaults";
 import { DEFAULT_NAV_CHROME } from "@/lib/ui-copy";
+import { cmsInlineToHtml } from "@/lib/richtext";
 
 const VALUE_VISUALS: { icon: ReactNode; gradient: string }[] = [
   {
@@ -195,7 +196,12 @@ export default function AboutPageClient({
                 ) : null}
 
                 {chrome.heroBody ? (
-                  <p className="text-lg text-white/60 mb-8 leading-relaxed">{chrome.heroBody}</p>
+                  <div
+                    className="text-lg text-white/60 mb-8 leading-relaxed [&_a]:text-[#00E1FF] [&_a]:underline"
+                    dangerouslySetInnerHTML={{
+                      __html: cmsInlineToHtml(chrome.heroBody),
+                    }}
+                  />
                 ) : null}
 
                 {chrome.heroCtaLabel ? (
@@ -455,7 +461,12 @@ export default function AboutPageClient({
                   </h2>
                 ) : null}
                 {chrome.ctaBody ? (
-                  <p className="text-white/60 text-lg mb-10">{chrome.ctaBody}</p>
+                  <div
+                    className="text-white/60 text-lg mb-10 [&_a]:text-[#00E1FF] [&_a]:underline"
+                    dangerouslySetInnerHTML={{
+                      __html: cmsInlineToHtml(chrome.ctaBody),
+                    }}
+                  />
                 ) : null}
                 {(chrome.ctaButtonLabel || chrome.ctaEmail) && (
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">

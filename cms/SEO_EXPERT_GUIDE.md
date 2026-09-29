@@ -29,8 +29,8 @@ Strapi is your full editorial CMS. After changes, click **Publish** (Draft & Pub
 | Promo bars / ranking CTA / popup copy | **Promo** (by slot) | Announcement, Google Ranking, timed CTA |
 | Careers job listings | **Job Opening** | Careers page |
 | Organization schema (name, geo, rating) | **Organization Profile** | JSON-LD |
-| 301/302 URL redirects + interlinking notes | **09. URL Redirects** | Live site (middleware) |
-| Multi-hop redirect chains (audit / flatten) | **10. Redirect Chain Links** | Docs only — flatten into URL Redirects |
+| 301/302 URL redirects + interlinking notes | **12. URL Redirects** | Live site (middleware) |
+| Multi-hop redirect chains (audit / flatten) | **13. Redirect Chain Links** | Docs only — flatten into URL Redirects |
 
 ---
 
@@ -152,7 +152,7 @@ Edit **Static Page** → slug `blog` → `heroHeading`, `heroBody`, and `section
 3. **Publish**.
 
 ### 7. URL Redirects (301 / 302)
-Use **09. URL Redirects** when a published URL moves (slug rename, page merge, external move).
+Use **12. URL Redirects** when a published URL moves (slug rename, page merge, external move).
 
 | Field | What to enter |
 |-------|----------------|
@@ -175,7 +175,7 @@ Use **09. URL Redirects** when a published URL moves (slug rename, page merge, e
 ```
 
 ### 8. Redirect Chain Links (documentation module)
-Use **10. Redirect Chain Links** to **document** multi-hop history (A→B→C→D) so SEO can flatten to a single live redirect.
+Use **13. Redirect Chain Links** to **document** multi-hop history (A→B→C→D) so SEO can flatten to a single live redirect.
 
 | Field | Purpose |
 |-------|---------|
@@ -185,7 +185,7 @@ Use **10. Redirect Chain Links** to **document** multi-hop history (A→B→C→
 | **Final path** | Destination `/d` |
 | **Active** / **Notes** | Track whether still relevant; how/why to flatten |
 
-This module does **not** power the live site. After documenting a chain, create (or update) a **09. URL Redirects** entry: `fromPath` = start → `toUrl` = final, then keep or archive the chain note.
+This module does **not** power the live site. After documenting a chain, create (or update) a **12. URL Redirects** entry: `fromPath` = start → `toUrl` = final, then keep or archive the chain note.
 
 ---
 
@@ -193,7 +193,7 @@ This module does **not** power the live site. After documenting a chain, create 
 
 1. Create user under **Settings → Users**.
 2. Create/assign role **SEO Editor** with:
-   - Create / Read / Update / Publish / Delete on all content types above (especially **Blog Post**, **Blog Category**, **Page SEO**, **Service**, **Industry**, **Static Page**, **09. URL Redirects**, **10. Redirect Chain Links**)
+   - Create / Read / Update / Publish / Delete on all content types above (especially **Blog Post**, **Blog Category**, **Page SEO**, **Service**, **Industry**, **Static Page**, **12. URL Redirects**, **13. Redirect Chain Links**)
    - Media library upload
    - **No** access to Settings / Users-Permissions / API Tokens (keep admin-only)
    - Blog posting must not require a developer — Content field supports H1–H6 via Markdown (`##`) or HTML (`<h2>`)
@@ -207,7 +207,7 @@ This module does **not** power the live site. After documenting a chain, create 
 - Do not delete Global SEO, Navigation, Homepage, or Form Config single types.
 - CRM (`/admin`) stays outside Strapi (quotes, projects, invoices).
 - Live SEO is managed **only in Strapi** (Global SEO, Page SEO, and each Service / Industry / Blog SEO component).
-- Live redirects come only from **09. URL Redirects**. Use **10. Redirect Chain Links** for audit notes, then flatten to a single redirect.
+- Live redirects come only from **12. URL Redirects**. Use **13. Redirect Chain Links** for audit notes, then flatten to a single redirect.
 
 ---
 

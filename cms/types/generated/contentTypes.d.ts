@@ -952,7 +952,7 @@ export interface ApiRedirectChainRedirectChain
   collectionName: 'redirect_chains';
   info: {
     description: 'Document multi-hop redirect chains (A\u2192B\u2192C) so SEO can flatten to a single hop';
-    displayName: '10. Redirect Chain Links';
+    displayName: '13. Redirect Chain Links';
     pluralName: 'redirect-chains';
     singularName: 'redirect-chain';
   };
@@ -1165,7 +1165,7 @@ export interface ApiUrlRedirectUrlRedirect extends Struct.CollectionTypeSchema {
   collectionName: 'url_redirects';
   info: {
     description: '301/302 redirects with editable interlinking notes for SEO';
-    displayName: '09. URL Redirects';
+    displayName: '12. URL Redirects';
     pluralName: 'url-redirects';
     singularName: 'url-redirect';
   };

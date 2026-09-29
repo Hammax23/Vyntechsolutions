@@ -4,7 +4,7 @@
   "info": {
     "singularName": "redirect-chain",
     "pluralName": "redirect-chains",
-    "displayName": "10. Redirect Chain Links",
+    "displayName": "13. Redirect Chain Links",
     "description": "Document multi-hop redirect chains (A→B→C) so SEO can flatten to a single hop"
   },
   "options": {

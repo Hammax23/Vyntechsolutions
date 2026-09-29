@@ -1,5 +1,7 @@
 "use client";
 
+import { cmsInlineToHtml, cmsBodyToHtml } from "@/lib/richtext";
+
 export type HowWeWorkStep = {
   number?: number;
   title: string;
@@ -70,7 +72,10 @@ function StepCopy({
       <h3 className="text-[15px] xl:text-base font-bold text-[#0a0a0a] mb-2 leading-snug">
         {title}
       </h3>
-      <p className="text-[12px] xl:text-[13px] text-[#555] leading-relaxed">{description}</p>
+      <div
+        className="text-[12px] xl:text-[13px] text-[#555] leading-relaxed [&_a]:text-[#0055FF] [&_a]:underline"
+        dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(description) }}
+      />
     </div>
   );
 }
@@ -110,9 +115,10 @@ export default function HowWeWork({
           {heading}
         </h2>
         {description ? (
-          <p className="text-center text-gray-600 text-base md:text-lg max-w-3xl mx-auto mb-10 md:mb-14 leading-relaxed">
-            {description}
-          </p>
+          <div
+            className="text-center text-gray-600 text-base md:text-lg max-w-3xl mx-auto mb-10 md:mb-14 leading-relaxed [&_a]:text-[#0055FF] [&_a]:underline"
+            dangerouslySetInnerHTML={{ __html: cmsBodyToHtml(description) }}
+          />
         ) : null}
         {!description ? <div className="mb-10 md:mb-14" /> : null}
 
@@ -125,7 +131,10 @@ export default function HowWeWork({
               </div>
               <div>
                 <h3 className="text-[15px] font-bold text-[#0a0a0a] mb-1.5">{step.title}</h3>
-                <p className="text-[13px] text-[#555] leading-relaxed">{step.description}</p>
+                <div
+                  className="text-[13px] text-[#555] leading-relaxed [&_a]:text-[#0055FF] [&_a]:underline"
+                  dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(step.description) }}
+                />
               </div>
             </div>
           ))}

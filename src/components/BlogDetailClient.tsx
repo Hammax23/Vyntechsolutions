@@ -9,6 +9,7 @@ import {
   type BlogPost,
 } from "@/data/blogData";
 import { DEFAULT_NAV_CHROME } from "@/lib/ui-copy";
+import { cmsInlineToHtml } from "@/lib/richtext";
 
 export default function BlogDetailClient({
   initialPost,
@@ -143,7 +144,10 @@ export default function BlogDetailClient({
                 <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
                   {chrome.ctaHeading}
                 </h2>
-                <p className="text-white/70 text-sm">{chrome.ctaBody}</p>
+                <div
+                  className="text-white/70 text-sm [&_a]:text-[#00E1FF] [&_a]:underline"
+                  dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(chrome.ctaBody) }}
+                />
               </div>
               <Link
                 href="/lets-talk-business"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { cmsInlineToHtml } from "@/lib/richtext";
 
 interface CityFAQItem {
   question: string;
@@ -84,9 +85,10 @@ export default function CityFAQ({
                     isOpen ? "max-h-[420px] opacity-100 pb-5" : "max-h-0 opacity-0"
                   }`}
                 >
-                  <p className="text-slate-500 text-[14px] sm:text-[15px] leading-relaxed pr-8">
-                    {faq.answer}
-                  </p>
+                  <div
+                    className="text-slate-500 text-[14px] sm:text-[15px] leading-relaxed pr-8 [&_a]:text-[#0055FF] [&_a]:underline"
+                    dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(faq.answer) }}
+                  />
                 </div>
               </div>
             );

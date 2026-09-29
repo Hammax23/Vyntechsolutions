@@ -9,6 +9,7 @@ import {
   type BlogListingChrome,
   type BlogPost,
 } from "@/data/blogData";
+import { cmsInlineToHtml } from "@/lib/richtext";
 import { DEFAULT_NAV_CHROME } from "@/lib/ui-copy";
 
 export default function BlogListingClient({
@@ -73,7 +74,10 @@ export default function BlogListingClient({
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
                 {chrome.heroHeading}
               </h1>
-              <p className="text-white/70 leading-relaxed">{chrome.heroBody}</p>
+              <div
+                className="text-white/70 leading-relaxed [&_a]:text-[#00E1FF] [&_a]:underline"
+                dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(chrome.heroBody) }}
+              />
             </div>
           </div>
         </section>
@@ -184,7 +188,10 @@ export default function BlogListingClient({
                 <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
                   {chrome.ctaHeading}
                 </h2>
-                <p className="text-white/70 text-sm">{chrome.ctaBody}</p>
+                <div
+                  className="text-white/70 text-sm [&_a]:text-[#00E1FF] [&_a]:underline"
+                  dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(chrome.ctaBody) }}
+                />
               </div>
               <button
                 onClick={() =>

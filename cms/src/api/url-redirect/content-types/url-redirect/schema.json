@@ -4,7 +4,7 @@
   "info": {
     "singularName": "url-redirect",
     "pluralName": "url-redirects",
-    "displayName": "09. URL Redirects",
+    "displayName": "12. URL Redirects",
     "description": "301/302 redirects with editable interlinking notes for SEO"
   },
   "options": {

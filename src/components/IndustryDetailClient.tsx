@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FAQ from "@/components/FAQ";
 import CmsRichText from "@/components/CmsRichText";
+import { cmsInlineToHtml } from "@/lib/richtext";
 import { useEffect, useState } from "react";
 import {
   industriesListingDefaults,
@@ -181,9 +182,12 @@ export default function IndustryDetailClient({
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
                   {accentLastWord(industry.title)}
                 </h1>
-                <p className="text-white/70 mb-6 leading-relaxed">
-                  {industry.description}
-                </p>
+                <div
+                  className="text-white/70 mb-6 leading-relaxed [&_a]:text-[#00E1FF] [&_a]:underline"
+                  dangerouslySetInnerHTML={{
+                    __html: cmsInlineToHtml(industry.description || ""),
+                  }}
+                />
                 <div className="flex flex-wrap items-center gap-6">
                   {industry.heroCtaLabel && (
                     <button
@@ -242,9 +246,12 @@ export default function IndustryDetailClient({
                     <h3 className="text-lg font-semibold text-[#0f172a] mb-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#00E1FF] group-hover:to-[#0055FF] transition-colors">
                       {service.title}
                     </h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                      {service.description}
-                    </p>
+                    <div
+                      className="text-gray-600 text-sm leading-relaxed [&_a]:text-[#0055FF] [&_a]:underline"
+                      dangerouslySetInnerHTML={{
+                        __html: cmsInlineToHtml(service.description),
+                      }}
+                    />
                   </div>
                 ))}
               </div>
@@ -269,9 +276,12 @@ export default function IndustryDetailClient({
                     <h3 className="text-lg font-semibold text-[#0f172a] mb-2">
                       {challenge.title}
                     </h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                      {challenge.description}
-                    </p>
+                    <div
+                      className="text-gray-600 text-sm leading-relaxed [&_a]:text-[#0055FF] [&_a]:underline"
+                      dangerouslySetInnerHTML={{
+                        __html: cmsInlineToHtml(challenge.description),
+                      }}
+                    />
                   </div>
                 ))}
               </div>
@@ -384,7 +394,12 @@ export default function IndustryDetailClient({
                     </h2>
                   )}
                   {industry.ctaBody && (
-                    <p className="text-white/70 text-sm">{resolveCtaBody(industry)}</p>
+                    <div
+                      className="text-white/70 text-sm [&_a]:text-[#00E1FF] [&_a]:underline"
+                      dangerouslySetInnerHTML={{
+                        __html: cmsInlineToHtml(resolveCtaBody(industry)),
+                      }}
+                    />
                   )}
                 </div>
                 {industry.ctaButtonLabel && (

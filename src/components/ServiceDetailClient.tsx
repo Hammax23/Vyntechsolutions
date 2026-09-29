@@ -11,7 +11,7 @@ import HowWeWork from "@/components/HowWeWork";
 import CmsRichText from "@/components/CmsRichText";
 import { servicesData, type ServiceData } from "@/data/servicesData";
 import type { ServicePageSections } from "@/data/servicePageSections";
-import { toParagraphs, toLines } from "@/lib/richtext";
+import { toParagraphs, toLines, cmsBodyToHtml, cmsInlineToHtml } from "@/lib/richtext";
 import {
   resolveServiceHeroHeading,
   resolveServiceOverviewHeading,
@@ -289,9 +289,22 @@ const WebDevDeliveryModelSection = ({
 
             <div className="w-20 h-1 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] rounded-full mb-8" />
 
-            <div className="space-y-5 text-gray-600 text-sm sm:text-base leading-relaxed">
+            <div className="space-y-5 text-gray-600 text-sm sm:text-base leading-relaxed [&_a]:text-[#0055FF] [&_a]:underline">
               {sectionDescription.map((para, i) => (
-                <p key={i} dangerouslySetInnerHTML={{ __html: para.replace("VynTech Solutions", '<strong class="text-[#0055FF] font-semibold">VynTech Solutions</strong>') }} />
+                <div
+                  key={i}
+                  dangerouslySetInnerHTML={{
+                    __html: cmsBodyToHtml(
+                      para.replace(
+                        "VynTech Solutions",
+                        "**VynTech Solutions**"
+                      )
+                    ).replace(
+                      /<strong>VynTech Solutions<\/strong>/g,
+                      '<strong class="text-[#0055FF] font-semibold">VynTech Solutions</strong>'
+                    ),
+                  }}
+                />
               ))}
             </div>
           </div>
@@ -2506,9 +2519,12 @@ export default function ServiceDetailClient({
                 </h1>
 
                 {/* Description */}
-                <p className="text-white/60 text-lg leading-relaxed mb-8 max-w-lg">
-                  {service.description}
-                </p>
+                <div
+                  className="text-white/60 text-lg leading-relaxed mb-8 max-w-lg [&_a]:text-[#00E1FF] [&_a]:underline"
+                  dangerouslySetInnerHTML={{
+                    __html: cmsBodyToHtml(service.description || ""),
+                  }}
+                />
 
 
 
@@ -2810,14 +2826,12 @@ export default function ServiceDetailClient({
                 const tagline = String(service.overviewTagline || "").trim();
                 const body = overviewHtml || tagline;
                 if (!body) return null;
-                const looksLikeHtml = /<[a-z][\s\S]*>/i.test(body);
-                return looksLikeHtml ? (
-                  <div
-                    className="text-gray-600 text-lg leading-relaxed prose prose-neutral max-w-none mx-auto"
-                    dangerouslySetInnerHTML={{ __html: body }}
+                // Markdown [text](url) + HTML <a> — same path as blog/CmsRichText
+                return (
+                  <CmsRichText
+                    html={body}
+                    className="text-gray-600 text-lg leading-relaxed prose prose-neutral max-w-none mx-auto text-center [&_p]:mb-0"
                   />
-                ) : (
-                  <p className="text-gray-600 text-lg leading-relaxed whitespace-pre-line">{body}</p>
                 );
               })()}
             </div>
@@ -2876,7 +2890,12 @@ export default function ServiceDetailClient({
 
                     <div>
                       <h3 className="text-base font-bold text-[#0f172a] mb-2">{feature.title}</h3>
-                      <p className="text-gray-600 text-sm leading-relaxed font-normal">{feature.description}</p>
+                      <p
+                        className="text-gray-600 text-sm leading-relaxed font-normal [&_a]:text-[#0055FF] [&_a]:underline"
+                        dangerouslySetInnerHTML={{
+                          __html: cmsInlineToHtml(feature.description || ""),
+                        }}
+                      />
                     </div>
                   </div>
                 ))}
@@ -2995,9 +3014,12 @@ export default function ServiceDetailClient({
                   {seoBlock.heading || "Choose Your Growth Plan"}
                 </h2>
                 {seoBlock.description && (
-                  <p className="text-gray-600 max-w-2xl mx-auto">
-                    {seoBlock.description}
-                  </p>
+                  <div
+                    className="text-gray-600 max-w-2xl mx-auto [&_a]:text-[#0055FF] [&_a]:underline"
+                    dangerouslySetInnerHTML={{
+                      __html: cmsBodyToHtml(seoBlock.description),
+                    }}
+                  />
                 )}
               </div>
 
@@ -3187,9 +3209,12 @@ export default function ServiceDetailClient({
                       {localSeo.ctaHeading || "Ready to Grow Your Organic Traffic?"}
                     </h3>
                     {localSeo.ctaBody && (
-                      <p className="text-gray-600 text-sm leading-relaxed font-light">
-                        {localSeo.ctaBody}
-                      </p>
+                      <div
+                        className="text-gray-600 text-sm leading-relaxed font-light [&_a]:text-[#0055FF] [&_a]:underline"
+                        dangerouslySetInnerHTML={{
+                          __html: cmsBodyToHtml(localSeo.ctaBody),
+                        }}
+                      />
                     )}
                   </div>
                   <button
@@ -3384,9 +3409,12 @@ export default function ServiceDetailClient({
                 </h2>
               ) : null}
               {canadaBlock.description ? (
-                <p className="text-gray-500 text-sm sm:text-base max-w-2xl mx-auto mb-10 leading-relaxed">
-                  {canadaBlock.description}
-                </p>
+                <div
+                  className="text-gray-500 text-sm sm:text-base max-w-2xl mx-auto mb-10 leading-relaxed [&_a]:text-[#0055FF] [&_a]:underline"
+                  dangerouslySetInnerHTML={{
+                    __html: cmsBodyToHtml(canadaBlock.description),
+                  }}
+                />
               ) : (
                 <div className="mb-10" />
               )}
@@ -3430,9 +3458,18 @@ export default function ServiceDetailClient({
                 <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
                   {service.ctaHeading || "Ready To Get Started?"}
                 </h2>
-                <p className="text-white/70 text-sm">
-                  {(service.ctaBody || "Let's discuss how our {title} services can help transform your business.").replace(/\{title\}/g, service.title)}
-                </p>
+                <div
+                  className="text-white/70 text-sm [&_a]:text-[#00E1FF] [&_a]:underline"
+                  dangerouslySetInnerHTML={{
+                    __html: cmsInlineToHtml(
+                      (service.ctaBody ||
+                        "Let's discuss how our {title} services can help transform your business.").replace(
+                        /\{title\}/g,
+                        service.title
+                      )
+                    ),
+                  }}
+                />
               </div>
               <button
                 onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
