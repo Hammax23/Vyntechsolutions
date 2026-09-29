@@ -683,14 +683,14 @@ export interface ApiIndustryIndustry extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    ctaBody: Schema.Attribute.Text;
+    ctaBody: Schema.Attribute.RichText;
     ctaButtonLabel: Schema.Attribute.String;
     ctaHeading: Schema.Attribute.String;
-    description: Schema.Attribute.Text;
+    description: Schema.Attribute.RichText;
     faqEyebrow: Schema.Attribute.String & Schema.Attribute.DefaultTo<'FAQ'>;
     faqHeading: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Frequently asked questions'>;
-    faqIntro: Schema.Attribute.Text &
+    faqIntro: Schema.Attribute.RichText &
       Schema.Attribute.DefaultTo<'Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.'>;
     faqs: Schema.Attribute.Component<'shared.faq', true>;
     hero: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;

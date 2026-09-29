@@ -181,9 +181,10 @@ export default function FAQ({
           <h2 className="text-[28px] sm:text-4xl font-semibold tracking-tight text-[#0f172a] mb-3">
             {heading}
           </h2>
-          <p className="text-slate-500 text-[15px] sm:text-base max-w-xl mx-auto leading-relaxed">
-            {intro}
-          </p>
+          <div
+            className="text-slate-500 text-[15px] sm:text-base max-w-xl mx-auto leading-relaxed [&_a]:text-[#0055FF] [&_a]:underline"
+            dangerouslySetInnerHTML={{ __html: cmsInlineToHtml(intro) }}
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 lg:gap-x-24">

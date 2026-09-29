@@ -43,9 +43,15 @@ export default function CityFAQ({
           <h2 className="text-[28px] sm:text-4xl font-semibold tracking-tight text-[#0f172a] mb-3">
             {heading}
           </h2>
-          <p className="text-slate-500 text-[15px] sm:text-base max-w-xl mx-auto leading-relaxed">
-            {intro || `Everything you need to know about our ${serviceTitle} services in ${formattedCity}.`}
-          </p>
+          <div
+            className="text-slate-500 text-[15px] sm:text-base max-w-xl mx-auto leading-relaxed [&_a]:text-[#0055FF] [&_a]:underline"
+            dangerouslySetInnerHTML={{
+              __html: cmsInlineToHtml(
+                intro ||
+                  `Everything you need to know about our ${serviceTitle} services in ${formattedCity}.`
+              ),
+            }}
+          />
         </div>
 
         <div className="border-t border-slate-200">

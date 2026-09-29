@@ -24,7 +24,7 @@
       "type": "string"
     },
     "description": {
-      "type": "text"
+      "type": "richtext"
     },
     "icon": {
       "type": "string"
@@ -99,14 +99,14 @@
       "default": "Frequently asked questions"
     },
     "faqIntro": {
-      "type": "text",
+      "type": "richtext",
       "default": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team."
     },
     "ctaHeading": {
       "type": "string"
     },
     "ctaBody": {
-      "type": "text"
+      "type": "richtext"
     },
     "ctaButtonLabel": {
       "type": "string"
