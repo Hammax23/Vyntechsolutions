@@ -31,6 +31,10 @@ const PUBLIC_ACTIONS = [
   "api::organization-profile.organization-profile.find",
   "api::client-logo.client-logo.find",
   "api::client-logo.client-logo.findOne",
+  "api::url-redirect.url-redirect.find",
+  "api::url-redirect.url-redirect.findOne",
+  "api::redirect-chain.redirect-chain.find",
+  "api::redirect-chain.redirect-chain.findOne",
 ];
 
 async function enablePublicPermissions(strapi: Core.Strapi) {

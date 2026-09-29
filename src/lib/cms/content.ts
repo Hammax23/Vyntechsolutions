@@ -2,6 +2,8 @@ import { blogPosts, getPostBySlug as getLocalPost, type BlogPost } from "@/data/
 import { faqsForIndustry } from "@/data/industryFaqs";
 import { strapiFetch, unwrapList, unwrapSingle, type StrapiListResponse, type StrapiSingleResponse } from "@/lib/strapi";
 
+export type { CmsUrlRedirect } from "@/lib/cms/redirects";
+export { fetchActiveUrlRedirects as getCmsUrlRedirects } from "@/lib/cms/redirects";
 /**
  * Deep-populate shared.seo (media + openGraph).
  * Use named keys only — mixing populate[0]=… with populate[seo]=… returns HTTP 400 in Strapi 5.

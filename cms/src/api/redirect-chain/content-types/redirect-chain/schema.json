@@ -1,0 +1,37 @@
+{
+  "kind": "collectionType",
+  "collectionName": "redirect_chains",
+  "info": {
+    "singularName": "redirect-chain",
+    "pluralName": "redirect-chains",
+    "displayName": "10. Redirect Chain Links",
+    "description": "Document multi-hop redirect chains (A→B→C) so SEO can flatten to a single hop"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "startPath": {
+      "type": "string",
+      "required": true
+    },
+    "steps": {
+      "type": "json"
+    },
+    "finalPath": {
+      "type": "string",
+      "required": true
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    },
+    "notes": {
+      "type": "text"
+    }
+  }
+}

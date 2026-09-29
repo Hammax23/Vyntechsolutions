@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "url_redirects",
+  "info": {
+    "singularName": "url-redirect",
+    "pluralName": "url-redirects",
+    "displayName": "09. URL Redirects",
+    "description": "301/302 redirects with editable interlinking notes for SEO"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "fromPath": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "toUrl": {
+      "type": "string",
+      "required": true
+    },
+    "redirectType": {
+      "type": "enumeration",
+      "enum": ["permanent", "temporary"],
+      "default": "permanent",
+      "required": true
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    },
+    "interlinking": {
+      "type": "text"
+    },
+    "notes": {
+      "type": "text"
+    }
+  }
+}

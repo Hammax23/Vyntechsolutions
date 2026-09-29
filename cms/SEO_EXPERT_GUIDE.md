@@ -29,6 +29,8 @@ Strapi is your full editorial CMS. After changes, click **Publish** (Draft & Pub
 | Promo bars / ranking CTA / popup copy | **Promo** (by slot) | Announcement, Google Ranking, timed CTA |
 | Careers job listings | **Job Opening** | Careers page |
 | Organization schema (name, geo, rating) | **Organization Profile** | JSON-LD |
+| 301/302 URL redirects + interlinking notes | **09. URL Redirects** | Live site (middleware) |
+| Multi-hop redirect chains (audit / flatten) | **10. Redirect Chain Links** | Docs only — flatten into URL Redirects |
 
 ---
 
@@ -149,13 +151,49 @@ Edit **Static Page** → slug `blog` → `heroHeading`, `heroBody`, and `section
 2. Edit JSON arrays: `services` (prefer service **slugs**), `regions`, `hearAbout`, `budgetOptions`.
 3. **Publish**.
 
+### 7. URL Redirects (301 / 302)
+Use **09. URL Redirects** when a published URL moves (slug rename, page merge, external move).
+
+| Field | What to enter |
+|-------|----------------|
+| **From path** (`fromPath`) | Old path only, e.g. `/blog/old-slug` (leading `/`, no domain) |
+| **To URL** (`toUrl`) | New path `/blog/new-slug` **or** full `https://…` |
+| **Redirect type** | `permanent` → HTTP 301 (default) or `temporary` → HTTP 302 |
+| **Active** | On = live; Off = ignore without deleting |
+| **Interlinking** | Editable notes for SEO: source page → anchor text → target URL (one line per link) |
+| **Notes** | Optional internal reason |
+
+1. Create entry → fill fields → set **Active** → **Publish**.
+2. Within ~60 seconds the live site applies the redirect (Next.js middleware).
+3. Prefer **one hop**: old path → final destination. Do not chain `/a`→`/b` and `/b`→`/c` as separate live redirects if you can avoid it.
+
+**Interlinking field example:**
+
+```text
+/services/web-development → "custom software" → /services/custom-software-development
+/blog/old-slug → "related guide" → /blog/new-slug
+```
+
+### 8. Redirect Chain Links (documentation module)
+Use **10. Redirect Chain Links** to **document** multi-hop history (A→B→C→D) so SEO can flatten to a single live redirect.
+
+| Field | Purpose |
+|-------|---------|
+| **Title** | Short label, e.g. "Blog slug rename chain" |
+| **Start path** | First hop `/a` |
+| **Steps** | JSON array of intermediate paths, e.g. `["/b","/c"]` |
+| **Final path** | Destination `/d` |
+| **Active** / **Notes** | Track whether still relevant; how/why to flatten |
+
+This module does **not** power the live site. After documenting a chain, create (or update) a **09. URL Redirects** entry: `fromPath` = start → `toUrl` = final, then keep or archive the chain note.
+
 ---
 
 ## Role setup (admin once)
 
 1. Create user under **Settings → Users**.
 2. Create/assign role **SEO Editor** with:
-   - Create / Read / Update / Publish / Delete on all content types above (especially **Blog Post**, **Blog Category**, **Page SEO**, **Service**, **Industry**, **Static Page**)
+   - Create / Read / Update / Publish / Delete on all content types above (especially **Blog Post**, **Blog Category**, **Page SEO**, **Service**, **Industry**, **Static Page**, **09. URL Redirects**, **10. Redirect Chain Links**)
    - Media library upload
    - **No** access to Settings / Users-Permissions / API Tokens (keep admin-only)
    - Blog posting must not require a developer — Content field supports H1–H6 via Markdown (`##`) or HTML (`<h2>`)
@@ -165,10 +203,11 @@ Edit **Static Page** → slug `blog` → `heroHeading`, `heroBody`, and `section
 ## Rules
 
 - Always **Publish** after saving drafts.
-- Prefer editing existing entries over recreating (keeds IDs/slugs stable).
+- Prefer editing existing entries over recreating (keeps IDs/slugs stable).
 - Do not delete Global SEO, Navigation, Homepage, or Form Config single types.
 - CRM (`/admin`) stays outside Strapi (quotes, projects, invoices).
 - Live SEO is managed **only in Strapi** (Global SEO, Page SEO, and each Service / Industry / Blog SEO component).
+- Live redirects come only from **09. URL Redirects**. Use **10. Redirect Chain Links** for audit notes, then flatten to a single redirect.
 
 ---
 

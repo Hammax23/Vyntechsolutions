@@ -947,6 +947,41 @@ export interface ApiPromoPromo extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiRedirectChainRedirectChain
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'redirect_chains';
+  info: {
+    description: 'Document multi-hop redirect chains (A\u2192B\u2192C) so SEO can flatten to a single hop';
+    displayName: '10. Redirect Chain Links';
+    pluralName: 'redirect-chains';
+    singularName: 'redirect-chain';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    active: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    finalPath: Schema.Attribute.String & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::redirect-chain.redirect-chain'
+    > &
+      Schema.Attribute.Private;
+    notes: Schema.Attribute.Text;
+    publishedAt: Schema.Attribute.DateTime;
+    startPath: Schema.Attribute.String & Schema.Attribute.Required;
+    steps: Schema.Attribute.JSON;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiServiceService extends Struct.CollectionTypeSchema {
   collectionName: 'services';
   info: {
@@ -1120,6 +1155,44 @@ export interface ApiStaticPageStaticPage extends Struct.CollectionTypeSchema {
     seo: Schema.Attribute.Component<'shared.seo', false>;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
     title: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiUrlRedirectUrlRedirect extends Struct.CollectionTypeSchema {
+  collectionName: 'url_redirects';
+  info: {
+    description: '301/302 redirects with editable interlinking notes for SEO';
+    displayName: '09. URL Redirects';
+    pluralName: 'url-redirects';
+    singularName: 'url-redirect';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    active: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    fromPath: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    interlinking: Schema.Attribute.Text;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::url-redirect.url-redirect'
+    > &
+      Schema.Attribute.Private;
+    notes: Schema.Attribute.Text;
+    publishedAt: Schema.Attribute.DateTime;
+    redirectType: Schema.Attribute.Enumeration<['permanent', 'temporary']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'permanent'>;
+    toUrl: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1649,8 +1722,10 @@ declare module '@strapi/strapi' {
       'api::organization-profile.organization-profile': ApiOrganizationProfileOrganizationProfile;
       'api::page-seo.page-seo': ApiPageSeoPageSeo;
       'api::promo.promo': ApiPromoPromo;
+      'api::redirect-chain.redirect-chain': ApiRedirectChainRedirectChain;
       'api::service.service': ApiServiceService;
       'api::static-page.static-page': ApiStaticPageStaticPage;
+      'api::url-redirect.url-redirect': ApiUrlRedirectUrlRedirect;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;
