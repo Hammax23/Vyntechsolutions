@@ -410,6 +410,7 @@ export function WorkflowProgressPdfDocument({ data }: { data: ProgressReportData
                     <View style={s.taskMain}>
                       <Text style={s.taskTitle}>{t.title}</Text>
                       {t.description ? <Text style={s.taskDesc}>{t.description}</Text> : null}
+                      {t.workLink ? <Text style={s.taskDesc}>Work link: {t.workLink}</Text> : null}
                       <Text style={s.taskMeta}>
                         Assigned by {t.createdByName}
                         {` · To do → Done ${t.elapsedLabel} · In progress ${t.activeLabel} · On hold ${t.blockedLabel}`}

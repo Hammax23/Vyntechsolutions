@@ -239,6 +239,8 @@ model WorkflowTask {
   id              String    @id @default(cuid())
   title           String
   description     String?
+  /// Optional URL to the page/work the employee worked on (e.g. site About page)
+  workLink        String?
   status          String    @default("todo") // todo | in_progress | done | blocked
   priority        String    @default("medium") // low | medium | high
   workDate        DateTime

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { ensureAdminWorkflowCreator, notSystemStaffWhere } from "@/lib/workflow-auth";
-import { isValidIsoDate, mapTask, todayKey, utcDay, utcDayRange } from "@/lib/workflow-progress";
+import { isValidIsoDate, mapTask, todayKey, utcDay, utcDayRange, normalizeWorkLink } from "@/lib/workflow-progress";
 import { persistTaskFiles, removeTaskUploadDir } from "@/lib/workflow-attachments";
 
 export const dynamic = "force-dynamic";
@@ -46,6 +46,7 @@ export async function GET(request: NextRequest) {
 async function parseAssignBody(request: NextRequest): Promise<{
   title: string;
   description: string;
+  workLink: string;
   assignedToId: string;
   workDate: string;
   priority: string;
@@ -64,6 +65,7 @@ async function parseAssignBody(request: NextRequest): Promise<{
     return {
       title: String(form.get("title") || "").trim(),
       description: String(form.get("description") || "").trim(),
+      workLink: String(form.get("workLink") || "").trim(),
       assignedToId: String(form.get("assignedToId") || "").trim(),
       workDate: String(form.get("workDate") || "").slice(0, 10) || todayKey(),
       priority: String(form.get("priority") || "medium"),
@@ -76,6 +78,7 @@ async function parseAssignBody(request: NextRequest): Promise<{
   return {
     title: String(body.title || "").trim(),
     description: String(body.description || "").trim(),
+    workLink: String(body.workLink || "").trim(),
     assignedToId: String(body.assignedToId || "").trim(),
     workDate: String(body.workDate || "").slice(0, 10) || todayKey(),
     priority: String(body.priority || "medium"),
@@ -109,10 +112,21 @@ export async function POST(request: NextRequest) {
     const priority = PRIORITIES.has(parsed.priority) ? parsed.priority : "medium";
     const now = new Date();
 
+    let workLink: string | null = null;
+    try {
+      workLink = normalizeWorkLink(parsed.workLink);
+    } catch (e) {
+      return NextResponse.json(
+        { error: e instanceof Error ? e.message : "Invalid work link" },
+        { status: 400 }
+      );
+    }
+
     const task = await prisma.workflowTask.create({
       data: {
         title: parsed.title,
         description: parsed.description || null,
+        workLink,
         status,
         priority,
         workDate,

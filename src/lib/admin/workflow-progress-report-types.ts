@@ -4,6 +4,7 @@ export type ProgressReportTask = {
   id: string;
   title: string;
   description: string;
+  workLink: string;
   status: string;
   priority: string;
   workDate: string;

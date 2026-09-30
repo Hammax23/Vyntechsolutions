@@ -2,7 +2,7 @@
 
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import VynTechLogo from "@/components/VynTechLogo";
-import { heatmapTone, isWeekendKey, todayKey, formatDuration, formatFileSize, computeTaskTiming, type TaskTimingSummary } from "@/lib/workflow-progress";
+import { heatmapTone, isWeekendKey, todayKey, formatDuration, formatFileSize, computeTaskTiming, workLinkLabel, type TaskTimingSummary } from "@/lib/workflow-progress";
 import { useWorkflowTheme, workflowUi } from "@/components/workflow/workflow-theme";
 import { useLivePoll } from "@/hooks/useLivePoll";
 import { MAX_ATTACHMENT_BYTES, MAX_ATTACHMENTS_PER_TASK } from "@/lib/workflow-attachments-limits";
@@ -22,6 +22,7 @@ type WTask = {
   id: string;
   title: string;
   description: string;
+  workLink?: string;
   status: "todo" | "in_progress" | "done" | "blocked";
   priority: string;
   workDate: string;
@@ -288,6 +289,22 @@ const TaskCard = memo(function TaskCard({
         </div>
       </div>
       {t.description ? <p className={`${ui.muted} text-xs leading-relaxed line-clamp-3 break-words`}>{t.description}</p> : null}
+      {t.workLink ? (
+        <a
+          href={t.workLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`inline-flex items-center gap-1.5 text-xs font-medium break-all ${
+            isDark ? "text-[#7EB6FF] hover:text-[#A8CFFF]" : "text-[#0055FF] hover:text-[#003FCC]"
+          }`}
+          title={t.workLink}
+        >
+          <svg className="w-3.5 h-3.5 shrink-0 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+          </svg>
+          <span className="truncate max-w-[220px]">{workLinkLabel(t.workLink)}</span>
+        </a>
+      ) : null}
       {timing ? (
         <div className="space-y-1.5">
           <p className={`text-[10px] font-medium ${ui.faint}`}>Time on this task</p>
@@ -501,6 +518,7 @@ export default function WorkflowApp({
   const [form, setForm] = useState({
     title: "",
     description: "",
+    workLink: "",
     priority: "medium",
     assignedToId: user.id,
   });
@@ -795,6 +813,7 @@ export default function WorkflowApp({
         const fd = new FormData();
         fd.append("title", form.title.trim());
         fd.append("description", form.description || "");
+        fd.append("workLink", form.workLink.trim());
         fd.append("priority", form.priority);
         fd.append("assignedToId", form.assignedToId);
         fd.append("workDate", date);
@@ -819,7 +838,7 @@ export default function WorkflowApp({
           setInbox((prev) => [task, ...prev.filter((x) => x.id !== task.id)]);
         }
       }
-      setForm({ title: "", description: "", priority: "medium", assignedToId: user.id });
+      setForm({ title: "", description: "", workLink: "", priority: "medium", assignedToId: user.id });
       clearPendingFiles();
       const ok = await refreshAll();
       if (ok) stampRef.current = "";
@@ -1323,6 +1342,23 @@ export default function WorkflowApp({
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
           />
+          <div>
+            <label className={`block ${ui.muted} text-xs mb-1`}>
+              Work link <span className="opacity-70">(optional)</span>
+            </label>
+            <input
+              className={ui.input}
+              type="url"
+              inputMode="url"
+              autoComplete="url"
+              placeholder="https://vyntechsolutions.ca/about"
+              value={form.workLink}
+              onChange={(e) => setForm({ ...form, workLink: e.target.value })}
+            />
+            <p className={`${ui.faint} text-[11px] mt-1 leading-snug`}>
+              Page or URL you worked on — admin can open it to verify progress.
+            </p>
+          </div>
           <div>
             <label className={`block ${ui.muted} text-xs mb-1`}>Work date</label>
             <input type="date" className={ui.input} value={date} onChange={(e) => e.target.value && setDate(e.target.value)} />

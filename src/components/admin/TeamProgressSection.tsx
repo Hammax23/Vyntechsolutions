@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { heatmapTone, isWeekendKey, todayKey, formatDuration, formatFileSize } from "@/lib/workflow-progress";
+import { heatmapTone, isWeekendKey, todayKey, formatDuration, formatFileSize, workLinkLabel } from "@/lib/workflow-progress";
 import { useLivePoll } from "@/hooks/useLivePoll";
 import WorkflowApp from "@/components/workflow/WorkflowApp";
 import { MAX_ATTACHMENT_BYTES, MAX_ATTACHMENTS_PER_TASK } from "@/lib/workflow-attachments-limits";
@@ -19,6 +19,7 @@ type Task = {
   id: string;
   title: string;
   description: string;
+  workLink?: string;
   status: string;
   priority: string;
   createdBy?: { name: string };
@@ -100,6 +101,7 @@ export default function TeamProgressSection() {
   const [taskForm, setTaskForm] = useState({
     title: "",
     description: "",
+    workLink: "",
     assignedToId: "",
     workDate: todayKey(),
     priority: "medium",
@@ -429,6 +431,7 @@ export default function TeamProgressSection() {
       const fd = new FormData();
       fd.append("title", taskForm.title.trim());
       fd.append("description", taskForm.description || "");
+      fd.append("workLink", taskForm.workLink.trim());
       fd.append("assignedToId", taskForm.assignedToId);
       fd.append("workDate", taskForm.workDate);
       fd.append("priority", taskForm.priority);
@@ -449,7 +452,7 @@ export default function TeamProgressSection() {
           : `Assigned “${taskForm.title.trim()}” to ${who}`,
         "success"
       );
-      setTaskForm((prev) => ({ ...prev, title: "", description: "" }));
+      setTaskForm((prev) => ({ ...prev, title: "", description: "", workLink: "" }));
       clearAssignFiles();
       const ok = await refreshLive();
       if (ok) stampRef.current = "";
@@ -704,6 +707,22 @@ export default function TeamProgressSection() {
               </option>
             </select>
           </div>
+        </div>
+        <div>
+          <label className="block text-white/40 text-[11px] mb-1">
+            Work link <span className="text-white/25 font-normal">(optional)</span>
+          </label>
+          <input
+            className={input}
+            type="url"
+            inputMode="url"
+            placeholder="https://vyntechsolutions.ca/about"
+            value={taskForm.workLink}
+            onChange={(e) => setTaskForm({ ...taskForm, workLink: e.target.value })}
+          />
+          <p className="text-white/30 text-[11px] mt-1">
+            Link to the page or deliverable so progress is easy to verify.
+          </p>
         </div>
         <div>
           <div className="flex items-end justify-between gap-3 mb-1.5">
@@ -970,6 +989,20 @@ export default function TeamProgressSection() {
                     <p className="text-white text-sm font-medium leading-snug break-words">{t.title}</p>
                     {t.description ? (
                       <p className="text-white/45 text-xs leading-relaxed line-clamp-2 break-words">{t.description}</p>
+                    ) : null}
+                    {t.workLink ? (
+                      <a
+                        href={t.workLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-[12px] text-[#7dd3fc] hover:underline break-all"
+                        title={t.workLink}
+                      >
+                        <svg className="w-3.5 h-3.5 shrink-0 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                        <span className="truncate max-w-[260px]">{workLinkLabel(t.workLink)}</span>
+                      </a>
                     ) : null}
                     {t.createdBy ? <p className="text-white/35 text-[11px]">from {t.createdBy.name}</p> : null}
                     <div className="pt-0.5 space-y-1">

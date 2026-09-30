@@ -7,6 +7,7 @@ import {
   isValidIsoDate,
   utcDay,
   utcDayRange,
+  normalizeWorkLink,
 } from "@/lib/workflow-progress";
 import { notSystemStaffWhere, requireStaff } from "@/lib/workflow-auth";
 import { persistTaskFiles, removeTaskUploadDir } from "@/lib/workflow-attachments";
@@ -42,6 +43,7 @@ function initialTiming(status: string, now = new Date()) {
 async function parseCreateBody(request: NextRequest): Promise<{
   title: string;
   description: string;
+  workLink: string;
   assignedToId: string;
   workDate: string;
   priority: string;
@@ -60,6 +62,7 @@ async function parseCreateBody(request: NextRequest): Promise<{
     return {
       title: String(form.get("title") || "").trim(),
       description: String(form.get("description") || "").trim(),
+      workLink: String(form.get("workLink") || "").trim(),
       assignedToId: String(form.get("assignedToId") || "").trim(),
       workDate: String(form.get("workDate") || "").slice(0, 10) || todayKey(),
       priority: String(form.get("priority") || "medium"),
@@ -72,6 +75,7 @@ async function parseCreateBody(request: NextRequest): Promise<{
   return {
     title: String(body.title || "").trim(),
     description: body.description ? String(body.description) : "",
+    workLink: body.workLink ? String(body.workLink) : "",
     assignedToId: String(body.assignedToId || "").trim(),
     workDate: String(body.workDate || "").slice(0, 10) || todayKey(),
     priority: String(body.priority || "medium"),
@@ -128,10 +132,21 @@ export async function POST(request: NextRequest) {
   const priority = PRIORITIES.has(parsed.priority) ? parsed.priority : "medium";
   const now = new Date();
 
+  let workLink: string | null = null;
+  try {
+    workLink = normalizeWorkLink(parsed.workLink);
+  } catch (e) {
+    return NextResponse.json(
+      { error: e instanceof Error ? e.message : "Invalid work link" },
+      { status: 400 }
+    );
+  }
+
   const task = await prisma.workflowTask.create({
     data: {
       title: parsed.title,
       description: parsed.description || null,
+      workLink,
       status,
       priority,
       workDate,
@@ -181,6 +196,16 @@ export async function PATCH(request: NextRequest) {
 
   if (typeof body.title === "string" && body.title.trim()) data.title = body.title.trim();
   if (typeof body.description === "string") data.description = body.description || null;
+  if (typeof body.workLink === "string") {
+    try {
+      data.workLink = normalizeWorkLink(body.workLink);
+    } catch (e) {
+      return NextResponse.json(
+        { error: e instanceof Error ? e.message : "Invalid work link" },
+        { status: 400 }
+      );
+    }
+  }
   if (PRIORITIES.has(body.priority)) data.priority = body.priority;
   if (typeof body.workDate === "string" && body.workDate) {
     const d = body.workDate.slice(0, 10);

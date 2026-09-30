@@ -44,6 +44,50 @@ export function todayKey(): string {
   return `${y}-${m}-${d}`;
 }
 
+/**
+ * Normalize optional work URL (page the employee worked on).
+ * Empty → null. Invalid → throws when strict (default).
+ */
+export function normalizeWorkLink(raw: unknown, opts?: { strict?: boolean }): string | null {
+  const strict = opts?.strict !== false;
+  const input = String(raw ?? "").trim();
+  if (!input) return null;
+
+  let candidate = input;
+  if (!/^https?:\/\//i.test(candidate)) candidate = `https://${candidate}`;
+
+  try {
+    const u = new URL(candidate);
+    if (u.protocol !== "http:" && u.protocol !== "https:") {
+      if (strict) throw new Error("Work link must be an http(s) URL");
+      return null;
+    }
+    if (!u.hostname || u.hostname.length < 2) {
+      if (strict) throw new Error("Work link is not a valid URL");
+      return null;
+    }
+    return u.toString();
+  } catch (e) {
+    if (strict) {
+      throw e instanceof Error && e.message.startsWith("Work link")
+        ? e
+        : new Error("Work link is not a valid URL");
+    }
+    return null;
+  }
+}
+
+/** Short host+path label for UI cards. */
+export function workLinkLabel(href: string, max = 48): string {
+  try {
+    const u = new URL(href);
+    const text = `${u.hostname}${u.pathname === "/" ? "" : u.pathname}`.replace(/\/$/, "");
+    return text.length > max ? `${text.slice(0, max - 1)}…` : text;
+  } catch {
+    return href.length > max ? `${href.slice(0, max - 1)}…` : href;
+  }
+}
+
 export function scoreTasks(statuses: string[]): DayScore {
   const total = statuses.length;
   const done = statuses.filter((s) => s === "done").length;
@@ -241,6 +285,7 @@ export function mapTask(t: {
   id: string;
   title: string;
   description: string | null;
+  workLink?: string | null;
   status: string;
   priority: string;
   workDate: Date;
@@ -288,6 +333,7 @@ export function mapTask(t: {
     id: t.id,
     title: t.title,
     description: t.description || "",
+    workLink: t.workLink || "",
     status: t.status as WorkflowStatus,
     priority: t.priority,
     workDate: dateKey(t.workDate),

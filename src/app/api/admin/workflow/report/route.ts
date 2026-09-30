@@ -84,6 +84,7 @@ export async function POST(request: NextRequest) {
           id: t.id,
           title: t.title,
           description: (t.description || "").slice(0, 280),
+          workLink: (t.workLink || "").slice(0, 500),
           status: t.status,
           priority: t.priority || "medium",
           workDate: key,
