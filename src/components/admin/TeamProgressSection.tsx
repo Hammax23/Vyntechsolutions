@@ -22,6 +22,8 @@ type Task = {
   workLink?: string;
   status: string;
   priority: string;
+  projectId?: string | null;
+  project?: { id: string; name: string } | null;
   createdBy?: { name: string };
   attachments?: TaskAttachment[];
   timing?: {
@@ -33,13 +35,15 @@ type Task = {
   };
 };
 
+type ProjectOption = { id: string; projectName: string };
+
 function cellClass(percent: number | null) {
   const tone = heatmapTone(percent);
-  if (tone === "empty") return "bg-white/[0.04]";
-  if (tone === "zero") return "bg-white/15";
-  if (tone === "low") return "bg-amber-500/45";
-  if (tone === "mid") return "bg-[#0055FF]/55";
-  return "bg-emerald-500/55";
+  if (tone === "empty") return "tp-heat-empty bg-white/[0.04]";
+  if (tone === "zero") return "tp-heat-zero bg-white/15";
+  if (tone === "low") return "tp-heat-low bg-amber-500/45";
+  if (tone === "mid") return "tp-heat-mid bg-[#0055FF]/55";
+  return "tp-heat-full bg-emerald-500/55";
 }
 
 const STATUS_LABEL: Record<string, string> = {
@@ -105,7 +109,9 @@ export default function TeamProgressSection() {
     assignedToId: "",
     workDate: todayKey(),
     priority: "medium",
+    projectId: "",
   });
+  const [projectOptions, setProjectOptions] = useState<ProjectOption[]>([]);
   const [assignFiles, setAssignFiles] = useState<AssignPendingFile[]>([]);
   const assignFileRef = useRef<HTMLInputElement>(null);
   const assignFilesRef = useRef<AssignPendingFile[]>([]);
@@ -200,6 +206,18 @@ export default function TeamProgressSection() {
     return true;
   }, []);
 
+  const loadProjectOptions = useCallback(async () => {
+    const res = await fetch("/api/admin/projects", { cache: "no-store" });
+    if (!res.ok) return false;
+    const data = await res.json();
+    const list = ((data.projects || []) as { id: string; projectName: string }[]).map((p) => ({
+      id: p.id,
+      projectName: p.projectName,
+    }));
+    setProjectOptions(list);
+    return true;
+  }, []);
+
   const loadOverview = useCallback(async (y = yearRef.current, m = monthRef.current) => {
     const seq = ++overviewSeq.current;
     const res = await fetch(`/api/admin/workflow/overview?year=${y}&month=${m}`, { cache: "no-store" });
@@ -221,11 +239,11 @@ export default function TeamProgressSection() {
   }, []);
 
   const refreshLive = useCallback(async () => {
-    const results = await Promise.all([loadStaff(), loadOverview()]);
+    const results = await Promise.all([loadStaff(), loadOverview(), loadProjectOptions()]);
     const sel = selectedRef.current;
     if (sel) results.push(await loadDayTasks(sel.staffId, sel.date));
     return results.every(Boolean);
-  }, [loadStaff, loadOverview, loadDayTasks]);
+  }, [loadStaff, loadOverview, loadProjectOptions, loadDayTasks]);
 
   const checkSync = useCallback(async () => {
     const res = await fetch("/api/admin/workflow/sync", { cache: "no-store" });
@@ -435,6 +453,7 @@ export default function TeamProgressSection() {
       fd.append("assignedToId", taskForm.assignedToId);
       fd.append("workDate", taskForm.workDate);
       fd.append("priority", taskForm.priority);
+      if (taskForm.projectId) fd.append("projectId", taskForm.projectId);
       for (const item of assignFiles) fd.append("files", item.file);
 
       const res = await fetch("/api/admin/workflow/tasks", {
@@ -452,7 +471,13 @@ export default function TeamProgressSection() {
           : `Assigned “${taskForm.title.trim()}” to ${who}`,
         "success"
       );
-      setTaskForm((prev) => ({ ...prev, title: "", description: "", workLink: "" }));
+      setTaskForm((prev) => ({
+        ...prev,
+        title: "",
+        description: "",
+        workLink: "",
+        projectId: prev.projectId,
+      }));
       clearAssignFiles();
       const ok = await refreshLive();
       if (ok) stampRef.current = "";
@@ -563,7 +588,7 @@ export default function TeamProgressSection() {
   }, [previewStaff]);
 
   const input =
-    "w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm placeholder-white/30 outline-none focus:border-[#00B4FF]/50";
+    "pm-field";
 
   const shiftMonth = (delta: number) => {
     const d = new Date(year, month - 1 + delta, 1);
@@ -573,7 +598,7 @@ export default function TeamProgressSection() {
   };
 
   return (
-    <div className="space-y-6 relative">
+    <div className="admin-team-progress space-y-6 relative">
       {toast ? (
         <div
           role="status"
@@ -677,6 +702,25 @@ export default function TeamProgressSection() {
               value={taskForm.workDate}
               onChange={(e) => setTaskForm({ ...taskForm, workDate: e.target.value })}
             />
+          </div>
+          <div className="md:col-span-2 xl:col-span-2">
+            <label className="block text-white/40 text-[11px] mb-1">
+              Project <span className="text-white/25 font-normal">(optional)</span>
+            </label>
+            <select
+              className={input}
+              value={taskForm.projectId}
+              onChange={(e) => setTaskForm({ ...taskForm, projectId: e.target.value })}
+            >
+              <option value="" className="bg-[#0a0a1a]">
+                No project link
+              </option>
+              {projectOptions.map((p) => (
+                <option key={p.id} value={p.id} className="bg-[#0a0a1a]">
+                  {p.projectName}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -839,17 +883,27 @@ export default function TeamProgressSection() {
               disabled={exporting || !reportStaffId}
               title={!reportStaffId ? "Select an employee in Export progress report" : "Export full month PDF"}
               onClick={() => void exportProgressPdf({ mode: "month", staffId: reportStaffId, year, month })}
-              className="px-2.5 py-1 rounded-lg border border-white/15 text-[11px] text-white/75 hover:bg-white/5 disabled:opacity-40"
+              className="pm-action-btn text-[11px] disabled:opacity-40"
             >
               {exporting ? "PDF…" : "Month PDF"}
             </button>
-            <button onClick={() => shiftMonth(-1)} className="px-2 py-1 bg-white/5 rounded-lg text-white/70">
+            <button
+              type="button"
+              onClick={() => shiftMonth(-1)}
+              className="pm-action-btn px-2 py-1"
+              aria-label="Previous month"
+            >
               ‹
             </button>
-            <span className="text-sm text-white min-w-[140px] text-center">
+            <span className="text-sm text-white font-medium min-w-[140px] text-center">
               {new Date(year, month - 1, 1).toLocaleString("en-CA", { month: "long", year: "numeric" })}
             </span>
-            <button onClick={() => shiftMonth(1)} className="px-2 py-1 bg-white/5 rounded-lg text-white/70">
+            <button
+              type="button"
+              onClick={() => shiftMonth(1)}
+              className="pm-action-btn px-2 py-1"
+              aria-label="Next month"
+            >
               ›
             </button>
           </div>
@@ -858,11 +912,11 @@ export default function TeamProgressSection() {
           <table className="min-w-full text-xs">
             <thead className="sticky top-0 z-10">
               <tr>
-                <th className="sticky left-0 z-20 bg-[#0a0a1a] text-left text-white/40 font-medium px-3 py-2 min-w-[140px]">
+                <th className="sticky left-0 z-20 bg-[#0a0a1a] text-left text-white font-semibold px-3 py-2 min-w-[140px]">
                   Employee
                 </th>
                 {dayKeys.map((k) => (
-                  <th key={k} className="bg-[#0a0a1a] text-white/30 font-normal px-0.5 py-2 w-7">
+                  <th key={k} className="bg-[#0a0a1a] text-white font-semibold px-0.5 py-2 w-7">
                     {Number(k.slice(8))}
                   </th>
                 ))}
@@ -921,19 +975,19 @@ export default function TeamProgressSection() {
         </div>
         <div className="px-4 py-3 border-t border-white/10 flex flex-wrap gap-3 text-[11px] text-white/40">
           <span className="flex items-center gap-1.5">
-            <i className="w-3 h-3 rounded-sm bg-white/[0.04] inline-block" /> Empty
+            <i className="w-3 h-3 rounded-sm tp-heat-empty bg-white/[0.04] inline-block" /> Empty
           </span>
           <span className="flex items-center gap-1.5">
-            <i className="w-3 h-3 rounded-sm bg-white/15 inline-block" /> 0%
+            <i className="w-3 h-3 rounded-sm tp-heat-zero bg-white/15 inline-block" /> 0%
           </span>
           <span className="flex items-center gap-1.5">
-            <i className="w-3 h-3 rounded-sm bg-amber-500/45 inline-block" /> 1–49%
+            <i className="w-3 h-3 rounded-sm tp-heat-low bg-amber-500/45 inline-block" /> 1–49%
           </span>
           <span className="flex items-center gap-1.5">
-            <i className="w-3 h-3 rounded-sm bg-[#0055FF]/55 inline-block" /> 50–99%
+            <i className="w-3 h-3 rounded-sm tp-heat-mid bg-[#0055FF]/55 inline-block" /> 50–99%
           </span>
           <span className="flex items-center gap-1.5">
-            <i className="w-3 h-3 rounded-sm bg-emerald-500/55 inline-block" /> 100%
+            <i className="w-3 h-3 rounded-sm tp-heat-full bg-emerald-500/55 inline-block" /> 100%
           </span>
         </div>
       </div>
@@ -986,7 +1040,17 @@ export default function TeamProgressSection() {
                   className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 bg-white/[0.03] border border-white/10 rounded-xl px-3.5 py-3"
                 >
                   <div className="min-w-0 flex-1 space-y-1.5">
-                    <p className="text-white text-sm font-medium leading-snug break-words">{t.title}</p>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="text-white text-sm font-medium leading-snug break-words">{t.title}</p>
+                      {t.project?.name ? (
+                        <span
+                          title={t.project.name}
+                          className="max-w-[160px] truncate text-[10px] font-medium px-1.5 py-0.5 rounded border border-[#00B4FF]/35 bg-[#00B4FF]/10 text-[#7dd3fc]"
+                        >
+                          {t.project.name}
+                        </span>
+                      ) : null}
+                    </div>
                     {t.description ? (
                       <p className="text-white/45 text-xs leading-relaxed line-clamp-2 break-words">{t.description}</p>
                     ) : null}

@@ -36,7 +36,10 @@ model Project {
   clientEmail  String
   clientPhone  String
   companyName  String?
+  /// Public path to company logo (e.g. /uploads/project-logos/xxx.png)
+  companyLogo  String?
   services     String[]
+  /// SDLC phase: discovery | requirements | design | development | testing | deployment | support | seo | digital_marketing | completed | on_hold
   status       String   @default("discovery")
   priority     String   @default("medium")
   progress     Int      @default(0)
@@ -45,13 +48,66 @@ model Project {
   startDate    DateTime?
   deadline     DateTime?
   teamMembers  String[]
+  /// Sign-offs: [{ phase, signedOffAt, note }]
+  phaseGates   Json     @default("[]")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  tasks        Task[]
-  milestones   Milestone[]
-  notes        Note[]
-  activityLogs ActivityLog[]
+  tasks           Task[]
+  milestones      Milestone[]
+  notes           Note[]
+  activityLogs    ActivityLog[]
+  phaseChecks     ProjectPhaseCheck[]
+  payments        ProjectPayment[]
+  teamRoster      ProjectTeamMember[]
+  workflowTasks   WorkflowTask[]
+}
+
+/// Staff assigned to a client project (for Workflow assign from Project Manager)
+model ProjectTeamMember {
+  id          String    @id @default(cuid())
+  projectId   String
+  staffUserId String
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  staffUser   StaffUser @relation(fields: [staffUserId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+
+  @@unique([projectId, staffUserId])
+  @@index([staffUserId])
+}
+
+/// Per-phase checklist items (seeded from Our Project Workflow PDF)
+model ProjectPhaseCheck {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  phase     String
+  label     String
+  done      Boolean  @default(false)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId, phase])
+}
+
+/// Payment milestones (default 40% / 30% / 30%)
+model ProjectPayment {
+  id        String    @id @default(cuid())
+  projectId String
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  label     String
+  percent   Float
+  amount    Float     @default(0)
+  status    String    @default("pending") // pending | due | paid
+  dueDate   DateTime?
+  paidAt    DateTime?
+  notes     String?
+  sortOrder Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([projectId])
 }
 
 // Tasks
@@ -233,6 +289,7 @@ model StaffUser {
   createdTasks  WorkflowTask[] @relation("TaskCreator")
   assignedTasks WorkflowTask[] @relation("TaskAssignee")
   attachments   WorkflowAttachment[]
+  projectTeams  ProjectTeamMember[]
 }
 
 model WorkflowTask {
@@ -247,6 +304,9 @@ model WorkflowTask {
   dueAt           DateTime?
   createdById     String
   assignedToId    String
+  /// Optional link to client Project (Project Manager ↔ Workflow)
+  projectId       String?
+  project         Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
   createdBy       StaffUser @relation("TaskCreator", fields: [createdById], references: [id], onDelete: Restrict)
   assignedTo      StaffUser @relation("TaskAssignee", fields: [assignedToId], references: [id], onDelete: Restrict)
   /// When the current status segment started
@@ -270,6 +330,7 @@ model WorkflowTask {
   @@index([assignedToId, workDate])
   @@index([createdById, workDate])
   @@index([workDate])
+  @@index([projectId, workDate])
 }
 
 model WorkflowAttachment {

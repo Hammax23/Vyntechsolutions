@@ -292,6 +292,7 @@ export function mapTask(t: {
   dueAt: Date | null;
   createdById: string;
   assignedToId: string;
+  projectId?: string | null;
   createdAt: Date;
   updatedAt: Date;
   statusChangedAt?: Date;
@@ -304,6 +305,7 @@ export function mapTask(t: {
   blockedMs?: number;
   createdBy?: { id: string; name: string; color: string };
   assignedTo?: { id: string; name: string; color: string };
+  project?: { id: string; projectName: string } | null;
   attachments?: Array<{
     id: string;
     taskId: string;
@@ -340,6 +342,10 @@ export function mapTask(t: {
     dueAt: t.dueAt ? t.dueAt.toISOString() : null,
     createdById: t.createdById,
     assignedToId: t.assignedToId,
+    projectId: t.projectId ?? t.project?.id ?? null,
+    project: t.project
+      ? { id: t.project.id, name: t.project.projectName }
+      : null,
     createdAt: t.createdAt.toISOString(),
     updatedAt: t.updatedAt.toISOString(),
     statusChangedAt: timing.statusChangedAt,

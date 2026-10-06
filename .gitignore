@@ -46,6 +46,8 @@ yarn-error.log*
 # workflow task attachments (keep folder in repo)
 /uploads/workflow/*
 !/uploads/workflow/.gitkeep
+/public/uploads/project-logos/*
+!/public/uploads/project-logos/.gitkeep
 
 # vercel
 .vercel

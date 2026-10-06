@@ -21,6 +21,7 @@ const PRIORITIES = new Set(["low", "medium", "high"]);
 const includePeople = {
   createdBy: { select: { id: true, name: true, color: true } },
   assignedTo: { select: { id: true, name: true, color: true } },
+  project: { select: { id: true, projectName: true } },
   attachments: {
     include: { uploadedBy: { select: { id: true, name: true } } },
     orderBy: { createdAt: "asc" as const },

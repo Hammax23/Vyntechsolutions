@@ -10,9 +10,10 @@ export const runtime = "nodejs";
 const STATUSES = new Set(["todo", "in_progress", "done", "blocked"]);
 const PRIORITIES = new Set(["low", "medium", "high"]);
 
-const includePeople = {
+const includeTask = {
   createdBy: { select: { id: true, name: true, color: true } },
   assignedTo: { select: { id: true, name: true, color: true } },
+  project: { select: { id: true, projectName: true } },
   attachments: {
     include: { uploadedBy: { select: { id: true, name: true } } },
     orderBy: { createdAt: "asc" as const },
@@ -32,7 +33,7 @@ export async function GET(request: NextRequest) {
 
     const tasks = await prisma.workflowTask.findMany({
       where: { assignedToId: staffId, workDate: utcDayRange(date) },
-      include: includePeople,
+      include: includeTask,
       orderBy: { createdAt: "asc" },
     });
 
@@ -51,6 +52,7 @@ async function parseAssignBody(request: NextRequest): Promise<{
   workDate: string;
   priority: string;
   status: string;
+  projectId: string;
   files: File[];
 }> {
   const contentType = request.headers.get("content-type") || "";
@@ -70,6 +72,7 @@ async function parseAssignBody(request: NextRequest): Promise<{
       workDate: String(form.get("workDate") || "").slice(0, 10) || todayKey(),
       priority: String(form.get("priority") || "medium"),
       status: String(form.get("status") || "todo"),
+      projectId: String(form.get("projectId") || "").trim(),
       files,
     };
   }
@@ -83,6 +86,7 @@ async function parseAssignBody(request: NextRequest): Promise<{
     workDate: String(body.workDate || "").slice(0, 10) || todayKey(),
     priority: String(body.priority || "medium"),
     status: String(body.status || "todo"),
+    projectId: String(body.projectId || "").trim(),
     files: [],
   };
 }
@@ -104,6 +108,28 @@ export async function POST(request: NextRequest) {
 
     if (!isValidIsoDate(parsed.workDate)) {
       return NextResponse.json({ error: "Invalid work date" }, { status: 400 });
+    }
+
+    let projectId: string | null = null;
+    let onTeam = true;
+    if (parsed.projectId) {
+      const project = await prisma.project.findUnique({
+        where: { id: parsed.projectId },
+        select: { id: true, projectName: true },
+      });
+      if (!project) {
+        return NextResponse.json({ error: "Project not found" }, { status: 400 });
+      }
+      projectId = project.id;
+      const membership = await prisma.projectTeamMember.findUnique({
+        where: {
+          projectId_staffUserId: {
+            projectId: project.id,
+            staffUserId: assignee.id,
+          },
+        },
+      });
+      onTeam = Boolean(membership);
     }
 
     const creator = await ensureAdminWorkflowCreator();
@@ -132,13 +158,14 @@ export async function POST(request: NextRequest) {
         workDate,
         assignedToId: assignee.id,
         createdById: creator.id,
+        projectId,
         statusChangedAt: now,
         cycleStartedAt: now,
         startedAt: status === "in_progress" || status === "done" || status === "blocked" ? now : null,
         completedAt: status === "done" ? now : null,
         firstBlockedAt: status === "blocked" ? now : null,
       },
-      include: includePeople,
+      include: includeTask,
     });
 
     if (parsed.files.length > 0) {
@@ -154,9 +181,22 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    if (projectId) {
+      const note = onTeam
+        ? `Work assigned to ${assignee.name}: ${parsed.title}`
+        : `Work assigned to ${assignee.name} (not on project team): ${parsed.title}`;
+      await prisma.activityLog.create({
+        data: {
+          projectId,
+          action: note,
+          user: "Admin",
+        },
+      });
+    }
+
     const full = await prisma.workflowTask.findUnique({
       where: { id: task.id },
-      include: includePeople,
+      include: includeTask,
     });
 
     return NextResponse.json({ task: mapTask(full!) });

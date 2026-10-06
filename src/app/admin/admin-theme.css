@@ -24,13 +24,61 @@
 
 [data-admin-theme="light"] .border-white\/5,
 [data-admin-theme="light"] .border-white\/10,
+[data-admin-theme="light"] .border-white\/15,
 [data-admin-theme="light"] .border-white\/20 {
-  border-color: #e2e8f0 !important;
+  border-color: #cbd5e1 !important;
 }
 
 [data-admin-theme="light"] .border-white\/30,
 [data-admin-theme="light"] .border-white\/50 {
-  border-color: #cbd5e1 !important;
+  border-color: #94a3b8 !important;
+}
+
+/* Explicit form controls — never invisible on white */
+.pm-field {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background-color: rgba(255, 255, 255, 0.04);
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  color: #f8fafc;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  outline: none;
+}
+
+.pm-field:focus {
+  border-color: rgba(148, 163, 184, 0.7);
+  box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.18);
+}
+
+.pm-field--area {
+  resize: none;
+  min-height: 7rem;
+}
+
+[data-admin-theme="light"] .pm-field {
+  border-color: #94a3b8 !important;
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  box-shadow: inset 0 1px 2px rgb(15 23 42 / 0.04);
+}
+
+[data-admin-theme="light"] .pm-field:focus {
+  border-color: #334155 !important;
+  box-shadow: 0 0 0 2px rgb(15 23 42 / 0.08) !important;
+}
+
+[data-admin-theme="light"] .pm-edit-panel {
+  border-color: #94a3b8 !important;
+  background-color: #ffffff !important;
+}
+
+[data-admin-theme="light"] input.border,
+[data-admin-theme="light"] textarea.border,
+[data-admin-theme="light"] select.border {
+  border-color: #94a3b8 !important;
+  background-color: #ffffff !important;
 }
 
 [data-admin-theme="light"] .bg-white\/5,
@@ -61,8 +109,13 @@
   color: #0f172a !important;
 }
 
-[data-admin-theme="light"] .text-white\/80 {
+[data-admin-theme="light"] .text-white\/80,
+[data-admin-theme="light"] .text-white\/75 {
   color: #1e293b !important;
+}
+
+[data-admin-theme="light"] .text-white\/85 {
+  color: #0f172a !important;
 }
 
 [data-admin-theme="light"] .text-white\/90 {
@@ -74,13 +127,103 @@
   color: #334155 !important;
 }
 
-[data-admin-theme="light"] .text-white\/50 {
+[data-admin-theme="light"] .text-white\/50,
+[data-admin-theme="light"] .text-white\/55 {
   color: #475569 !important;
 }
 
 [data-admin-theme="light"] .text-white\/45,
 [data-admin-theme="light"] .text-white\/40 {
-  color: #64748b !important;
+  color: #475569 !important;
+}
+
+/* Payment / status chips — always readable in light mode */
+.pm-status-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.5rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 0.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(248, 250, 252, 0.8);
+  background: rgba(255, 255, 255, 0.06);
+  white-space: nowrap;
+}
+
+.pm-status-chip--paid {
+  border-color: rgba(16, 185, 129, 0.45);
+  color: #6ee7b7;
+  background: rgba(16, 185, 129, 0.12);
+}
+
+.pm-status-chip--pending,
+.pm-status-chip--due {
+  border-color: rgba(148, 163, 184, 0.45);
+  color: #cbd5e1;
+  background: rgba(148, 163, 184, 0.1);
+}
+
+[data-admin-theme="light"] .pm-status-chip {
+  border-color: #94a3b8 !important;
+  color: #334155 !important;
+  background: #f1f5f9 !important;
+}
+
+[data-admin-theme="light"] .pm-status-chip--paid {
+  border-color: #6ee7b7 !important;
+  color: #047857 !important;
+  background: #ecfdf5 !important;
+}
+
+[data-admin-theme="light"] .pm-status-chip--pending,
+[data-admin-theme="light"] .pm-status-chip--due {
+  border-color: #64748b !important;
+  color: #0f172a !important;
+  background: #e2e8f0 !important;
+}
+
+.pm-action-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-size: 12px;
+  color: rgba(248, 250, 252, 0.85);
+  background: transparent;
+  white-space: nowrap;
+}
+
+.pm-action-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.pm-action-btn--danger {
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.35);
+}
+
+.pm-action-btn--danger:hover {
+  background: rgba(248, 113, 113, 0.1);
+}
+
+[data-admin-theme="light"] .pm-action-btn {
+  border-color: #94a3b8 !important;
+  color: #334155 !important;
+  background: #ffffff !important;
+}
+
+[data-admin-theme="light"] .pm-action-btn:hover {
+  background: #f1f5f9 !important;
+}
+
+[data-admin-theme="light"] .pm-action-btn--danger {
+  border-color: #fca5a5 !important;
+  color: #b91c1c !important;
 }
 
 [data-admin-theme="light"] .text-white\/35,
@@ -88,7 +231,7 @@
 [data-admin-theme="light"] .text-white\/25,
 [data-admin-theme="light"] .text-white\/20,
 [data-admin-theme="light"] .text-white\/15 {
-  color: #64748b !important;
+  color: #334155 !important;
 }
 
 [data-admin-theme="light"] .hover\:text-white:hover,
@@ -208,6 +351,160 @@
   background-color: #ecfdf5 !important;
   color: #047857 !important;
   border-color: #6ee7b7 !important;
+}
+
+/* Project Manager checklist — enterprise neutrals */
+.pm-check-label {
+  color: #e2e8f0;
+}
+.pm-check-label--done {
+  color: #64748b;
+  text-decoration: line-through;
+}
+.pm-check-num {
+  color: #64748b;
+}
+.pm-check-box {
+  border-color: #64748b;
+  color: #ffffff;
+  background-color: transparent;
+}
+.pm-check-box--on {
+  border-color: #94a3b8;
+  background-color: #475569;
+  color: #ffffff;
+}
+.pm-check-row:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+.pm-check-row--done {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+.pm-check-row--done:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.pm-stat-card {
+  background-color: rgba(10, 10, 20, 0.92);
+}
+
+.pm-shell {
+  width: 100%;
+  max-width: 100%;
+}
+
+[data-admin-theme="light"] .pm-tab-count {
+  color: #334155 !important;
+  border-color: #cbd5e1 !important;
+  background-color: #f1f5f9 !important;
+}
+
+.pm-phase-scroll {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.pm-phase-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.pm-phase-scroll::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.35);
+  border-radius: 999px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pm-shell * {
+    scroll-behavior: auto !important;
+  }
+}
+
+[data-admin-theme="light"] .pm-check-label {
+  color: #0f172a !important;
+}
+[data-admin-theme="light"] .pm-check-label--done {
+  color: #94a3b8 !important;
+  text-decoration: line-through;
+}
+[data-admin-theme="light"] .pm-check-num {
+  color: #94a3b8 !important;
+}
+[data-admin-theme="light"] .pm-check-box {
+  border-color: #cbd5e1 !important;
+  background-color: #ffffff !important;
+}
+[data-admin-theme="light"] .pm-check-box--on {
+  border-color: #334155 !important;
+  background-color: #334155 !important;
+  color: #ffffff !important;
+}
+[data-admin-theme="light"] .pm-check-row:hover {
+  background-color: #f8fafc !important;
+}
+[data-admin-theme="light"] .pm-check-row--done {
+  background-color: #f1f5f9 !important;
+}
+[data-admin-theme="light"] .pm-check-row--done:hover {
+  background-color: #e2e8f0 !important;
+}
+
+/* Project Manager — sober toolbar (enterprise, not marketing hero) */
+[data-admin-theme="light"] .pm-brand-hero {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: none !important;
+}
+
+[data-admin-theme="light"] .pm-brand-hero .pm-brand-hero__title {
+  color: #0f172a !important;
+}
+
+[data-admin-theme="light"] .pm-brand-hero .pm-brand-hero__eyebrow {
+  color: #64748b !important;
+  border-color: #e2e8f0 !important;
+  background: #f8fafc !important;
+}
+
+[data-admin-theme="light"] .pm-brand-hero .pm-brand-hero__sub {
+  color: #64748b !important;
+}
+
+[data-admin-theme="light"] .pm-brand-hero button {
+  background-color: #0f172a !important;
+  border-color: #0f172a !important;
+  color: #ffffff !important;
+}
+
+[data-admin-theme="light"] .pm-brand-hero button:hover {
+  background-color: #1e293b !important;
+}
+
+[data-admin-theme="light"] .pm-brand-hero button * {
+  color: #ffffff !important;
+}
+
+[data-admin-theme="light"] .pm-kpi-strip {
+  background-color: #e2e8f0 !important;
+  border-color: #e2e8f0 !important;
+}
+
+[data-admin-theme="light"] .pm-stat-card {
+  background-color: #ffffff !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-admin-theme="light"] .pm-stat-card:hover {
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-admin-theme="light"] .pm-stat-card .text-white {
+  color: #0f172a !important;
+}
+
+[data-admin-theme="light"] .pm-stat-card .text-white\/40 {
+  color: #94a3b8 !important;
 }
 
 [data-admin-theme="light"] .admin-status-chip span,
@@ -417,4 +714,46 @@
 
 [data-admin-theme="dark"] .admin-toast__close:hover {
   background: rgba(255, 255, 255, 0.08);
+}
+
+/* —— Team Progress: restore readable light calendar / heatmap —— */
+[data-admin-theme="light"] .admin-team-progress .bg-\[\#0a0a1a\] {
+  background-color: #f8fafc !important;
+}
+
+[data-admin-theme="light"] .admin-team-progress thead th {
+  color: #0f172a !important;
+  font-weight: 600 !important;
+  background-color: #e2e8f0 !important;
+  border-bottom: 1px solid #cbd5e1 !important;
+}
+
+[data-admin-theme="light"] .admin-team-progress tbody td.sticky {
+  background-color: #ffffff !important;
+  border-right: 1px solid #e2e8f0 !important;
+}
+
+[data-admin-theme="light"] .admin-team-progress .tp-heat-empty {
+  background-color: #f1f5f9 !important;
+  box-shadow: inset 0 0 0 1px #cbd5e1;
+}
+
+[data-admin-theme="light"] .admin-team-progress .tp-heat-zero {
+  background-color: #94a3b8 !important;
+}
+
+[data-admin-theme="light"] .admin-team-progress .tp-heat-low {
+  background-color: #f59e0b !important;
+}
+
+[data-admin-theme="light"] .admin-team-progress .tp-heat-mid {
+  background-color: #0055ff !important;
+}
+
+[data-admin-theme="light"] .admin-team-progress .tp-heat-full {
+  background-color: #10b981 !important;
+}
+
+[data-admin-theme="light"] .admin-team-progress .ring-white {
+  --tw-ring-color: #0f172a !important;
 }

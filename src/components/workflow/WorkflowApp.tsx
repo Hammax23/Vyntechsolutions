@@ -39,6 +39,8 @@ type WTask = {
   blockedMs?: number;
   timing?: TaskTimingSummary;
   attachments?: WAttachment[];
+  projectId?: string | null;
+  project?: { id: string; name: string } | null;
   createdBy?: { id: string; name: string; color: string };
   assignedTo?: { id: string; name: string; color: string };
 };
@@ -276,7 +278,17 @@ const TaskCard = memo(function TaskCard({
   return (
     <div className={`${ui.card} border rounded-xl p-3 space-y-2 ${ui.cardHover} transition-colors`}>
       <div className="flex items-start justify-between gap-2">
-        <p className="text-sm font-medium leading-snug break-words min-w-0">{t.title}</p>
+        <div className="min-w-0 flex-1 space-y-1">
+          <p className="text-sm font-medium leading-snug break-words">{t.title}</p>
+          {t.project?.name ? (
+            <p
+              title={t.project.name}
+              className={`text-[11px] truncate ${isDark ? "text-white/45" : "text-slate-500"}`}
+            >
+              {t.project.name}
+            </p>
+          ) : null}
+        </div>
         <div className="flex flex-col items-end gap-1 shrink-0">
           <span className={`text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded ${statusChip(t.status, isDark)}`}>
             {STATUS_LABEL[t.status]}
