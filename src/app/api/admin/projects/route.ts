@@ -248,10 +248,14 @@ export async function PATCH(request: NextRequest) {
     }
 
     let gates = parsePhaseGates(existing.phaseGates);
+    const gatePayload =
+      phaseGate && typeof phaseGate === "object"
+        ? (phaseGate as { phase?: unknown; note?: unknown })
+        : null;
 
-    if (phaseGate && typeof phaseGate === "object") {
-      const phase = normalizeProjectStatus(String(phaseGate.phase || ""));
-      const note = phaseGate.note ? String(phaseGate.note) : undefined;
+    if (gatePayload) {
+      const phase = normalizeProjectStatus(String(gatePayload.phase || ""));
+      const note = gatePayload.note ? String(gatePayload.note) : undefined;
       const signedOffAt = new Date().toISOString();
       gates = [
         ...gates.filter((g) => g.phase !== phase),
@@ -285,9 +289,9 @@ export async function PATCH(request: NextRequest) {
         user: "Admin",
       });
     }
-    if (phaseGate?.phase) {
+    if (gatePayload?.phase) {
       activityData.push({
-        action: `Phase signed off: ${phaseGate.phase}${phaseGate.note ? ` — ${phaseGate.note}` : ""}`,
+        action: `Phase signed off: ${gatePayload.phase}${gatePayload.note ? ` — ${gatePayload.note}` : ""}`,
         user: "Admin",
       });
     }
