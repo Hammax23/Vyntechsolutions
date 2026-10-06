@@ -50,11 +50,18 @@ export async function GET(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const body = await request.json().catch(() => ({}));
+    const body = (await request.json().catch(() => ({}))) as {
+      projectId?: unknown;
+      staffUserIds?: unknown;
+    };
     const projectId = String(body.projectId || "").trim();
     const rawIds = Array.isArray(body.staffUserIds) ? body.staffUserIds : [];
-    const staffUserIds = [
-      ...new Set(rawIds.map((id: unknown) => String(id || "").trim()).filter(Boolean)),
+    const staffUserIds: string[] = [
+      ...new Set(
+        rawIds
+          .map((id) => String(id ?? "").trim())
+          .filter((id): id is string => id.length > 0)
+      ),
     ];
 
     if (!projectId) {
