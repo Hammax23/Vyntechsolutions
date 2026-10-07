@@ -61,6 +61,28 @@ model Project {
   payments        ProjectPayment[]
   teamRoster      ProjectTeamMember[]
   workflowTasks   WorkflowTask[]
+  clientUpdates   ProjectClientUpdate[]
+  billingInvoices BillingInvoice[]
+}
+
+/// Email status updates sent to the client from Project Manager
+model ProjectClientUpdate {
+  id             String   @id @default(cuid())
+  projectId      String
+  project        Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  sentTo         String
+  subject        String
+  messageNote    String?
+  snapshot       Json
+  kind           String   @default("client") // client | test
+  status         String   @default("sent") // sent | failed
+  errorMessage   String?
+  idempotencyKey String   @unique
+  bccTo          String?
+  sentBy         String   @default("Admin")
+  createdAt      DateTime @default(now())
+
+  @@index([projectId, createdAt])
 }
 
 /// Staff assigned to a client project (for Workflow assign from Project Manager)
@@ -106,6 +128,7 @@ model ProjectPayment {
   sortOrder Int       @default(0)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  billingInvoice BillingInvoice?
 
   @@index([projectId])
 }
@@ -251,27 +274,59 @@ model ClientInvoice {
 
 // Client billing invoices (invoices issued TO clients)
 model BillingInvoice {
-  id             String   @id @default(cuid())
-  invoiceNumber  String   @unique
-  issueDate      DateTime @default(now())
-  dueDate        DateTime?
-  clientName     String
-  companyName    String?
-  clientEmail    String?
-  clientPhone    String?
-  clientAddress  String?
-  projectTitle   String?
-  lineItems      Json     @default("[]")
-  discountPercent Float   @default(0)
-  hstPercent     Float    @default(13)
-  amountPaid     Float    @default(0)
-  paymentMethod  String?
-  paymentTerms   String?
-  notes          String?
-  status         String   @default("draft") // draft | sent | paid | overdue | cancelled
-  projectId      String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id                      String    @id @default(cuid())
+  invoiceNumber           String    @unique
+  issueDate               DateTime  @default(now())
+  dueDate                 DateTime?
+  clientName              String
+  companyName             String?
+  clientEmail             String?
+  clientPhone             String?
+  clientAddress           String?
+  projectTitle            String?
+  lineItems               Json      @default("[]")
+  discountPercent         Float     @default(0)
+  hstPercent              Float     @default(13)
+  amountPaid              Float     @default(0)
+  paymentMethod           String?
+  paymentTerms            String?
+  notes                   String?
+  status                  String    @default("draft") // draft | sent | paid | overdue | cancelled
+  projectId               String?
+  project                 Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  projectPaymentId        String?   @unique
+  projectPayment          ProjectPayment? @relation(fields: [projectPaymentId], references: [id], onDelete: SetNull)
+  stripeCheckoutSessionId String?
+  stripePaymentIntentId   String?
+  checkoutUrl             String?
+  paidAt                  DateTime?
+  sentAt                  DateTime?
+  sentTo                  String?
+  lastSendError           String?
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+  events                  BillingInvoiceEvent[]
+
+  @@index([projectId])
+  @@index([status, dueDate])
+}
+
+model BillingInvoiceEvent {
+  id        String   @id @default(cuid())
+  invoiceId String
+  invoice   BillingInvoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  type      String
+  meta      Json?
+  createdAt DateTime @default(now())
+
+  @@index([invoiceId, createdAt])
+}
+
+/// Stripe webhook idempotency
+model StripeWebhookEvent {
+  id        String   @id
+  type      String
+  createdAt DateTime @default(now())
 }
 
 // Internal staff accounts for /workflow daily progress

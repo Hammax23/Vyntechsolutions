@@ -28,5 +28,11 @@ export function createDefaultBillingInvoice(existingNumbers: string[] = []): Bil
     notes: "",
     status: "draft",
     projectId: null,
+    projectPaymentId: null,
+    checkoutUrl: "",
+    paidAt: "",
+    sentAt: "",
+    sentTo: "",
+    lastSendError: "",
   };
 }

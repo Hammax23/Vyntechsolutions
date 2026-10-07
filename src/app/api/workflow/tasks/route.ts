@@ -49,6 +49,7 @@ async function parseCreateBody(request: NextRequest): Promise<{
   workDate: string;
   priority: string;
   status: string;
+  projectId: string;
   files: File[];
 }> {
   const contentType = request.headers.get("content-type") || "";
@@ -68,6 +69,7 @@ async function parseCreateBody(request: NextRequest): Promise<{
       workDate: String(form.get("workDate") || "").slice(0, 10) || todayKey(),
       priority: String(form.get("priority") || "medium"),
       status: String(form.get("status") || "todo"),
+      projectId: String(form.get("projectId") || "").trim(),
       files,
     };
   }
@@ -81,8 +83,37 @@ async function parseCreateBody(request: NextRequest): Promise<{
     workDate: String(body.workDate || "").slice(0, 10) || todayKey(),
     priority: String(body.priority || "medium"),
     status: String(body.status || "todo"),
+    projectId: String(body.projectId || "").trim(),
     files: [],
   };
+}
+
+async function assertAssigneeOnProject(projectId: string, assigneeId: string) {
+  const project = await prisma.project.findUnique({
+    where: { id: projectId },
+    select: { id: true, status: true },
+  });
+  if (!project) {
+    return { error: "Project not found", status: 400 as const };
+  }
+  if (project.status === "completed" || project.status === "on_hold") {
+    return { error: "Project is not active", status: 400 as const };
+  }
+  const membership = await prisma.projectTeamMember.findUnique({
+    where: {
+      projectId_staffUserId: {
+        projectId: project.id,
+        staffUserId: assigneeId,
+      },
+    },
+  });
+  if (!membership) {
+    return {
+      error: "Assignee must be on this project team",
+      status: 400 as const,
+    };
+  }
+  return { projectId: project.id };
 }
 
 export async function GET(request: NextRequest) {
@@ -118,12 +149,20 @@ export async function POST(request: NextRequest) {
 
   const parsed = await parseCreateBody(request);
   if (!parsed.title) return NextResponse.json({ error: "Title required" }, { status: 400 });
+  if (!parsed.projectId) {
+    return NextResponse.json({ error: "Select a project" }, { status: 400 });
+  }
 
   const assignedToId = parsed.assignedToId || me.id;
   const assignee = await prisma.staffUser.findFirst({
     where: { id: assignedToId, isActive: true, ...notSystemStaffWhere() },
   });
   if (!assignee) return NextResponse.json({ error: "Assignee not found" }, { status: 400 });
+
+  const projectCheck = await assertAssigneeOnProject(parsed.projectId, assignee.id);
+  if ("error" in projectCheck) {
+    return NextResponse.json({ error: projectCheck.error }, { status: projectCheck.status });
+  }
 
   if (!isValidIsoDate(parsed.workDate)) {
     return NextResponse.json({ error: "Invalid work date" }, { status: 400 });
@@ -133,9 +172,16 @@ export async function POST(request: NextRequest) {
   const priority = PRIORITIES.has(parsed.priority) ? parsed.priority : "medium";
   const now = new Date();
 
-  let workLink: string | null = null;
+  if (!parsed.workLink.trim()) {
+    return NextResponse.json({ error: "Work link is required" }, { status: 400 });
+  }
+  let workLink: string;
   try {
-    workLink = normalizeWorkLink(parsed.workLink);
+    const normalized = normalizeWorkLink(parsed.workLink);
+    if (!normalized) {
+      return NextResponse.json({ error: "Work link is required" }, { status: 400 });
+    }
+    workLink = normalized;
   } catch (e) {
     return NextResponse.json(
       { error: e instanceof Error ? e.message : "Invalid work link" },
@@ -153,6 +199,7 @@ export async function POST(request: NextRequest) {
       workDate,
       assignedToId: assignee.id,
       createdById: me.id,
+      projectId: projectCheck.projectId,
       ...initialTiming(status, now),
     },
     include: includePeople,
@@ -219,6 +266,30 @@ export async function PATCH(request: NextRequest) {
     });
     if (!assignee) return NextResponse.json({ error: "Assignee not found" }, { status: 400 });
     data.assignedToId = assignee.id;
+  }
+
+  const nextProjectId =
+    typeof body.projectId === "string" && body.projectId.trim()
+      ? body.projectId.trim()
+      : existing.projectId;
+  const nextAssigneeId =
+    typeof data.assignedToId === "string" ? data.assignedToId : existing.assignedToId;
+
+  if (typeof body.projectId === "string" && body.projectId.trim()) {
+    const projectCheck = await assertAssigneeOnProject(body.projectId.trim(), nextAssigneeId);
+    if ("error" in projectCheck) {
+      return NextResponse.json({ error: projectCheck.error }, { status: projectCheck.status });
+    }
+    data.projectId = projectCheck.projectId;
+  } else if (
+    typeof data.assignedToId === "string" &&
+    nextProjectId &&
+    data.assignedToId !== existing.assignedToId
+  ) {
+    const projectCheck = await assertAssigneeOnProject(nextProjectId, nextAssigneeId);
+    if ("error" in projectCheck) {
+      return NextResponse.json({ error: projectCheck.error }, { status: projectCheck.status });
+    }
   }
 
   if (STATUSES.has(body.status) && body.status !== existing.status) {

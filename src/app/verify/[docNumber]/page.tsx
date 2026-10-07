@@ -4,24 +4,50 @@ import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+type ExpenseDoc = {
+  expenseType: "salary" | "expense";
+  documentNumber: string;
+  issueDate: string;
+  payeeName: string;
+  payeeRole: string;
+  periodLabel: string;
+  category: string;
+  paymentMethod: string;
+  status: string;
+  amountLabel: string;
+  amount: string;
+  createdAt: string;
+};
+
+type BillingDoc = {
+  documentNumber: string;
+  issueDate: string;
+  dueDate: string;
+  clientName: string;
+  companyName: string;
+  projectTitle: string;
+  paymentMethod: string;
+  status: string;
+  amountLabel: string;
+  amount: string;
+  balance: string;
+  balanceValue?: number;
+  checkoutUrl?: string;
+  lineItems?: Array<{
+    description: string;
+    quantity: number;
+    rate: number;
+    amount: string;
+  }>;
+  createdAt: string;
+};
+
 type VerifyPayload = {
   verified: boolean;
   issuedBy: string;
   company: string;
-  document: {
-    expenseType: "salary" | "expense";
-    documentNumber: string;
-    issueDate: string;
-    payeeName: string;
-    payeeRole: string;
-    periodLabel: string;
-    category: string;
-    paymentMethod: string;
-    status: string;
-    amountLabel: string;
-    amount: string;
-    createdAt: string;
-  };
+  documentType?: string;
+  document: ExpenseDoc | BillingDoc;
 };
 
 function fmtDate(iso: string) {
@@ -84,8 +110,10 @@ export default function VerifyDocumentPage({ params }: { params: { docNumber: st
     );
   }
 
-  const doc = data.document;
-  const isSalary = doc.expenseType === "salary";
+  const isBilling = data.documentType === "client_invoice";
+  const billing = isBilling ? (data.document as BillingDoc) : null;
+  const expense = !isBilling ? (data.document as ExpenseDoc) : null;
+  const isSalary = expense?.expenseType === "salary";
 
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-10">
@@ -109,66 +137,108 @@ export default function VerifyDocumentPage({ params }: { params: { docNumber: st
             </div>
           </div>
 
-          <div className="px-6 py-5 space-y-4">
-            <div>
-              <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Document type</p>
-              <p className="text-slate-900 font-medium">{isSalary ? "Salary Slip" : "Expense Voucher"}</p>
+          {billing ? (
+            <div className="px-6 py-5 space-y-4">
+              <div>
+                <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Document type</p>
+                <p className="text-slate-900 font-medium">Client Invoice</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Invoice #</p>
+                  <p className="text-slate-900 font-medium break-all">{billing.documentNumber}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Status</p>
+                  <p className="text-slate-900 font-medium capitalize">{billing.status}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Issue date</p>
+                  <p className="text-slate-900 font-medium">{fmtDate(billing.issueDate)}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Due date</p>
+                  <p className="text-slate-900 font-medium">{fmtDate(billing.dueDate)}</p>
+                </div>
+              </div>
+              <div>
+                <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Bill to</p>
+                <p className="text-slate-900 font-medium">{billing.clientName}</p>
+                {billing.companyName ? (
+                  <p className="text-slate-600 text-sm">{billing.companyName}</p>
+                ) : null}
+              </div>
+              {billing.projectTitle ? (
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Project</p>
+                  <p className="text-slate-900 font-medium">{billing.projectTitle}</p>
+                </div>
+              ) : null}
+              {billing.lineItems && billing.lineItems.length > 0 ? (
+                <div className="border border-slate-100 rounded-xl overflow-hidden">
+                  <div className="px-3 py-2 bg-slate-50 text-[10px] uppercase tracking-wider text-slate-400 font-semibold">
+                    Line items
+                  </div>
+                  <ul className="divide-y divide-slate-100">
+                    {billing.lineItems.map((line, i) => (
+                      <li key={i} className="px-3 py-2 flex justify-between gap-3 text-sm">
+                        <span className="text-slate-700 min-w-0 truncate">{line.description}</span>
+                        <span className="text-slate-900 font-medium shrink-0">{line.amount}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+              <div className="grid grid-cols-2 gap-4 pt-1">
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Total</p>
+                  <p className="text-slate-900 font-bold text-lg">{billing.amount}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Balance due</p>
+                  <p className="text-slate-900 font-bold text-lg">{billing.balance}</p>
+                </div>
+              </div>
+              {billing.checkoutUrl && (billing.balanceValue == null || billing.balanceValue > 0) && billing.status !== "paid" ? (
+                <a
+                  href={billing.checkoutUrl}
+                  className="inline-flex w-full justify-center rounded-lg bg-[#0055FF] text-white text-sm font-semibold px-4 py-2.5 hover:bg-[#0044CC]"
+                >
+                  Pay now
+                </a>
+              ) : null}
             </div>
-
-            <div className="grid grid-cols-2 gap-4">
+          ) : expense ? (
+            <div className="px-6 py-5 space-y-4">
               <div>
-                <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Document #</p>
-                <p className="text-slate-900 font-medium text-sm break-all">{doc.documentNumber}</p>
+                <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Document type</p>
+                <p className="text-slate-900 font-medium">{isSalary ? "Salary Slip" : "Expense Voucher"}</p>
               </div>
-              <div>
-                <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Issue date</p>
-                <p className="text-slate-900 font-medium text-sm">{fmtDate(doc.issueDate)}</p>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Document #</p>
+                  <p className="text-slate-900 font-medium break-all">{expense.documentNumber}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Issue date</p>
+                  <p className="text-slate-900 font-medium">{fmtDate(expense.issueDate)}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Payee</p>
+                  <p className="text-slate-900 font-medium">{expense.payeeName}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">{expense.amountLabel}</p>
+                  <p className="text-slate-900 font-bold text-lg">{expense.amount}</p>
+                </div>
               </div>
             </div>
-
-            <div>
-              <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">
-                {isSalary ? "Employee" : "Payee"}
-              </p>
-              <p className="text-slate-900 font-medium">{doc.payeeName}</p>
-              {doc.payeeRole ? <p className="text-slate-500 text-sm">{doc.payeeRole}</p> : null}
-            </div>
-
-            {isSalary && doc.periodLabel ? (
-              <div>
-                <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Pay period</p>
-                <p className="text-slate-900 font-medium">{doc.periodLabel}</p>
-              </div>
-            ) : doc.category ? (
-              <div>
-                <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Category</p>
-                <p className="text-slate-900 font-medium">{doc.category}</p>
-              </div>
-            ) : null}
-
-            <div className="rounded-xl bg-[#0F2A5F]/5 border border-[#0F2A5F]/10 px-4 py-3 flex items-center justify-between">
-              <span className="text-sm text-slate-600">{doc.amountLabel}</span>
-              <span className="text-lg font-bold text-[#0F2A5F]">{doc.amount}</span>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 pt-2 border-t border-slate-100">
-              <div>
-                <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Issued by</p>
-                <p className="text-slate-900 font-medium text-sm">{data.issuedBy}</p>
-              </div>
-              <div>
-                <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Company</p>
-                <p className="text-slate-900 font-medium text-sm">{data.company}</p>
-              </div>
-            </div>
-          </div>
+          ) : null}
         </div>
 
         <p className="text-center text-xs text-slate-400 mt-6">
-          If this does not match the paper/PDF you received, contact{" "}
-          <a href="mailto:info@vyntechsolutions.ca" className="text-[#0055FF]">
-            info@vyntechsolutions.ca
-          </a>
+          Issued by {data.company} · {data.issuedBy}
         </p>
       </div>
     </div>

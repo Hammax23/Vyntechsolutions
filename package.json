@@ -30,6 +30,7 @@
     "qrcode": "^1.5.4",
     "react": "^18",
     "react-dom": "^18",
+    "stripe": "^23.0.0",
     "swagger-ui-react": "^5.17.14"
   },
   "devDependencies": {

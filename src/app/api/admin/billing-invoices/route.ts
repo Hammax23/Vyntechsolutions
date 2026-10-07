@@ -3,53 +3,12 @@ import prisma from "@/lib/prisma";
 import type {
   BillingInvoiceData,
   BillingInvoiceStatus,
-  BillingLineItem,
 } from "@/lib/admin/billing-invoice-types";
+import { calculateBillingTotals } from "@/lib/admin/billing-invoice-types";
 import { allocateNextBillingInvoiceNumber } from "@/lib/admin/allocate-billing-invoice-number";
-
-function mapInvoice(record: {
-  id: string;
-  invoiceNumber: string;
-  issueDate: Date;
-  dueDate: Date | null;
-  clientName: string;
-  companyName: string | null;
-  clientEmail: string | null;
-  clientPhone: string | null;
-  clientAddress: string | null;
-  projectTitle: string | null;
-  lineItems: unknown;
-  discountPercent: number;
-  hstPercent: number;
-  amountPaid: number;
-  paymentMethod: string | null;
-  paymentTerms: string | null;
-  notes: string | null;
-  status: string;
-  projectId: string | null;
-}): BillingInvoiceData {
-  return {
-    id: record.id,
-    invoiceNumber: record.invoiceNumber,
-    issueDate: record.issueDate.toISOString().split("T")[0],
-    dueDate: record.dueDate ? record.dueDate.toISOString().split("T")[0] : "",
-    clientName: record.clientName,
-    companyName: record.companyName || "",
-    clientEmail: record.clientEmail || "",
-    clientPhone: record.clientPhone || "",
-    clientAddress: record.clientAddress || "",
-    projectTitle: record.projectTitle || "",
-    lineItems: (record.lineItems as BillingLineItem[]) || [],
-    discountPercent: record.discountPercent,
-    hstPercent: record.hstPercent,
-    amountPaid: record.amountPaid,
-    paymentMethod: record.paymentMethod || "",
-    paymentTerms: record.paymentTerms || "",
-    notes: record.notes || "",
-    status: (record.status as BillingInvoiceStatus) || "draft",
-    projectId: record.projectId,
-  };
-}
+import { mapBillingInvoice, logBillingEvent } from "@/lib/admin/billing-invoice-map";
+import { resolveStatusAfterSave } from "@/lib/admin/billing-invoice-status";
+import { markBillingInvoicePaid, sweepOverdueBillingInvoices } from "@/lib/admin/billing-invoice-service";
 
 function normalize(data: BillingInvoiceData) {
   const lineItems = (data.lineItems || [])
@@ -83,13 +42,56 @@ function normalize(data: BillingInvoiceData) {
     notes: data.notes?.trim() || null,
     status,
     projectId: data.projectId || null,
+    projectPaymentId: data.projectPaymentId || null,
   };
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    await sweepOverdueBillingInvoices();
     const invoices = await prisma.billingInvoice.findMany({ orderBy: { createdAt: "desc" } });
-    return NextResponse.json({ invoices: invoices.map(mapInvoice) });
+    const mapped = invoices.map(mapBillingInvoice);
+
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    let outstanding = 0;
+    const kpis = { draft: 0, sent: 0, overdue: 0, paidMonth: 0, outstanding: 0 };
+
+    for (const inv of mapped) {
+      if (inv.status === "draft") kpis.draft += 1;
+      if (inv.status === "sent") kpis.sent += 1;
+      if (inv.status === "overdue") kpis.overdue += 1;
+      if (inv.status === "paid" && inv.paidAt && new Date(inv.paidAt) >= monthStart) {
+        kpis.paidMonth += 1;
+      }
+      if (inv.status === "sent" || inv.status === "overdue") {
+        outstanding += calculateBillingTotals(inv).balance;
+      }
+    }
+    kpis.outstanding = Math.round(outstanding * 100) / 100;
+
+    const id = request.nextUrl.searchParams.get("id");
+    if (id) {
+      const row = invoices.find((i) => i.id === id);
+      if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
+      const events = await prisma.billingInvoiceEvent.findMany({
+        where: { invoiceId: id },
+        orderBy: { createdAt: "desc" },
+        take: 30,
+      });
+      return NextResponse.json({
+        invoice: mapBillingInvoice(row),
+        events: events.map((e) => ({
+          id: e.id,
+          type: e.type,
+          meta: e.meta,
+          createdAt: e.createdAt.toISOString(),
+        })),
+        kpis,
+      });
+    }
+
+    return NextResponse.json({ invoices: mapped, kpis });
   } catch (error) {
     console.error("Error fetching billing invoices:", error);
     return NextResponse.json({ error: "Failed to fetch invoices" }, { status: 500 });
@@ -98,34 +100,83 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const data = (await request.json()) as BillingInvoiceData;
+    const body = await request.json();
+    if (body?.action === "record_payment" && body.id) {
+      const amount = Number(body.amountPaid);
+      const updated = await markBillingInvoicePaid({
+        invoiceId: String(body.id),
+        amountPaid: Number.isFinite(amount) ? amount : undefined,
+        paymentMethod: body.paymentMethod ? String(body.paymentMethod) : undefined,
+        source: "manual",
+      });
+      if (!updated) return NextResponse.json({ error: "Not found" }, { status: 404 });
+      return NextResponse.json({ invoice: mapBillingInvoice(updated) });
+    }
+
+    const data = body as BillingInvoiceData;
     if (!data.clientName?.trim()) {
       return NextResponse.json({ error: "Client name required" }, { status: 400 });
     }
     const payload = normalize(data);
+    payload.status = resolveStatusAfterSave({
+      previousStatus: "draft",
+      requestedStatus: payload.status,
+      dueDate: payload.dueDate,
+      amountPaid: payload.amountPaid,
+      lineItems: payload.lineItems,
+      discountPercent: payload.discountPercent,
+      hstPercent: payload.hstPercent,
+    });
+
     const requested = payload.invoiceNumber;
     if (requested) {
       const taken = await prisma.billingInvoice.findUnique({
         where: { invoiceNumber: requested },
         select: { id: true },
       });
-      if (taken) {
-        payload.invoiceNumber = await allocateNextBillingInvoiceNumber();
-      }
+      if (taken) payload.invoiceNumber = await allocateNextBillingInvoiceNumber();
     } else {
       payload.invoiceNumber = await allocateNextBillingInvoiceNumber();
     }
 
-    // Retry once on rare unique race
+    if (payload.projectPaymentId) {
+      const existingLink = await prisma.billingInvoice.findUnique({
+        where: { projectPaymentId: payload.projectPaymentId },
+        select: { id: true },
+      });
+      if (existingLink) {
+        return NextResponse.json(
+          { error: "An invoice already exists for this payment milestone", invoiceId: existingLink.id },
+          { status: 409 }
+        );
+      }
+    }
+
     try {
-      const invoice = await prisma.billingInvoice.create({ data: payload });
-      return NextResponse.json({ invoice: mapInvoice(invoice) });
+      const invoice = await prisma.billingInvoice.create({
+        data: {
+          ...payload,
+          paidAt: payload.status === "paid" ? new Date() : null,
+        },
+      });
+      await logBillingEvent(prisma, invoice.id, "created", {
+        invoiceNumber: invoice.invoiceNumber,
+      });
+      return NextResponse.json({ invoice: mapBillingInvoice(invoice) });
     } catch (err: unknown) {
       const code = (err as { code?: string })?.code;
       if (code === "P2002") {
         payload.invoiceNumber = await allocateNextBillingInvoiceNumber();
-        const invoice = await prisma.billingInvoice.create({ data: payload });
-        return NextResponse.json({ invoice: mapInvoice(invoice) });
+        const invoice = await prisma.billingInvoice.create({
+          data: {
+            ...payload,
+            paidAt: payload.status === "paid" ? new Date() : null,
+          },
+        });
+        await logBillingEvent(prisma, invoice.id, "created", {
+          invoiceNumber: invoice.invoiceNumber,
+        });
+        return NextResponse.json({ invoice: mapBillingInvoice(invoice) });
       }
       throw err;
     }
@@ -142,20 +193,63 @@ export async function PATCH(request: NextRequest) {
     if (!data.clientName?.trim()) {
       return NextResponse.json({ error: "Client name required" }, { status: 400 });
     }
+
+    const existing = await prisma.billingInvoice.findUnique({ where: { id: data.id } });
+    if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
     const payload = normalize(data);
     if (!payload.invoiceNumber) {
-      const existing = await prisma.billingInvoice.findUnique({
-        where: { id: data.id },
-        select: { invoiceNumber: true },
-      });
       payload.invoiceNumber =
-        existing?.invoiceNumber || (await allocateNextBillingInvoiceNumber());
+        existing.invoiceNumber || (await allocateNextBillingInvoiceNumber());
     }
+
+    if (existing.status === "paid") {
+      // After paid: only notes / cancel / payment method notes-ish fields
+      const invoice = await prisma.billingInvoice.update({
+        where: { id: data.id },
+        data: {
+          notes: payload.notes,
+          status: payload.status === "cancelled" ? "cancelled" : existing.status,
+          paymentMethod: payload.paymentMethod,
+          paymentTerms: payload.paymentTerms,
+        },
+      });
+      return NextResponse.json({ invoice: mapBillingInvoice(invoice) });
+    }
+
+    payload.status = resolveStatusAfterSave({
+      previousStatus: existing.status,
+      requestedStatus: payload.status,
+      dueDate: payload.dueDate,
+      amountPaid: payload.amountPaid,
+      lineItems: payload.lineItems,
+      discountPercent: payload.discountPercent,
+      hstPercent: payload.hstPercent,
+    });
+
     const invoice = await prisma.billingInvoice.update({
       where: { id: data.id },
-      data: payload,
+      data: {
+        ...payload,
+        paidAt:
+          payload.status === "paid"
+            ? existing.paidAt || new Date()
+            : null,
+        projectPaymentId: payload.projectPaymentId || existing.projectPaymentId,
+      },
     });
-    return NextResponse.json({ invoice: mapInvoice(invoice) });
+
+    if (payload.status === "paid" && existing.status !== "paid") {
+      await logBillingEvent(prisma, invoice.id, "payment_recorded", { source: "admin_edit" });
+      if (invoice.projectPaymentId) {
+        await prisma.projectPayment.update({
+          where: { id: invoice.projectPaymentId },
+          data: { status: "paid", paidAt: new Date() },
+        });
+      }
+    }
+
+    return NextResponse.json({ invoice: mapBillingInvoice(invoice) });
   } catch (error) {
     console.error("Error updating billing invoice:", error);
     return NextResponse.json({ error: "Failed to update invoice" }, { status: 500 });
@@ -166,6 +260,14 @@ export async function DELETE(request: NextRequest) {
   try {
     const id = new URL(request.url).searchParams.get("id");
     if (!id) return NextResponse.json({ error: "ID required" }, { status: 400 });
+    const existing = await prisma.billingInvoice.findUnique({ where: { id } });
+    if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    if (existing.status === "paid") {
+      return NextResponse.json(
+        { error: "Paid invoices cannot be deleted. Cancel instead if needed." },
+        { status: 400 }
+      );
+    }
     await prisma.billingInvoice.delete({ where: { id } });
     return NextResponse.json({ success: true });
   } catch (error) {

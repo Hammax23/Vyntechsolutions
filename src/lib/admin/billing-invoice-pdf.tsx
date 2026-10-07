@@ -156,7 +156,7 @@ export function BillingInvoicePdfDocument({
   const logoSrc = loadPrintLogoSrc();
 
   return (
-    <Document title={`Invoice ${data.invoiceNumber}`} author="VynTech Solutions Inc.">
+    <Document title={`Invoice ${data.invoiceNumber}`} author="VynTech Solutions">
       <Page size="A4" style={s.page}>
         <Image src={logoSrc} style={s.watermark} fixed />
 
@@ -165,7 +165,7 @@ export function BillingInvoicePdfDocument({
             <Image src={logoSrc} style={s.logo} />
             <View>
               <Text style={s.brand}>vyntech</Text>
-              <Text style={s.brandSub}>VynTech Solutions Inc.</Text>
+              <Text style={s.brandSub}>VynTech Solutions</Text>
             </View>
           </View>
           <View>
@@ -199,7 +199,7 @@ export function BillingInvoicePdfDocument({
         <View style={s.parties}>
           <View style={s.party}>
             <Text style={s.partyLabel}>FROM</Text>
-            <Text style={s.partyText}>VynTech Solutions Inc.</Text>
+            <Text style={s.partyText}>VynTech Solutions</Text>
             <Text style={s.muted}>{COMPANY_EMAIL}</Text>
             <Text style={s.muted}>{COMPANY_WEB}</Text>
           </View>
@@ -281,6 +281,12 @@ export function BillingInvoicePdfDocument({
             <>
               <Text style={s.noteHead}>Payment Terms</Text>
               <Text style={s.noteText}>{data.paymentTerms}</Text>
+            </>
+          ) : null}
+          {data.checkoutUrl && totals.balance > 0 ? (
+            <>
+              <Text style={s.noteHead}>Pay online</Text>
+              <Text style={s.verifyUrl}>{data.checkoutUrl}</Text>
             </>
           ) : null}
           {data.notes ? (

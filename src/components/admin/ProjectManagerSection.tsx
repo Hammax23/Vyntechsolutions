@@ -14,6 +14,11 @@ import {
   phaseLabel,
   type ProjectPhase,
 } from "@/lib/admin/project-workflow";
+import {
+  buildClientUpdateHtml,
+  buildClientUpdateSubject,
+  type ClientUpdateSnapshot,
+} from "@/lib/admin/project-client-update-email";
 import { todayKey } from "@/lib/workflow-progress";
 
 type StaffOption = {
@@ -33,6 +38,39 @@ type LinkedWorkflowTask = {
   assignedTo?: { id: string; name: string; color: string } | null;
   project?: { id: string; name: string } | null;
 };
+
+type ClientUpdateHistoryItem = {
+  id: string;
+  sentTo: string;
+  subject: string;
+  messageNote: string | null;
+  kind: string;
+  status: string;
+  errorMessage: string | null;
+  bccTo?: string | null;
+  sentBy?: string | null;
+  createdAt: string;
+};
+
+type ClientUpdateViewRecord = {
+  id: string;
+  sentTo: string;
+  subject: string;
+  messageNote: string | null;
+  kind: string;
+  status: string;
+  errorMessage: string | null;
+  bccTo: string | null;
+  sentBy: string | null;
+  createdAt: string;
+  html: string;
+};
+
+const CLIENT_UPDATE_NOTE_CHIPS = [
+  "We are on track with the current phase.",
+  "Waiting on your feedback to proceed.",
+  "Ready for your review.",
+];
 
 const WF_STATUS_LABEL: Record<string, string> = {
   todo: "To do",
@@ -147,6 +185,8 @@ function ProjectLogoMark({
 type Props = {
   refreshKey?: number;
   onLoaded?: (count: number) => void;
+  /** Jump to Client Invoices and open this billing invoice */
+  onOpenClientInvoice?: (invoiceId: string) => void;
 };
 
 function formatProject(p: Record<string, unknown>): AdminProject {
@@ -188,13 +228,24 @@ function taskStatusStyle(status: string) {
   return "bg-white/10 text-white/50";
 }
 
-export default function ProjectManagerSection({ refreshKey = 0, onLoaded }: Props) {
+export default function ProjectManagerSection({
+  refreshKey = 0,
+  onLoaded,
+  onOpenClientInvoice,
+}: Props) {
   const reduceMotion = useReducedMotion();
   const [projects, setProjects] = useState<AdminProject[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mobilePane, setMobilePane] = useState<"list" | "detail">("list");
   const [projectTab, setProjectTab] = useState<
-    "workflow" | "team" | "overview" | "tasks" | "timeline" | "notes" | "activity"
+    | "workflow"
+    | "team"
+    | "overview"
+    | "tasks"
+    | "timeline"
+    | "notes"
+    | "activity"
+    | "updates"
   >("workflow");
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
@@ -215,6 +266,25 @@ export default function ProjectManagerSection({ refreshKey = 0, onLoaded }: Prop
     workLink: "",
   });
 
+  const [showClientUpdate, setShowClientUpdate] = useState(false);
+  const [cuTo, setCuTo] = useState("");
+  const [cuSubject, setCuSubject] = useState("");
+  const [cuDraft, setCuDraft] = useState<ClientUpdateSnapshot | null>(null);
+  const [cuSubjectTouched, setCuSubjectTouched] = useState(false);
+  const [cuTestTo, setCuTestTo] = useState("");
+  const [cuPreflight, setCuPreflight] = useState<{ ok: boolean; issues: string[] }>({
+    ok: true,
+    issues: [],
+  });
+  const [cuHistory, setCuHistory] = useState<ClientUpdateHistoryItem[]>([]);
+  const [cuHistoryTotal, setCuHistoryTotal] = useState(0);
+  const [cuLoadingPreview, setCuLoadingPreview] = useState(false);
+  const [cuSending, setCuSending] = useState(false);
+  const [cuConfirmClient, setCuConfirmClient] = useState(false);
+  const [showCuView, setShowCuView] = useState(false);
+  const [cuViewLoading, setCuViewLoading] = useState(false);
+  const [cuViewRecord, setCuViewRecord] = useState<ClientUpdateViewRecord | null>(null);
+
   const [showAddTask, setShowAddTask] = useState(false);
   const [showAddNote, setShowAddNote] = useState(false);
   const [showAddMilestone, setShowAddMilestone] = useState(false);
@@ -222,6 +292,9 @@ export default function ProjectManagerSection({ refreshKey = 0, onLoaded }: Prop
   const [creating, setCreating] = useState(false);
   const [showAddPayment, setShowAddPayment] = useState(false);
   const [editingPaymentId, setEditingPaymentId] = useState<string | null>(null);
+  const [paymentInvoices, setPaymentInvoices] = useState<
+    Record<string, { id: string; invoiceNumber: string; status: string; checkoutUrl?: string }>
+  >({});
 
   const motionDuration = reduceMotion ? 0 : 0.28;
   const stagger = reduceMotion ? 0 : 0.045;
@@ -314,10 +387,10 @@ export default function ProjectManagerSection({ refreshKey = 0, onLoaded }: Prop
     });
   }, []);
 
-  const loadProjects = useCallback(async () => {
-    setLoading(true);
+  const loadProjects = useCallback(async (opts?: { silent?: boolean }) => {
+    if (!opts?.silent) setLoading(true);
     try {
-      const response = await fetch("/api/admin/projects");
+      const response = await fetch("/api/admin/projects", { cache: "no-store" });
       if (response.ok) {
         const data = await response.json();
         const formatted = (data.projects || []).map((p: Record<string, unknown>) => formatProject(p));
@@ -331,7 +404,7 @@ export default function ProjectManagerSection({ refreshKey = 0, onLoaded }: Prop
     } catch (e) {
       console.error(e);
     } finally {
-      setLoading(false);
+      if (!opts?.silent) setLoading(false);
     }
   }, [onLoaded]);
 
@@ -445,9 +518,12 @@ export default function ProjectManagerSection({ refreshKey = 0, onLoaded }: Prop
     setLoadingTeam(true);
     try {
       const [teamRes, tasksRes] = await Promise.all([
-        fetch(`/api/admin/projects/team?projectId=${encodeURIComponent(projectId)}`),
+        fetch(`/api/admin/projects/team?projectId=${encodeURIComponent(projectId)}`, {
+          cache: "no-store",
+        }),
         fetch(
-          `/api/admin/projects/workflow-tasks?projectId=${encodeURIComponent(projectId)}&limit=50`
+          `/api/admin/projects/workflow-tasks?projectId=${encodeURIComponent(projectId)}&limit=50`,
+          { cache: "no-store" }
         ),
       ]);
       const teamData = await teamRes.json().catch(() => ({}));
@@ -466,6 +542,20 @@ export default function ProjectManagerSection({ refreshKey = 0, onLoaded }: Prop
     }
   }, []);
 
+  const refreshLinkedWfTasks = useCallback(async (projectId: string) => {
+    try {
+      const res = await fetch(
+        `/api/admin/projects/workflow-tasks?projectId=${encodeURIComponent(projectId)}&limit=50`,
+        { cache: "no-store" }
+      );
+      if (!res.ok) return;
+      const data = await res.json().catch(() => ({}));
+      setLinkedWfTasks((data.tasks || []) as LinkedWorkflowTask[]);
+    } catch {
+      /* keep current list */
+    }
+  }, []);
+
   useEffect(() => {
     void loadStaffOptions();
   }, [loadStaffOptions]);
@@ -473,7 +563,19 @@ export default function ProjectManagerSection({ refreshKey = 0, onLoaded }: Prop
   useEffect(() => {
     if (!selectedId || projectTab !== "team") return;
     void loadProjectTeamBundle(selectedId);
-  }, [selectedId, projectTab, loadProjectTeamBundle]);
+    const refresh = () => void refreshLinkedWfTasks(selectedId);
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") refresh();
+    };
+    window.addEventListener("focus", refresh);
+    document.addEventListener("visibilitychange", onVisibility);
+    const poll = window.setInterval(refresh, 5_000);
+    return () => {
+      window.removeEventListener("focus", refresh);
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.clearInterval(poll);
+    };
+  }, [selectedId, projectTab, loadProjectTeamBundle, refreshLinkedWfTasks]);
 
   const saveProjectTeam = async () => {
     if (!selectedProject) return;
@@ -547,6 +649,215 @@ export default function ProjectManagerSection({ refreshKey = 0, onLoaded }: Prop
       setMessage(e instanceof Error ? e.message : "Could not assign work");
     } finally {
       setAssigningWork(false);
+    }
+  };
+
+  const loadClientUpdateHistory = useCallback(async (projectId: string) => {
+    const res = await fetch(
+      `/api/admin/projects/client-update?projectId=${encodeURIComponent(projectId)}&history=1&limit=100`,
+      { cache: "no-store" }
+    );
+    if (!res.ok) return;
+    const data = await res.json().catch(() => ({}));
+    setCuHistory((data.history || []) as ClientUpdateHistoryItem[]);
+    setCuHistoryTotal(typeof data.total === "number" ? data.total : (data.history || []).length);
+  }, []);
+
+  useEffect(() => {
+    if (!selectedId) {
+      setCuHistory([]);
+      setCuHistoryTotal(0);
+      return;
+    }
+    void loadClientUpdateHistory(selectedId);
+  }, [selectedId, loadClientUpdateHistory]);
+
+  const openClientUpdateRecord = useCallback(
+    async (recordId: string) => {
+      if (!selectedId) return;
+      setShowCuView(true);
+      setCuViewLoading(true);
+      setCuViewRecord(null);
+      try {
+        const qs = new URLSearchParams({ projectId: selectedId, id: recordId });
+        const res = await fetch(`/api/admin/projects/client-update?${qs.toString()}`, {
+          cache: "no-store",
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || "Could not load email");
+        setCuViewRecord(data.record as ClientUpdateViewRecord);
+      } catch (e) {
+        setMessage(e instanceof Error ? e.message : "Could not load email");
+        setShowCuView(false);
+      } finally {
+        setCuViewLoading(false);
+      }
+    },
+    [selectedId]
+  );
+
+  const loadClientUpdatePreview = useCallback(async (projectId: string, note: string) => {
+    setCuLoadingPreview(true);
+    try {
+      const qs = new URLSearchParams({ projectId, note });
+      const res = await fetch(`/api/admin/projects/client-update?${qs.toString()}`, {
+        cache: "no-store",
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Could not load preview");
+
+      const snap = data.snapshot as ClientUpdateSnapshot | undefined;
+      if (snap) {
+        const origin = typeof window !== "undefined" ? window.location.origin : "";
+        const draft: ClientUpdateSnapshot = {
+          ...snap,
+          brandName: snap.brandName || "VynTech Solutions",
+          eyebrow: snap.eyebrow || "Project status update",
+          checklistHeading: snap.checklistHeading || "This phase",
+          paymentsHeading: snap.paymentsHeading || "Payment milestones",
+          noteHeading: snap.noteHeading || "Message from VynTech",
+          note: note || snap.note || "",
+          brandLogoUrl: origin
+            ? `${origin}/logo-print.png`
+            : snap.brandLogoUrl || "/logo-print.png",
+        };
+        setCuDraft(draft);
+        if (!cuSubjectTouched) {
+          setCuSubject(String(data.subject || buildClientUpdateSubject(draft)));
+        }
+      }
+
+      setCuTo((prev) => (prev.trim() ? prev : String(data.to || "")));
+      setCuTestTo(String(data.testTo || ""));
+      setCuPreflight(
+        data.preflight && typeof data.preflight === "object"
+          ? {
+              ok: Boolean(data.preflight.ok),
+              issues: Array.isArray(data.preflight.issues)
+                ? data.preflight.issues.map(String)
+                : [],
+            }
+          : { ok: true, issues: [] }
+      );
+      if (typeof data.snapshot?.progress === "number") {
+        setProjects((prev) =>
+          prev.map((p) =>
+            p.id === projectId ? { ...p, progress: data.snapshot.progress } : p
+          )
+        );
+      }
+    } catch (e) {
+      setMessage(e instanceof Error ? e.message : "Could not load preview");
+    } finally {
+      setCuLoadingPreview(false);
+    }
+  }, [cuSubjectTouched]);
+
+  const patchCu = useCallback(( partial: Partial<ClientUpdateSnapshot>) => {
+    setCuDraft((prev) => (prev ? { ...prev, ...partial } : prev));
+    setCuConfirmClient(false);
+  }, []);
+
+  const cuLiveSnapshot = useMemo((): ClientUpdateSnapshot | null => {
+    if (!cuDraft) return null;
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    return {
+      ...cuDraft,
+      brandLogoUrl: origin ? `${origin}/logo-print.png` : cuDraft.brandLogoUrl,
+    };
+  }, [cuDraft]);
+
+  const cuHtml = useMemo(() => {
+    if (!cuLiveSnapshot) return "";
+    return buildClientUpdateHtml(cuLiveSnapshot);
+  }, [cuLiveSnapshot]);
+
+  const openClientUpdateModal = async (prefill?: {
+    subject?: string;
+    note?: string;
+    to?: string;
+  }) => {
+    if (!selectedProject) return;
+    setShowClientUpdate(true);
+    setCuConfirmClient(false);
+    setCuSubjectTouched(Boolean(prefill?.subject));
+    setCuSubject(prefill?.subject ?? "");
+    setCuTo(prefill?.to ?? selectedProject.clientEmail ?? "");
+    setCuDraft(null);
+    await Promise.all([
+      loadClientUpdatePreview(selectedProject.id, prefill?.note ?? ""),
+      loadClientUpdateHistory(selectedProject.id),
+    ]);
+  };
+
+  const syncSubjectFromDraft = (draft: ClientUpdateSnapshot) => {
+    if (cuSubjectTouched) return;
+    setCuSubject(buildClientUpdateSubject(draft));
+  };
+
+  const sendClientUpdate = async (kind: "client" | "test") => {
+    if (!selectedProject || !cuLiveSnapshot) return;
+    if (kind === "client") {
+      const issues = [...cuPreflight.issues];
+      if (!cuTo.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cuTo.trim())) {
+        issues.push("Valid recipient email required");
+      }
+      if (issues.length > 0) {
+        setCuPreflight({ ok: false, issues: [...new Set(issues)] });
+        setMessage(issues[0]);
+        return;
+      }
+      if (!cuConfirmClient) {
+        setCuConfirmClient(true);
+        return;
+      }
+    }
+
+    setCuSending(true);
+    setMessage("");
+    const idempotencyKey =
+      typeof crypto !== "undefined" && crypto.randomUUID
+        ? crypto.randomUUID()
+        : `cu_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    try {
+      const res = await fetch("/api/admin/projects/client-update", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          projectId: selectedProject.id,
+          note: cuLiveSnapshot.note,
+          subject: cuSubject,
+          to: kind === "client" ? cuTo.trim() : undefined,
+          snapshot: cuLiveSnapshot,
+          kind,
+          idempotencyKey,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Could not send update");
+
+      if (kind === "client" && data.clientEmail) {
+        applyProject({
+          ...selectedProject,
+          clientEmail: String(data.clientEmail),
+          progress:
+            typeof data.progress === "number" ? data.progress : selectedProject.progress,
+        });
+      }
+      setMessage(
+        kind === "test"
+          ? `Test update sent to ${data.sentTo || cuTestTo}`
+          : `Client update emailed to ${data.sentTo || cuTo}`
+      );
+      setCuConfirmClient(false);
+      await loadClientUpdateHistory(selectedProject.id);
+      await loadProjects();
+      if (kind === "client") setShowClientUpdate(false);
+    } catch (e) {
+      setCuConfirmClient(false);
+      setMessage(e instanceof Error ? e.message : "Could not send update");
+    } finally {
+      setCuSending(false);
     }
   };
 
@@ -669,6 +980,77 @@ export default function ProjectManagerSection({ refreshKey = 0, onLoaded }: Prop
     }
   };
 
+  const loadPaymentInvoices = useCallback(async (projectId: string) => {
+    try {
+      const res = await fetch("/api/admin/billing-invoices", { cache: "no-store" });
+      if (!res.ok) return;
+      const data = await res.json().catch(() => ({}));
+      const map: Record<
+        string,
+        { id: string; invoiceNumber: string; status: string; checkoutUrl?: string }
+      > = {};
+      for (const inv of data.invoices || []) {
+        if (inv.projectId === projectId && inv.projectPaymentId) {
+          map[String(inv.projectPaymentId)] = {
+            id: String(inv.id),
+            invoiceNumber: String(inv.invoiceNumber),
+            status: String(inv.status),
+            checkoutUrl: inv.checkoutUrl ? String(inv.checkoutUrl) : "",
+          };
+        }
+      }
+      setPaymentInvoices(map);
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!selectedId || projectTab !== "workflow") return;
+    void loadPaymentInvoices(selectedId);
+  }, [selectedId, projectTab, loadPaymentInvoices]);
+
+  const jumpToClientInvoice = (invoiceId: string, note: string) => {
+    try {
+      sessionStorage.setItem("vyntech-open-billing-invoice", invoiceId);
+    } catch {
+      /* ignore */
+    }
+    setMessage(note);
+    onOpenClientInvoice?.(invoiceId);
+  };
+
+  const createInvoiceFromPayment = async (paymentId: string) => {
+    if (!selectedProject) return;
+    setMessage("");
+    try {
+      const res = await fetch("/api/admin/billing-invoices/from-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ projectId: selectedProject.id, paymentId }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Could not create invoice");
+      const inv = data.invoice as { id: string; invoiceNumber: string; status: string };
+      setPaymentInvoices((prev) => ({
+        ...prev,
+        [paymentId]: {
+          id: inv.id,
+          invoiceNumber: inv.invoiceNumber,
+          status: inv.status,
+        },
+      }));
+      jumpToClientInvoice(
+        inv.id,
+        data.existing
+          ? `Opening ${inv.invoiceNumber} in Client Invoices…`
+          : `Created ${inv.invoiceNumber} — opening editor to send…`
+      );
+    } catch (e) {
+      setMessage(e instanceof Error ? e.message : "Could not create invoice");
+    }
+  };
+
   const markPayment = async (paymentId: string, status: string) => {
     const res = await fetch("/api/admin/projects/payments", {
       method: "PATCH",
@@ -767,17 +1149,45 @@ export default function ProjectManagerSection({ refreshKey = 0, onLoaded }: Prop
   };
 
   const updateTaskStatus = async (taskId: string, status: Task["status"]) => {
-    await fetch("/api/admin/projects/tasks", {
+    if (!selectedId || !selectedProject) return;
+    const rollback = selectedProject.tasks;
+    setProjects((prev) =>
+      prev.map((p) =>
+        p.id === selectedId
+          ? {
+              ...p,
+              tasks: p.tasks.map((t) => (t.id === taskId ? { ...t, status } : t)),
+            }
+          : p
+      )
+    );
+    const res = await fetch("/api/admin/projects/tasks", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: taskId, status }),
     });
-    await loadProjects();
+    if (!res.ok) {
+      setProjects((prev) =>
+        prev.map((p) => (p.id === selectedId ? { ...p, tasks: rollback } : p))
+      );
+      setMessage("Could not update task status");
+    }
   };
 
   const deleteTask = async (taskId: string) => {
-    await fetch(`/api/admin/projects/tasks?id=${taskId}`, { method: "DELETE" });
-    await loadProjects();
+    if (!selectedId) return;
+    setProjects((prev) =>
+      prev.map((p) =>
+        p.id === selectedId
+          ? { ...p, tasks: p.tasks.filter((t) => t.id !== taskId) }
+          : p
+      )
+    );
+    const res = await fetch(`/api/admin/projects/tasks?id=${taskId}`, { method: "DELETE" });
+    if (!res.ok) {
+      await loadProjects({ silent: true });
+      setMessage("Could not delete task");
+    }
   };
 
   const addMilestone = async () => {
@@ -1334,6 +1744,13 @@ export default function ProjectManagerSection({ refreshKey = 0, onLoaded }: Prop
                   <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto flex-wrap">
                     <button
                       type="button"
+                      onClick={() => void openClientUpdateModal()}
+                      className="pm-action-btn text-xs"
+                    >
+                      Send client update
+                    </button>
+                    <button
+                      type="button"
                       onClick={startEditDetails}
                       className="text-xs px-2.5 py-1.5 rounded border border-white/20 bg-white/[0.06] text-white font-medium hover:bg-white/[0.1]"
                     >
@@ -1431,6 +1848,11 @@ export default function ProjectManagerSection({ refreshKey = 0, onLoaded }: Prop
                       count: teamMemberIds.length,
                     },
                     { id: "overview" as const, label: "Overview", count: null },
+                    {
+                      id: "updates" as const,
+                      label: "Updates",
+                      count: cuHistoryTotal,
+                    },
                     {
                       id: "tasks" as const,
                       label: "Tasks",
@@ -1753,6 +2175,43 @@ export default function ProjectManagerSection({ refreshKey = 0, onLoaded }: Prop
                                 >
                                   {pay.status || "pending"}
                                 </span>
+                                {paymentInvoices[pay.id] ? (
+                                  <>
+                                    <span
+                                      className={`pm-status-chip ${
+                                        paymentInvoices[pay.id].status === "paid"
+                                          ? "pm-status-chip--paid"
+                                          : paymentInvoices[pay.id].status === "overdue"
+                                            ? "pm-status-chip--due"
+                                            : "pm-status-chip--pending"
+                                      }`}
+                                      title={`Invoice ${paymentInvoices[pay.id].invoiceNumber}`}
+                                    >
+                                      inv {paymentInvoices[pay.id].status}
+                                    </span>
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        jumpToClientInvoice(
+                                          paymentInvoices[pay.id].id,
+                                          `Opening ${paymentInvoices[pay.id].invoiceNumber}…`
+                                        )
+                                      }
+                                      className="pm-action-btn"
+                                      title={paymentInvoices[pay.id].invoiceNumber}
+                                    >
+                                      Open invoice
+                                    </button>
+                                  </>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    onClick={() => void createInvoiceFromPayment(pay.id)}
+                                    className="pm-action-btn"
+                                  >
+                                    Create invoice
+                                  </button>
+                                )}
                                 {pay.status !== "paid" ? (
                                   <button
                                     type="button"
@@ -2788,6 +3247,118 @@ export default function ProjectManagerSection({ refreshKey = 0, onLoaded }: Prop
                       ))}
                   </motion.div>
                 )}
+
+                {projectTab === "updates" && (
+                  <motion.div
+                    key="tab-updates"
+                    variants={fadeOnly}
+                    initial="hidden"
+                    animate="show"
+                    exit="hidden"
+                    transition={{ duration: motionDuration }}
+                    className="space-y-3"
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                      <div>
+                        <p className="text-white/80 text-sm font-medium">Client update emails</p>
+                        <p className="text-white/40 text-xs mt-0.5">
+                          Full send record for this project
+                          {cuHistoryTotal > 0 ? ` · ${cuHistoryTotal} total` : ""}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => void openClientUpdateModal()}
+                        className="pm-action-btn text-xs shrink-0"
+                      >
+                        Compose update
+                      </button>
+                    </div>
+
+                    {cuHistory.length === 0 ? (
+                      <div className="bg-white/[0.02] border border-white/5 rounded-lg p-6 text-center">
+                        <p className="text-white/45 text-sm">No client emails sent yet.</p>
+                        <p className="text-white/30 text-xs mt-1">
+                          Send an update from Compose — every send is logged here.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="border border-white/10 rounded-lg overflow-hidden">
+                        <div className="hidden sm:grid grid-cols-[1fr_140px_90px_90px_72px] gap-2 px-3 py-2 border-b border-white/10 text-[10px] uppercase tracking-wide text-white/35">
+                          <span>Subject / recipient</span>
+                          <span>When</span>
+                          <span>Kind</span>
+                          <span>Status</span>
+                          <span />
+                        </div>
+                        <ul className="divide-y divide-white/5">
+                          {cuHistory.map((row) => (
+                            <li
+                              key={row.id}
+                              className="px-3 py-3 sm:grid sm:grid-cols-[1fr_140px_90px_90px_72px] sm:gap-2 sm:items-center"
+                            >
+                              <div className="min-w-0">
+                                <p className="text-white/80 text-sm truncate">{row.subject}</p>
+                                <p className="text-white/35 text-[11px] mt-0.5 truncate">
+                                  To {row.sentTo}
+                                  {row.bccTo ? ` · BCC ${row.bccTo}` : ""}
+                                  {row.sentBy ? ` · ${row.sentBy}` : ""}
+                                </p>
+                                {row.errorMessage ? (
+                                  <p className="text-red-300/70 text-[10px] mt-1 truncate">
+                                    {row.errorMessage}
+                                  </p>
+                                ) : null}
+                              </div>
+                              <p className="text-white/40 text-[11px] mt-1.5 sm:mt-0">
+                                {new Date(row.createdAt).toLocaleString()}
+                              </p>
+                              <p className="text-white/45 text-[11px] mt-1 sm:mt-0 capitalize">
+                                {row.kind === "test" ? "Test" : "Client"}
+                              </p>
+                              <p
+                                className={`text-[11px] mt-1 sm:mt-0 ${
+                                  row.status === "failed"
+                                    ? "text-red-300/80"
+                                    : "text-emerald-300/70"
+                                }`}
+                              >
+                                {row.status === "failed" ? "Failed" : "Sent"}
+                              </p>
+                              <div className="flex items-center gap-2 mt-2 sm:mt-0 sm:justify-end">
+                                <button
+                                  type="button"
+                                  onClick={() => void openClientUpdateRecord(row.id)}
+                                  className="text-[11px] text-white/70 hover:text-white"
+                                >
+                                  View
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    void openClientUpdateModal({
+                                      subject: row.subject,
+                                      note: row.messageNote || "",
+                                      to: row.kind === "client" ? row.sentTo : undefined,
+                                    })
+                                  }
+                                  className="text-[11px] text-white/40 hover:text-white/70"
+                                >
+                                  Reuse
+                                </button>
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                        {cuHistoryTotal > cuHistory.length ? (
+                          <p className="px-3 py-2 text-[10px] text-white/30 border-t border-white/5">
+                            Showing latest {cuHistory.length} of {cuHistoryTotal}
+                          </p>
+                        ) : null}
+                      </div>
+                    )}
+                  </motion.div>
+                )}
                 </AnimatePresence>
               </div>
             </motion.div>
@@ -2810,6 +3381,651 @@ export default function ProjectManagerSection({ refreshKey = 0, onLoaded }: Prop
           </AnimatePresence>
         </div>
       </motion.div>
+
+      {showClientUpdate && selectedProject ? (
+        <div
+          className="pm-client-update-overlay fixed inset-0 z-[80] flex items-end sm:items-center justify-center p-0 sm:p-5"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !cuSending) {
+              setShowClientUpdate(false);
+              setCuConfirmClient(false);
+            }
+          }}
+        >
+          <div
+            className="pm-client-update w-full sm:max-w-4xl max-h-[94vh] overflow-hidden flex flex-col rounded-t border-t sm:rounded sm:border border-white/15 bg-[#0a0a1a]"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Send client update"
+          >
+            <div className="flex items-start justify-between gap-3 px-4 sm:px-5 py-3.5 border-b border-white/10 shrink-0">
+              <div className="min-w-0">
+                <h3 className="text-white font-semibold text-sm">Send client update</h3>
+                <p className="text-white/40 text-xs mt-0.5 truncate">
+                  {selectedProject.projectName}
+                  {cuLoadingPreview ? " · refreshing preview" : ""}
+                </p>
+              </div>
+              <button
+                type="button"
+                disabled={cuSending}
+                onClick={() => {
+                  setShowClientUpdate(false);
+                  setCuConfirmClient(false);
+                }}
+                className="text-white/40 hover:text-white text-xs px-2 py-1 rounded hover:bg-white/5 shrink-0"
+              >
+                Cancel
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto">
+              <div className="grid grid-cols-1 lg:grid-cols-2 lg:min-h-[420px]">
+                <div className="p-4 sm:p-5 space-y-3.5 border-b lg:border-b-0 lg:border-r border-white/10">
+                  {!cuPreflight.ok ? (
+                    <p className="pm-client-update__warn text-xs leading-relaxed">
+                      {cuPreflight.issues.join(" · ") || "Fix the recipient email before sending."}
+                    </p>
+                  ) : null}
+
+                  <div className="space-y-3">
+                    <p className="text-white/40 text-[11px]">Delivery</p>
+                    <div>
+                      <label className="block text-white/40 text-[11px] mb-1">To</label>
+                      <input
+                        className="pm-field"
+                        type="email"
+                        value={cuTo}
+                        onChange={(e) => {
+                          const v = e.target.value;
+                          setCuTo(v);
+                          const ok = Boolean(
+                            v.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())
+                          );
+                          setCuPreflight({
+                            ok,
+                            issues: ok ? [] : ["Client email looks invalid"],
+                          });
+                          setCuConfirmClient(false);
+                        }}
+                        placeholder="client@company.com"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-white/40 text-[11px] mb-1">Subject</label>
+                      <input
+                        className="pm-field"
+                        value={cuSubject}
+                        onChange={(e) => {
+                          setCuSubjectTouched(true);
+                          setCuSubject(e.target.value);
+                          setCuConfirmClient(false);
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {cuDraft ? (
+                    <>
+                      <div className="pt-1 border-t border-white/10 space-y-3">
+                        <p className="text-white/40 text-[11px]">Header</p>
+                        <div>
+                          <label className="block text-white/40 text-[11px] mb-1">
+                            Brand name
+                          </label>
+                          <input
+                            className="pm-field"
+                            value={cuDraft.brandName}
+                            onChange={(e) => patchCu({ brandName: e.target.value })}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-white/40 text-[11px] mb-1">
+                            Header subtitle
+                          </label>
+                          <input
+                            className="pm-field"
+                            value={cuDraft.eyebrow}
+                            onChange={(e) => patchCu({ eyebrow: e.target.value })}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="pt-1 border-t border-white/10 space-y-3">
+                        <p className="text-white/40 text-[11px]">Greeting & project</p>
+                        <div>
+                          <label className="block text-white/40 text-[11px] mb-1">
+                            Greeting name
+                          </label>
+                          <input
+                            className="pm-field"
+                            value={cuDraft.clientName}
+                            onChange={(e) => patchCu({ clientName: e.target.value })}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-white/40 text-[11px] mb-1">
+                            Project title
+                          </label>
+                          <input
+                            className="pm-field"
+                            value={cuDraft.projectName}
+                            onChange={(e) => {
+                              const projectName = e.target.value;
+                              const next = { ...cuDraft, projectName };
+                              patchCu({ projectName });
+                              syncSubjectFromDraft(next);
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-white/40 text-[11px] mb-1">
+                            Company line
+                          </label>
+                          <input
+                            className="pm-field"
+                            value={cuDraft.companyName}
+                            onChange={(e) => patchCu({ companyName: e.target.value })}
+                            placeholder="Optional"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="pt-1 border-t border-white/10 space-y-3">
+                        <p className="text-white/40 text-[11px]">Status strip</p>
+                        <div>
+                          <label className="block text-white/40 text-[11px] mb-1">
+                            Phase label
+                          </label>
+                          <input
+                            className="pm-field"
+                            value={cuDraft.phaseLabel}
+                            onChange={(e) => {
+                              const phaseLabel = e.target.value;
+                              const next = { ...cuDraft, phaseLabel };
+                              patchCu({ phaseLabel });
+                              syncSubjectFromDraft(next);
+                            }}
+                          />
+                        </div>
+                        <div className="grid grid-cols-3 gap-2">
+                          <div>
+                            <label className="block text-white/40 text-[11px] mb-1">
+                              Phase #
+                            </label>
+                            <input
+                              className="pm-field"
+                              type="number"
+                              min={1}
+                              value={cuDraft.phaseIndex}
+                              onChange={(e) =>
+                                patchCu({
+                                  phaseIndex: Math.max(1, Number(e.target.value) || 1),
+                                })
+                              }
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-white/40 text-[11px] mb-1">
+                              Of total
+                            </label>
+                            <input
+                              className="pm-field"
+                              type="number"
+                              min={1}
+                              value={cuDraft.phaseTotal}
+                              onChange={(e) =>
+                                patchCu({
+                                  phaseTotal: Math.max(1, Number(e.target.value) || 1),
+                                })
+                              }
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-white/40 text-[11px] mb-1">
+                              Progress %
+                            </label>
+                            <input
+                              className="pm-field"
+                              type="number"
+                              min={0}
+                              max={100}
+                              value={cuDraft.progress}
+                              onChange={(e) => {
+                                const progress = Math.max(
+                                  0,
+                                  Math.min(100, Number(e.target.value) || 0)
+                                );
+                                const next = { ...cuDraft, progress };
+                                patchCu({ progress });
+                                syncSubjectFromDraft(next);
+                              }}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-white/40 text-[11px] mb-1">
+                            As of date
+                          </label>
+                          <input
+                            className="pm-field"
+                            value={cuDraft.asOf}
+                            onChange={(e) => patchCu({ asOf: e.target.value })}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="pt-1 border-t border-white/10 space-y-2">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="min-w-0 flex-1">
+                            <label className="block text-white/40 text-[11px] mb-1">
+                              Checklist heading
+                            </label>
+                            <input
+                              className="pm-field"
+                              value={cuDraft.checklistHeading}
+                              onChange={(e) =>
+                                patchCu({ checklistHeading: e.target.value })
+                              }
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            className="pm-action-btn text-[11px] mt-5 shrink-0"
+                            onClick={() =>
+                              patchCu({
+                                checklist: [
+                                  ...cuDraft.checklist,
+                                  { label: "New checklist item", done: false },
+                                ],
+                              })
+                            }
+                          >
+                            Add item
+                          </button>
+                        </div>
+                        <ul className="space-y-2 max-h-44 overflow-y-auto pr-1">
+                          {cuDraft.checklist.map((item, idx) => (
+                            <li
+                              key={`check-${idx}`}
+                              className="flex items-start gap-2 border border-white/10 rounded px-2 py-1.5"
+                            >
+                              <input
+                                type="checkbox"
+                                className="mt-2"
+                                checked={item.done}
+                                onChange={(e) => {
+                                  const checklist = cuDraft.checklist.map((row, i) =>
+                                    i === idx ? { ...row, done: e.target.checked } : row
+                                  );
+                                  patchCu({ checklist });
+                                }}
+                              />
+                              <input
+                                className="pm-field flex-1"
+                                value={item.label}
+                                onChange={(e) => {
+                                  const checklist = cuDraft.checklist.map((row, i) =>
+                                    i === idx ? { ...row, label: e.target.value } : row
+                                  );
+                                  patchCu({ checklist });
+                                }}
+                              />
+                              <button
+                                type="button"
+                                className="text-[11px] text-white/40 hover:text-white mt-2"
+                                onClick={() =>
+                                  patchCu({
+                                    checklist: cuDraft.checklist.filter((_, i) => i !== idx),
+                                  })
+                                }
+                              >
+                                Remove
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className="pt-1 border-t border-white/10 space-y-2">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="min-w-0 flex-1">
+                            <label className="block text-white/40 text-[11px] mb-1">
+                              Payments heading
+                            </label>
+                            <input
+                              className="pm-field"
+                              value={cuDraft.paymentsHeading}
+                              onChange={(e) =>
+                                patchCu({ paymentsHeading: e.target.value })
+                              }
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            className="pm-action-btn text-[11px] mt-5 shrink-0"
+                            onClick={() =>
+                              patchCu({
+                                payments: [
+                                  ...cuDraft.payments,
+                                  { label: "New milestone", status: "pending" },
+                                ],
+                              })
+                            }
+                          >
+                            Add
+                          </button>
+                        </div>
+                        <ul className="space-y-2 max-h-44 overflow-y-auto pr-1">
+                          {cuDraft.payments.map((item, idx) => (
+                            <li
+                              key={`pay-${idx}`}
+                              className="flex flex-wrap items-center gap-2 border border-white/10 rounded px-2 py-1.5"
+                            >
+                              <input
+                                className="pm-field flex-1 min-w-[140px]"
+                                value={item.label}
+                                onChange={(e) => {
+                                  const payments = cuDraft.payments.map((row, i) =>
+                                    i === idx ? { ...row, label: e.target.value } : row
+                                  );
+                                  patchCu({ payments });
+                                }}
+                              />
+                              <select
+                                className="pm-field w-auto"
+                                value={item.status}
+                                onChange={(e) => {
+                                  const status = e.target.value as
+                                    | "paid"
+                                    | "pending"
+                                    | "due";
+                                  const payments = cuDraft.payments.map((row, i) =>
+                                    i === idx ? { ...row, status } : row
+                                  );
+                                  patchCu({ payments });
+                                }}
+                              >
+                                <option value="pending" className="bg-[#0a0a1a]">
+                                  Pending
+                                </option>
+                                <option value="due" className="bg-[#0a0a1a]">
+                                  Due
+                                </option>
+                                <option value="paid" className="bg-[#0a0a1a]">
+                                  Paid
+                                </option>
+                              </select>
+                              <button
+                                type="button"
+                                className="text-[11px] text-white/40 hover:text-white"
+                                onClick={() =>
+                                  patchCu({
+                                    payments: cuDraft.payments.filter((_, i) => i !== idx),
+                                  })
+                                }
+                              >
+                                Remove
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className="pt-1 border-t border-white/10 space-y-3">
+                        <p className="text-white/40 text-[11px]">Message block</p>
+                        <div>
+                          <label className="block text-white/40 text-[11px] mb-1">
+                            Message heading
+                          </label>
+                          <input
+                            className="pm-field"
+                            value={cuDraft.noteHeading}
+                            onChange={(e) => patchCu({ noteHeading: e.target.value })}
+                          />
+                        </div>
+                        <div>
+                          <div className="flex items-center justify-between gap-2 mb-1">
+                            <label className="block text-white/40 text-[11px]">
+                              Message body
+                            </label>
+                            <select
+                              className="bg-transparent border-0 text-[11px] text-white/45 outline-none cursor-pointer max-w-[160px]"
+                              value=""
+                              onChange={(e) => {
+                                const v = e.target.value;
+                                if (!v) return;
+                                patchCu({ note: v });
+                                e.target.value = "";
+                              }}
+                            >
+                              <option value="" className="bg-[#0a0a1a]">
+                                Insert note…
+                              </option>
+                              {CLIENT_UPDATE_NOTE_CHIPS.map((chip) => (
+                                <option key={chip} value={chip} className="bg-[#0a0a1a]">
+                                  {chip}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                          <textarea
+                            className="pm-field pm-field--area"
+                            rows={4}
+                            value={cuDraft.note}
+                            onChange={(e) => patchCu({ note: e.target.value })}
+                            placeholder="Short note for the client…"
+                          />
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <p className="text-white/35 text-xs">Loading email fields…</p>
+                  )}
+
+                  <div className="pt-1 space-y-2">
+                    <p className="text-white/30 text-[11px]">
+                      From info@vyntechsolutions.ca · test → {cuTestTo || "admin mailbox"}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        disabled={cuSending || cuLoadingPreview || !cuLiveSnapshot}
+                        onClick={() => void sendClientUpdate("test")}
+                        className="pm-action-btn text-xs disabled:opacity-50"
+                      >
+                        {cuSending ? "Sending…" : "Send test to me"}
+                      </button>
+                      <button
+                        type="button"
+                        disabled={
+                          cuSending || cuLoadingPreview || !cuPreflight.ok || !cuLiveSnapshot
+                        }
+                        onClick={() => void sendClientUpdate("client")}
+                        className="pm-action-btn text-xs disabled:opacity-50"
+                      >
+                        {cuSending
+                          ? "Sending…"
+                          : cuConfirmClient
+                            ? `Confirm → ${cuTo.trim() || "client"}`
+                            : "Send to client"}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-white/10">
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <p className="text-white/40 text-[11px]">Recent sends</p>
+                      {cuHistoryTotal > 0 ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowClientUpdate(false);
+                            setProjectTab("updates");
+                          }}
+                          className="text-[10px] text-white/40 hover:text-white/70"
+                        >
+                          Full record ({cuHistoryTotal})
+                        </button>
+                      ) : null}
+                    </div>
+                    {cuHistory.length === 0 ? (
+                      <p className="text-white/30 text-xs">None sent yet for this project.</p>
+                    ) : (
+                      <ul className="space-y-2 max-h-40 overflow-y-auto pr-1">
+                        {cuHistory.slice(0, 8).map((row) => (
+                          <li
+                            key={row.id}
+                            className="flex items-start justify-between gap-2 text-xs"
+                          >
+                            <div className="min-w-0">
+                              <p className="text-white/75 truncate">{row.subject}</p>
+                              <p className="text-white/30 text-[10px] mt-0.5 truncate">
+                                {new Date(row.createdAt).toLocaleString()} · {row.sentTo}
+                                {row.status === "failed" ? " · failed" : ""}
+                                {row.kind === "test" ? " · test" : ""}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-2 shrink-0">
+                              <button
+                                type="button"
+                                onClick={() => void openClientUpdateRecord(row.id)}
+                                className="text-[11px] text-white/60 hover:text-white"
+                              >
+                                View
+                              </button>
+                              <button
+                                type="button"
+                                disabled={cuSending}
+                                onClick={() =>
+                                  void openClientUpdateModal({
+                                    subject: row.subject,
+                                    note: row.messageNote || "",
+                                    to: row.kind === "client" ? row.sentTo : cuTo,
+                                  })
+                                }
+                                className="text-[11px] text-white/45 hover:text-white"
+                              >
+                                Reuse
+                              </button>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </div>
+
+                <div className="pm-client-update__preview-pane p-4 sm:p-5 flex flex-col min-h-[280px] bg-white/[0.02]">
+                  <div className="flex items-center justify-between gap-2 mb-2 shrink-0">
+                    <p className="text-white/40 text-[11px]">Email preview</p>
+                    <p className="text-white/30 text-[10px]">
+                      {cuLoadingPreview ? "Loading…" : "Live"}
+                    </p>
+                  </div>
+                  <div className="pm-client-update__preview flex-1 border border-white/10 overflow-hidden min-h-[260px]">
+                    {cuHtml ? (
+                      <iframe
+                        title="Client update preview"
+                        className="w-full h-full min-h-[320px] border-0 bg-white"
+                        sandbox=""
+                        srcDoc={cuHtml}
+                      />
+                    ) : (
+                      <div className="h-full min-h-[260px] flex items-center justify-center text-white/40 text-sm">
+                        {cuLoadingPreview ? "Loading…" : "Preview will appear here"}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {showCuView ? (
+        <div
+          className="fixed inset-0 z-[80] flex items-center justify-center p-3 sm:p-6 bg-black/70"
+          onClick={() => {
+            setShowCuView(false);
+            setCuViewRecord(null);
+          }}
+        >
+          <div
+            className="pm-client-update w-full max-w-3xl max-h-[92vh] overflow-hidden flex flex-col rounded-lg border border-white/10 bg-[#0a0a1a] shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-3 px-4 sm:px-5 py-3 border-b border-white/10 shrink-0">
+              <div className="min-w-0">
+                <p className="text-white text-sm font-medium truncate">
+                  {cuViewRecord?.subject || (cuViewLoading ? "Loading…" : "Sent email")}
+                </p>
+                {cuViewRecord ? (
+                  <p className="text-white/40 text-[11px] mt-1 truncate">
+                    {new Date(cuViewRecord.createdAt).toLocaleString()} · To {cuViewRecord.sentTo}
+                    {cuViewRecord.kind === "test" ? " · test" : " · client"}
+                    {cuViewRecord.status === "failed" ? " · failed" : " · sent"}
+                    {cuViewRecord.sentBy ? ` · ${cuViewRecord.sentBy}` : ""}
+                  </p>
+                ) : null}
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowCuView(false);
+                  setCuViewRecord(null);
+                }}
+                className="text-white/40 hover:text-white text-lg leading-none px-1"
+                aria-label="Close"
+              >
+                ×
+              </button>
+            </div>
+            <div className="flex-1 min-h-0 overflow-auto p-3 sm:p-4">
+              {cuViewLoading ? (
+                <div className="h-[360px] flex items-center justify-center text-white/40 text-sm">
+                  Loading email…
+                </div>
+              ) : cuViewRecord?.html ? (
+                <iframe
+                  title="Sent client update"
+                  className="w-full min-h-[420px] h-[60vh] border border-white/10 bg-white rounded"
+                  sandbox=""
+                  srcDoc={cuViewRecord.html}
+                />
+              ) : (
+                <div className="h-[280px] flex items-center justify-center text-white/40 text-sm">
+                  Could not load this email.
+                </div>
+              )}
+            </div>
+            {cuViewRecord ? (
+              <div className="px-4 sm:px-5 py-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 shrink-0">
+                <p className="text-white/30 text-[10px] truncate max-w-[60%]">
+                  {cuViewRecord.bccTo ? `BCC ${cuViewRecord.bccTo}` : "No BCC"}
+                  {cuViewRecord.errorMessage ? ` · ${cuViewRecord.errorMessage}` : ""}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const note = cuViewRecord.messageNote || "";
+                    const subject = cuViewRecord.subject;
+                    const to =
+                      cuViewRecord.kind === "client" ? cuViewRecord.sentTo : undefined;
+                    setShowCuView(false);
+                    setCuViewRecord(null);
+                    void openClientUpdateModal({ subject, note, to });
+                  }}
+                  className="text-[11px] text-white/60 hover:text-white"
+                >
+                  Reuse as draft
+                </button>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
     </motion.div>
   );
 }

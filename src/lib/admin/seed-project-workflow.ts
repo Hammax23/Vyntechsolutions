@@ -3,6 +3,7 @@ import {
   buildMissingPhaseCheckCreates,
   buildPaymentCreates,
   buildPhaseCheckCreates,
+  computeOverallProgress,
   normalizeProjectStatus,
 } from "@/lib/admin/project-workflow";
 
@@ -16,6 +17,29 @@ const projectInclude = {
 };
 
 export { projectInclude };
+
+/** Persist Project.progress from SDLC phase checks (single owner of %). */
+export async function syncProjectProgress(projectId: string): Promise<number> {
+  const project = await prisma.project.findUnique({
+    where: { id: projectId },
+    select: {
+      id: true,
+      status: true,
+      progress: true,
+      phaseChecks: { select: { phase: true, done: true } },
+    },
+  });
+  if (!project) return 0;
+
+  const { percent } = computeOverallProgress(project.phaseChecks, project.status);
+  if (project.progress !== percent) {
+    await prisma.project.update({
+      where: { id: projectId },
+      data: { progress: percent },
+    });
+  }
+  return percent;
+}
 
 /** Seed checklist + payment rows if missing (lazy backfill for older projects). */
 export async function ensureProjectWorkflow(projectId: string, budget?: number) {
@@ -65,6 +89,8 @@ export async function ensureProjectWorkflow(projectId: string, budget?: number) 
     });
   }
 
+  await syncProjectProgress(projectId);
+
   return prisma.project.findUnique({
     where: { id: projectId },
     include: projectInclude,
@@ -78,6 +104,7 @@ export async function seedNewProjectWorkflow(projectId: string, budget: number) 
   await prisma.projectPayment.createMany({
     data: buildPaymentCreates(projectId, budget),
   });
+  await syncProjectProgress(projectId);
   await prisma.activityLog.create({
     data: {
       projectId,

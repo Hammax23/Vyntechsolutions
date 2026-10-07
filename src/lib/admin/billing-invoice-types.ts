@@ -26,6 +26,19 @@ export type BillingInvoiceData = {
   notes: string;
   status: BillingInvoiceStatus;
   projectId?: string | null;
+  projectPaymentId?: string | null;
+  checkoutUrl?: string;
+  paidAt?: string;
+  sentAt?: string;
+  sentTo?: string;
+  lastSendError?: string;
+};
+
+export type BillingInvoiceEventData = {
+  id: string;
+  type: string;
+  meta?: Record<string, unknown> | null;
+  createdAt: string;
 };
 
 export type BillingInvoiceTotals = {
@@ -46,9 +59,9 @@ export const BILLING_STATUSES: { value: BillingInvoiceStatus; label: string }[] 
 ];
 
 export const BILLING_PAYMENT_METHODS = [
-  "Bank Transfer",
-  "E-Transfer",
   "Credit Card",
+  "E-Transfer",
+  "Bank Transfer",
   "Cheque",
   "Cash",
 ] as const;

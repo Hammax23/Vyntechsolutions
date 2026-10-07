@@ -37,6 +37,26 @@ type Task = {
 
 type ProjectOption = { id: string; projectName: string };
 
+type TodayByProject = {
+  projectId: string | null;
+  projectName: string;
+  total: number;
+  done: number;
+  inProgress: number;
+  todo: number;
+  blocked: number;
+  percent: number | null;
+  people: { id: string; name: string; color: string }[];
+  tasks: {
+    id: string;
+    title: string;
+    status: string;
+    priority: string;
+    assigneeName: string;
+    assigneeId: string;
+  }[];
+};
+
 function cellClass(percent: number | null) {
   const tone = heatmapTone(percent);
   if (tone === "empty") return "tp-heat-empty bg-white/[0.04]";
@@ -90,7 +110,10 @@ export default function TeamProgressSection() {
     grid: Record<string, Record<string, Score>>;
     todayStrip: (StaffRow & Score & { idle: boolean })[];
     teamToday: Score;
+    todayKey?: string;
+    todayByProject?: TodayByProject[];
   } | null>(null);
+  const [expandedTodayProject, setExpandedTodayProject] = useState<string | null>(null);
   const [selected, setSelected] = useState<{ staffId: string; date: string; name: string } | null>(null);
   const [previewStaff, setPreviewStaff] = useState<StaffRow | null>(null);
   const [dayTasks, setDayTasks] = useState<Task[]>([]);
@@ -553,6 +576,29 @@ export default function TeamProgressSection() {
     [year, month, days]
   );
 
+  const todayByProject = overview?.todayByProject || [];
+  const teamToday = overview?.teamToday;
+  const overviewTodayKey = overview?.todayKey || todayKey();
+
+  const dayTasksByProject = useMemo(() => {
+    const map = new Map<string, { key: string; name: string; tasks: Task[] }>();
+    for (const t of dayTasks) {
+      const key = t.projectId || "__none__";
+      const name = t.project?.name || "No project";
+      let bucket = map.get(key);
+      if (!bucket) {
+        bucket = { key, name, tasks: [] };
+        map.set(key, bucket);
+      }
+      bucket.tasks.push(t);
+    }
+    return Array.from(map.values()).sort((a, b) => {
+      if (a.key === "__none__") return 1;
+      if (b.key === "__none__") return -1;
+      return a.name.localeCompare(b.name);
+    });
+  }, [dayTasks]);
+
   const openEmployee = (staffId: string, name: string) => {
     const fromOverview = overview?.staff.find((s) => s.id === staffId);
     const fromList = staffList.find((s) => s.id === staffId);
@@ -655,6 +701,117 @@ export default function TeamProgressSection() {
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
           Live updates
         </span>
+      </div>
+
+      <div className="bg-white/[0.03] border border-white/10 rounded-xl overflow-hidden">
+        <div className="p-4 border-b border-white/10 flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h3 className="text-white font-semibold text-sm">Today by project</h3>
+            <p className="text-white/35 text-xs mt-0.5">
+              {overviewTodayKey} · work across projects at a glance
+            </p>
+          </div>
+          {teamToday ? (
+            <div className="flex flex-wrap gap-2 text-[11px]">
+              <span className="px-2 py-1 rounded-md border border-white/15 text-white/70 bg-white/[0.04]">
+                {teamToday.total} tasks
+              </span>
+              <span className="px-2 py-1 rounded-md border border-emerald-500/30 text-emerald-300/90 bg-emerald-500/10">
+                {teamToday.done} done
+              </span>
+              {teamToday.percent != null ? (
+                <span className="px-2 py-1 rounded-md border border-[#00B4FF]/30 text-[#7dd3fc] bg-[#00B4FF]/10">
+                  {teamToday.percent}%
+                </span>
+              ) : null}
+            </div>
+          ) : null}
+        </div>
+        {todayByProject.length === 0 ? (
+          <p className="px-4 py-8 text-center text-white/40 text-sm">
+            No workflow tasks today yet.
+          </p>
+        ) : (
+          <ul className="divide-y divide-white/5">
+            {todayByProject.map((proj) => {
+              const key = proj.projectId || "__none__";
+              const open = expandedTodayProject === key;
+              return (
+                <li key={key}>
+                  <button
+                    type="button"
+                    onClick={() => setExpandedTodayProject(open ? null : key)}
+                    className="w-full text-left px-4 py-3 hover:bg-white/[0.03] transition-colors"
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="min-w-0">
+                        <p className="text-white text-sm font-medium truncate">{proj.projectName}</p>
+                        <p className="text-white/40 text-[11px] mt-0.5 truncate">
+                          {proj.people.map((p) => p.name).join(", ") || "—"}
+                        </p>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-1.5 shrink-0">
+                        {proj.inProgress > 0 ? (
+                          <span className="text-[10px] px-1.5 py-0.5 rounded border border-sky-400/40 bg-sky-500/15 text-sky-200">
+                            {proj.inProgress} in progress
+                          </span>
+                        ) : null}
+                        {proj.todo > 0 ? (
+                          <span className="text-[10px] px-1.5 py-0.5 rounded border border-slate-400/40 bg-slate-500/15 text-slate-200">
+                            {proj.todo} to do
+                          </span>
+                        ) : null}
+                        {proj.blocked > 0 ? (
+                          <span className="text-[10px] px-1.5 py-0.5 rounded border border-amber-400/40 bg-amber-500/15 text-amber-200">
+                            {proj.blocked} on hold
+                          </span>
+                        ) : null}
+                        <span className="text-[10px] px-1.5 py-0.5 rounded border border-emerald-400/40 bg-emerald-500/15 text-emerald-200">
+                          {proj.done}/{proj.total} done
+                          {proj.percent != null ? ` · ${proj.percent}%` : ""}
+                        </span>
+                        <span className="text-white/30 text-xs ml-1">{open ? "▾" : "▸"}</span>
+                      </div>
+                    </div>
+                  </button>
+                  {open ? (
+                    <ul className="px-4 pb-3 space-y-1.5">
+                      {proj.tasks.map((t) => (
+                        <li
+                          key={t.id}
+                          className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2"
+                        >
+                          <div className="min-w-0">
+                            <p className="text-white/85 text-xs font-medium truncate">{t.title}</p>
+                            <p className="text-white/35 text-[10px] mt-0.5">{t.assigneeName}</p>
+                          </div>
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            <span
+                              className={`admin-status-chip inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-md border ${statusBadge(t.status)}`}
+                            >
+                              <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${statusDot(t.status)}`} />
+                              {STATUS_LABEL[t.status] || t.status}
+                            </span>
+                            <button
+                              type="button"
+                              className="text-[10px] text-[#7dd3fc] hover:underline"
+                              onClick={() => {
+                                const s = overview?.staff.find((x) => x.id === t.assigneeId);
+                                if (s) void openDay(s.id, overviewTodayKey, s.name);
+                              }}
+                            >
+                              Open day
+                            </button>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
 
       <div className="bg-white/[0.03] border border-white/10 rounded-xl p-4 space-y-3">
@@ -1033,8 +1190,19 @@ export default function TeamProgressSection() {
           {dayTasks.length === 0 ? (
             <p className="text-white/40 text-sm">No tasks this day.</p>
           ) : (
-            <ul className="space-y-2 max-h-[min(360px,50vh)] overflow-y-auto overscroll-contain pr-1">
-              {dayTasks.map((t) => (
+            <div className="space-y-4 max-h-[min(420px,55vh)] overflow-y-auto overscroll-contain pr-1">
+              {dayTasksByProject.map((group) => (
+                <div key={group.key} className="space-y-2">
+                  <div className="flex items-center justify-between gap-2 px-0.5">
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-[#7dd3fc]">
+                      {group.name}
+                    </p>
+                    <span className="text-[10px] text-white/35">
+                      {group.tasks.length} task{group.tasks.length === 1 ? "" : "s"}
+                    </span>
+                  </div>
+                  <ul className="space-y-2">
+              {group.tasks.map((t) => (
                 <li
                   key={t.id}
                   className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 bg-white/[0.03] border border-white/10 rounded-xl px-3.5 py-3"
@@ -1042,7 +1210,7 @@ export default function TeamProgressSection() {
                   <div className="min-w-0 flex-1 space-y-1.5">
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="text-white text-sm font-medium leading-snug break-words">{t.title}</p>
-                      {t.project?.name ? (
+                      {t.project?.name && dayTasksByProject.length === 1 ? (
                         <span
                           title={t.project.name}
                           className="max-w-[160px] truncate text-[10px] font-medium px-1.5 py-0.5 rounded border border-[#00B4FF]/35 bg-[#00B4FF]/10 text-[#7dd3fc]"
@@ -1171,27 +1339,21 @@ export default function TeamProgressSection() {
                           Time on this task
                         </p>
                         <div className="grid grid-cols-3 gap-1.5 max-w-md">
-                          <div className="admin-timing-meter admin-timing-meter--total rounded-lg border px-2.5 py-2">
-                            <p className="admin-timing-meter__label text-[9px] uppercase tracking-wide font-semibold">
-                              To do → Done
-                            </p>
-                            <p className="admin-timing-meter__value text-sm font-bold tabular-nums mt-0.5">
+                          <div className="admin-timing-meter admin-timing-meter--total px-2.5 py-2">
+                            <p className="admin-timing-meter__label">To do → Done</p>
+                            <p className="admin-timing-meter__value tabular-nums mt-0.5">
                               {formatDuration(t.timing.elapsedMs)}
                             </p>
                           </div>
-                          <div className="admin-timing-meter admin-timing-meter--work rounded-lg border px-2.5 py-2">
-                            <p className="admin-timing-meter__label text-[9px] uppercase tracking-wide font-semibold">
-                              In progress
-                            </p>
-                            <p className="admin-timing-meter__value text-sm font-bold tabular-nums mt-0.5">
+                          <div className="admin-timing-meter admin-timing-meter--work px-2.5 py-2">
+                            <p className="admin-timing-meter__label">In progress</p>
+                            <p className="admin-timing-meter__value tabular-nums mt-0.5">
                               {formatDuration(t.timing.activeMs)}
                             </p>
                           </div>
-                          <div className="admin-timing-meter admin-timing-meter--hold rounded-lg border px-2.5 py-2">
-                            <p className="admin-timing-meter__label text-[9px] uppercase tracking-wide font-semibold">
-                              On hold
-                            </p>
-                            <p className="admin-timing-meter__value text-sm font-bold tabular-nums mt-0.5">
+                          <div className="admin-timing-meter admin-timing-meter--hold px-2.5 py-2">
+                            <p className="admin-timing-meter__label">On hold</p>
+                            <p className="admin-timing-meter__value tabular-nums mt-0.5">
                               {formatDuration(t.timing.blockedTotalMs)}
                             </p>
                           </div>
@@ -1214,7 +1376,10 @@ export default function TeamProgressSection() {
                   </div>
                 </li>
               ))}
-            </ul>
+                  </ul>
+                </div>
+              ))}
+            </div>
           )}
         </div>
       ) : null}

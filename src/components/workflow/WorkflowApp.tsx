@@ -8,6 +8,14 @@ import { useLivePoll } from "@/hooks/useLivePoll";
 import { MAX_ATTACHMENT_BYTES, MAX_ATTACHMENTS_PER_TASK } from "@/lib/workflow-attachments-limits";
 
 type Staff = { id: string; name: string; email: string; role: string; color: string };
+type WProject = {
+  id: string;
+  projectName: string;
+  companyName: string;
+  status: string;
+  progress: number;
+  phaseLabel: string;
+};
 type WAttachment = {
   id: string;
   taskId: string;
@@ -116,55 +124,27 @@ function TimingMeter({
   tone: "work" | "hold" | "total" | "info";
   isDark: boolean;
 }) {
-  const toneClass =
+  const accent =
     tone === "work"
-      ? isDark
-        ? "border-sky-500/30 bg-sky-500/10"
-        : "border-sky-200 bg-sky-50"
+      ? "bg-[#0055FF]"
       : tone === "hold"
-        ? isDark
-          ? "border-amber-500/30 bg-amber-500/10"
-          : "border-amber-200 bg-amber-50"
-        : tone === "total"
-          ? isDark
-            ? "border-white/10 bg-white/[0.04]"
-            : "border-slate-200 bg-slate-50"
-          : isDark
-            ? "border-emerald-500/30 bg-emerald-500/10"
-            : "border-emerald-200 bg-emerald-50";
-  const valueClass =
-    tone === "work"
-      ? isDark
-        ? "text-sky-300"
-        : "text-sky-800"
-      : tone === "hold"
-        ? isDark
-          ? "text-amber-300"
-          : "text-amber-900"
+        ? "bg-amber-500"
         : tone === "info"
-          ? isDark
-            ? "text-emerald-300"
-            : "text-emerald-800"
+          ? "bg-emerald-500"
           : isDark
-            ? "text-white/90"
-            : "text-slate-800";
-  const labelClass =
-    tone === "work"
-      ? isDark
-        ? "text-sky-300/80"
-        : "text-sky-700"
-      : tone === "hold"
-        ? isDark
-          ? "text-amber-300/80"
-          : "text-amber-800"
-        : isDark
-          ? "text-white/45"
-          : "text-slate-500";
+            ? "bg-white/35"
+            : "bg-slate-400";
+  const shell = isDark
+    ? "bg-white/[0.04] ring-1 ring-inset ring-white/10"
+    : "bg-white ring-1 ring-inset ring-slate-200/90 shadow-[0_1px_0_rgba(15,23,42,0.04)]";
+  const valueClass = isDark ? "text-white" : "text-slate-900";
+  const labelClass = isDark ? "text-white/45" : "text-slate-500";
 
   return (
-    <div title={hint} className={`w-full rounded-lg border px-2.5 py-2 ${toneClass}`}>
-      <p className={`text-[9px] font-semibold uppercase tracking-wide ${labelClass}`}>{label}</p>
-      <p className={`text-sm font-bold tabular-nums leading-tight mt-0.5 ${valueClass}`}>{value}</p>
+    <div title={hint} className={`relative w-full overflow-hidden rounded-md ${shell} pl-3 pr-2.5 py-2`}>
+      <span className={`absolute inset-y-0 left-0 w-[3px] ${accent}`} aria-hidden />
+      <p className={`text-[9px] font-medium uppercase tracking-[0.08em] ${labelClass}`}>{label}</p>
+      <p className={`text-[13px] font-semibold tabular-nums leading-tight mt-0.5 ${valueClass}`}>{value}</p>
     </div>
   );
 }
@@ -174,6 +154,7 @@ const TaskCard = memo(function TaskCard({
   showDate,
   user,
   staff,
+  projects,
   ui,
   isDark,
   readOnly,
@@ -187,6 +168,7 @@ const TaskCard = memo(function TaskCard({
   showDate?: boolean;
   user: Staff;
   staff: Staff[];
+  projects: WProject[];
   ui: Ui;
   isDark: boolean;
   readOnly?: boolean;
@@ -429,7 +411,7 @@ const TaskCard = memo(function TaskCard({
             onClick={() => setDetailsOpen((v) => !v)}
             className="text-[10px] text-[#0055FF] hover:underline ml-auto"
           >
-            {detailsOpen ? "Hide" : "Date / assign"}
+            {detailsOpen ? "Hide" : "Date / project"}
           </button>
         ) : null}
       </div>
@@ -454,6 +436,33 @@ const TaskCard = memo(function TaskCard({
                   {s.name}
                 </option>
               ))}
+            </select>
+          </div>
+          <div className="sm:col-span-2">
+            <label className={`block ${ui.faint} text-[10px] mb-1`}>Project</label>
+            <select
+              className={ui.input}
+              value={t.projectId || ""}
+              onChange={(e) => {
+                if (e.target.value) onPatch(t.id, { projectId: e.target.value });
+              }}
+              disabled={projects.length === 0}
+            >
+              {!t.projectId ? (
+                <option value="" className={ui.option}>
+                  Select project
+                </option>
+              ) : null}
+              {projects.map((p) => (
+                <option key={p.id} value={p.id} className={ui.option}>
+                  {p.projectName}
+                </option>
+              ))}
+              {t.projectId && !projects.some((p) => p.id === t.projectId) && t.project ? (
+                <option value={t.projectId} className={ui.option}>
+                  {t.project.name}
+                </option>
+              ) : null}
             </select>
           </div>
         </div>
@@ -519,6 +528,8 @@ export default function WorkflowApp({
   const [tasks, setTasks] = useState<WTask[]>([]);
   const [inbox, setInbox] = useState<WTask[]>([]);
   const [staff, setStaff] = useState<Staff[]>([]);
+  const [projects, setProjects] = useState<WProject[]>([]);
+  const [projectFilter, setProjectFilter] = useState<string>("all");
   const [monthDays, setMonthDays] = useState<Record<string, { percent: number | null; total: number }>>({});
   const [cursor, setCursor] = useState(() => {
     const [y, m] = todayKey().split("-").map(Number);
@@ -533,6 +544,7 @@ export default function WorkflowApp({
     workLink: "",
     priority: "medium",
     assignedToId: user.id,
+    projectId: "",
   });
   const [pendingFiles, setPendingFiles] = useState<PendingFile[]>([]);
   const createFileRef = useRef<HTMLInputElement>(null);
@@ -668,6 +680,28 @@ export default function WorkflowApp({
     return true;
   }, [handleAuth, preview]);
 
+  const loadProjects = useCallback(async () => {
+    const url = preview
+      ? `/api/admin/workflow/employee/projects?staffId=${encodeURIComponent(user.id)}`
+      : "/api/workflow/projects";
+    const res = await fetch(url, { cache: "no-store" });
+    if (!(await handleAuth(res))) return false;
+    if (!res.ok) return false;
+    const data = await res.json().catch(() => ({}));
+    const list = (data.projects || []) as WProject[];
+    setProjects(list);
+    setForm((prev) => {
+      if (prev.projectId && list.some((p) => p.id === prev.projectId)) return prev;
+      if (list.length === 1) return { ...prev, projectId: list[0].id };
+      return prev;
+    });
+    setProjectFilter((prev) => {
+      if (prev === "all") return prev;
+      return list.some((p) => p.id === prev) ? prev : "all";
+    });
+    return true;
+  }, [handleAuth, preview, user.id]);
+
   const loadBoard = useCallback(
     async (d: string) => {
       const seq = ++boardSeq.current;
@@ -738,9 +772,15 @@ export default function WorkflowApp({
   const refreshAll = useCallback(async () => {
     const d = dateRef.current;
     const c = cursorRef.current;
-    const results = await Promise.all([loadBoard(d), loadInbox(), loadCalendar(c.year, c.month), loadStaff()]);
+    const results = await Promise.all([
+      loadBoard(d),
+      loadInbox(),
+      loadCalendar(c.year, c.month),
+      loadStaff(),
+      loadProjects(),
+    ]);
     return results.every(Boolean);
-  }, [loadBoard, loadInbox, loadCalendar, loadStaff]);
+  }, [loadBoard, loadInbox, loadCalendar, loadStaff, loadProjects]);
 
   const checkSync = useCallback(async () => {
     const res = await fetch(preview ? "/api/admin/workflow/sync" : "/api/workflow/sync", { cache: "no-store" });
@@ -802,9 +842,21 @@ export default function WorkflowApp({
   const createTask = async () => {
     if (preview) return;
     if (saving) return;
+    if (!form.projectId) {
+      setMessage(
+        projects.length === 0
+          ? "Ask admin to add you to a project team first"
+          : "Select a project"
+      );
+      return;
+    }
     if (!form.title.trim()) {
       setMessage("Task title is required");
       titleRef.current?.focus();
+      return;
+    }
+    if (!form.workLink.trim()) {
+      setMessage("Work link is required");
       return;
     }
     for (const item of pendingFiles) {
@@ -819,6 +871,7 @@ export default function WorkflowApp({
     }
     setSaving(true);
     setMessage("");
+    const keptProjectId = form.projectId;
     try {
       let res: Response;
       if (pendingFiles.length > 0) {
@@ -828,6 +881,7 @@ export default function WorkflowApp({
         fd.append("workLink", form.workLink.trim());
         fd.append("priority", form.priority);
         fd.append("assignedToId", form.assignedToId);
+        fd.append("projectId", form.projectId);
         fd.append("workDate", date);
         for (const item of pendingFiles) fd.append("files", item.file);
         res = await fetch("/api/workflow/tasks", { method: "POST", body: fd });
@@ -850,7 +904,14 @@ export default function WorkflowApp({
           setInbox((prev) => [task, ...prev.filter((x) => x.id !== task.id)]);
         }
       }
-      setForm({ title: "", description: "", workLink: "", priority: "medium", assignedToId: user.id });
+      setForm({
+        title: "",
+        description: "",
+        workLink: "",
+        priority: "medium",
+        assignedToId: user.id,
+        projectId: keptProjectId,
+      });
       clearPendingFiles();
       const ok = await refreshAll();
       if (ok) stampRef.current = "";
@@ -873,12 +934,52 @@ export default function WorkflowApp({
     if (typeof body.status === "string" && COLUMNS.includes(body.status as WTask["status"])) {
       setFocusCol(body.status as WTask["status"]);
     }
-    // Optimistic status-only for snappy UI; server task replaces with accurate timing
-    if (typeof body.status === "string") {
-      setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, status: body.status as WTask["status"] } : t)));
+    // Optimistic status / project for snappy UI; server task replaces with accurate timing
+    if (typeof body.status === "string" || typeof body.projectId === "string") {
+      const proj =
+        typeof body.projectId === "string"
+          ? projects.find((p) => p.id === body.projectId)
+          : undefined;
+      setTasks((prev) =>
+        prev.map((t) =>
+          t.id === id
+            ? {
+                ...t,
+                ...(typeof body.status === "string"
+                  ? { status: body.status as WTask["status"] }
+                  : null),
+                ...(typeof body.projectId === "string"
+                  ? {
+                      projectId: body.projectId,
+                      project: proj
+                        ? { id: proj.id, name: proj.projectName }
+                        : t.project,
+                    }
+                  : null),
+              }
+            : t
+        )
+      );
       setInbox((prev) =>
         prev
-          .map((t) => (t.id === id ? { ...t, status: body.status as WTask["status"] } : t))
+          .map((t) =>
+            t.id === id
+              ? {
+                  ...t,
+                  ...(typeof body.status === "string"
+                    ? { status: body.status as WTask["status"] }
+                    : null),
+                  ...(typeof body.projectId === "string"
+                    ? {
+                        projectId: body.projectId,
+                        project: proj
+                          ? { id: proj.id, name: proj.projectName }
+                          : t.project,
+                      }
+                    : null),
+                }
+              : t
+          )
           .filter((t) => inboxKeep(t, user.id))
       );
     }
@@ -933,11 +1034,16 @@ export default function WorkflowApp({
     return list;
   }, [cursor.year, cursor.month, daysInMonth, firstDow]);
 
-  const mine = useMemo(() => tasks.filter((t) => t.assignedToId === user.id), [tasks, user.id]);
-  const created = useMemo(
-    () => tasks.filter((t) => t.createdById === user.id && t.assignedToId !== user.id),
-    [tasks, user.id]
-  );
+  const mine = useMemo(() => {
+    const assigned = tasks.filter((t) => t.assignedToId === user.id);
+    if (projectFilter === "all") return assigned;
+    return assigned.filter((t) => t.projectId === projectFilter);
+  }, [tasks, user.id, projectFilter]);
+  const created = useMemo(() => {
+    const list = tasks.filter((t) => t.createdById === user.id && t.assignedToId !== user.id);
+    if (projectFilter === "all") return list;
+    return list.filter((t) => t.projectId === projectFilter);
+  }, [tasks, user.id, projectFilter]);
   const byColumn = useMemo(() => {
     const map: Record<WTask["status"], WTask[]> = {
       todo: [],
@@ -1169,6 +1275,29 @@ export default function WorkflowApp({
             </button>
           </div>
 
+          {tab === "board" ? (
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              <label className={`text-[11px] ${ui.muted}`} htmlFor="wf-project-filter">
+                Project
+              </label>
+              <select
+                id="wf-project-filter"
+                className={`${ui.input} text-xs py-1.5 max-w-[min(100%,280px)]`}
+                value={projectFilter}
+                onChange={(e) => setProjectFilter(e.target.value)}
+              >
+                <option value="all" className={ui.option}>
+                  All projects
+                </option>
+                {projects.map((p) => (
+                  <option key={p.id} value={p.id} className={ui.option}>
+                    {p.projectName}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : null}
+
           {loading ? (
             <div className={`${ui.empty} border rounded-2xl flex-1 min-h-[240px] flex items-center justify-center ${ui.muted} text-sm`}>
               Loading board…
@@ -1197,6 +1326,7 @@ export default function WorkflowApp({
                       showDate
                       user={user}
                       staff={staff}
+                      projects={projects}
                       ui={ui}
                       isDark={isDark}
                       readOnly={preview}
@@ -1254,6 +1384,7 @@ export default function WorkflowApp({
                         t={t}
                         user={user}
                         staff={staff}
+                        projects={projects}
                         ui={ui}
                         isDark={isDark}
                         readOnly={preview}
@@ -1284,19 +1415,20 @@ export default function WorkflowApp({
                         ) : (
                           list.map((t) => (
                             <TaskCard
-                        key={t.id}
-                        t={t}
-                        user={user}
-                        staff={staff}
-                        ui={ui}
-                        isDark={isDark}
-                        readOnly={preview}
-                        attachmentsReadOnly={false}
-                        attachmentBase={attachmentBase}
-                        onPatch={patch}
-                        onRemove={remove}
-                        onAttachmentsChange={syncAttachments}
-                      />
+                              key={t.id}
+                              t={t}
+                              user={user}
+                              staff={staff}
+                              projects={projects}
+                              ui={ui}
+                              isDark={isDark}
+                              readOnly={preview}
+                              attachmentsReadOnly={false}
+                              attachmentBase={attachmentBase}
+                              onPatch={patch}
+                              onRemove={remove}
+                              onAttachmentsChange={syncAttachments}
+                            />
                           ))
                         )}
                       </div>
@@ -1315,6 +1447,7 @@ export default function WorkflowApp({
                         t={t}
                         user={user}
                         staff={staff}
+                        projects={projects}
                         ui={ui}
                         isDark={isDark}
                         readOnly={preview}
@@ -1335,6 +1468,29 @@ export default function WorkflowApp({
         {!preview ? (
         <aside className={`${ui.card} border rounded-xl p-3 sm:p-4 space-y-3 min-h-0 xl:overflow-y-auto order-3`}>
           <h3 className="text-sm font-semibold">New task</h3>
+          <div>
+            <label className={`block ${ui.muted} text-xs mb-1`}>Project</label>
+            <select
+              className={ui.input}
+              value={form.projectId}
+              onChange={(e) => setForm({ ...form, projectId: e.target.value })}
+              disabled={projects.length === 0}
+            >
+              <option value="" className={ui.option}>
+                {projects.length === 0 ? "No projects assigned" : "Select project"}
+              </option>
+              {projects.map((p) => (
+                <option key={p.id} value={p.id} className={ui.option}>
+                  {p.projectName}
+                </option>
+              ))}
+            </select>
+            {projects.length === 0 ? (
+              <p className={`${ui.faint} text-[11px] mt-1.5 leading-snug`}>
+                Ask admin to add you on Project Manager → Team before creating tasks.
+              </p>
+            ) : null}
+          </div>
           <input
             ref={titleRef}
             className={ui.input}
@@ -1355,21 +1511,17 @@ export default function WorkflowApp({
             onChange={(e) => setForm({ ...form, description: e.target.value })}
           />
           <div>
-            <label className={`block ${ui.muted} text-xs mb-1`}>
-              Work link <span className="opacity-70">(optional)</span>
-            </label>
+            <label className={`block ${ui.muted} text-xs mb-1`}>Work link</label>
             <input
               className={ui.input}
               type="url"
               inputMode="url"
               autoComplete="url"
+              required
               placeholder="https://vyntechsolutions.ca/about"
               value={form.workLink}
               onChange={(e) => setForm({ ...form, workLink: e.target.value })}
             />
-            <p className={`${ui.faint} text-[11px] mt-1 leading-snug`}>
-              Page or URL you worked on — admin can open it to verify progress.
-            </p>
           </div>
           <div>
             <label className={`block ${ui.muted} text-xs mb-1`}>Work date</label>
@@ -1489,7 +1641,7 @@ export default function WorkflowApp({
           </div>
           <button
             type="button"
-            disabled={saving}
+            disabled={saving || !form.projectId || !form.workLink.trim() || projects.length === 0}
             onClick={() => void createTask()}
             className="w-full py-2.5 rounded-lg bg-gradient-to-r from-[#0055FF] to-[#00B4FF] text-white text-sm font-medium disabled:opacity-50 hover:opacity-95 hover:shadow-lg hover:shadow-blue-500/20 transition"
           >

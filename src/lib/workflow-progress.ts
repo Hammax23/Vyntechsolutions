@@ -155,7 +155,7 @@ export function formatFileSize(bytes: number): string {
 /** Human-readable duration for UI / PDF (no seconds flicker). */
 export function formatDuration(ms: number): string {
   const total = Math.max(0, Math.floor(ms));
-  if (total < 60_000) return "< 1 min";
+  if (total < 60_000) return "0 min";
   const minutes = Math.floor(total / 60_000);
   if (minutes < 60) return `${minutes} min`;
   const hours = Math.floor(minutes / 60);

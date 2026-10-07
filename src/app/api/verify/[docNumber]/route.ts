@@ -74,10 +74,20 @@ export async function GET(_request: Request, { params }: Params) {
           projectTitle: billing.projectTitle || "",
           paymentMethod: billing.paymentMethod || "",
           status: billing.status,
-          amountLabel: "Total Due",
+          amountLabel: "Total",
           amount: formatBillingCad(totals.total),
           amountValue: totals.total,
           balance: formatBillingCad(totals.balance),
+          balanceValue: totals.balance,
+          checkoutUrl: billing.checkoutUrl || "",
+          lineItems: lineItems.map((i) => ({
+            description: i.description,
+            quantity: i.quantity,
+            rate: i.rate,
+            amount: formatBillingCad(
+              (Number(i.quantity) || 0) * (Number(i.rate) || 0)
+            ),
+          })),
           createdAt: billing.createdAt.toISOString(),
         },
       });

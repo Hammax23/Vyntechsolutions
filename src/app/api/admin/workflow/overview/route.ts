@@ -54,7 +54,17 @@ export async function GET(request: NextRequest) {
         workDate: { gte: todayStart, lt: todayEnd },
         assignedToId: { in: staffIds },
       },
-      select: { assignedToId: true, status: true },
+      select: {
+        id: true,
+        title: true,
+        status: true,
+        priority: true,
+        assignedToId: true,
+        projectId: true,
+        project: { select: { id: true, projectName: true } },
+        assignedTo: { select: { id: true, name: true, color: true } },
+      },
+      orderBy: [{ createdAt: "desc" }],
     });
 
     const todayByStaff: Record<string, string[]> = {};
@@ -74,6 +84,80 @@ export async function GET(request: NextRequest) {
 
     const teamToday = scoreTasks(todayTasks.map((t) => t.status));
 
+    type ProjectBucket = {
+      projectId: string | null;
+      projectName: string;
+      total: number;
+      done: number;
+      inProgress: number;
+      todo: number;
+      blocked: number;
+      percent: number | null;
+      people: { id: string; name: string; color: string }[];
+      tasks: {
+        id: string;
+        title: string;
+        status: string;
+        priority: string;
+        assigneeName: string;
+        assigneeId: string;
+      }[];
+    };
+
+    const projectMap = new Map<string, ProjectBucket>();
+    for (const t of todayTasks) {
+      const key = t.projectId || "__none__";
+      let bucket = projectMap.get(key);
+      if (!bucket) {
+        bucket = {
+          projectId: t.projectId,
+          projectName: t.project?.projectName || "No project",
+          total: 0,
+          done: 0,
+          inProgress: 0,
+          todo: 0,
+          blocked: 0,
+          percent: null,
+          people: [],
+          tasks: [],
+        };
+        projectMap.set(key, bucket);
+      }
+      bucket.total += 1;
+      if (t.status === "done") bucket.done += 1;
+      else if (t.status === "in_progress") bucket.inProgress += 1;
+      else if (t.status === "blocked") bucket.blocked += 1;
+      else bucket.todo += 1;
+      if (t.assignedTo && !bucket.people.some((p) => p.id === t.assignedTo!.id)) {
+        bucket.people.push({
+          id: t.assignedTo.id,
+          name: t.assignedTo.name,
+          color: t.assignedTo.color,
+        });
+      }
+      bucket.tasks.push({
+        id: t.id,
+        title: t.title,
+        status: t.status,
+        priority: t.priority,
+        assigneeName: t.assignedTo?.name || "—",
+        assigneeId: t.assignedToId,
+      });
+    }
+
+    const todayByProject = Array.from(projectMap.values())
+      .map((b) => {
+        const score = scoreTasks(
+          b.tasks.map((t) => t.status)
+        );
+        return { ...b, percent: score.percent, done: score.done, total: score.total };
+      })
+      .sort((a, b) => {
+        if (a.projectId === null) return 1;
+        if (b.projectId === null) return -1;
+        return a.projectName.localeCompare(b.projectName);
+      });
+
     return NextResponse.json({
       year,
       month,
@@ -82,6 +166,8 @@ export async function GET(request: NextRequest) {
       grid,
       todayStrip,
       teamToday,
+      todayKey: todayKey(),
+      todayByProject,
     });
   } catch (error) {
     console.error("workflow overview", error);

@@ -589,7 +589,7 @@ export default function AdminPage() {
                         : activeSection === "offer_letters"
                           ? "Generate client & internal quotation PDFs"
                           : activeSection === "client_invoices"
-                            ? "Create and send professional client invoices"
+                            ? "Create, email PDF, Stripe pay links, and track status"
                             : "Salary slips & internal expense vouchers"}
                 </p>
               </div>
@@ -838,7 +838,19 @@ export default function AdminPage() {
           )}
 
           {activeSection === "projects" && (
-          <ProjectManagerSection refreshKey={projectsRefreshKey} />
+          <ProjectManagerSection
+            refreshKey={projectsRefreshKey}
+            onOpenClientInvoice={(invoiceId) => {
+              try {
+                sessionStorage.setItem("vyntech-open-billing-invoice", invoiceId);
+              } catch {
+                /* ignore */
+              }
+              setSelectedSubmission(null);
+              setSelectedPosition(null);
+              setActiveSection("client_invoices");
+            }}
+          />
           )}
 
           {/* Careers Section */}

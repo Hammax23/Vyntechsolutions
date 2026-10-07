@@ -18,7 +18,8 @@
 }
 
 [data-admin-theme="light"] .bg-\[\#0a0a1a\],
-[data-admin-theme="light"] .bg-\[\#0a0a1a\]\/80 {
+[data-admin-theme="light"] .bg-\[\#0a0a1a\]\/80,
+[data-admin-theme="light"] .bg-\[\#0a0a1a\]\/90 {
   background-color: #ffffff !important;
 }
 
@@ -300,6 +301,42 @@
   box-shadow: 0 25px 50px -12px rgb(15 23 42 / 0.12) !important;
 }
 
+/* Client update compose — same surfaces as Project Manager panels */
+.pm-client-update-overlay {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.pm-client-update__warn {
+  color: #fde68a;
+}
+
+.pm-client-update__preview {
+  background: #ffffff;
+}
+
+[data-admin-theme="light"] .pm-client-update-overlay {
+  background: rgba(15, 23, 42, 0.35);
+}
+
+[data-admin-theme="light"] .pm-client-update {
+  background-color: #ffffff !important;
+  border-color: #94a3b8 !important;
+  box-shadow: 0 20px 40px -16px rgb(15 23 42 / 0.18);
+}
+
+[data-admin-theme="light"] .pm-client-update__preview-pane {
+  background-color: #f8fafc !important;
+}
+
+[data-admin-theme="light"] .pm-client-update__preview {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-admin-theme="light"] .pm-client-update__warn {
+  color: #92400e !important;
+}
+
 /* Status / priority chips — high contrast in light mode (no washed pastel text) */
 [data-admin-theme="light"] .admin-status-chip.bg-emerald-100,
 [data-admin-theme="light"] .admin-status-chip.bg-sky-100,
@@ -512,83 +549,74 @@
   color: inherit !important;
 }
 
-/* Timing meters — readable on light + dark */
-.admin-timing-meter--total {
-  background-color: rgba(148, 163, 184, 0.12);
-  border-color: rgba(148, 163, 184, 0.35);
+/* Timing meters — compact accent strip (light + dark) */
+.admin-timing-meter {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.375rem;
+  border: none !important;
+  padding-left: 0.75rem !important;
+  background-color: rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
-.admin-timing-meter--total .admin-timing-meter__label {
-  color: rgba(226, 232, 240, 0.75);
+.admin-timing-meter::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
 }
 
-.admin-timing-meter--total .admin-timing-meter__value {
-  color: #f8fafc;
+.admin-timing-meter__label {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45) !important;
 }
 
-.admin-timing-meter--work {
-  background-color: rgba(14, 165, 233, 0.14);
-  border-color: rgba(56, 189, 248, 0.4);
+.admin-timing-meter__value {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #fff !important;
 }
 
-.admin-timing-meter--work .admin-timing-meter__label {
-  color: #7dd3fc;
+.admin-timing-meter--total::before {
+  background: rgba(255, 255, 255, 0.35);
 }
 
-.admin-timing-meter--work .admin-timing-meter__value {
-  color: #e0f2fe;
+.admin-timing-meter--work::before {
+  background: #0055ff;
 }
 
-.admin-timing-meter--hold {
-  background-color: rgba(245, 158, 11, 0.14);
-  border-color: rgba(245, 158, 11, 0.4);
+.admin-timing-meter--hold::before {
+  background: #f59e0b;
 }
 
-.admin-timing-meter--hold .admin-timing-meter__label {
-  color: #fbbf24;
+[data-admin-theme="light"] .admin-timing-meter {
+  background-color: #fff !important;
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.08), 0 1px 0 rgba(15, 23, 42, 0.03) !important;
 }
 
-.admin-timing-meter--hold .admin-timing-meter__value {
-  color: #fde68a;
+[data-admin-theme="light"] .admin-timing-meter__label {
+  color: #64748b !important;
 }
 
-[data-admin-theme="light"] .admin-timing-meter--total {
-  background-color: #e2e8f0 !important;
-  border-color: #94a3b8 !important;
-}
-
-[data-admin-theme="light"] .admin-timing-meter--total .admin-timing-meter__label {
-  color: #475569 !important;
-}
-
-[data-admin-theme="light"] .admin-timing-meter--total .admin-timing-meter__value {
+[data-admin-theme="light"] .admin-timing-meter__value {
   color: #0f172a !important;
 }
 
-[data-admin-theme="light"] .admin-timing-meter--work {
-  background-color: #e0f2fe !important;
-  border-color: #38bdf8 !important;
+[data-admin-theme="light"] .admin-timing-meter--total::before {
+  background: #94a3b8;
 }
 
-[data-admin-theme="light"] .admin-timing-meter--work .admin-timing-meter__label {
-  color: #0369a1 !important;
+[data-admin-theme="light"] .admin-timing-meter--work::before {
+  background: #0055ff;
 }
 
-[data-admin-theme="light"] .admin-timing-meter--work .admin-timing-meter__value {
-  color: #0c4a6e !important;
-}
-
-[data-admin-theme="light"] .admin-timing-meter--hold {
-  background-color: #ffedd5 !important;
-  border-color: #fb923c !important;
-}
-
-[data-admin-theme="light"] .admin-timing-meter--hold .admin-timing-meter__label {
-  color: #9a3412 !important;
-}
-
-[data-admin-theme="light"] .admin-timing-meter--hold .admin-timing-meter__value {
-  color: #7c2d12 !important;
+[data-admin-theme="light"] .admin-timing-meter--hold::before {
+  background: #f59e0b;
 }
 
 /* Floating toast — slides in from right */
@@ -756,4 +784,206 @@
 
 [data-admin-theme="light"] .admin-team-progress .ring-white {
   --tw-ring-color: #0f172a !important;
+}
+
+/* Client invoices — action bar matches admin light shell (not dark strip + white pills) */
+.admin-client-invoices .ci-toolbar {
+  background: rgba(10, 10, 26, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+[data-admin-theme="light"] .admin-client-invoices .ci-toolbar {
+  background: #f1f5f9 !important;
+  border-bottom-color: #e2e8f0 !important;
+}
+
+/* Client invoices — readable sidebar totals, tabs, links (light + dark) */
+.admin-client-invoices .ci-sidebar-totals {
+  background: rgba(0, 85, 255, 0.1);
+  border: 1px solid rgba(0, 180, 255, 0.22);
+}
+
+.admin-client-invoices .ci-sidebar-totals__line {
+  color: rgba(248, 250, 252, 0.72);
+}
+
+.admin-client-invoices .ci-sidebar-totals__total-row {
+  color: #f8fafc;
+  font-weight: 700;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.admin-client-invoices .ci-sidebar-totals__total {
+  color: #bae6fd;
+  font-weight: 700;
+}
+
+.admin-client-invoices .ci-tab {
+  color: rgba(248, 250, 252, 0.55);
+}
+
+.admin-client-invoices .ci-tab:hover {
+  color: rgba(248, 250, 252, 0.85);
+}
+
+.admin-client-invoices .ci-tab--active {
+  background: rgba(0, 85, 255, 0.28);
+  color: #e0f2fe;
+  border-color: rgba(56, 189, 248, 0.45) !important;
+}
+
+.admin-client-invoices .ci-link {
+  color: #38bdf8;
+}
+
+.admin-client-invoices .ci-link:hover {
+  color: #7dd3fc;
+}
+
+.admin-client-invoices .ci-project-link {
+  color: #7dd3fc;
+  font-weight: 500;
+}
+
+.admin-client-invoices .ci-invoice-row--selected {
+  background: rgba(0, 85, 255, 0.18);
+}
+
+.admin-client-invoices .ci-project-banner {
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  background: rgba(0, 85, 255, 0.12);
+}
+
+[data-admin-theme="light"] .admin-client-invoices .ci-sidebar-totals {
+  background: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+
+[data-admin-theme="light"] .admin-client-invoices .ci-sidebar-totals__line {
+  color: #475569 !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .ci-sidebar-totals__total-row {
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .ci-sidebar-totals__total {
+  color: #1d4ed8 !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .ci-tab {
+  color: #64748b !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .ci-tab:hover {
+  color: #334155 !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .ci-tab--active {
+  background: #dbeafe !important;
+  color: #1e40af !important;
+  border-color: #93c5fd !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .ci-link {
+  color: #2563eb !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .ci-link:hover {
+  color: #1d4ed8 !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .ci-project-link {
+  color: #1d4ed8 !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .ci-invoice-row--selected {
+  background: #dbeafe !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .ci-project-banner {
+  background: #eff6ff !important;
+  border-color: #bfdbfe !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .ci-project-banner .text-emerald-300 {
+  color: #047857 !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .ci-project-banner .text-sky-300 {
+  color: #0369a1 !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .text-emerald-300 {
+  color: #047857 !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .text-sky-300 {
+  color: #0369a1 !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .text-red-300 {
+  color: #b91c1c !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .bg-red-500\/20 {
+  background-color: #fee2e2 !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .bg-emerald-500\/20 {
+  background-color: #d1fae5 !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .bg-sky-500\/20 {
+  background-color: #e0f2fe !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .bg-emerald-500\/15 {
+  background-color: #d1fae5 !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .bg-sky-500\/15 {
+  background-color: #e0f2fe !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .bg-amber-500\/15 {
+  background-color: #fef3c7 !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .text-amber-200 {
+  color: #b45309 !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .ci-more-menu {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+}
+
+[data-admin-theme="light"] .admin-client-invoices .ci-more-menu button {
+  color: #334155 !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .ci-more-menu button:hover {
+  background: #f1f5f9 !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .ci-paid-dash {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .ci-paid-dash thead th {
+  color: #64748b !important;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .ci-paid-dash tbody td {
+  color: inherit;
+}
+
+[data-admin-theme="light"] .admin-client-invoices .ci-paid-project > div:first-child {
+  background: #f8fafc !important;
 }

@@ -266,3 +266,23 @@ export function phaseCheckProgress(
     percent: total === 0 ? 0 : Math.round((done / total) * 100),
   };
 }
+
+/** Client-facing overall % from all pipeline phase checks (not Tasks). */
+export function computeOverallProgress(
+  checks: { phase: string; done: boolean }[],
+  projectStatus?: string
+): { done: number; total: number; percent: number } {
+  if (normalizeProjectStatus(projectStatus || "") === "completed") {
+    return { done: 1, total: 1, percent: 100 };
+  }
+
+  const pipeline = new Set(PIPELINE_PHASES);
+  const list = checks.filter((c) => pipeline.has(c.phase as ProjectPhase));
+  const done = list.filter((c) => c.done).length;
+  const total = list.length;
+  return {
+    done,
+    total,
+    percent: total === 0 ? 0 : Math.round((done / total) * 100),
+  };
+}

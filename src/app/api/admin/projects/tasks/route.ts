@@ -18,7 +18,6 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Add activity log
     await prisma.activityLog.create({
       data: {
         action: `Task "${task.title}" added`,
@@ -27,8 +26,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Update project progress
-    await updateProjectProgress(data.projectId);
+    // Project.progress is owned by SDLC phase checks — Tasks must not overwrite it.
 
     return NextResponse.json({ task });
   } catch (error) {
@@ -56,7 +54,6 @@ export async function PATCH(request: NextRequest) {
       data: updateData,
     });
 
-    // Add activity log
     if (updateData.status) {
       await prisma.activityLog.create({
         data: {
@@ -66,9 +63,6 @@ export async function PATCH(request: NextRequest) {
         },
       });
     }
-
-    // Update project progress
-    await updateProjectProgress(task.projectId);
 
     return NextResponse.json({ task });
   } catch (error) {
@@ -88,14 +82,13 @@ export async function DELETE(request: NextRequest) {
     }
 
     const task = await prisma.task.findUnique({ where: { id } });
-    
+
     if (!task) {
       return NextResponse.json({ error: "Task not found" }, { status: 404 });
     }
 
     await prisma.task.delete({ where: { id } });
 
-    // Add activity log
     await prisma.activityLog.create({
       data: {
         action: `Task "${task.title}" deleted`,
@@ -104,24 +97,9 @@ export async function DELETE(request: NextRequest) {
       },
     });
 
-    // Update project progress
-    await updateProjectProgress(task.projectId);
-
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error deleting task:", error);
     return NextResponse.json({ error: "Failed to delete task" }, { status: 500 });
   }
-}
-
-// Helper function to update project progress based on completed tasks
-async function updateProjectProgress(projectId: string) {
-  const tasks = await prisma.task.findMany({ where: { projectId } });
-  const completedTasks = tasks.filter((t: { status: string }) => t.status === "completed").length;
-  const progress = tasks.length > 0 ? Math.round((completedTasks / tasks.length) * 100) : 0;
-
-  await prisma.project.update({
-    where: { id: projectId },
-    data: { progress },
-  });
 }

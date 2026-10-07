@@ -10,6 +10,7 @@ import {
   ensureProjectWorkflow,
   projectInclude,
   seedNewProjectWorkflow,
+  syncProjectProgress,
 } from "@/lib/admin/seed-project-workflow";
 import { removeProjectLogo, saveProjectLogo } from "@/lib/admin/project-logo";
 
@@ -62,7 +63,8 @@ export async function GET() {
           const full = await ensureProjectWorkflow(p.id, p.budget);
           return full || p;
         }
-        return p;
+        const percent = await syncProjectProgress(p.id);
+        return percent !== p.progress ? { ...p, progress: percent } : p;
       })
     );
 
