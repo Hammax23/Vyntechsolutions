@@ -1,6 +1,7 @@
 import { blogPosts, getPostBySlug as getLocalPost, type BlogPost } from "@/data/blogData";
+import prisma from "@/lib/prisma";
 import { faqsForIndustry } from "@/data/industryFaqs";
-import { strapiFetch, unwrapList, unwrapSingle, type StrapiListResponse, type StrapiSingleResponse } from "@/lib/strapi";
+import { getStrapiMedia, strapiFetch, unwrapList, unwrapSingle, type StrapiListResponse, type StrapiSingleResponse } from "@/lib/strapi";
 
 export type { CmsUrlRedirect } from "@/lib/cms/redirects";
 export { fetchActiveUrlRedirects as getCmsUrlRedirects } from "@/lib/cms/redirects";
@@ -84,8 +85,8 @@ function mapBlog(entry: Record<string, unknown>): CmsBlogPost {
     slug: String(entry.slug || ""),
     title: String(entry.title || ""),
     metaDescription: String(
-      entry.metaDescription ||
       (entry.seo as { metaDescription?: string } | undefined)?.metaDescription ||
+      entry.metaDescription ||
       ""
     ),
     excerpt: String(entry.excerpt || ""),
@@ -93,16 +94,59 @@ function mapBlog(entry: Record<string, unknown>): CmsBlogPost {
     tags: parseTags(entry.tags),
     author: String(entry.author || "VynTech Solutions Team"),
     readTime: String(entry.readTime || "5 min"),
-    image: String(
-      entry.image ||
-      (typeof entry.cover === "object" && entry.cover !== null
-        ? (entry.cover as { url?: string }).url || ""
-        : "")
-    ),
+    image:
+      getStrapiMedia(
+        String(
+          entry.image ||
+            (typeof entry.cover === "object" && entry.cover !== null
+              ? (entry.cover as { url?: string }).url || ""
+              : "")
+        ) || undefined
+      ) || "",
     content: String(entry.content || ""),
     featured: Boolean(entry.featured),
     seo: (entry.seo as Record<string, unknown>) || undefined,
   };
+}
+
+type PanelRow = Awaited<ReturnType<typeof prisma.blogPostEntry.findMany>>[number];
+
+function mapPanelPost(r: PanelRow): CmsBlogPost {
+  return {
+    slug: r.slug,
+    title: r.title,
+    metaDescription: r.metaDescription || r.excerpt,
+    excerpt: r.excerpt,
+    category: r.category || "Business",
+    tags: r.tags.split(",").map((t) => t.trim()).filter(Boolean),
+    author: r.author,
+    readTime: r.readTime,
+    image: r.image,
+    content: r.content,
+    featured: r.featured,
+  };
+}
+
+/** Posts authored in the /blogpost panel (website DB). Never throws — blog must render without the DB. */
+async function getPanelPosts(): Promise<CmsBlogPost[]> {
+  try {
+    const rows = await prisma.blogPostEntry.findMany({
+      where: { published: true },
+      orderBy: { publishedAt: "desc" },
+    });
+    return rows.map(mapPanelPost);
+  } catch {
+    return [];
+  }
+}
+
+async function getPanelPost(slug: string): Promise<CmsBlogPost | null> {
+  try {
+    const row = await prisma.blogPostEntry.findFirst({ where: { slug, published: true } });
+    return row ? mapPanelPost(row) : null;
+  } catch {
+    return null;
+  }
 }
 
 export async function getCmsBlogPosts(): Promise<CmsBlogPost[]> {
@@ -119,11 +163,18 @@ export async function getCmsBlogPosts(): Promise<CmsBlogPost[]> {
     tags: ["strapi", "blog"],
   });
 
-  const list = unwrapList(res).map(mapBlog).filter((p) => p.slug);
-  return list.length ? list : blogPosts;
+  const cms = unwrapList(res).map(mapBlog).filter((p) => p.slug);
+  const base = cms.length ? cms : blogPosts;
+  const panel = await getPanelPosts();
+  if (!panel.length) return base;
+  const panelSlugs = new Set(panel.map((p) => p.slug));
+  // Panel posts first (newest), panel version wins on slug clash.
+  return [...panel, ...base.filter((p) => !panelSlugs.has(p.slug))];
 }
 
 export async function getCmsBlogPost(slug: string): Promise<CmsBlogPost | null> {
+  const panelPost = await getPanelPost(slug);
+  if (panelPost) return panelPost;
   const res = await strapiFetch<StrapiListResponse<Record<string, unknown>>>({
     path: "/api/blog-posts",
     query: {

@@ -27,7 +27,11 @@
       "type": "richtext"
     },
     "content": {
-      "type": "richtext"
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultHtml"
+      }
     },
     "tags": {
       "type": "string"
@@ -46,6 +50,7 @@
     "cover": {
       "type": "media",
       "multiple": false,
+      "required": false,
       "allowedTypes": [
         "images"
       ]

@@ -284,6 +284,9 @@ async function withGlobalDefaults(
     description?: string;
     path: string;
     extraKeywords?: string[];
+    /** Post/page cover used for social previews (relative URLs are made absolute). */
+    image?: string;
+    ogType?: string;
   }
 ): Promise<Metadata> {
   const globalSeo = await getCmsGlobalSeo();
@@ -329,8 +332,15 @@ async function withGlobalDefaults(
     focusKeyword: pageSeo.focusKeyword,
     ogTitle,
     ogDescription,
-    ogType: pageSeo.ogType,
-    imageUrl: pageSeo.imageUrl || defaultOg,
+    ogType: pageSeo.ogType || opts.ogType,
+    imageUrl:
+      pageSeo.imageUrl ||
+      (opts.image
+        ? /^https?:\/\//i.test(opts.image)
+          ? opts.image
+          : `${siteUrl.replace(/\/$/, "")}${opts.image.startsWith("/") ? "" : "/"}${opts.image}`
+        : undefined) ||
+      defaultOg,
     imageAlt: pageSeo.imageAlt || title || siteName,
     siteUrl,
     siteName,
@@ -364,6 +374,8 @@ export async function metadataForBlog(slug: string): Promise<Metadata> {
     description: seo.metaDescription || post.metaDescription || post.excerpt,
     path: `/blog/${slug}`,
     extraKeywords: Array.isArray(post.tags) ? post.tags.map(String) : undefined,
+    image: post.image || undefined,
+    ogType: "article",
   });
 }
 

@@ -117,7 +117,7 @@ export async function loadBlogListingBundle(): Promise<BlogListingBundle> {
   const fromPosts = Array.from(
     new Set(list.map((p) => p.category).filter(Boolean))
   );
-  const categoryNames = fromCms.length ? fromCms : fromPosts;
+  const categoryNames = Array.from(new Set([...fromCms, ...fromPosts]));
 
   return {
     posts: list,
