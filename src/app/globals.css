@@ -90,25 +90,8 @@ body {
   animation-delay: 1s;
 }
 
-/* /blogpost editor + public article content: tables, images, rules */
-.blog-editor { color: #fff; font-size: 0.95rem; line-height: 1.7; }
-.blog-editor h1 { font-size: 1.9rem; font-weight: 700; margin: 1.4rem 0 .6rem; }
-.blog-editor h2 { font-size: 1.5rem; font-weight: 700; margin: 1.3rem 0 .6rem; }
-.blog-editor h3 { font-size: 1.25rem; font-weight: 600; margin: 1.1rem 0 .5rem; }
-.blog-editor h4 { font-size: 1.1rem; font-weight: 600; margin: 1rem 0 .4rem; }
-.blog-editor p { margin: .7rem 0; }
-.blog-editor ul { list-style: disc; padding-left: 1.5rem; margin: .7rem 0; }
-.blog-editor ol { list-style: decimal; padding-left: 1.5rem; margin: .7rem 0; }
-.blog-editor li > p { margin: .2rem 0; }
-.blog-editor a { color: #00B4FF; text-decoration: underline; }
-.blog-editor blockquote { border-left: 4px solid rgba(0,180,255,.5); padding-left: 1rem; font-style: italic; color: rgba(255,255,255,.75); margin: 1rem 0; }
-.blog-editor hr { border-color: rgba(255,255,255,.15); margin: 1.5rem 0; }
-.blog-editor img { max-width: 100%; height: auto; border-radius: .5rem; margin: 1rem 0; }
-.blog-editor table, .cms-richtext table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
-.blog-editor th, .blog-editor td { border: 1px solid rgba(255,255,255,.2); padding: .5rem .7rem; vertical-align: top; }
-.blog-editor th { background: rgba(255,255,255,.08); text-align: left; }
-.blog-editor .selectedCell { background: rgba(0,180,255,.2); }
-.blog-editor p.is-editor-empty:first-child::before { content: attr(data-placeholder); color: rgba(255,255,255,.3); float: left; height: 0; pointer-events: none; }
+/* Public article content: tables, images, rules */
+.cms-richtext table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
 .cms-richtext th, .cms-richtext td { border: 1px solid #e5e7eb; padding: .5rem .7rem; color: #4b5563; }
 .cms-richtext th { background: #f8f9fa; font-weight: 600; text-align: left; color: #1a1a2e; }
 .cms-richtext img { max-width: 100%; height: auto; border-radius: .5rem; margin: 1.25rem 0; }

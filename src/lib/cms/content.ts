@@ -1,5 +1,4 @@
 import { blogPosts, getPostBySlug as getLocalPost, type BlogPost } from "@/data/blogData";
-import prisma from "@/lib/prisma";
 import { faqsForIndustry } from "@/data/industryFaqs";
 import { getStrapiMedia, strapiFetch, unwrapList, unwrapSingle, type StrapiListResponse, type StrapiSingleResponse } from "@/lib/strapi";
 
@@ -109,46 +108,6 @@ function mapBlog(entry: Record<string, unknown>): CmsBlogPost {
   };
 }
 
-type PanelRow = Awaited<ReturnType<typeof prisma.blogPostEntry.findMany>>[number];
-
-function mapPanelPost(r: PanelRow): CmsBlogPost {
-  return {
-    slug: r.slug,
-    title: r.title,
-    metaDescription: r.metaDescription || r.excerpt,
-    excerpt: r.excerpt,
-    category: r.category || "Business",
-    tags: r.tags.split(",").map((t) => t.trim()).filter(Boolean),
-    author: r.author,
-    readTime: r.readTime,
-    image: r.image,
-    content: r.content,
-    featured: r.featured,
-  };
-}
-
-/** Posts authored in the /blogpost panel (website DB). Never throws — blog must render without the DB. */
-async function getPanelPosts(): Promise<CmsBlogPost[]> {
-  try {
-    const rows = await prisma.blogPostEntry.findMany({
-      where: { published: true },
-      orderBy: { publishedAt: "desc" },
-    });
-    return rows.map(mapPanelPost);
-  } catch {
-    return [];
-  }
-}
-
-async function getPanelPost(slug: string): Promise<CmsBlogPost | null> {
-  try {
-    const row = await prisma.blogPostEntry.findFirst({ where: { slug, published: true } });
-    return row ? mapPanelPost(row) : null;
-  } catch {
-    return null;
-  }
-}
-
 export async function getCmsBlogPosts(): Promise<CmsBlogPost[]> {
   const res = await strapiFetch<StrapiListResponse<Record<string, unknown>>>({
     path: "/api/blog-posts",
@@ -163,18 +122,11 @@ export async function getCmsBlogPosts(): Promise<CmsBlogPost[]> {
     tags: ["strapi", "blog"],
   });
 
-  const cms = unwrapList(res).map(mapBlog).filter((p) => p.slug);
-  const base = cms.length ? cms : blogPosts;
-  const panel = await getPanelPosts();
-  if (!panel.length) return base;
-  const panelSlugs = new Set(panel.map((p) => p.slug));
-  // Panel posts first (newest), panel version wins on slug clash.
-  return [...panel, ...base.filter((p) => !panelSlugs.has(p.slug))];
+  const list = unwrapList(res).map(mapBlog).filter((p) => p.slug);
+  return list.length ? list : blogPosts;
 }
 
 export async function getCmsBlogPost(slug: string): Promise<CmsBlogPost | null> {
-  const panelPost = await getPanelPost(slug);
-  if (panelPost) return panelPost;
   const res = await strapiFetch<StrapiListResponse<Record<string, unknown>>>({
     path: "/api/blog-posts",
     query: {
