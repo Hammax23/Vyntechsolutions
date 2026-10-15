@@ -1,6 +1,6 @@
 import { blogPosts, getPostBySlug as getLocalPost, type BlogPost } from "@/data/blogData";
 import { faqsForIndustry } from "@/data/industryFaqs";
-import { strapiFetch, unwrapList, unwrapSingle, type StrapiListResponse, type StrapiSingleResponse } from "@/lib/strapi";
+import { getStrapiMedia, strapiFetch, unwrapList, unwrapSingle, type StrapiListResponse, type StrapiSingleResponse } from "@/lib/strapi";
 
 export type { CmsUrlRedirect } from "@/lib/cms/redirects";
 export { fetchActiveUrlRedirects as getCmsUrlRedirects } from "@/lib/cms/redirects";
@@ -84,8 +84,8 @@ function mapBlog(entry: Record<string, unknown>): CmsBlogPost {
     slug: String(entry.slug || ""),
     title: String(entry.title || ""),
     metaDescription: String(
-      entry.metaDescription ||
       (entry.seo as { metaDescription?: string } | undefined)?.metaDescription ||
+      entry.metaDescription ||
       ""
     ),
     excerpt: String(entry.excerpt || ""),
@@ -93,12 +93,15 @@ function mapBlog(entry: Record<string, unknown>): CmsBlogPost {
     tags: parseTags(entry.tags),
     author: String(entry.author || "VynTech Solutions Team"),
     readTime: String(entry.readTime || "5 min"),
-    image: String(
-      entry.image ||
-      (typeof entry.cover === "object" && entry.cover !== null
-        ? (entry.cover as { url?: string }).url || ""
-        : "")
-    ),
+    image:
+      getStrapiMedia(
+        String(
+          entry.image ||
+            (typeof entry.cover === "object" && entry.cover !== null
+              ? (entry.cover as { url?: string }).url || ""
+              : "")
+        ) || undefined
+      ) || "",
     content: String(entry.content || ""),
     featured: Boolean(entry.featured),
     seo: (entry.seo as Record<string, unknown>) || undefined,

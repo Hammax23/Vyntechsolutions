@@ -61,6 +61,29 @@ export function sanitizeCmsHtml(input: string | null | undefined): string {
     .replace(/data:/gi, "");
 }
 
+/**
+ * Strip the styling baggage that comes with text pasted from Google Docs / Word / web pages
+ * (inline fonts, colours, sizes, pre-wrap) so articles take on the site's own typography.
+ * Keeps structure (headings, lists, tables, links, images) and text-align.
+ */
+export function cleanPastedHtml(input: string): string {
+  return input
+    // Google Docs wrapper: <b style="font-weight:normal" id="docs-internal-guid-…">…</b>
+    .replace(/<b\b[^>]*id="docs-internal-guid[^"]*"[^>]*>/gi, "")
+    .replace(/<\/?o:p>/gi, "")
+    // inline style -> keep only text-align
+    .replace(/\sstyle\s*=\s*("([^"]*)"|'([^']*)')/gi, (_m, _q, dq, sq) => {
+      const align = /text-align\s*:\s*(left|right|center|justify)/i.exec(dq ?? sq ?? "");
+      return align ? ` style="text-align:${align[1].toLowerCase()}"` : "";
+    })
+    // presentational attributes
+    .replace(/\s(?:dir|role|aria-level|bgcolor|face|color|align|valign)\s*=\s*("[^"]*"|'[^']*')/gi, "")
+    // <span> is only ever styling wrapper in CMS content
+    .replace(/<\/?span\b[^>]*>/gi, "")
+    // empty paragraphs left by editors
+    .replace(/<p>(?:\s|&nbsp;|<br\s*\/?>)*<\/p>/gi, "");
+}
+
 function escapeHtml(text: string): string {
   return text
     .replace(/&/g, "&amp;")
@@ -111,7 +134,7 @@ export function cmsBodyToHtml(input: string | null | undefined): string {
   const raw = normalizeNewlines(input).trim();
   if (!raw) return "";
   if (looksLikeHtml(raw)) {
-    return convertMarkdownLinksInHtml(sanitizeCmsHtml(raw));
+    return convertMarkdownLinksInHtml(cleanPastedHtml(sanitizeCmsHtml(raw)));
   }
 
   const lines = raw.split("\n");
