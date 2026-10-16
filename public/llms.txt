@@ -1,0 +1,119 @@
+# VynTech Solutions
+
+> VynTech Solutions is a Canadian software development and digital agency headquartered in Mississauga, Ontario. It builds websites, mobile apps, custom software, e-commerce stores and AI integrations, and provides SEO, cloud, DevOps and ongoing support for businesses across Canada and the United States, from startups building an MVP to enterprises modernizing legacy systems.
+
+Key facts:
+- Head office: 55 Village Centre Pl #200, Mississauga, ON L4Z 1V9, Canada
+- Contact: info@vyntechsolutions.ca | +1 (877) 879-6061
+- 5+ years in business, 30+ engineers, 500+ websites delivered, 98% client satisfaction, 24/7 support
+- Tech stack: React, Next.js, Vue.js, Nuxt, TypeScript, Node.js, React Native, AWS and Azure
+- E-commerce platforms: Shopify, WooCommerce, Magento and custom builds
+- Typical timelines: most websites launch in 4–8 weeks; AI integration projects take 2–8 weeks
+- Process: discovery and strategy, architecture and design, two-week agile sprints with demos, launch and ongoing support
+- Every website is custom-built (no templates), with a dedicated project manager and regular progress updates
+- Also offers tax and accounting services for Canadian businesses and individuals through a CPA-certified team
+
+Frequently asked questions:
+
+**What other services do you provide?**
+Beyond web development, we offer mobile app development, UI/UX design, SEO, custom software, cloud solutions, and ongoing maintenance.
+
+**Do you provide customized website design services?**
+Yes, every website is built from scratch around your brand and goals — no generic templates.
+
+**Are you an e-commerce website development company?**
+Yes, we build e-commerce platforms on Shopify, WooCommerce, and custom stacks, from catalogs to payment integration.
+
+**Do you offer small business website development?**
+Absolutely. We build websites for businesses of every size, including budget-friendly options for small businesses.
+
+**What makes you one of the best website development companies in Toronto?**
+Transparent communication, strong technical expertise, and results — 500+ websites delivered with a 98% client satisfaction rate.
+
+**Where can I learn more about your company and team?**
+Visit our About Us page (https://vyntechsolutions.ca/about) to learn our mission, values, and story.
+
+**Can I track the progress of my new website project?**
+Yes, you'll get a dedicated project manager and regular updates throughout development.
+
+**Which e-commerce technology platforms do you work with?**
+We work with Shopify, WooCommerce, Magento, and custom-coded solutions.
+
+**How do I find a professional web design company in Toronto?**
+Look for a company with a proven track record, transparent pricing, and real client results — all of which are core to how we work.
+
+**Can you handle a complex migration without disrupting our business?**
+Yes, we plan and test carefully, scheduling deployment during low-traffic windows to keep your business running smoothly.
+
+## Services
+- [Web Development](https://vyntechsolutions.ca/services/web-development): Custom websites, online stores and web applications built to load fast, rank well and convert visitors into customers
+- [Mobile App Development](https://vyntechsolutions.ca/services/mobile-app-development): Native and cross-platform iOS and Android apps, from concept and design through testing and app store submission
+- [Custom Software Development](https://vyntechsolutions.ca/services/custom-software-development): Internal tools, admin panels, CRMs and business applications built around how a company actually operates
+- [AI Integration Services](https://vyntechsolutions.ca/services/ai-integration-services): AI chatbots, LLM and RAG integration (OpenAI, Claude, Gemini), intelligent document processing and predictive analytics connected to existing CRMs, ERPs and websites
+- [E-commerce Solutions](https://vyntechsolutions.ca/services/ecommerce-solutions): Shopify, WooCommerce and custom e-commerce stores, including catalogs and payment integration
+- [UI/UX Design](https://vyntechsolutions.ca/services/ui-ux-design): Wireframes, prototypes and full design systems for websites and apps
+- [SEO & Digital Marketing](https://vyntechsolutions.ca/services/seo-digital-marketing): Local SEO for small businesses, enterprise SEO, technical SEO and content strategy for Toronto and Canadian businesses
+- [Cloud Solutions](https://vyntechsolutions.ca/services/cloud-solutions): Cloud setup, migration and optimization on AWS and Azure
+- [DevOps & CI/CD](https://vyntechsolutions.ca/services/devops-cicd): Automated deployment pipelines, Docker containers and infrastructure setup
+- [Maintenance & Support](https://vyntechsolutions.ca/services/maintenance-support): Bug fixes, updates, security patches and ongoing support for websites and apps
+- [Tax & Accounting Services](https://vyntechsolutions.ca/services/tax-accounting): Corporate and personal tax filing, GST/HST, bookkeeping, incorporation, part-time CFO services, SR&ED and government grant claims
+- [All Services](https://vyntechsolutions.ca/services): Overview of every service VynTech offers
+
+## Industries
+- [Healthcare & Pharmaceuticals](https://vyntechsolutions.ca/industries/healthcare): Custom healthcare software development
+- [Finance & Banking](https://vyntechsolutions.ca/industries/finance-banking): Fintech and banking software
+- [E-commerce & Retail](https://vyntechsolutions.ca/industries/ecommerce-retail): Online stores and retail technology
+- [Education & E-learning](https://vyntechsolutions.ca/industries/education): E-learning platforms and education software
+- [Real Estate & Property](https://vyntechsolutions.ca/industries/real-estate): Websites and software for real estate businesses
+- [Logistics & Transportation](https://vyntechsolutions.ca/industries/logistics): Logistics and transportation software development
+- [Entertainment & Media](https://vyntechsolutions.ca/industries/entertainment-media): Digital products for media and entertainment companies
+- [Manufacturing & Industry](https://vyntechsolutions.ca/industries/manufacturing): Software for manufacturing operations
+- [Hospitality & Travel](https://vyntechsolutions.ca/industries/hospitality-travel): Booking, hospitality and travel solutions
+- [Telecommunications](https://vyntechsolutions.ca/industries/telecommunications): Software for telecom providers
+- [All Industries](https://vyntechsolutions.ca/industries): Overview of industries served
+
+## Web Development by City
+- [Web Development Toronto](https://vyntechsolutions.ca/services/web-development/toronto): Website and web app development for Toronto businesses
+- [Web Development Mississauga](https://vyntechsolutions.ca/services/web-development/mississauga): Website development for Mississauga businesses
+- [Web Development Brampton](https://vyntechsolutions.ca/services/web-development/brampton): Website development for Brampton businesses
+- [Web Development Hamilton](https://vyntechsolutions.ca/services/web-development/hamilton): Website development for Hamilton businesses
+- [Web Development Ottawa](https://vyntechsolutions.ca/services/web-development/ottawa): Website development for Ottawa businesses
+- [Web Development Vancouver](https://vyntechsolutions.ca/services/web-development/vancouver): Website development for Vancouver businesses
+- [Web Development Calgary](https://vyntechsolutions.ca/services/web-development/calgary): Website development for Calgary businesses
+- [Web Development Edmonton](https://vyntechsolutions.ca/services/web-development/edmonton): Website development for Edmonton businesses
+
+## SEO Services by City
+- [SEO Toronto](https://vyntechsolutions.ca/services/seo-digital-marketing/toronto): SEO and digital marketing for Toronto businesses
+- [SEO North York](https://vyntechsolutions.ca/services/seo-digital-marketing/north-york): SEO for North York businesses
+- [SEO Mississauga](https://vyntechsolutions.ca/services/seo-digital-marketing/mississauga): SEO for Mississauga businesses
+- [SEO Brampton](https://vyntechsolutions.ca/services/seo-digital-marketing/brampton): SEO for Brampton businesses
+- [SEO Hamilton](https://vyntechsolutions.ca/services/seo-digital-marketing/hamilton): SEO for Hamilton businesses
+- [SEO Ottawa](https://vyntechsolutions.ca/services/seo-digital-marketing/ottawa): SEO for Ottawa businesses
+- [SEO Vancouver](https://vyntechsolutions.ca/services/seo-digital-marketing/vancouver): SEO for Vancouver businesses
+- [SEO Calgary](https://vyntechsolutions.ca/services/seo-digital-marketing/calgary): SEO for Calgary businesses
+- [SEO Edmonton](https://vyntechsolutions.ca/services/seo-digital-marketing/edmonton): SEO for Edmonton businesses
+
+## About
+- [About VynTech Solutions](https://vyntechsolutions.ca/about): Company mission, values, team size and four-step delivery process
+- [Contact / Get a Free Consultation](https://vyntechsolutions.ca/lets-talk-business): Request a quote or consultation for any service
+
+## Social & Business Profiles
+- [Google Business Profile](https://share.google/VG99GTNSeudcuQ1JT): VynTech Solutions on Google, with location, hours and customer reviews
+- [Facebook](https://www.facebook.com/VyntechSolutions): Official VynTech Solutions Facebook page with company news and updates
+
+## Latest Blog Post
+- [AI Integration: How to Bring AI into Your Business Workflows](https://vyntechsolutions.ca/blog/ai-integration-workflow): Practical steps for adding AI to existing business processes and tools
+
+## Guides & Insights
+- [MVP Development: Realistic Timelines and Costs](https://vyntechsolutions.ca/blog/mvp-development-how-long-and-how-much): How long an MVP takes to build and what it costs
+- [Why Custom Software Beats Off-the-Shelf](https://vyntechsolutions.ca/blog/why-custom-software-beats-off-the-shelf): When custom software is a better investment than ready-made tools
+- [Web App vs Mobile App: Which to Build First](https://vyntechsolutions.ca/blog/web-app-vs-mobile-app-which-to-build-first): How to decide between a web app and a mobile app for a new product
+- [How to Choose a Tech Stack for a Startup](https://vyntechsolutions.ca/blog/how-to-choose-tech-stack-for-startup): Choosing frameworks and infrastructure for a new startup
+- [API Integration: A Non-Technical Guide for Business Owners](https://vyntechsolutions.ca/blog/api-integration-guide-for-business-owners): What API integration is and how it helps a business
+- [Website Redesign Checklist: 15 Things to Get Right](https://vyntechsolutions.ca/blog/website-redesign-checklist-2024): Key steps to plan and execute a website redesign
+
+## Optional
+- [Blog](https://vyntechsolutions.ca/blog): All VynTech articles and insights
+- [Careers](https://vyntechsolutions.ca/careers): Open positions at VynTech Solutions
+- [Privacy Policy](https://vyntechsolutions.ca/privacy-policy): How VynTech handles personal data
+- [Terms & Conditions](https://vyntechsolutions.ca/terms-and-conditions): Website terms of use

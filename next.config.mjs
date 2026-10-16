@@ -26,6 +26,30 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'cdn.jsdelivr.net',
       },
+      {
+        protocol: 'https',
+        hostname: 'cms.vyntechsolutions.ca',
+      },
+      {
+        protocol: 'http',
+        hostname: '127.0.0.1',
+        port: '1338',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '1338',
+      },
+      {
+        protocol: 'http',
+        hostname: '127.0.0.1',
+        port: '1337',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '1337',
+      },
     ],
   },
   

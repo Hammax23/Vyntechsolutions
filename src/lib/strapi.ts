@@ -3,7 +3,17 @@
  * Falls back gracefully when Strapi is offline or empty.
  */
 
+/** Server-side API base (may be http://127.0.0.1:1338 on the VPS). */
 const STRAPI_URL = (process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL || "http://127.0.0.1:1337").replace(/\/$/, "");
+/**
+ * Browser-facing CMS origin for media/uploads.
+ * Prefer NEXT_PUBLIC_* so clients never get 127.0.0.1 image URLs.
+ */
+const STRAPI_PUBLIC_URL = (
+  process.env.NEXT_PUBLIC_STRAPI_URL ||
+  process.env.STRAPI_URL ||
+  "http://127.0.0.1:1337"
+).replace(/\/$/, "");
 const STRAPI_TOKEN = process.env.STRAPI_API_TOKEN || "";
 
 /** ISR window — avoids cache:"no-store" which breaks `next build` static generation. */
@@ -22,10 +32,43 @@ export function getStrapiURL(path = ""): string {
   return `${STRAPI_URL}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
+/** Resolve a Strapi media path/URL for use in <img> / next/image (public host). */
 export function getStrapiMedia(url?: string | null): string | undefined {
   if (!url) return undefined;
-  if (url.startsWith("http") || url.startsWith("//") || url.startsWith("data:")) return url;
-  return getStrapiURL(url);
+  const raw = String(url).trim();
+  if (!raw) return undefined;
+  if (raw.startsWith("data:")) return raw;
+  if (raw.startsWith("//")) return `https:${raw}`;
+
+  if (raw.startsWith("http://") || raw.startsWith("https://")) {
+    try {
+      const u = new URL(raw);
+      // Admin/API often returns loopback absolute URLs — rewrite for browsers
+      if (u.hostname === "127.0.0.1" || u.hostname === "localhost") {
+        return `${STRAPI_PUBLIC_URL}${u.pathname}${u.search}`;
+      }
+    } catch {
+      /* keep original */
+    }
+    return raw;
+  }
+
+  return `${STRAPI_PUBLIC_URL}${raw.startsWith("/") ? raw : `/${raw}`}`;
+}
+
+/** Pull url from Strapi 4/5 media shapes (flat, data, attributes). */
+export function extractStrapiMediaUrl(raw: unknown): string {
+  if (!raw) return "";
+  if (typeof raw === "string") return raw.trim();
+  if (typeof raw !== "object") return "";
+  const m = raw as {
+    url?: string;
+    data?: { url?: string; attributes?: { url?: string } } | null;
+    attributes?: { url?: string };
+  };
+  return String(
+    m.url || m.data?.url || m.data?.attributes?.url || m.attributes?.url || ""
+  ).trim();
 }
 
 type FetchOptions = {
