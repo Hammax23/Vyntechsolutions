@@ -207,6 +207,8 @@ type BuildArgs = {
   ogType?: string;
   imageUrl?: string;
   imageAlt?: string;
+  /** Only set when the real image size is known (generated cards / fallback). */
+  imageSize?: { width: number; height: number };
   siteUrl: string;
   siteName: string;
   locale?: string;
@@ -229,6 +231,7 @@ function buildMetadata(args: BuildArgs): Metadata {
     ogType,
     imageUrl,
     imageAlt,
+    imageSize,
     siteUrl,
     siteName,
     locale = "en_CA",
@@ -241,8 +244,7 @@ function buildMetadata(args: BuildArgs): Metadata {
   const images = [
     {
       url: ogImage,
-      width: 1200,
-      height: 630,
+      ...(imageSize ? { width: imageSize.width, height: imageSize.height } : {}),
       alt: imageAlt || title || siteName,
     },
   ];
@@ -286,6 +288,8 @@ async function withGlobalDefaults(
     extraKeywords?: string[];
     /** Post/page cover used for social previews (relative URLs are made absolute). */
     image?: string;
+    /** True when `image` is a generated 1200x630 card (so its size can be declared). */
+    imageIsGenerated?: boolean;
     ogType?: string;
   }
 ): Promise<Metadata> {
@@ -342,6 +346,7 @@ async function withGlobalDefaults(
         : undefined) ||
       defaultOg,
     imageAlt: pageSeo.imageAlt || title || siteName,
+    imageSize: !pageSeo.imageUrl && (opts.imageIsGenerated || !opts.image) ? { width: 1200, height: 630 } : undefined,
     siteUrl,
     siteName,
     locale,
@@ -374,7 +379,12 @@ export async function metadataForBlog(slug: string): Promise<Metadata> {
     description: seo.metaDescription || post.metaDescription || post.excerpt,
     path: `/blog/${slug}`,
     extraKeywords: Array.isArray(post.tags) ? post.tags.map(String) : undefined,
-    image: post.image || undefined,
+    // Real cover when there is one; otherwise an auto-generated branded 1200x630 card.
+    // Unsplash covers are stored at w=800; ask for 1200px so Facebook shows the large card.
+    image: post.image
+      ? post.image.replace(/(images\.unsplash\.com\/[^?]*\?[^#]*?)\bw=\d+/, "$1w=1200")
+      : `/api/blog-og/${encodeURIComponent(slug)}`,
+    imageIsGenerated: !post.image,
     ogType: "article",
   });
 }
