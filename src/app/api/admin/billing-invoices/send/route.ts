@@ -13,6 +13,7 @@ import {
 } from "@/lib/mail";
 import { SITE_URL } from "@/lib/company";
 import { ensureBillingCheckoutUrl } from "@/lib/admin/ensure-billing-checkout";
+import type { BillingInvoiceData, BillingInvoiceStatus } from "@/lib/admin/billing-invoice-types";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -65,11 +66,11 @@ export async function POST(request: NextRequest) {
     const invoice = mapBillingInvoice(row);
     // Client-facing PDF/email must never say DRAFT — status flips to sent on send,
     // but PDF was previously built before that update (so clients saw DRAFT).
-    const statusForOutbound =
+    const statusForOutbound: BillingInvoiceStatus =
       row.status === "paid" || row.status === "overdue" || row.status === "cancelled"
-        ? row.status
+        ? (row.status as BillingInvoiceStatus)
         : "sent";
-    const outboundInvoice = {
+    const outboundInvoice: BillingInvoiceData = {
       ...invoice,
       status: statusForOutbound,
       checkoutUrl: payUrl || invoice.checkoutUrl,

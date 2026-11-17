@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import type { Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import type { AdminRole } from "@/lib/admin-session";
 import { sectionsForRole } from "@/lib/admin-acl";
@@ -95,7 +96,9 @@ export async function logAdminActivity(opts: {
         userId: opts.userId,
         sessionId: opts.sessionId || null,
         action: opts.action,
-        ...(opts.meta ? { meta: opts.meta } : {}),
+        ...(opts.meta
+          ? { meta: opts.meta as Prisma.InputJsonValue }
+          : {}),
       },
     });
   } catch (e) {
