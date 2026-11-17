@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
 import VynTechLogo from "@/components/VynTechLogo";
 import { useAdminTheme } from "@/components/admin/admin-theme";
@@ -41,6 +41,36 @@ const ProjectManagerSection = dynamic(() => import("@/components/admin/ProjectMa
   ),
 });
 
+const VirtualAssistantsSection = dynamic(
+  () => import("@/components/admin/VirtualAssistantsSection"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64 text-white/40 text-sm">
+        Loading virtual assistants...
+      </div>
+    ),
+  }
+);
+
+type AdminSection =
+  | "quotes"
+  | "projects"
+  | "workflow"
+  | "careers"
+  | "offer_letters"
+  | "invoices"
+  | "client_invoices"
+  | "virtual_assistants";
+
+type AdminUserInfo = {
+  id: string;
+  name: string;
+  email: string;
+  role: "owner" | "virtual_assistant";
+  sections: AdminSection[];
+};
+
 interface QuoteSubmission {
   id: string;
   fullName: string;
@@ -75,6 +105,7 @@ export default function AdminPage() {
   const { theme, toggle, isDark } = useAdminTheme();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [adminUser, setAdminUser] = useState<AdminUserInfo | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -86,7 +117,7 @@ export default function AdminPage() {
   const [selectedSubmission, setSelectedSubmission] = useState<QuoteSubmission | null>(null);
   const [activeTab, setActiveTab] = useState<"all" | "new" | "in_progress" | "completed">("all");
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeSection, setActiveSection] = useState<"quotes" | "projects" | "workflow" | "careers" | "offer_letters" | "invoices" | "client_invoices">("workflow");
+  const [activeSection, setActiveSection] = useState<AdminSection>("workflow");
   const [projectsRefreshKey, setProjectsRefreshKey] = useState(0);
   const [showConvertModal, setShowConvertModal] = useState(false);
   const [convertData, setConvertData] = useState({ projectName: "", budget: "", deadline: "", startDate: "" });
@@ -104,16 +135,103 @@ export default function AdminPage() {
     isActive: true,
   });
 
-  useEffect(() => {
-    const authToken = sessionStorage.getItem("adminAuth");
-    if (authToken === "authenticated") {
+  const allowedSections = adminUser?.sections || [];
+  const canSection = useCallback(
+    (section: AdminSection) =>
+      allowedSections.length === 0 ? false : allowedSections.includes(section),
+    [allowedSections]
+  );
+
+  const applyAuthenticatedUser = useCallback(
+    (user: AdminUserInfo) => {
+      setAdminUser(user);
       setIsAuthenticated(true);
-      fetchSubmissions();
-      setProjectsRefreshKey((k) => k + 1);
-      loadJobPositions();
+      const preferred =
+        user.role === "owner"
+          ? "workflow"
+          : user.sections.includes("quotes")
+            ? "quotes"
+            : user.sections[0];
+      setActiveSection(preferred);
+      if (user.sections.includes("quotes")) fetchSubmissions();
+      if (user.sections.includes("projects") || user.sections.includes("client_invoices")) {
+        setProjectsRefreshKey((k) => k + 1);
+      }
+      if (user.sections.includes("careers")) loadJobPositions();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/admin/auth", { cache: "no-store" });
+        if (!res.ok) {
+          if (!cancelled) {
+            setIsAuthenticated(false);
+            setAdminUser(null);
+          }
+          return;
+        }
+        const data = await res.json();
+        if (!cancelled && data.authenticated && data.user) {
+          applyAuthenticatedUser(data.user as AdminUserInfo);
+        }
+      } catch {
+        if (!cancelled) {
+          setIsAuthenticated(false);
+          setAdminUser(null);
+        }
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [applyAuthenticatedUser]);
+
+  // Presence heartbeat while tab is visible
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    let timer: ReturnType<typeof setInterval> | null = null;
+
+    const beat = () => {
+      if (document.hidden) return;
+      void fetch("/api/admin/presence", { method: "POST" }).then(async (res) => {
+        if (res.status === 401) {
+          setIsAuthenticated(false);
+          setAdminUser(null);
+        }
+      });
+    };
+
+    const start = () => {
+      beat();
+      if (timer) clearInterval(timer);
+      timer = setInterval(beat, 60_000);
+    };
+
+    const onVis = () => {
+      if (!document.hidden) start();
+    };
+
+    start();
+    document.addEventListener("visibilitychange", onVis);
+    return () => {
+      if (timer) clearInterval(timer);
+      document.removeEventListener("visibilitychange", onVis);
+    };
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (!adminUser) return;
+    if (!canSection(activeSection) && allowedSections[0]) {
+      setActiveSection(allowedSections[0]);
     }
-    setIsLoading(false);
-  }, []);
+  }, [adminUser, activeSection, canSection, allowedSections]);
 
   const loadJobPositions = async () => {
     try {
@@ -258,11 +376,11 @@ export default function AdminPage() {
           return;
         }
         
-        sessionStorage.setItem("adminAuth", "authenticated");
-        setIsAuthenticated(true);
-        fetchSubmissions();
-        setProjectsRefreshKey((k) => k + 1);
-        loadJobPositions();
+        if (data.user) {
+          applyAuthenticatedUser(data.user as AdminUserInfo);
+        } else {
+          setIsAuthenticated(true);
+        }
       }
     } catch (err) {
       setError("An error occurred. Please try again.");
@@ -270,13 +388,29 @@ export default function AdminPage() {
     setIsLoggingIn(false);
   };
 
-  const handleLogout = () => {
-    sessionStorage.removeItem("adminAuth");
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/admin/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ step: "logout" }),
+      });
+    } catch {
+      /* ignore */
+    }
     setIsAuthenticated(false);
+    setAdminUser(null);
     setEmail("");
     setPassword("");
     setTwoFACode("");
     setLoginStep("credentials");
+  };
+
+  const goSection = (section: AdminSection) => {
+    if (!canSection(section)) return;
+    setActiveSection(section);
+    setSelectedSubmission(null);
+    setSelectedPosition(null);
   };
 
   const updateStatus = async (id: string, status: QuoteSubmission["status"]) => {
@@ -495,53 +629,80 @@ export default function AdminPage() {
           </div>
         </div>
 
-        <nav className="flex-1 p-3 space-y-1">
-          <button onClick={() => { setActiveSection("workflow"); setSelectedSubmission(null);  setSelectedPosition(null); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeSection === "workflow" ? "bg-[#0055FF]/20 border-l-2 border-[#00B4FF] text-white" : "text-white/50 hover:text-white hover:bg-white/5"}`}>
+        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+          {canSection("workflow") ? (
+          <button onClick={() => goSection("workflow")} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeSection === "workflow" ? "bg-[#0055FF]/20 border-l-2 border-[#00B4FF] text-white" : "text-white/50 hover:text-white hover:bg-white/5"}`}>
             <svg className={`w-5 h-5 ${activeSection === "workflow" ? "text-[#00B4FF]" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
             </svg>
             {sidebarOpen && <span className="text-sm font-medium">Team Progress</span>}
           </button>
-          <button onClick={() => { setActiveSection("quotes");  }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeSection === "quotes" ? "bg-[#0055FF]/20 border-l-2 border-[#00B4FF] text-white" : "text-white/50 hover:text-white hover:bg-white/5"}`}>
+          ) : null}
+          {canSection("quotes") ? (
+          <button onClick={() => goSection("quotes")} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeSection === "quotes" ? "bg-[#0055FF]/20 border-l-2 border-[#00B4FF] text-white" : "text-white/50 hover:text-white hover:bg-white/5"}`}>
             <svg className={`w-5 h-5 ${activeSection === "quotes" ? "text-[#00B4FF]" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
             </svg>
             {sidebarOpen && <span className="text-sm font-medium">Quote Requests</span>}
           </button>
-          <button onClick={() => { setActiveSection("projects"); setSelectedSubmission(null); setSelectedPosition(null); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeSection === "projects" ? "bg-[#0055FF]/20 border-l-2 border-[#00B4FF] text-white" : "text-white/50 hover:text-white hover:bg-white/5"}`}>
+          ) : null}
+          {canSection("projects") ? (
+          <button onClick={() => goSection("projects")} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeSection === "projects" ? "bg-[#0055FF]/20 border-l-2 border-[#00B4FF] text-white" : "text-white/50 hover:text-white hover:bg-white/5"}`}>
             <svg className={`w-5 h-5 ${activeSection === "projects" ? "text-[#00B4FF]" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
             </svg>
             {sidebarOpen && <span className="text-sm font-medium">Project Manager</span>}
           </button>
-          <button onClick={() => { setActiveSection("careers"); setSelectedSubmission(null);  }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeSection === "careers" ? "bg-[#0055FF]/20 border-l-2 border-[#00B4FF] text-white" : "text-white/50 hover:text-white hover:bg-white/5"}`}>
+          ) : null}
+          {canSection("careers") ? (
+          <button onClick={() => goSection("careers")} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeSection === "careers" ? "bg-[#0055FF]/20 border-l-2 border-[#00B4FF] text-white" : "text-white/50 hover:text-white hover:bg-white/5"}`}>
             <svg className={`w-5 h-5 ${activeSection === "careers" ? "text-[#00B4FF]" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
             {sidebarOpen && <span className="text-sm font-medium">Careers</span>}
           </button>
-          <button onClick={() => { setActiveSection("offer_letters"); setSelectedSubmission(null);  setSelectedPosition(null); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeSection === "offer_letters" ? "bg-[#0055FF]/20 border-l-2 border-[#00B4FF] text-white" : "text-white/50 hover:text-white hover:bg-white/5"}`}>
+          ) : null}
+          {canSection("offer_letters") ? (
+          <button onClick={() => goSection("offer_letters")} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeSection === "offer_letters" ? "bg-[#0055FF]/20 border-l-2 border-[#00B4FF] text-white" : "text-white/50 hover:text-white hover:bg-white/5"}`}>
             <svg className={`w-5 h-5 ${activeSection === "offer_letters" ? "text-[#00B4FF]" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
             </svg>
             {sidebarOpen && <span className="text-sm font-medium">Offer Letters</span>}
           </button>
-          <button onClick={() => { setActiveSection("client_invoices"); setSelectedSubmission(null);  setSelectedPosition(null); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeSection === "client_invoices" ? "bg-[#0055FF]/20 border-l-2 border-[#00B4FF] text-white" : "text-white/50 hover:text-white hover:bg-white/5"}`}>
+          ) : null}
+          {canSection("client_invoices") ? (
+          <button onClick={() => goSection("client_invoices")} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeSection === "client_invoices" ? "bg-[#0055FF]/20 border-l-2 border-[#00B4FF] text-white" : "text-white/50 hover:text-white hover:bg-white/5"}`}>
             <svg className={`w-5 h-5 ${activeSection === "client_invoices" ? "text-[#00B4FF]" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
             </svg>
             {sidebarOpen && <span className="text-sm font-medium">Client Invoice</span>}
           </button>
-          <button onClick={() => { setActiveSection("invoices"); setSelectedSubmission(null);  setSelectedPosition(null); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeSection === "invoices" ? "bg-[#0055FF]/20 border-l-2 border-[#00B4FF] text-white" : "text-white/50 hover:text-white hover:bg-white/5"}`}>
+          ) : null}
+          {canSection("invoices") ? (
+          <button onClick={() => goSection("invoices")} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeSection === "invoices" ? "bg-[#0055FF]/20 border-l-2 border-[#00B4FF] text-white" : "text-white/50 hover:text-white hover:bg-white/5"}`}>
             <svg className={`w-5 h-5 ${activeSection === "invoices" ? "text-[#00B4FF]" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             {sidebarOpen && <span className="text-sm font-medium">Company Expenses</span>}
           </button>
+          ) : null}
+          {canSection("virtual_assistants") ? (
+          <button onClick={() => goSection("virtual_assistants")} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${activeSection === "virtual_assistants" ? "bg-[#0055FF]/20 border-l-2 border-[#00B4FF] text-white" : "text-white/50 hover:text-white hover:bg-white/5"}`}>
+            <svg className={`w-5 h-5 ${activeSection === "virtual_assistants" ? "text-[#00B4FF]" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+            </svg>
+            {sidebarOpen && <span className="text-sm font-medium">Virtual Assistants</span>}
+          </button>
+          ) : null}
         </nav>
 
-        <div className="p-3 border-t border-white/5">
-          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 rounded-lg transition-all">
+        <div className="p-3 border-t border-white/5 space-y-1">
+          {sidebarOpen && adminUser ? (
+            <p className="px-4 py-1 text-[11px] text-white/35 truncate" title={adminUser.email}>
+              {adminUser.name} · {adminUser.role === "owner" ? "Owner" : "VA"}
+            </p>
+          ) : null}
+          <button onClick={() => void handleLogout()} className="w-full flex items-center gap-3 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 rounded-lg transition-all">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
@@ -575,6 +736,8 @@ export default function AdminPage() {
                           ? "Offer Letters"
                           : activeSection === "client_invoices"
                             ? "Client Invoice"
+                            : activeSection === "virtual_assistants"
+                              ? "Virtual Assistants"
                             : "Company Expenses"}
                 </h2>
                 <p className="text-white/40 text-xs">
@@ -606,7 +769,7 @@ export default function AdminPage() {
         </header>
 
         <div className="p-6 flex-1 overflow-y-auto">
-          {activeSection === "quotes" && (
+          {activeSection === "quotes" && canSection("quotes") && (
           <>
           {/* Stats */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -837,7 +1000,7 @@ export default function AdminPage() {
           </>
           )}
 
-          {activeSection === "projects" && (
+          {activeSection === "projects" && canSection("projects") && (
           <ProjectManagerSection
             refreshKey={projectsRefreshKey}
             onOpenClientInvoice={(invoiceId) => {
@@ -854,7 +1017,7 @@ export default function AdminPage() {
           )}
 
           {/* Careers Section */}
-          {activeSection === "careers" && (
+          {activeSection === "careers" && canSection("careers") && (
           <>
             {/* Add Position Button */}
             <div className="flex justify-end mb-4">
@@ -921,17 +1084,20 @@ export default function AdminPage() {
           </>
           )}
 
-          {activeSection === "offer_letters" && (
+          {activeSection === "offer_letters" && canSection("offer_letters") && (
             <OfferLetterSection sidebarOpen={sidebarOpen} />
           )}
-          {activeSection === "workflow" && (
+          {activeSection === "workflow" && canSection("workflow") && (
             <TeamProgressSection />
           )}
-          {activeSection === "client_invoices" && (
+          {activeSection === "client_invoices" && canSection("client_invoices") && (
             <ClientInvoiceSection sidebarOpen={sidebarOpen} />
           )}
-          {activeSection === "invoices" && (
+          {activeSection === "invoices" && canSection("invoices") && (
             <InvoiceSection sidebarOpen={sidebarOpen} />
+          )}
+          {activeSection === "virtual_assistants" && canSection("virtual_assistants") && (
+            <VirtualAssistantsSection />
           )}
         </div>
       </main>

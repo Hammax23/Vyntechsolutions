@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyWorkflowSession, workflowCookieName } from "@/lib/workflow-session";
+import { adminCookieName, verifyAdminSession } from "@/lib/admin-session";
+import { canAccessAdminApi } from "@/lib/admin-acl";
 import {
   fetchActiveUrlRedirects,
   findMatchingRedirect,
@@ -36,15 +38,28 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // /api/admin/auth is public (login/verify/me/logout self-enforce)
+  const adminPath = pathname.replace(/\/+$/, "") || pathname;
+  if (adminPath === "/api/admin/auth" || adminPath.startsWith("/api/admin/auth/")) {
+    return NextResponse.next();
+  }
+
+  if (pathname.startsWith("/api/admin")) {
+    const token = request.cookies.get(adminCookieName())?.value;
+    const session = await verifyAdminSession(token);
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    if (!canAccessAdminApi(session.role, request.method, pathname)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match page paths + workflow API auth.
-     * Skip Next internals and common static assets.
-     */
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|map|txt|xml|woff2?)$).*)",
   ],
 };

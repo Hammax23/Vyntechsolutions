@@ -32,6 +32,9 @@ export type BillingInvoiceRecord = {
   sentAt?: Date | null;
   sentTo?: string | null;
   lastSendError?: string | null;
+  dropboxPath?: string | null;
+  dropboxUploadedAt?: Date | null;
+  dropboxError?: string | null;
 };
 
 export function mapBillingInvoice(record: BillingInvoiceRecord): BillingInvoiceData {
@@ -61,6 +64,11 @@ export function mapBillingInvoice(record: BillingInvoiceRecord): BillingInvoiceD
     sentAt: record.sentAt ? record.sentAt.toISOString() : "",
     sentTo: record.sentTo || "",
     lastSendError: record.lastSendError || "",
+    dropboxPath: record.dropboxPath || "",
+    dropboxUploadedAt: record.dropboxUploadedAt
+      ? record.dropboxUploadedAt.toISOString()
+      : "",
+    dropboxError: record.dropboxError || "",
   };
 }
 

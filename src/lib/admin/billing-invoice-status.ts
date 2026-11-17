@@ -6,6 +6,10 @@ export function startOfTodayUtc(): Date {
   return new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
 }
 
+/**
+ * System-side status derivation (overdue sweep, post-Stripe).
+ * May return "paid" only when amountPaid already covers the total (set by Stripe webhook).
+ */
 export function deriveBillingStatus(input: {
   status: string;
   dueDate: Date | null;
@@ -27,6 +31,7 @@ export function deriveBillingStatus(input: {
     amountPaid: input.amountPaid,
   });
 
+  // Paid only when payment was recorded (Stripe) — balance cleared
   if (totals.total > 0 && totals.balance <= 0) return "paid";
   if (current === "paid") return "paid";
   if (current === "draft") return "draft";
@@ -41,6 +46,10 @@ export function deriveBillingStatus(input: {
   return "sent";
 }
 
+/**
+ * Admin create/update status rules.
+ * IMPORTANT: Admin can NEVER mark an invoice paid — only Stripe webhook can.
+ */
 export function resolveStatusAfterSave(input: {
   previousStatus: string;
   requestedStatus: string;
@@ -50,37 +59,33 @@ export function resolveStatusAfterSave(input: {
   discountPercent: number;
   hstPercent: number;
 }): BillingInvoiceStatus {
+  const previous = (["draft", "sent", "paid", "overdue", "cancelled"].includes(input.previousStatus)
+    ? input.previousStatus
+    : "draft") as BillingInvoiceStatus;
+
+  // Once paid via Stripe, stay paid (admin cannot undo via save)
+  if (previous === "paid") return "paid";
+
   const requested = (["draft", "sent", "paid", "overdue", "cancelled"].includes(input.requestedStatus)
     ? input.requestedStatus
     : "draft") as BillingInvoiceStatus;
 
   if (requested === "cancelled") return "cancelled";
 
-  const totals = calculateBillingTotals({
-    lineItems: (input.lineItems as BillingLineItem[]) || [],
+  // Ignore admin requesting "paid" or stuffing amountPaid to clear balance
+  if (requested === "draft") return "draft";
+
+  // sent / overdue / ignored "paid" → derive sent vs overdue only (never paid from save)
+  const derived = deriveBillingStatus({
+    status: "sent",
+    dueDate: input.dueDate,
+    // Use 0 so balance-based paid cannot trigger from admin payload
+    amountPaid: 0,
+    lineItems: input.lineItems,
     discountPercent: input.discountPercent,
     hstPercent: input.hstPercent,
-    amountPaid: input.amountPaid,
   });
 
-  if (totals.total > 0 && totals.balance <= 0) return "paid";
-  if (requested === "paid") return "paid";
-
-  if (requested === "sent" || requested === "overdue") {
-    return deriveBillingStatus({
-      status: "sent",
-      dueDate: input.dueDate,
-      amountPaid: input.amountPaid,
-      lineItems: input.lineItems,
-      discountPercent: input.discountPercent,
-      hstPercent: input.hstPercent,
-    });
-  }
-
-  if (requested === "draft") {
-    if (input.previousStatus === "paid") return "paid";
-    return "draft";
-  }
-
-  return requested;
+  if (derived === "paid") return "sent";
+  return derived;
 }

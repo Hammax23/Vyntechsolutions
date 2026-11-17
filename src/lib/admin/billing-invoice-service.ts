@@ -2,10 +2,12 @@ import prisma from "@/lib/prisma";
 import { deriveBillingStatus } from "@/lib/admin/billing-invoice-status";
 import { logBillingEvent } from "@/lib/admin/billing-invoice-map";
 import { calculateBillingTotals, type BillingLineItem } from "@/lib/admin/billing-invoice-types";
+import { uploadPaidInvoiceToDropbox } from "@/lib/admin/upload-paid-invoice-dropbox";
 
 export async function sweepOverdueBillingInvoices(): Promise<number> {
   const candidates = await prisma.billingInvoice.findMany({
     where: {
+      deletedAt: null,
       status: "sent",
       dueDate: { lt: new Date() },
     },
@@ -44,7 +46,21 @@ export async function markBillingInvoicePaid(opts: {
   source: string;
 }) {
   const invoice = await prisma.billingInvoice.findUnique({ where: { id: opts.invoiceId } });
-  if (!invoice) return null;
+  if (!invoice || invoice.deletedAt) return null;
+
+  // Cancelled invoices must not flip to Paid if an old Stripe link is still used
+  if (invoice.status === "cancelled") {
+    await logBillingEvent(prisma, invoice.id, "paid_ignored_cancelled", {
+      source: opts.source,
+      sessionId: opts.stripeCheckoutSessionId || null,
+    });
+    return null;
+  }
+
+  // Only Stripe (or trusted system callers) may mark paid — never manual admin
+  if (opts.source !== "stripe_webhook") {
+    return null;
+  }
 
   const totals = calculateBillingTotals({
     lineItems: (invoice.lineItems as BillingLineItem[]) || [],
@@ -79,5 +95,18 @@ export async function markBillingInvoicePaid(opts: {
     });
   }
 
-  return updated;
+  // Archive paid PDF to Dropbox — never throw into Stripe webhook
+  try {
+    await uploadPaidInvoiceToDropbox({
+      invoiceId: updated.id,
+      force: false,
+      timeoutMs: 8_000,
+    });
+  } catch (e) {
+    console.error("dropbox archive after paid", e);
+  }
+
+  // Re-read so response includes dropbox fields when available
+  const withDropbox = await prisma.billingInvoice.findUnique({ where: { id: updated.id } });
+  return withDropbox || updated;
 }

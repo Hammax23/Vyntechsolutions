@@ -12,6 +12,7 @@ import {
   sendMail,
 } from "@/lib/mail";
 import { SITE_URL } from "@/lib/company";
+import { ensureBillingCheckoutUrl } from "@/lib/admin/ensure-billing-checkout";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -23,13 +24,57 @@ export async function POST(request: NextRequest) {
     const kind = body.kind === "test" ? "test" : "client";
     if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
 
-    const row = await prisma.billingInvoice.findUnique({ where: { id } });
-    if (!row) return NextResponse.json({ error: "Invoice not found" }, { status: 404 });
+    let row = await prisma.billingInvoice.findUnique({ where: { id } });
+    if (!row || row.deletedAt) {
+      return NextResponse.json({ error: "Invoice not found" }, { status: 404 });
+    }
     if (row.status === "cancelled") {
       return NextResponse.json({ error: "Cancelled invoices cannot be sent" }, { status: 400 });
     }
 
+    const origin =
+      request.headers.get("x-forwarded-proto") && request.headers.get("x-forwarded-host")
+        ? `${request.headers.get("x-forwarded-proto")}://${request.headers.get("x-forwarded-host")}`
+        : SITE_URL;
+
+    // Auto-create Stripe pay link before email (client must pay via link → auto Paid)
+    let payUrl = row.checkoutUrl || "";
+    if (row.status !== "paid") {
+      const checkout = await ensureBillingCheckoutUrl({ invoiceId: id, origin });
+      if (checkout.ok && checkout.checkoutUrl) {
+        payUrl = checkout.checkoutUrl;
+        row = (await prisma.billingInvoice.findUnique({ where: { id } })) || row;
+      } else if (!checkout.ok && kind === "client") {
+        // Fail closed — never email a client invoice without a working pay link
+        const status =
+          checkout.code === "not_configured"
+            ? 503
+            : checkout.code === "not_found"
+              ? 404
+              : 400;
+        const message =
+          checkout.code === "not_configured"
+            ? "Stripe is not configured — cannot send a pay link. Set STRIPE_SECRET_KEY (and webhook) first."
+            : checkout.code === "nothing_due"
+              ? "Invoice balance is $0 — add line items / rates before sending."
+              : checkout.error || "Could not create Stripe pay link";
+        return NextResponse.json({ error: message }, { status });
+      }
+    }
+
     const invoice = mapBillingInvoice(row);
+    // Client-facing PDF/email must never say DRAFT — status flips to sent on send,
+    // but PDF was previously built before that update (so clients saw DRAFT).
+    const statusForOutbound =
+      row.status === "paid" || row.status === "overdue" || row.status === "cancelled"
+        ? row.status
+        : "sent";
+    const outboundInvoice = {
+      ...invoice,
+      status: statusForOutbound,
+      checkoutUrl: payUrl || invoice.checkoutUrl,
+    };
+
     const to =
       kind === "test"
         ? getAdminTestAddress()
@@ -47,18 +92,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const origin =
-      request.headers.get("x-forwarded-proto") && request.headers.get("x-forwarded-host")
-        ? `${request.headers.get("x-forwarded-proto")}://${request.headers.get("x-forwarded-host")}`
-        : SITE_URL;
-
     const email = buildBillingInvoiceEmail({
-      invoice,
-      payUrl: invoice.checkoutUrl,
+      invoice: outboundInvoice,
+      payUrl: payUrl || invoice.checkoutUrl,
       verifyOrigin: origin,
     });
 
-    const pdfBuffer = await renderBillingInvoicePdf(invoice);
+    const pdfBuffer = await renderBillingInvoicePdf(outboundInvoice);
     const logoAttachment = loadPrintLogoAttachment();
     const bcc = kind === "client" ? getArchiveBccAddress() : null;
 
@@ -92,7 +132,7 @@ export async function POST(request: NextRequest) {
       const updated = await prisma.billingInvoice.update({
         where: { id },
         data: {
-          status: row.status === "paid" ? "paid" : row.status === "overdue" ? "overdue" : "sent",
+          status: statusForOutbound,
           sentAt: new Date(),
           sentTo: to,
           lastSendError: null,

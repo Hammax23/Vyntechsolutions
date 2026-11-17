@@ -32,6 +32,9 @@ export type BillingInvoiceData = {
   sentAt?: string;
   sentTo?: string;
   lastSendError?: string;
+  dropboxPath?: string;
+  dropboxUploadedAt?: string;
+  dropboxError?: string;
 };
 
 export type BillingInvoiceEventData = {

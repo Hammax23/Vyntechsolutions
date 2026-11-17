@@ -7,7 +7,6 @@ import type {
   BillingLineItem,
 } from "@/lib/admin/billing-invoice-types";
 import {
-  BILLING_PAYMENT_METHODS,
   BILLING_STATUSES,
   calculateBillingTotals,
   formatCad,
@@ -94,12 +93,14 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
   const [showMoreActions, setShowMoreActions] = useState(false);
 
   const nextStepHint = useMemo(() => {
-    if (!form.id) return "1) Fill details → Save";
-    if (form.status === "draft") return "2) Next: Send to client (optional: Send test first)";
-    if (form.status === "sent" || form.status === "overdue") {
-      return "3) Waiting for pay link / Stripe — or tap Record paid if paid outside";
+    if (!form.id) return "1) Fill details + amount → Save";
+    if (form.status === "draft") {
+      return "2) Send to client (auto creates Stripe pay link in the email)";
     }
-    if (form.status === "paid") return "Done — invoice is paid";
+    if (form.status === "sent" || form.status === "overdue") {
+      return "3) Waiting for client to pay via Stripe link — Paid updates automatically";
+    }
+    if (form.status === "paid") return "Done — paid via Stripe pay link";
     if (form.status === "cancelled") return "Cancelled — no further action";
     return "";
   }, [form.id, form.status]);
@@ -550,6 +551,9 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
       sentAt: "",
       sentTo: "",
       lastSendError: "",
+      dropboxPath: "",
+      dropboxUploadedAt: "",
+      dropboxError: "",
     });
     setEvents([]);
     setSendConfirm(false);
@@ -558,6 +562,36 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
     setMessage(
       `Duplicated as draft ${nextInvoiceNumberFromExisting(nums)} — review and Save`
     );
+  };
+
+  const saveToDropbox = async () => {
+    if (!form.id || form.status !== "paid") {
+      setMessage("Only paid invoices can be saved to Dropbox");
+      return;
+    }
+    setBusy(true);
+    setMessage("");
+    try {
+      const res = await fetch("/api/admin/billing-invoices/dropbox", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: form.id }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (data.invoice) setForm(data.invoice);
+      if (!res.ok) throw new Error(data.error || "Dropbox upload failed");
+      setMessage(
+        data.path
+          ? `Saved to Dropbox: ${data.path}`
+          : "Saved to Dropbox"
+      );
+      await load();
+      void loadEvents(form.id);
+    } catch (e) {
+      setMessage(e instanceof Error ? e.message : "Dropbox upload failed");
+    } finally {
+      setBusy(false);
+    }
   };
 
   const createForProject = (projectId: string | null, projectName?: string) => {
@@ -627,7 +661,8 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
   };
 
   const createPayLink = async () => {
-    const saved = form.id ? form : await save();
+    // Always persist latest line items / totals before creating or refreshing Stripe link
+    const saved = await save();
     if (!saved?.id) {
       setMessage("Save the invoice first");
       return;
@@ -638,7 +673,7 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
       const res = await fetch("/api/admin/billing-invoices/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: saved.id }),
+        body: JSON.stringify({ id: saved.id, force: true }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Could not create pay link");
@@ -663,7 +698,8 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
   };
 
   const sendInvoice = async (kind: "client" | "test") => {
-    const saved = form.id ? form : await save();
+    // Always save first so email/PDF use current form (not stale DB)
+    const saved = await save();
     if (!saved?.id) return;
     if (kind === "client" && !sendConfirm) {
       setSendConfirm(true);
@@ -692,36 +728,6 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
     } catch (e) {
       setSendConfirm(false);
       setMessage(e instanceof Error ? e.message : "Send failed");
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const recordPayment = async () => {
-    if (!form.id) {
-      setMessage("Save first");
-      return;
-    }
-    setBusy(true);
-    try {
-      const res = await fetch("/api/admin/billing-invoices", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "record_payment",
-          id: form.id,
-          amountPaid: totals.total,
-          paymentMethod: form.paymentMethod || "E-Transfer",
-        }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || "Could not record payment");
-      if (data.invoice) setForm(data.invoice);
-      setMessage("Payment recorded — invoice marked paid");
-      await load();
-      void loadEvents(form.id);
-    } catch (e) {
-      setMessage(e instanceof Error ? e.message : "Record payment failed");
     } finally {
       setBusy(false);
     }
@@ -760,11 +766,33 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
   };
 
   const remove = async () => {
-    if (!form.id || !confirm("Delete this client invoice?")) return;
-    await fetch(`/api/admin/billing-invoices?id=${form.id}`, { method: "DELETE" });
-    reset();
-    load();
-    setMessage("Invoice deleted");
+    if (!form.id) return;
+    if (form.status === "paid") {
+      setMessage("Paid invoices cannot be deleted (accounting record).");
+      return;
+    }
+    if (
+      !confirm(
+        "Delete this invoice from the list? It is soft-deleted (kept in the database, hidden from admin)."
+      )
+    ) {
+      return;
+    }
+    try {
+      const res = await fetch(`/api/admin/billing-invoices?id=${form.id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setMessage(String(data.error || "Delete failed"));
+        return;
+      }
+      reset();
+      await load();
+      setMessage("Invoice deleted (soft) — removed from list");
+    } catch {
+      setMessage("Delete failed");
+    }
   };
 
   const copyVerifyLink = async () => {
@@ -777,6 +805,19 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
       setMessage("Verify link copied");
     } catch {
       setMessage(verifyUrl);
+    }
+  };
+
+  const copyPayLink = async () => {
+    if (!form.checkoutUrl) {
+      setMessage("No pay link yet — Send to client or use More → Get pay link");
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(form.checkoutUrl);
+      setMessage("Pay link copied");
+    } catch {
+      setMessage(form.checkoutUrl);
     }
   };
 
@@ -1578,16 +1619,6 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
             >
               Duplicate
             </button>
-            {form.id &&
-            (form.status === "sent" || form.status === "overdue") ? (
-              <button
-                onClick={() => void recordPayment()}
-                disabled={busy}
-                className="px-4 py-2 bg-white/10 hover:bg-white/15 border border-white/15 text-white text-sm rounded-md font-medium disabled:opacity-50"
-              >
-                3. Record paid
-              </button>
-            ) : null}
 
             <div className="relative ml-auto">
               <button
@@ -1614,24 +1645,26 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
                     type="button"
                     onClick={() => {
                       setShowMoreActions(false);
-                      void sendInvoice("test");
-                    }}
-                    disabled={busy}
-                    className="w-full text-left px-3 py-2 text-sm text-white/80 hover:bg-white/5 rounded-md disabled:opacity-50"
-                  >
-                    Send test email
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowMoreActions(false);
                       void createPayLink();
                     }}
                     disabled={busy || form.status === "cancelled" || form.status === "paid"}
                     className="w-full text-left px-3 py-2 text-sm text-white/80 hover:bg-white/5 rounded-md disabled:opacity-50"
                   >
-                    Get pay link
+                    Get / refresh pay link
                   </button>
+                  {form.id && form.status === "paid" ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowMoreActions(false);
+                        void saveToDropbox();
+                      }}
+                      disabled={busy}
+                      className="w-full text-left px-3 py-2 text-sm text-white/80 hover:bg-white/5 rounded-md disabled:opacity-50"
+                    >
+                      {form.dropboxPath ? "Re-save to Dropbox" : "Save to Dropbox"}
+                    </button>
+                  ) : null}
                   <button
                     type="button"
                     onClick={() => {
@@ -1642,20 +1675,7 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
                   >
                     Copy verify link
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowMoreActions(false);
-                      set(
-                        "invoiceNumber",
-                        nextInvoiceNumberFromExisting(invoices.map((i) => i.invoiceNumber))
-                      );
-                    }}
-                    className="w-full text-left px-3 py-2 text-sm text-white/80 hover:bg-white/5 rounded-md"
-                  >
-                    Next invoice #
-                  </button>
-                  {form.id && form.status !== "cancelled" ? (
+                  {form.id && form.status !== "cancelled" && form.status !== "paid" ? (
                     <button
                       type="button"
                       onClick={() => {
@@ -1668,7 +1688,7 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
                       Mark cancelled
                     </button>
                   ) : null}
-                  {form.id ? (
+                  {form.id && form.status !== "paid" ? (
                     <button
                       type="button"
                       onClick={() => {
@@ -1703,8 +1723,8 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
             </div>
           </div>
           <p className="text-[11px] text-white/40 pt-1">
-            Status updates automatically: Save → Draft · Send to client → Sent · Payment → Paid.
-            You do not need to change it manually.
+            Status is automatic: Save → Draft · Send to client → Sent (+ Stripe pay link in email) ·
+            Client pays link → Paid. You cannot mark Paid manually.
           </p>
         </div>
 
@@ -1753,9 +1773,76 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
               <input className={input} value={form.projectTitle} placeholder="Website Redesign — Phase 1" onChange={(e) => set("projectTitle", e.target.value)} />
             </div>
             {form.checkoutUrl ? (
-              <div className="md:col-span-2">
-                <label className={label}>Pay link</label>
-                <p className="text-[11px] text-[#7dd3fc] break-all">{form.checkoutUrl}</p>
+              <div className="md:col-span-2 ci-pay-link rounded-lg border border-white/10 bg-white/[0.03] p-3 space-y-2">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wide text-white/45 font-medium">
+                      Stripe pay link
+                    </p>
+                    <p className="text-[11px] text-white/50 mt-0.5">
+                      Client pays here → invoice becomes Paid automatically
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <a
+                      href={form.checkoutUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center px-3 py-1.5 rounded-md text-xs font-medium bg-[#0055FF] hover:bg-[#0044CC] text-white no-underline"
+                    >
+                      Open pay page
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => void copyPayLink()}
+                      className="pm-action-btn px-3 py-1.5 text-xs"
+                    >
+                      Copy link
+                    </button>
+                  </div>
+                </div>
+                <a
+                  href={form.checkoutUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ci-link block text-[11px] break-all leading-relaxed hover:underline"
+                  title={form.checkoutUrl}
+                >
+                  {form.checkoutUrl.length > 96
+                    ? `${form.checkoutUrl.slice(0, 72)}…${form.checkoutUrl.slice(-18)}`
+                    : form.checkoutUrl}
+                </a>
+              </div>
+            ) : null}
+
+            {form.status === "paid" ? (
+              <div className="ci-pay-link mt-3 rounded-lg border border-white/10 bg-white/[0.03] p-3 space-y-2">
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <div>
+                    <p className="text-xs font-medium text-white/70">Dropbox archive</p>
+                    {form.dropboxPath ? (
+                      <p className="text-[11px] text-emerald-400/90 mt-0.5 break-all">
+                        Saved: {form.dropboxPath}
+                      </p>
+                    ) : form.dropboxError ? (
+                      <p className="text-[11px] text-amber-300/90 mt-0.5">
+                        Not saved — {form.dropboxError}
+                      </p>
+                    ) : (
+                      <p className="text-[11px] text-white/45 mt-0.5">
+                        Not archived yet — use More → Save to Dropbox
+                      </p>
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => void saveToDropbox()}
+                    disabled={busy}
+                    className="pm-action-btn px-3 py-1.5 text-xs disabled:opacity-50"
+                  >
+                    {form.dropboxPath ? "Re-save" : "Save to Dropbox"}
+                  </button>
+                </div>
               </div>
             ) : null}
           </div>
@@ -1812,16 +1899,30 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
                   type="number"
                   min={0}
                   step="0.01"
-                  value={item.quantity}
-                  onChange={(e) => updateLine(i, { quantity: Number(e.target.value) })}
+                  inputMode="decimal"
+                  value={item.quantity === 0 ? "" : item.quantity}
+                  onChange={(e) => {
+                    const raw = e.target.value;
+                    updateLine(i, {
+                      quantity: raw === "" ? 0 : Number(raw),
+                    });
+                  }}
                 />
                 <input
                   className={input}
                   type="number"
                   min={0}
                   step="0.01"
-                  value={item.rate}
-                  onChange={(e) => updateLine(i, { rate: Number(e.target.value) })}
+                  inputMode="decimal"
+                  placeholder="0"
+                  value={item.rate === 0 ? "" : item.rate}
+                  onChange={(e) => {
+                    const raw = e.target.value;
+                    // Avoid "021" — empty field when 0 so typing replaces, not appends after 0
+                    updateLine(i, {
+                      rate: raw === "" ? 0 : Number(raw),
+                    });
+                  }}
                 />
                 <div className="text-right text-sm text-white/80 px-1">
                   {formatCad(lineAmount(item))}
@@ -1866,29 +1967,23 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
                 />
               </div>
               <div>
-                <label className={label}>Amount Paid</label>
+                <label className={label}>Amount Paid (Stripe only)</label>
                 <input
-                  className={input}
+                  className={`${input} opacity-80`}
                   type="number"
-                  min={0}
-                  step="0.01"
                   value={form.amountPaid}
-                  onChange={(e) => set("amountPaid", Number(e.target.value))}
+                  readOnly
+                  title="Filled automatically when the client pays via Stripe"
                 />
               </div>
               <div>
                 <label className={label}>Payment Method</label>
-                <select
-                  className={input}
-                  value={form.paymentMethod}
-                  onChange={(e) => set("paymentMethod", e.target.value)}
-                >
-                  {BILLING_PAYMENT_METHODS.map((m) => (
-                    <option key={m} value={m} className="bg-[#0a0a1a]">
-                      {m}
-                    </option>
-                  ))}
-                </select>
+                <input
+                  className={`${input} opacity-80`}
+                  value={form.paymentMethod || (form.status === "paid" ? "Credit Card" : "—")}
+                  readOnly
+                  title="Set when the client pays via Stripe"
+                />
               </div>
             </div>
           </div>

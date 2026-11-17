@@ -3,12 +3,14 @@ import prisma from "@/lib/prisma";
 import type {
   BillingInvoiceData,
   BillingInvoiceStatus,
+  BillingLineItem,
 } from "@/lib/admin/billing-invoice-types";
 import { calculateBillingTotals } from "@/lib/admin/billing-invoice-types";
 import { allocateNextBillingInvoiceNumber } from "@/lib/admin/allocate-billing-invoice-number";
 import { mapBillingInvoice, logBillingEvent } from "@/lib/admin/billing-invoice-map";
 import { resolveStatusAfterSave } from "@/lib/admin/billing-invoice-status";
-import { markBillingInvoicePaid, sweepOverdueBillingInvoices } from "@/lib/admin/billing-invoice-service";
+import { sweepOverdueBillingInvoices } from "@/lib/admin/billing-invoice-service";
+import { clearBillingCheckoutLink } from "@/lib/admin/ensure-billing-checkout";
 
 function normalize(data: BillingInvoiceData) {
   const lineItems = (data.lineItems || [])
@@ -49,7 +51,10 @@ function normalize(data: BillingInvoiceData) {
 export async function GET(request: NextRequest) {
   try {
     await sweepOverdueBillingInvoices();
-    const invoices = await prisma.billingInvoice.findMany({ orderBy: { createdAt: "desc" } });
+    const invoices = await prisma.billingInvoice.findMany({
+      where: { deletedAt: null },
+      orderBy: { createdAt: "desc" },
+    });
     const mapped = invoices.map(mapBillingInvoice);
 
     const now = new Date();
@@ -101,16 +106,14 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    if (body?.action === "record_payment" && body.id) {
-      const amount = Number(body.amountPaid);
-      const updated = await markBillingInvoicePaid({
-        invoiceId: String(body.id),
-        amountPaid: Number.isFinite(amount) ? amount : undefined,
-        paymentMethod: body.paymentMethod ? String(body.paymentMethod) : undefined,
-        source: "manual",
-      });
-      if (!updated) return NextResponse.json({ error: "Not found" }, { status: 404 });
-      return NextResponse.json({ invoice: mapBillingInvoice(updated) });
+    if (body?.action === "record_payment") {
+      return NextResponse.json(
+        {
+          error:
+            "Manual Record paid is disabled. Status becomes Paid only after the client pays via the Stripe pay link.",
+        },
+        { status: 403 }
+      );
     }
 
     const data = body as BillingInvoiceData;
@@ -118,11 +121,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Client name required" }, { status: 400 });
     }
     const payload = normalize(data);
+    // Admin cannot set paid amounts / paid status — Stripe webhook only
+    payload.amountPaid = 0;
     payload.status = resolveStatusAfterSave({
       previousStatus: "draft",
-      requestedStatus: payload.status,
+      requestedStatus: payload.status === "paid" ? "draft" : payload.status,
       dueDate: payload.dueDate,
-      amountPaid: payload.amountPaid,
+      amountPaid: 0,
       lineItems: payload.lineItems,
       discountPercent: payload.discountPercent,
       hstPercent: payload.hstPercent,
@@ -140,8 +145,8 @@ export async function POST(request: NextRequest) {
     }
 
     if (payload.projectPaymentId) {
-      const existingLink = await prisma.billingInvoice.findUnique({
-        where: { projectPaymentId: payload.projectPaymentId },
+      const existingLink = await prisma.billingInvoice.findFirst({
+        where: { projectPaymentId: payload.projectPaymentId, deletedAt: null },
         select: { id: true },
       });
       if (existingLink) {
@@ -156,7 +161,8 @@ export async function POST(request: NextRequest) {
       const invoice = await prisma.billingInvoice.create({
         data: {
           ...payload,
-          paidAt: payload.status === "paid" ? new Date() : null,
+          amountPaid: 0,
+          paidAt: null,
         },
       });
       await logBillingEvent(prisma, invoice.id, "created", {
@@ -170,7 +176,8 @@ export async function POST(request: NextRequest) {
         const invoice = await prisma.billingInvoice.create({
           data: {
             ...payload,
-            paidAt: payload.status === "paid" ? new Date() : null,
+            amountPaid: 0,
+            paidAt: null,
           },
         });
         await logBillingEvent(prisma, invoice.id, "created", {
@@ -195,7 +202,9 @@ export async function PATCH(request: NextRequest) {
     }
 
     const existing = await prisma.billingInvoice.findUnique({ where: { id: data.id } });
-    if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    if (!existing || existing.deletedAt) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
 
     const payload = normalize(data);
     if (!payload.invoiceNumber) {
@@ -204,50 +213,73 @@ export async function PATCH(request: NextRequest) {
     }
 
     if (existing.status === "paid") {
-      // After paid: only notes / cancel / payment method notes-ish fields
+      // After Stripe paid: only notes / terms — never un-pay or change amounts via admin
       const invoice = await prisma.billingInvoice.update({
         where: { id: data.id },
         data: {
           notes: payload.notes,
-          status: payload.status === "cancelled" ? "cancelled" : existing.status,
-          paymentMethod: payload.paymentMethod,
           paymentTerms: payload.paymentTerms,
         },
       });
       return NextResponse.json({ invoice: mapBillingInvoice(invoice) });
     }
 
+    // Lock payment fields to DB — admin save cannot mark paid
+    payload.amountPaid = existing.amountPaid;
     payload.status = resolveStatusAfterSave({
       previousStatus: existing.status,
-      requestedStatus: payload.status,
+      requestedStatus: payload.status === "paid" ? existing.status : payload.status,
       dueDate: payload.dueDate,
-      amountPaid: payload.amountPaid,
+      amountPaid: existing.amountPaid,
       lineItems: payload.lineItems,
       discountPercent: payload.discountPercent,
       hstPercent: payload.hstPercent,
     });
 
+    const prevTotals = calculateBillingTotals({
+      lineItems: (existing.lineItems as BillingLineItem[]) || [],
+      discountPercent: existing.discountPercent,
+      hstPercent: existing.hstPercent,
+      amountPaid: existing.amountPaid,
+    });
+    const nextTotals = calculateBillingTotals({
+      lineItems: payload.lineItems,
+      discountPercent: payload.discountPercent,
+      hstPercent: payload.hstPercent,
+      amountPaid: existing.amountPaid,
+    });
+    const balanceChanged =
+      Math.round(prevTotals.balance * 100) !== Math.round(nextTotals.balance * 100);
+    const becomingCancelled =
+      payload.status === "cancelled" && existing.status !== "cancelled";
+
+    // Stale Stripe links must not collect the old amount / cancelled invoices
+    if (
+      (balanceChanged || becomingCancelled) &&
+      (existing.checkoutUrl || existing.stripeCheckoutSessionId)
+    ) {
+      await clearBillingCheckoutLink({
+        invoiceId: existing.id,
+        sessionId: existing.stripeCheckoutSessionId,
+        reason: becomingCancelled
+          ? "cancelled"
+          : "balance_changed",
+      });
+    }
+
     const invoice = await prisma.billingInvoice.update({
       where: { id: data.id },
       data: {
         ...payload,
-        paidAt:
-          payload.status === "paid"
-            ? existing.paidAt || new Date()
-            : null,
+        amountPaid: existing.amountPaid,
+        paidAt: existing.paidAt,
+        status: payload.status,
         projectPaymentId: payload.projectPaymentId || existing.projectPaymentId,
+        ...(becomingCancelled || balanceChanged
+          ? { checkoutUrl: null, stripeCheckoutSessionId: null }
+          : {}),
       },
     });
-
-    if (payload.status === "paid" && existing.status !== "paid") {
-      await logBillingEvent(prisma, invoice.id, "payment_recorded", { source: "admin_edit" });
-      if (invoice.projectPaymentId) {
-        await prisma.projectPayment.update({
-          where: { id: invoice.projectPaymentId },
-          data: { status: "paid", paidAt: new Date() },
-        });
-      }
-    }
 
     return NextResponse.json({ invoice: mapBillingInvoice(invoice) });
   } catch (error) {
@@ -261,15 +293,41 @@ export async function DELETE(request: NextRequest) {
     const id = new URL(request.url).searchParams.get("id");
     if (!id) return NextResponse.json({ error: "ID required" }, { status: 400 });
     const existing = await prisma.billingInvoice.findUnique({ where: { id } });
-    if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    if (!existing || existing.deletedAt) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
     if (existing.status === "paid") {
       return NextResponse.json(
-        { error: "Paid invoices cannot be deleted. Cancel instead if needed." },
+        {
+          error:
+            "Paid invoices cannot be deleted. Use Mark cancelled only if you must void a draft/sent invoice; keep paid records for accounting.",
+        },
         { status: 400 }
       );
     }
-    await prisma.billingInvoice.delete({ where: { id } });
-    return NextResponse.json({ success: true });
+
+    // Soft delete — hide from lists; expire live Stripe session so old emails can't collect
+    await clearBillingCheckoutLink({
+      invoiceId: id,
+      sessionId: existing.stripeCheckoutSessionId,
+      reason: "soft_deleted",
+    });
+    await prisma.billingInvoice.update({
+      where: { id },
+      data: {
+        deletedAt: new Date(),
+        // Free milestone link so a new invoice can be created from the same payment
+        projectPaymentId: null,
+        checkoutUrl: null,
+        stripeCheckoutSessionId: null,
+      },
+    });
+    await logBillingEvent(prisma, id, "soft_deleted", {
+      invoiceNumber: existing.invoiceNumber,
+      previousStatus: existing.status,
+    });
+
+    return NextResponse.json({ success: true, softDeleted: true });
   } catch (error) {
     console.error("Error deleting billing invoice:", error);
     return NextResponse.json({ error: "Failed to delete invoice" }, { status: 500 });

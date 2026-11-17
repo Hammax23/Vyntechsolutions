@@ -15,8 +15,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "projectId and paymentId required" }, { status: 400 });
     }
 
-    const existing = await prisma.billingInvoice.findUnique({
-      where: { projectPaymentId: paymentId },
+    const existing = await prisma.billingInvoice.findFirst({
+      where: { projectPaymentId: paymentId, deletedAt: null },
     });
     if (existing) {
       return NextResponse.json({

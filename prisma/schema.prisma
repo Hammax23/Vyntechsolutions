@@ -202,6 +202,53 @@ model TwoFactorCode {
   @@index([email])
 }
 
+/// Multi-user /admin accounts (owner + virtual assistants)
+model AdminUser {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  /// owner | virtual_assistant
+  role         String   @default("virtual_assistant")
+  isActive     Boolean  @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  sessions     AdminSession[]
+  activities   AdminActivityEvent[]
+
+  @@index([role, isActive])
+}
+
+model AdminSession {
+  id          String    @id @default(cuid())
+  userId      String
+  user        AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  loginAt     DateTime  @default(now())
+  lastSeenAt  DateTime  @default(now())
+  logoutAt    DateTime?
+  /// logout | timeout | disabled
+  endedReason String?
+  ip          String?
+  userAgent   String?
+  createdAt   DateTime  @default(now())
+
+  @@index([userId, loginAt])
+  @@index([userId, logoutAt, lastSeenAt])
+}
+
+model AdminActivityEvent {
+  id        String    @id @default(cuid())
+  userId    String
+  user      AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessionId String?
+  action    String
+  meta      Json?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, createdAt])
+}
+
 // Job Positions / Careers
 model JobPosition {
   id            String   @id @default(cuid())
@@ -303,12 +350,18 @@ model BillingInvoice {
   sentAt                  DateTime?
   sentTo                  String?
   lastSendError           String?
+  /// Dropbox archive path after Paid (e.g. /VynTech Solutions/Client Invoices/2026/11/INV-….pdf)
+  dropboxPath             String?
+  dropboxUploadedAt       DateTime?
+  dropboxError            String?
+  deletedAt               DateTime?
   createdAt               DateTime  @default(now())
   updatedAt               DateTime  @updatedAt
   events                  BillingInvoiceEvent[]
 
   @@index([projectId])
   @@index([status, dueDate])
+  @@index([deletedAt])
 }
 
 model BillingInvoiceEvent {

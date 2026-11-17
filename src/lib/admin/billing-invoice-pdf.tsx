@@ -178,7 +178,20 @@ export function BillingInvoicePdfDocument({
         <View style={s.titleRow}>
           <View>
             <Text style={s.title}>INVOICE</Text>
-            <Text style={s.status}>Status: {data.status}</Text>
+            <Text style={s.status}>
+              Status:{" "}
+              {data.status === "sent"
+                ? "Sent"
+                : data.status === "paid"
+                  ? "Paid"
+                  : data.status === "overdue"
+                    ? "Overdue"
+                    : data.status === "cancelled"
+                      ? "Cancelled"
+                      : data.status === "draft"
+                        ? "Draft"
+                        : data.status}
+            </Text>
           </View>
           <View style={s.metaBox}>
             <View style={s.metaRow}>

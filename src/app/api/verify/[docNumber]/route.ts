@@ -26,7 +26,7 @@ export async function GET(_request: Request, { params }: Params) {
       return NextResponse.json({
         verified: true,
         issuedBy: "VynTech Admin",
-        company: "VynTech Solutions Inc.",
+        company: "VynTech Solutions",
         documentType: expenseType === "salary" ? "salary_slip" : "expense_voucher",
         document: {
           expenseType,
@@ -50,7 +50,7 @@ export async function GET(_request: Request, { params }: Params) {
       where: { invoiceNumber: documentNumber },
     });
 
-    if (billing) {
+    if (billing && !billing.deletedAt) {
       const lineItems = (billing.lineItems as BillingLineItem[]) || [];
       const totals = calculateBillingTotals({
         lineItems,
@@ -62,7 +62,7 @@ export async function GET(_request: Request, { params }: Params) {
       return NextResponse.json({
         verified: true,
         issuedBy: "VynTech Admin",
-        company: "VynTech Solutions Inc.",
+        company: "VynTech Solutions",
         documentType: "client_invoice",
         document: {
           documentNumber: billing.invoiceNumber,

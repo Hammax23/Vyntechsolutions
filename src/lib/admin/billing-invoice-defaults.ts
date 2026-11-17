@@ -34,5 +34,8 @@ export function createDefaultBillingInvoice(existingNumbers: string[] = []): Bil
     sentAt: "",
     sentTo: "",
     lastSendError: "",
+    dropboxPath: "",
+    dropboxUploadedAt: "",
+    dropboxError: "",
   };
 }
