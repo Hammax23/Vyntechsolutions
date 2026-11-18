@@ -397,27 +397,29 @@ function mapWhyChooseCards(raw: unknown): { icon: string; label: string; iconUrl
   });
 }
 
-function mapHeroGraphicItems(
-  raw: unknown
-): Array<{ preset?: string; imageUrl?: string; alt?: string; label?: string }> {
+type HeroGraphicMapped = {
+  preset?: string;
+  imageUrl?: string;
+  alt?: string;
+  label?: string;
+};
+
+function mapHeroGraphicItems(raw: unknown): HeroGraphicMapped[] {
   if (!Array.isArray(raw)) return [];
-  return raw
-    .map((entry) => {
-      const item = (entry && typeof entry === "object" ? entry : {}) as Record<string, unknown>;
-      const imageUrl = resolveCmsMediaUrl(item.image) || undefined;
-      const preset = item.preset != null ? String(item.preset) : undefined;
-      if (!imageUrl && !preset) return null;
-      return {
-        ...(preset ? { preset } : {}),
-        ...(imageUrl ? { imageUrl } : {}),
-        alt: item.alt != null ? String(item.alt) : undefined,
-        label: item.label != null ? String(item.label) : undefined,
-      };
-    })
-    .filter(
-      (x): x is { preset?: string; imageUrl?: string; alt?: string; label?: string } =>
-        Boolean(x)
-    );
+  const out: HeroGraphicMapped[] = [];
+  for (const entry of raw) {
+    const item = (entry && typeof entry === "object" ? entry : {}) as Record<string, unknown>;
+    const imageUrl = resolveCmsMediaUrl(item.image) || undefined;
+    const preset = item.preset != null ? String(item.preset) : undefined;
+    if (!imageUrl && !preset) continue;
+    out.push({
+      ...(preset ? { preset } : {}),
+      ...(imageUrl ? { imageUrl } : {}),
+      alt: item.alt != null ? String(item.alt) : undefined,
+      label: item.label != null ? String(item.label) : undefined,
+    });
+  }
+  return out;
 }
 
 function mapCustomSoftwareBlock(raw: unknown): CmsService["customSoftwareServicesBlock"] | undefined {
