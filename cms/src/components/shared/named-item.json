@@ -5,6 +5,13 @@
   "attributes": {
     "title": { "type": "string", "required": true },
     "description": { "type": "richtext" },
-    "icon": { "type": "string" }
+    "icon": { "type": "string" },
+    "iconMedia": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    }
   }
 }
+

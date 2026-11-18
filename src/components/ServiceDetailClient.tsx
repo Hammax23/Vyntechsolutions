@@ -111,8 +111,14 @@ function resolveTechStackData(
   return (service?.techStack || pageSections.techStack) as ServicePageSections["techStack"] | undefined;
 }
 
-// Icon component
-const FeatureIcon = ({ type }: { type: string }) => {
+// Icon component — prefers CMS-uploaded iconMedia URL when present
+const FeatureIcon = ({ type, iconUrl }: { type?: string; iconUrl?: string }) => {
+  if (iconUrl) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={iconUrl} alt="" className="w-8 h-8 object-contain" />
+    );
+  }
   const iconPaths: Record<string, string> = {
     // Development
     code: "M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5",
@@ -174,7 +180,7 @@ const FeatureIcon = ({ type }: { type: string }) => {
     default: "M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"
   };
 
-  const pathD = iconPaths[type] || iconPaths.default;
+  const pathD = iconPaths[type || ""] || iconPaths.default;
 
   return (
     <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -1100,136 +1106,151 @@ const SeoHeroGraphic = () => {
   );
 };
 
-const CustomSoftwareHeroGraphic = () => {
-  return (
-    <div className="relative w-full max-w-[600px] mx-auto h-[340px] sm:h-[480px] flex items-center justify-center py-4">
-      {/* Background glow */}
-      <div className="absolute w-80 h-80 sm:w-[480px] sm:h-[480px] bg-[#0055FF]/10 rounded-full blur-3xl -z-10" />
+type HeroGraphicCell = {
+  preset?: string;
+  imageUrl?: string;
+  alt?: string;
+  label?: string;
+};
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-10 w-full px-4 relative z-10">
-
-        {/* 1. Browser Window */}
-        <div className="flex justify-center hover:-translate-y-2 transition-transform duration-500 hover:drop-shadow-lg">
-          <svg viewBox="0 0 100 100" className="w-24 sm:w-32 h-auto" overflow="visible">
-            <rect x="10" y="20" width="80" height="60" rx="6" fill="#dbeafe" />
-            <path d="M10 26 C10 22.7 12.7 20 16 20 L84 20 C87.3 20 90 22.7 90 26 L90 32 L10 32 Z" fill="#334155" />
-            <circle cx="18" cy="26" r="2.5" fill="#ef4444" />
-            <circle cx="26" cy="26" r="2.5" fill="#facc15" />
-            <circle cx="34" cy="26" r="2.5" fill="#22c55e" />
-            <rect x="65" y="24.5" width="15" height="3" rx="1.5" fill="#475569" />
-            <text x="50" y="63" fontSize="28" fontWeight="900" fontFamily="monospace" textAnchor="middle" fill="#ef4444">&lt;/&gt;</text>
-          </svg>
-        </div>
-
-        {/* 2. Gear & Wrench */}
-        <div className="flex justify-center hover:-translate-y-2 transition-transform duration-500 delay-75 hover:drop-shadow-lg">
-          <svg viewBox="0 0 100 100" className="w-24 sm:w-32 h-auto" overflow="visible">
-            {/* Gear Body */}
-            <circle cx="50" cy="50" r="30" fill="#334155" />
-            <g fill="#334155">
+const HeroGraphicPresetSvg = ({ preset }: { preset: string }) => {
+  const cls = "w-24 sm:w-32 h-auto";
+  switch (preset) {
+    case "browser":
+      return (
+        <svg viewBox="0 0 100 100" className={cls} overflow="visible">
+          <rect x="10" y="20" width="80" height="60" rx="6" fill="#dbeafe" />
+          <path d="M10 26 C10 22.7 12.7 20 16 20 L84 20 C87.3 20 90 22.7 90 26 L90 32 L10 32 Z" fill="#334155" />
+          <circle cx="18" cy="26" r="2.5" fill="#ef4444" />
+          <circle cx="26" cy="26" r="2.5" fill="#facc15" />
+          <circle cx="34" cy="26" r="2.5" fill="#22c55e" />
+          <rect x="65" y="24.5" width="15" height="3" rx="1.5" fill="#475569" />
+          <text x="50" y="63" fontSize="28" fontWeight="900" fontFamily="monospace" textAnchor="middle" fill="#ef4444">&lt;/&gt;</text>
+        </svg>
+      );
+    case "gear":
+      return (
+        <svg viewBox="0 0 100 100" className={cls} overflow="visible">
+          <circle cx="50" cy="50" r="30" fill="#334155" />
+          <g fill="#334155">
+            <rect x="40" y="10" width="20" height="20" rx="3" />
+            <rect x="40" y="70" width="20" height="20" rx="3" />
+            <rect x="10" y="40" width="20" height="20" rx="3" />
+            <rect x="70" y="40" width="20" height="20" rx="3" />
+            <g transform="rotate(45 50 50)">
               <rect x="40" y="10" width="20" height="20" rx="3" />
               <rect x="40" y="70" width="20" height="20" rx="3" />
               <rect x="10" y="40" width="20" height="20" rx="3" />
               <rect x="70" y="40" width="20" height="20" rx="3" />
-              <g transform="rotate(45 50 50)">
-                <rect x="40" y="10" width="20" height="20" rx="3" />
-                <rect x="40" y="70" width="20" height="20" rx="3" />
-                <rect x="10" y="40" width="20" height="20" rx="3" />
-                <rect x="70" y="40" width="20" height="20" rx="3" />
-              </g>
             </g>
-            <circle cx="50" cy="50" r="18" fill="white" />
-            {/* Wrench */}
-            <path d="M42 38 C42 34 46 32 50 32 C54 32 58 34 58 38 C58 41 55 43 55 43 L55 65 C55 67 53 69 50 69 C47 69 45 67 45 65 L45 43 C45 43 42 41 42 38 Z" fill="#dbeafe" />
-          </svg>
-        </div>
+          </g>
+          <circle cx="50" cy="50" r="18" fill="white" />
+          <path d="M42 38 C42 34 46 32 50 32 C54 32 58 34 58 38 C58 41 55 43 55 43 L55 65 C55 67 53 69 50 69 C47 69 45 67 45 65 L45 43 C45 43 42 41 42 38 Z" fill="#dbeafe" />
+        </svg>
+      );
+    case "robot":
+      return (
+        <svg viewBox="0 0 100 100" className={cls} overflow="visible">
+          <rect x="25" y="15" width="50" height="35" rx="12" fill="#334155" />
+          <rect x="18" y="25" width="64" height="15" rx="4" fill="#334155" />
+          <circle cx="36" cy="30" r="4" fill="#0ea5e9" />
+          <circle cx="64" cy="30" r="4" fill="#0ea5e9" />
+          <path d="M44 38 Q50 42 56 38" stroke="#0ea5e9" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+          <path d="M25 55 C25 45 75 45 75 55 L80 85 L20 85 Z" fill="#dbeafe" />
+          <circle cx="25" cy="65" r="8" fill="#bfdbfe" />
+          <circle cx="75" cy="65" r="8" fill="#bfdbfe" />
+          <rect x="25" y="55" width="50" height="28" rx="3" fill="#1e293b" />
+          <rect x="22" y="83" width="56" height="4" rx="2" fill="#94a3b8" />
+          <text x="50" y="75" fontSize="16" fontWeight="900" fontFamily="monospace" textAnchor="middle" fill="#ef4444">&lt;/&gt;</text>
+        </svg>
+      );
+    case "laptop":
+      return (
+        <svg viewBox="0 0 100 100" className={cls} overflow="visible">
+          <rect x="15" y="25" width="70" height="50" rx="4" fill="#334155" />
+          <path d="M10 75 L90 75 C94 75 95 78 95 82 L5 82 C5 78 6 75 10 75 Z" fill="#dbeafe" />
+          <path d="M40 75 L60 75 L65 82 L35 82 Z" fill="#bfdbfe" />
+          <text x="50" y="62" fontSize="34" fontWeight="900" fontFamily="monospace" textAnchor="middle" fill="#0ea5e9">{`{ }`}</text>
+        </svg>
+      );
+    case "document":
+      return (
+        <svg viewBox="0 0 100 100" className={cls} overflow="visible">
+          <path d="M25 15 L60 15 L75 30 L75 85 C75 88 72 90 69 90 L31 90 C28 90 25 88 25 85 Z" fill="#dbeafe" />
+          <path d="M60 15 L60 30 L75 30 Z" fill="#93c5fd" />
+          <g transform="translate(42, 55) scale(0.8)">
+            <circle cx="0" cy="0" r="14" fill="#93c5fd" />
+            <circle cx="0" cy="0" r="6" fill="#dbeafe" />
+            {Array.from({ length: 8 }).map((_, i) => (
+              <rect key={i} x="-3" y="-18" width="6" height="36" fill="#93c5fd" rx="1" transform={`rotate(${i * 45})`} />
+            ))}
+          </g>
+          <g transform="translate(62, 72) scale(0.6)">
+            <circle cx="0" cy="0" r="14" fill="#93c5fd" />
+            <circle cx="0" cy="0" r="6" fill="#dbeafe" />
+            {Array.from({ length: 8 }).map((_, i) => (
+              <rect key={i} x="-3" y="-18" width="6" height="36" fill="#93c5fd" rx="1" transform={`rotate(${i * 45})`} />
+            ))}
+          </g>
+        </svg>
+      );
+    case "monitor":
+      return (
+        <svg viewBox="0 0 100 100" className={cls} overflow="visible">
+          <path d="M45 75 L55 75 L60 90 L40 90 Z" fill="#bfdbfe" />
+          <rect x="30" y="90" width="40" height="4" rx="2" fill="#dbeafe" />
+          <rect x="10" y="15" width="80" height="60" rx="4" fill="#dbeafe" />
+          <rect x="14" y="19" width="72" height="45" rx="2" fill="#334155" />
+          <circle cx="22" cy="27" r="2" fill="white" opacity="0.8" />
+          <circle cx="22" cy="35" r="2" fill="white" opacity="0.8" />
+          <circle cx="22" cy="43" r="2" fill="white" opacity="0.8" />
+          <circle cx="22" cy="51" r="2" fill="white" opacity="0.8" />
+          <circle cx="22" cy="59" r="2" fill="white" opacity="0.8" />
+          <rect x="28" y="26" width="15" height="3" rx="1.5" fill="#ef4444" />
+          <rect x="46" y="26" width="25" height="3" rx="1.5" fill="#ef4444" />
+          <rect x="28" y="34" width="25" height="3" rx="1.5" fill="#0ea5e9" />
+          <rect x="56" y="34" width="15" height="3" rx="1.5" fill="#0ea5e9" />
+          <rect x="28" y="42" width="12" height="3" rx="1.5" fill="#facc15" />
+          <rect x="43" y="42" width="28" height="3" rx="1.5" fill="#facc15" />
+          <rect x="28" y="50" width="30" height="3" rx="1.5" fill="#ef4444" />
+          <rect x="28" y="58" width="20" height="3" rx="1.5" fill="#facc15" />
+          <rect x="51" y="58" width="20" height="3" rx="1.5" fill="#facc15" />
+        </svg>
+      );
+    default:
+      return null;
+  }
+};
 
-        {/* 3. Robot with Laptop */}
-        <div className="flex justify-center hover:-translate-y-2 transition-transform duration-500 delay-150 hover:drop-shadow-lg">
-          <svg viewBox="0 0 100 100" className="w-24 sm:w-32 h-auto" overflow="visible">
-            {/* Robot Head */}
-            <rect x="25" y="15" width="50" height="35" rx="12" fill="#334155" />
-            <rect x="18" y="25" width="64" height="15" rx="4" fill="#334155" />
-            {/* Eyes & Smile */}
-            <circle cx="36" cy="30" r="4" fill="#0ea5e9" />
-            <circle cx="64" cy="30" r="4" fill="#0ea5e9" />
-            <path d="M44 38 Q50 42 56 38" stroke="#0ea5e9" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-            {/* Body */}
-            <path d="M25 55 C25 45 75 45 75 55 L80 85 L20 85 Z" fill="#dbeafe" />
-            <circle cx="25" cy="65" r="8" fill="#bfdbfe" />
-            <circle cx="75" cy="65" r="8" fill="#bfdbfe" />
-            {/* Laptop */}
-            <rect x="25" y="55" width="50" height="28" rx="3" fill="#1e293b" />
-            <rect x="22" y="83" width="56" height="4" rx="2" fill="#94a3b8" />
-            <text x="50" y="75" fontSize="16" fontWeight="900" fontFamily="monospace" textAnchor="middle" fill="#ef4444">&lt;/&gt;</text>
-          </svg>
-        </div>
+/** CMS-driven only — Admin controls order/presets/images/labels via heroGraphicItems. */
+const CustomSoftwareHeroGraphic = ({ items }: { items?: HeroGraphicCell[] }) => {
+  if (!items?.length) return null;
 
-        {/* 4. Laptop with { } */}
-        <div className="flex justify-center hover:-translate-y-2 transition-transform duration-500 delay-[225ms] hover:drop-shadow-lg">
-          <svg viewBox="0 0 100 100" className="w-24 sm:w-32 h-auto" overflow="visible">
-            <rect x="15" y="25" width="70" height="50" rx="4" fill="#334155" />
-            <path d="M10 75 L90 75 C94 75 95 78 95 82 L5 82 C5 78 6 75 10 75 Z" fill="#dbeafe" />
-            <path d="M40 75 L60 75 L65 82 L35 82 Z" fill="#bfdbfe" />
-            <text x="50" y="62" fontSize="34" fontWeight="900" fontFamily="monospace" textAnchor="middle" fill="#0ea5e9">{`{ }`}</text>
-          </svg>
-        </div>
-
-        {/* 5. Document with Gears */}
-        <div className="flex justify-center hover:-translate-y-2 transition-transform duration-500 delay-[300ms] hover:drop-shadow-lg">
-          <svg viewBox="0 0 100 100" className="w-24 sm:w-32 h-auto" overflow="visible">
-            <path d="M25 15 L60 15 L75 30 L75 85 C75 88 72 90 69 90 L31 90 C28 90 25 88 25 85 Z" fill="#dbeafe" />
-            <path d="M60 15 L60 30 L75 30 Z" fill="#93c5fd" />
-            {/* Big Gear */}
-            <g transform="translate(42, 55) scale(0.8)">
-              <circle cx="0" cy="0" r="14" fill="#93c5fd" />
-              <circle cx="0" cy="0" r="6" fill="#dbeafe" />
-              {Array.from({ length: 8 }).map((_, i) => (
-                <rect key={i} x="-3" y="-18" width="6" height="36" fill="#93c5fd" rx="1" transform={`rotate(${i * 45})`} />
-              ))}
-            </g>
-            {/* Small Gear */}
-            <g transform="translate(62, 72) scale(0.6)">
-              <circle cx="0" cy="0" r="14" fill="#93c5fd" />
-              <circle cx="0" cy="0" r="6" fill="#dbeafe" />
-              {Array.from({ length: 8 }).map((_, i) => (
-                <rect key={i} x="-3" y="-18" width="6" height="36" fill="#93c5fd" rx="1" transform={`rotate(${i * 45})`} />
-              ))}
-            </g>
-          </svg>
-        </div>
-
-        {/* 6. Desktop Monitor */}
-        <div className="flex justify-center hover:-translate-y-2 transition-transform duration-500 delay-[375ms] hover:drop-shadow-lg">
-          <svg viewBox="0 0 100 100" className="w-24 sm:w-32 h-auto" overflow="visible">
-            {/* Stand */}
-            <path d="M45 75 L55 75 L60 90 L40 90 Z" fill="#bfdbfe" />
-            <rect x="30" y="90" width="40" height="4" rx="2" fill="#dbeafe" />
-            {/* Monitor */}
-            <rect x="10" y="15" width="80" height="60" rx="4" fill="#dbeafe" />
-            <rect x="14" y="19" width="72" height="45" rx="2" fill="#334155" />
-            {/* Code Lines */}
-            <circle cx="22" cy="27" r="2" fill="white" opacity="0.8" />
-            <circle cx="22" cy="35" r="2" fill="white" opacity="0.8" />
-            <circle cx="22" cy="43" r="2" fill="white" opacity="0.8" />
-            <circle cx="22" cy="51" r="2" fill="white" opacity="0.8" />
-            <circle cx="22" cy="59" r="2" fill="white" opacity="0.8" />
-
-            <rect x="28" y="26" width="15" height="3" rx="1.5" fill="#ef4444" />
-            <rect x="46" y="26" width="25" height="3" rx="1.5" fill="#ef4444" />
-
-            <rect x="28" y="34" width="25" height="3" rx="1.5" fill="#0ea5e9" />
-            <rect x="56" y="34" width="15" height="3" rx="1.5" fill="#0ea5e9" />
-
-            <rect x="28" y="42" width="12" height="3" rx="1.5" fill="#facc15" />
-            <rect x="43" y="42" width="28" height="3" rx="1.5" fill="#facc15" />
-
-            <rect x="28" y="50" width="30" height="3" rx="1.5" fill="#ef4444" />
-            <rect x="28" y="58" width="20" height="3" rx="1.5" fill="#facc15" />
-            <rect x="51" y="58" width="20" height="3" rx="1.5" fill="#facc15" />
-          </svg>
-        </div>
-
+  return (
+    <div className="relative w-full max-w-[600px] mx-auto h-[340px] sm:h-[480px] flex items-center justify-center py-4">
+      <div className="absolute w-80 h-80 sm:w-[480px] sm:h-[480px] bg-[#0055FF]/10 rounded-full blur-3xl -z-10" />
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-10 w-full px-4 relative z-10">
+        {items.map((item, idx) => (
+          <div
+            key={`${item.preset || item.imageUrl || "cell"}-${idx}`}
+            className="flex flex-col items-center justify-center hover:-translate-y-2 transition-transform duration-500 hover:drop-shadow-lg"
+            style={{ transitionDelay: `${idx * 75}ms` }}
+          >
+            {item.imageUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={item.imageUrl}
+                alt={item.alt || item.label || ""}
+                className="w-24 sm:w-32 h-auto object-contain"
+              />
+            ) : item.preset ? (
+              <HeroGraphicPresetSvg preset={item.preset} />
+            ) : null}
+            {item.label ? (
+              <span className="mt-2 text-xs text-white/70 text-center">{item.label}</span>
+            ) : null}
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -1259,7 +1280,7 @@ const CustomSoftwareServicesSection = ({
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 relative z-10">
         <div className={`text-center max-w-4xl mx-auto mb-16 transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0f172a] mb-4">
-            {data.heading || "Software Services"}
+            {data.heading || ""}
             {data.headingAccent ? (
               <>
                 {" "}
@@ -1285,7 +1306,7 @@ const CustomSoftwareServicesSection = ({
             >
               <div className="mb-6">
                 <div className="w-12 h-12 rounded-lg bg-[#f0f6ff] border border-blue-100 flex items-center justify-center text-[#0055FF] group-hover:bg-gradient-to-r group-hover:from-[#00E1FF] group-hover:to-[#0055FF] group-hover:text-white group-hover:border-transparent transition-all">
-                  <FeatureIcon type={srv.icon || "code"} />
+                  <FeatureIcon type={srv.icon || "code"} iconUrl={(srv as { iconUrl?: string }).iconUrl} />
                 </div>
               </div>
               <h3 className="text-xl font-bold text-[#0f172a] mb-4 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#00E1FF] group-hover:to-[#0055FF] transition-all">
@@ -2284,7 +2305,7 @@ const CoreCapabilitiesSection = ({
 
             <div className="mb-6">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#00E1FF]/10 to-[#0055FF]/10 text-[#0055FF] group-hover:bg-gradient-to-r group-hover:from-[#00E1FF] group-hover:to-[#0055FF] group-hover:text-white flex items-center justify-center transition-all duration-300 group-hover:scale-110 shadow-sm">
-                <FeatureIcon type={item.icon || "default"} />
+                <FeatureIcon type={item.icon || "default"} iconUrl={(item as { iconUrl?: string }).iconUrl} />
               </div>
             </div>
 
@@ -2475,6 +2496,13 @@ export default function ServiceDetailClient({
   const heroVariant = (service?.heroVariant || HERO_VARIANT_BY_SLUG[slug] || "browser") as string;
   const techStackData = resolveTechStackData(service, pageSections);
   const canadaBlock = service ? resolveCanadaCities(service, pageSections, slug) : null;
+  // Custom Software: no soft marketing leftovers — empty CMS field = empty UI.
+  const cmsStrict = slug === "custom-software-development";
+  const cmsText = (value: string | undefined | null, soft?: string) => {
+    const v = (value || "").trim();
+    if (v) return v;
+    return cmsStrict ? "" : soft || "";
+  };
 
   useEffect(() => {
     setIsVisible(true);
@@ -2531,11 +2559,11 @@ export default function ServiceDetailClient({
         <section className="relative pt-28 pb-16 bg-[#0d1117] overflow-hidden">
           {/* Subtle background glow */}
           <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(ellipse at 70% 50%, rgba(0,180,255,0.08) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(59,130,246,0.06) 0%, transparent 50%)' }} />
-          {service.heroImage ? (
+          {(service.heroImageMediaUrl || service.heroImage) ? (
             <>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={service.heroImage}
+                src={service.heroImageMediaUrl || service.heroImage}
                 alt=""
                 className="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none"
               />
@@ -2556,10 +2584,14 @@ export default function ServiceDetailClient({
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
               {/* Left: Text Content */}
               <div className={`transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-                {/* Category Badge */}
-                <div className="inline-flex items-center gap-2 border border-[#00E1FF]/30 bg-gradient-to-r from-[#00E1FF]/10 to-[#0055FF]/10 rounded-full px-4 py-1.5 mb-6">
-                  <span className="text-xs font-bold bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text uppercase tracking-widest">{service.title}</span>
-                </div>
+                {/* Category Badge — CMS: heroBadgeLabel */}
+                {cmsText(service.heroBadgeLabel, service.title) ? (
+                  <div className="inline-flex items-center gap-2 border border-[#00E1FF]/30 bg-gradient-to-r from-[#00E1FF]/10 to-[#0055FF]/10 rounded-full px-4 py-1.5 mb-6">
+                    <span className="text-xs font-bold bg-gradient-to-r from-[#00E1FF] to-[#0055FF] text-transparent bg-clip-text uppercase tracking-widest">
+                      {cmsText(service.heroBadgeLabel, service.title)}
+                    </span>
+                  </div>
+                ) : null}
 
                 {/* Headline */}
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-[1.1]">
@@ -2582,7 +2614,7 @@ export default function ServiceDetailClient({
                     onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
                     className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] hover:opacity-90 text-white px-7 py-4 rounded-xl font-semibold text-base transition-all duration-300 shadow-lg shadow-[#00E1FF]/25"
                   >
-                    {service.heroCtaLabel || "Get a Free Consultation"}
+                    {cmsText(service.heroCtaLabel, "Get a Free Consultation")}
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
@@ -2747,8 +2779,7 @@ export default function ServiceDetailClient({
                   /* E-commerce Illustration */
                   <EcommerceHeroGraphic />
                 ) : heroVariant === "custom" ? (
-                  /* Custom Software Development Graphic */
-                  <CustomSoftwareHeroGraphic />
+                  <CustomSoftwareHeroGraphic items={service.heroGraphicItems} />
                 ) : heroVariant === "seo" ? (
                   /* SEO Graphic */
                   <SeoHeroGraphic />
@@ -2915,11 +2946,13 @@ export default function ServiceDetailClient({
 
             {/* What We Offer Label & Feature Cards */}
             <>
-              <div className="text-center mb-8">
-                <span className="inline-block bg-gradient-to-r from-[#00E1FF]/10 to-[#0055FF]/10 text-[#0055FF] border border-[#00E1FF]/30 text-sm font-semibold px-4 py-2 rounded-full">
-                  {service.featuresEyebrow || "What We Offer"}
-                </span>
-              </div>
+              {cmsText(service.featuresEyebrow, "What We Offer") ? (
+                <div className="text-center mb-8">
+                  <span className="inline-block bg-gradient-to-r from-[#00E1FF]/10 to-[#0055FF]/10 text-[#0055FF] border border-[#00E1FF]/30 text-sm font-semibold px-4 py-2 rounded-full">
+                    {cmsText(service.featuresEyebrow, "What We Offer")}
+                  </span>
+                </div>
+              ) : null}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {service.features.map((feature, index) => (
@@ -2932,7 +2965,7 @@ export default function ServiceDetailClient({
 
                     <div className="mb-4">
                       <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#00E1FF]/10 to-[#0055FF]/10 text-[#0055FF] group-hover:bg-gradient-to-r group-hover:from-[#00E1FF] group-hover:to-[#0055FF] group-hover:text-white flex items-center justify-center transition-all duration-300 group-hover:scale-110 shadow-sm">
-                        <FeatureIcon type={feature.icon} />
+                        <FeatureIcon type={feature.icon} iconUrl={feature.iconUrl} />
                       </div>
                     </div>
 
@@ -2958,12 +2991,17 @@ export default function ServiceDetailClient({
                 return null;
               }
               const cms = (service as ServiceData & {
-                coreCapabilitiesBlock?: NonNullable<ServicePageSections["coreCapabilities"]>;
+                coreCapabilitiesBlock?: NonNullable<ServicePageSections["coreCapabilities"]> & {
+                  items?: Array<{ title: string; description?: string; icon?: string; iconUrl?: string }>;
+                };
               }).coreCapabilitiesBlock;
+              // Prefer CMS; local pageSections only for non-custom pages as last resort
               const data =
                 cms?.items?.length
                   ? cms
-                  : pageSections.coreCapabilities;
+                  : slug === "custom-software-development"
+                    ? null
+                    : pageSections.coreCapabilities;
               return data?.items?.length ? <CoreCapabilitiesSection data={data} /> : null;
             })()}
 
@@ -3023,25 +3061,27 @@ export default function ServiceDetailClient({
           return data ? <EcommerceServicesSection data={data} /> : null;
         })()}
 
-        {/* Custom Software Services Grid */}
+        {/* Custom Software Services Grid — CMS only (no local leftover merge) */}
         {(() => {
           if (slug !== "custom-software-development") return null;
           const cms = (service as ServiceData & {
-            customSoftwareServicesBlock?: NonNullable<ServicePageSections["customSoftwareServices"]>;
+            customSoftwareServicesBlock?: NonNullable<ServicePageSections["customSoftwareServices"]> & {
+              items?: Array<{ title: string; description?: string; icon?: string; iconUrl?: string }>;
+            };
           }).customSoftwareServicesBlock;
-          const data =
-            cms?.items?.length
-              ? {
-                  heading: cms.heading,
-                  headingAccent: cms.headingAccent,
-                  description: cms.description,
-                  items: cms.items.map((it) => ({
-                    title: it.title,
-                    description: it.description || "",
-                    icon: it.icon,
-                  })),
-                }
-              : pageSections.customSoftwareServices;
+          const data = cms?.items?.length
+            ? {
+                heading: cms.heading,
+                headingAccent: cms.headingAccent,
+                description: cms.description,
+                items: cms.items.map((it) => ({
+                  title: it.title,
+                  description: it.description || "",
+                  icon: it.icon,
+                  iconUrl: it.iconUrl,
+                })),
+              }
+            : null;
           return data?.items?.length ? <CustomSoftwareServicesSection data={data} /> : null;
         })()}
 
@@ -3151,7 +3191,7 @@ export default function ServiceDetailClient({
         {service.process && service.process.length > 0 && (
           <HowWeWork
             steps={service.process}
-            heading={service.processHeading || "How We Work"}
+            heading={cmsText(service.processHeading, "How We Work")}
             description={service.processDescription}
           />
         )}
@@ -3159,7 +3199,7 @@ export default function ServiceDetailClient({
         {service.caseStudies?.length ? (
           <section className="py-16 bg-white border-t border-gray-100">
             <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
-              <h2 className="text-3xl font-bold text-[#0f172a] text-center mb-10">{(service as ServiceData & { caseStudiesHeading?: string }).caseStudiesHeading || "Case Studies"}</h2>
+              <h2 className="text-3xl font-bold text-[#0f172a] text-center mb-10">{cmsText((service as ServiceData & { caseStudiesHeading?: string }).caseStudiesHeading, "Case Studies")}</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {service.caseStudies.map((cs, i) => (
                   <div
@@ -3386,7 +3426,7 @@ export default function ServiceDetailClient({
             lightning: "M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z",
           };
 
-          const cards: { icon: string; label: string }[] = service.whyChooseUsCards;
+          const cards: { icon: string; label: string; iconUrl?: string }[] = service.whyChooseUsCards;
 
           // Smart heading renderer: last 2 words get gradient
           const renderHeading = (text: string) => {
@@ -3434,9 +3474,18 @@ export default function ServiceDetailClient({
                         const lines = toLines(card.label);
                         return (
                           <div key={i} className="bg-white rounded-2xl p-4 sm:p-6 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-lg hover:border-[#00E1FF]/40 transition-all duration-300 min-h-[130px] sm:min-h-[160px] border border-gray-100 group">
-                            <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#0f172a] group-hover:text-[#00E1FF] transition-colors mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d={path} />
-                            </svg>
+                            {card.iconUrl ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img
+                                src={card.iconUrl}
+                                alt=""
+                                className="w-7 h-7 sm:w-8 sm:h-8 object-contain mb-3 sm:mb-4"
+                              />
+                            ) : (
+                              <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#0f172a] group-hover:text-[#00E1FF] transition-colors mb-3 sm:mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.75}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d={path} />
+                              </svg>
+                            )}
                             <span className="text-[#0f172a] font-semibold text-[11px] sm:text-xs md:text-sm leading-snug">
                               {lines.map((line, li) => (
                                 <span key={li}>{line}{li < lines.length - 1 && <br />}</span>
@@ -3510,17 +3559,16 @@ export default function ServiceDetailClient({
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 bg-gradient-to-r from-[#262b3f]/20 to-transparent rounded-2xl p-6 md:p-8">
               <div>
                 <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-                  {service.ctaHeading || "Ready To Get Started?"}
+                  {cmsText(service.ctaHeading, "Ready To Get Started?")}
                 </h2>
                 <div
                   className="text-white/70 text-sm [&_a]:text-[#00E1FF] [&_a]:underline"
                   dangerouslySetInnerHTML={{
                     __html: cmsInlineToHtml(
-                      (service.ctaBody ||
-                        "Let's discuss how our {title} services can help transform your business.").replace(
-                        /\{title\}/g,
-                        service.title
-                      )
+                      cmsText(
+                        service.ctaBody,
+                        "Let's discuss how our {title} services can help transform your business."
+                      ).replace(/\{title\}/g, service.title)
                     ),
                   }}
                 />
@@ -3529,7 +3577,7 @@ export default function ServiceDetailClient({
                 onClick={() => window.dispatchEvent(new CustomEvent('openLetsTalkBusiness'))}
                 className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#00E1FF] to-[#0055FF] hover:opacity-90 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 whitespace-nowrap shadow-lg shadow-[#00E1FF]/20"
               >
-                {service.ctaButtonLabel || "Transform Your Digital Presence"}
+                {cmsText(service.ctaButtonLabel, "Transform Your Digital Presence")}
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>

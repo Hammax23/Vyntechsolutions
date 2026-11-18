@@ -13,6 +13,8 @@ export type ClientUpdateChecklistItem = {
 export type ClientUpdatePaymentItem = {
   label: string;
   status: "paid" | "pending" | "due";
+  /** CAD amount shown next to status in the client email */
+  amount?: number;
 };
 
 export type ClientUpdateSnapshot = {
@@ -54,6 +56,15 @@ function escapeHtml(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
+function formatPaymentAmount(amount: unknown): string {
+  const n = typeof amount === "number" ? amount : Number(amount);
+  if (!Number.isFinite(n) || n < 0) return "";
+  return `$${n.toLocaleString("en-CA", {
+    minimumFractionDigits: n % 1 === 0 ? 0 : 2,
+    maximumFractionDigits: 2,
+  })}`;
+}
+
 function paymentChip(status: string): { label: string; bg: string; color: string } {
   const s = String(status || "").toLowerCase();
   if (s === "paid") return { label: "Paid", bg: "#edf2f7", color: "#1e3a5f" };
@@ -70,7 +81,11 @@ export function buildClientUpdatePlainSummary(snapshot: ClientUpdateSnapshot): s
     .map((c) => `${c.done ? "[x]" : "[ ]"} ${c.label}`)
     .join("\n");
   const pays = snapshot.payments
-    .map((p) => `- ${p.label}: ${paymentChip(p.status).label}`)
+    .map((p) => {
+      const amt = formatPaymentAmount(p.amount);
+      const st = paymentChip(p.status).label;
+      return `- ${p.label}: ${amt ? `${amt} · ${st}` : st}`;
+    })
     .join("\n");
   return [
     `${snapshot.projectName} — ${snapshot.phaseLabel} (${snapshot.progress}%)`,
@@ -142,9 +157,13 @@ export function buildClientUpdateHtml(snapshot: ClientUpdateSnapshot): string {
     ? snapshot.payments
         .map((p) => {
           const chip = paymentChip(p.status);
+          const amt = formatPaymentAmount(p.amount);
+          const statusCell = amt
+            ? `<span style="color:#0f172a;font-weight:600;margin-right:8px;">${escapeHtml(amt)}</span><span style="display:inline-block;padding:3px 8px;border-radius:4px;background:${chip.bg};color:${chip.color};font-size:11px;font-weight:600;">${escapeHtml(chip.label)}</span>`
+            : `<span style="display:inline-block;padding:3px 8px;border-radius:4px;background:${chip.bg};color:${chip.color};font-size:11px;font-weight:600;">${escapeHtml(chip.label)}</span>`;
           return `<tr>
-            <td style="padding:8px 0;border-bottom:1px solid #e8ecf1;font-size:13px;color:#0f172a;">${escapeHtml(p.label)}</td>
-            <td style="padding:8px 0;border-bottom:1px solid #e8ecf1;text-align:right;font-size:12px;font-weight:600;color:${chip.color};">${chip.label}</td>
+            <td style="padding:8px 0;border-bottom:1px solid #e8ecf1;font-size:13px;color:#0f172a;vertical-align:middle;">${escapeHtml(p.label)}</td>
+            <td style="padding:8px 0;border-bottom:1px solid #e8ecf1;text-align:right;vertical-align:middle;white-space:nowrap;">${statusCell}</td>
           </tr>`;
         })
         .join("")

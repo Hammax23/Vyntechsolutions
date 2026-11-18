@@ -1193,7 +1193,8 @@
       "faqEyebrow": "FAQ",
       "faqHeading": "Frequently asked questions",
       "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
-      "overviewHeading": "Web Development"
+      "overviewHeading": "Web Development",
+      "heroBadgeLabel": "Web Development"
     },
     {
       "title": "Mobile App Development",
@@ -2164,7 +2165,8 @@
             "description": "Compliance with Canadian data laws like PIPEDA, CPPA, Quebec Law 25, PHIPA for healthcare."
           }
         ]
-      }
+      },
+      "heroBadgeLabel": "Mobile App Development"
     },
     {
       "title": "Cloud Solutions",
@@ -3037,7 +3039,8 @@
       "faqEyebrow": "FAQ",
       "faqHeading": "Frequently asked questions",
       "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
-      "overviewHeading": "Cloud Solutions"
+      "overviewHeading": "Cloud Solutions",
+      "heroBadgeLabel": "Cloud Solutions"
     },
     {
       "title": "AI/ML Solutions",
@@ -3878,7 +3881,8 @@
       "faqEyebrow": "FAQ",
       "faqHeading": "Frequently asked questions",
       "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
-      "overviewHeading": "AI/ML Solutions"
+      "overviewHeading": "AI/ML Solutions",
+      "heroBadgeLabel": "AI/ML Solutions"
     },
     {
       "title": "DevOps & CI/CD",
@@ -4713,7 +4717,8 @@
       "faqEyebrow": "FAQ",
       "faqHeading": "Frequently asked questions",
       "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
-      "overviewHeading": "DevOps & CI/CD"
+      "overviewHeading": "DevOps & CI/CD",
+      "heroBadgeLabel": "DevOps & CI/CD"
     },
     {
       "title": "UI/UX Design",
@@ -5518,7 +5523,8 @@
       "faqEyebrow": "FAQ",
       "faqHeading": "Frequently asked questions",
       "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
-      "overviewHeading": "UI/UX Design"
+      "overviewHeading": "UI/UX Design",
+      "heroBadgeLabel": "UI/UX Design"
     },
     {
       "title": "E-commerce Solutions",
@@ -6343,7 +6349,8 @@
       "faqEyebrow": "FAQ",
       "faqHeading": "Frequently asked questions",
       "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
-      "overviewHeading": "E-commerce Solutions"
+      "overviewHeading": "E-commerce Solutions",
+      "heroBadgeLabel": "E-commerce Solutions"
     },
     {
       "title": "Custom Software Development",
@@ -7238,7 +7245,34 @@
             "description": "Robust data protection adhering to ISO standards and PIPEDA."
           }
         ]
-      }
+      },
+      "heroBadgeLabel": "Custom Software Development",
+      "heroGraphicItems": [
+        {
+          "preset": "browser",
+          "label": "Web UI"
+        },
+        {
+          "preset": "gear",
+          "label": "Automation"
+        },
+        {
+          "preset": "robot",
+          "label": "AI Assist"
+        },
+        {
+          "preset": "laptop",
+          "label": "Apps"
+        },
+        {
+          "preset": "document",
+          "label": "Workflows"
+        },
+        {
+          "preset": "monitor",
+          "label": "Dashboards"
+        }
+      ]
     },
     {
       "title": "SEO/Digital Marketing",
@@ -8091,7 +8125,8 @@
       "faqEyebrow": "FAQ",
       "faqHeading": "Frequently asked questions",
       "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
-      "overviewHeading": "SEO/Digital Marketing"
+      "overviewHeading": "SEO/Digital Marketing",
+      "heroBadgeLabel": "SEO/Digital Marketing"
     },
     {
       "title": "Maintenance & Support",
@@ -8852,7 +8887,8 @@
       "faqEyebrow": "FAQ",
       "faqHeading": "Frequently asked questions",
       "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
-      "overviewHeading": "Maintenance & Support"
+      "overviewHeading": "Maintenance & Support",
+      "heroBadgeLabel": "Maintenance & Support"
     },
     {
       "title": "Tax & Accounting Services",
@@ -9491,7 +9527,8 @@
       "faqEyebrow": "FAQ",
       "faqHeading": "Frequently asked questions",
       "faqIntro": "Answers about how we work, timelines, and delivery. Still stuck? Chat with the team.",
-      "overviewHeading": "Tax & Accounting Services"
+      "overviewHeading": "Tax & Accounting Services",
+      "heroBadgeLabel": "Tax & Accounting Services"
     }
   ],
   "industries": [

@@ -3708,7 +3708,11 @@ export default function ProjectManagerSection({
                               patchCu({
                                 payments: [
                                   ...cuDraft.payments,
-                                  { label: "New milestone", status: "pending" },
+                                  {
+                                    label: "New milestone",
+                                    status: "pending",
+                                    amount: 0,
+                                  },
                                 ],
                               })
                             }
@@ -3728,6 +3732,30 @@ export default function ProjectManagerSection({
                                 onChange={(e) => {
                                   const payments = cuDraft.payments.map((row, i) =>
                                     i === idx ? { ...row, label: e.target.value } : row
+                                  );
+                                  patchCu({ payments });
+                                }}
+                              />
+                              <input
+                                className="pm-field w-[110px]"
+                                type="number"
+                                min={0}
+                                step="0.01"
+                                placeholder="Amount"
+                                title="Payment amount (CAD)"
+                                value={
+                                  item.amount === undefined || item.amount === null
+                                    ? ""
+                                    : item.amount
+                                }
+                                onChange={(e) => {
+                                  const raw = e.target.value;
+                                  const amount =
+                                    raw.trim() === ""
+                                      ? undefined
+                                      : Math.max(0, Number(raw) || 0);
+                                  const payments = cuDraft.payments.map((row, i) =>
+                                    i === idx ? { ...row, amount } : row
                                   );
                                   patchCu({ payments });
                                 }}

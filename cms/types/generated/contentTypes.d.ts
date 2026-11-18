@@ -1058,8 +1058,14 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
     faqs: Schema.Attribute.Component<'shared.faq', true>;
     features: Schema.Attribute.Component<'shared.named-item', true>;
     featuresEyebrow: Schema.Attribute.String;
+    heroBadgeLabel: Schema.Attribute.String;
     heroCtaLabel: Schema.Attribute.String;
+    heroGraphicItems: Schema.Attribute.Component<
+      'sections.hero-graphic-item',
+      true
+    >;
     heroImage: Schema.Attribute.String;
+    heroImageMedia: Schema.Attribute.Media<'images'>;
     heroVariant: Schema.Attribute.Enumeration<
       [
         'browser',

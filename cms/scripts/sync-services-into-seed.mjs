@@ -24,6 +24,7 @@ const keys = [
   "heroImage",
   "heroVariant",
   "heroCtaLabel",
+  "heroBadgeLabel",
   "overview",
   "overviewTagline",
   "featuresEyebrow",

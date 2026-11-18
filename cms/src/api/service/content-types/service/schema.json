@@ -55,6 +55,22 @@
     "heroCtaLabel": {
       "type": "string"
     },
+    "heroBadgeLabel": {
+      "type": "string"
+    },
+    "heroImageMedia": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"],
+      "description": "Optional hero background image (replaces the string Hero Image path). Upload here so SEO can change it without code."
+    },
+    "heroGraphicItems": {
+      "type": "component",
+      "repeatable": true,
+      "component": "sections.hero-graphic-item",
+      "description": "Custom Software (and similar) hero illustration grid. When filled, replaces the built-in SVG graphic. Upload one image per cell."
+    },
     "overview": {
       "type": "richtext"
     },

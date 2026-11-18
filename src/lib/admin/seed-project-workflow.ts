@@ -63,10 +63,19 @@ export async function ensureProjectWorkflow(projectId: string, budget?: number) 
     });
   }
 
+  // First-time workflow only: seed checklist + default payments together.
+  // Never re-create payments when count hits 0 — that made deletes "come back"
+  // after DELETE → ensureProjectWorkflow (empty list looked like "unseeded").
   if (existing._count.phaseChecks === 0) {
     await prisma.projectPhaseCheck.createMany({
       data: buildPhaseCheckCreates(projectId),
     });
+    if (existing._count.payments === 0) {
+      const amountBudget = typeof budget === "number" ? budget : existing.budget;
+      await prisma.projectPayment.createMany({
+        data: buildPaymentCreates(projectId, amountBudget),
+      });
+    }
   } else {
     const maxSort = existing.phaseChecks.reduce(
       (m, row) => Math.max(m, row.sortOrder ?? 0),
@@ -80,13 +89,6 @@ export async function ensureProjectWorkflow(projectId: string, budget?: number) 
     if (missing.length > 0) {
       await prisma.projectPhaseCheck.createMany({ data: missing });
     }
-  }
-
-  if (existing._count.payments === 0) {
-    const amountBudget = typeof budget === "number" ? budget : existing.budget;
-    await prisma.projectPayment.createMany({
-      data: buildPaymentCreates(projectId, amountBudget),
-    });
   }
 
   await syncProjectProgress(projectId);

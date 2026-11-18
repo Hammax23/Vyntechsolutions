@@ -23,13 +23,15 @@ const SEO_POPULATE: Record<string, string> = {
 };
 
 const SERVICE_POPULATE: Record<string, string> = {
-  "populate[features]": "true",
+  "populate[features][populate][iconMedia]": "true",
   "populate[process]": "true",
   "populate[stats]": "true",
   "populate[caseStudies]": "true",
-  "populate[whyChooseUsCards]": "true",
+  "populate[whyChooseUsCards][populate][iconMedia]": "true",
   "populate[deliverySteps]": "true",
   "populate[faqs]": "true",
+  "populate[heroImageMedia]": "true",
+  "populate[heroGraphicItems][populate][image]": "true",
   "populate[seoPackagesBlock][populate][packages]": "true",
   "populate[cloudIncludedBlock][populate][items]": "true",
   "populate[aiMlGridBlock][populate][items]": "true",
@@ -37,8 +39,8 @@ const SERVICE_POPULATE: Record<string, string> = {
   "populate[ecommerceServicesBlock][populate][items]": "true",
   "populate[uiuxEngagementsBlock][populate][items]": "true",
   "populate[mobileTabsBlock][populate][tabs][populate][points]": "true",
-  "populate[customSoftwareServicesBlock][populate][items]": "true",
-  "populate[coreCapabilitiesBlock][populate][items]": "true",
+  "populate[customSoftwareServicesBlock][populate][items][populate][iconMedia]": "true",
+  "populate[coreCapabilitiesBlock][populate][items][populate][iconMedia]": "true",
   "populate[techStackBlock][populate][categories][populate][items]": "true",
   "populate[localSeoBlock][populate][stats]": "true",
   "populate[canadaCitiesBlock]": "true",
@@ -161,6 +163,13 @@ export async function getCmsRelatedPosts(slug: string, limit = 3): Promise<CmsBl
     .slice(0, limit);
 }
 
+export type CmsNamedItem = {
+  title: string;
+  description?: string;
+  icon?: string;
+  iconUrl?: string;
+};
+
 export type CmsService = {
   slug: string;
   title: string;
@@ -171,11 +180,21 @@ export type CmsService = {
   heroImage: string;
   heroVariant?: string;
   heroCtaLabel?: string;
+  heroBadgeLabel?: string;
+  /** Absolute URL from Strapi media upload (overrides string heroImage when set). */
+  heroImageMediaUrl?: string;
+  /** CMS hero illustration cells (preset SVG and/or uploaded image). */
+  heroGraphicItems?: Array<{
+    preset?: string;
+    imageUrl?: string;
+    alt?: string;
+    label?: string;
+  }>;
   overview: string;
   overviewTagline?: string;
   overviewHeading?: string;
   featuresEyebrow?: string;
-  features: { title: string; description: string; icon: string }[];
+  features: CmsNamedItem[];
   technologies: string[];
   process: { step: string; description: string }[];
   stats: { value: string; label: string }[];
@@ -185,7 +204,7 @@ export type CmsService = {
   whyChooseUsIntro?: string;
   whyChooseUsSubHeading?: string;
   whyChooseUsSubText?: string;
-  whyChooseUsCards?: { icon: string; label: string }[];
+  whyChooseUsCards?: { icon: string; label: string; iconUrl?: string }[];
   deliveryEyebrow?: string;
   deliveryHeading?: string;
   deliveryDescription?: string;
@@ -247,11 +266,11 @@ export type CmsService = {
     heading?: string;
     headingAccent?: string;
     description?: string;
-    items?: Array<{ title: string; description?: string; icon?: string }>;
+    items?: Array<CmsNamedItem>;
   };
   coreCapabilitiesBlock?: {
     eyebrow?: string;
-    items?: Array<{ title: string; description?: string; icon?: string }>;
+    items?: Array<CmsNamedItem>;
   };
   uiuxEngagementsBlock?: {
     eyebrow?: string;
@@ -345,6 +364,82 @@ export type CmsService = {
   cityOverrides?: Record<string, any>;
 };
 
+function resolveCmsMediaUrl(raw: unknown): string {
+  return getStrapiMedia(extractStrapiMediaUrl(raw) || undefined) || "";
+}
+
+function mapCmsNamedItem(raw: unknown): CmsNamedItem {
+  const item = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
+  const iconUrl = resolveCmsMediaUrl(item.iconMedia);
+  return {
+    title: String(item.title || ""),
+    description: item.description != null ? String(item.description) : "",
+    icon: item.icon != null ? String(item.icon) : "",
+    ...(iconUrl ? { iconUrl } : {}),
+  };
+}
+
+function mapCmsNamedItems(raw: unknown): CmsNamedItem[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.map(mapCmsNamedItem).filter((it) => it.title);
+}
+
+function mapWhyChooseCards(raw: unknown): { icon: string; label: string; iconUrl?: string }[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((entry) => {
+    const item = (entry && typeof entry === "object" ? entry : {}) as Record<string, unknown>;
+    const iconUrl = resolveCmsMediaUrl(item.iconMedia);
+    return {
+      icon: String(item.icon || "chart"),
+      label: String(item.label || ""),
+      ...(iconUrl ? { iconUrl } : {}),
+    };
+  });
+}
+
+function mapHeroGraphicItems(
+  raw: unknown
+): Array<{ preset?: string; imageUrl?: string; alt?: string; label?: string }> {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((entry) => {
+      const item = (entry && typeof entry === "object" ? entry : {}) as Record<string, unknown>;
+      const imageUrl = resolveCmsMediaUrl(item.image) || undefined;
+      const preset = item.preset != null ? String(item.preset) : undefined;
+      if (!imageUrl && !preset) return null;
+      return {
+        ...(preset ? { preset } : {}),
+        ...(imageUrl ? { imageUrl } : {}),
+        alt: item.alt != null ? String(item.alt) : undefined,
+        label: item.label != null ? String(item.label) : undefined,
+      };
+    })
+    .filter(
+      (x): x is { preset?: string; imageUrl?: string; alt?: string; label?: string } =>
+        Boolean(x)
+    );
+}
+
+function mapCustomSoftwareBlock(raw: unknown): CmsService["customSoftwareServicesBlock"] | undefined {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return undefined;
+  const block = raw as Record<string, unknown>;
+  return {
+    heading: block.heading != null ? String(block.heading) : undefined,
+    headingAccent: block.headingAccent != null ? String(block.headingAccent) : undefined,
+    description: block.description != null ? String(block.description) : undefined,
+    items: mapCmsNamedItems(block.items),
+  };
+}
+
+function mapCoreCapabilitiesBlock(raw: unknown): CmsService["coreCapabilitiesBlock"] | undefined {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return undefined;
+  const block = raw as Record<string, unknown>;
+  return {
+    eyebrow: block.eyebrow != null ? String(block.eyebrow) : undefined,
+    items: mapCmsNamedItems(block.items),
+  };
+}
+
 function mapService(entry: Record<string, unknown>, fallbackSlug?: string, localFallback?: CmsService): CmsService {
   const isPopulated = (val: unknown) => val !== null && val !== undefined && val !== "";
   const isArrayPopulated = (val: unknown) => Array.isArray(val) && val.length > 0;
@@ -353,6 +448,8 @@ function mapService(entry: Record<string, unknown>, fallbackSlug?: string, local
   const slug = String(entry.slug || fallbackSlug || "");
   const allowLocationCities =
     slug === "web-development" || slug === "seo-digital-marketing";
+  const heroImageMediaUrl = resolveCmsMediaUrl(entry.heroImageMedia);
+  const heroGraphicItems = mapHeroGraphicItems(entry.heroGraphicItems);
 
   return {
     slug,
@@ -364,13 +461,22 @@ function mapService(entry: Record<string, unknown>, fallbackSlug?: string, local
     heroImage: isPopulated(entry.heroImage) ? String(entry.heroImage) : (localFallback?.heroImage || ""),
     heroVariant: isPopulated(entry.heroVariant) ? String(entry.heroVariant) : localFallback?.heroVariant,
     heroCtaLabel: isPopulated(entry.heroCtaLabel) ? String(entry.heroCtaLabel) : localFallback?.heroCtaLabel,
+    heroBadgeLabel: isPopulated(entry.heroBadgeLabel)
+      ? String(entry.heroBadgeLabel)
+      : localFallback?.heroBadgeLabel,
+    heroImageMediaUrl: heroImageMediaUrl || localFallback?.heroImageMediaUrl,
+    heroGraphicItems: heroGraphicItems.length
+      ? heroGraphicItems
+      : localFallback?.heroGraphicItems,
     overview: isPopulated(entry.overview) ? String(entry.overview) : (localFallback?.overview || ""),
     overviewTagline: isPopulated(entry.overviewTagline) ? String(entry.overviewTagline) : localFallback?.overviewTagline,
     overviewHeading: isPopulated(entry.overviewHeading)
       ? String(entry.overviewHeading)
       : localFallback?.overviewHeading,
     featuresEyebrow: isPopulated(entry.featuresEyebrow) ? String(entry.featuresEyebrow) : localFallback?.featuresEyebrow,
-    features: isArrayPopulated(entry.features) ? (entry.features as CmsService["features"]) : (localFallback?.features || []),
+    features: isArrayPopulated(entry.features)
+      ? mapCmsNamedItems(entry.features)
+      : (localFallback?.features || []),
     technologies: isArrayPopulated(entry.technologies) ? (entry.technologies as string[]) : (localFallback?.technologies || []),
     processHeading: isPopulated(entry.processHeading) ? String(entry.processHeading) : localFallback?.processHeading,
     processDescription: isPopulated(entry.processDescription) ? String(entry.processDescription) : localFallback?.processDescription,
@@ -384,7 +490,7 @@ function mapService(entry: Record<string, unknown>, fallbackSlug?: string, local
     whyChooseUsSubHeading: isPopulated(entry.whyChooseUsSubHeading) ? String(entry.whyChooseUsSubHeading) : localFallback?.whyChooseUsSubHeading,
     whyChooseUsSubText: isPopulated(entry.whyChooseUsSubText) ? String(entry.whyChooseUsSubText) : localFallback?.whyChooseUsSubText,
     whyChooseUsCards: isArrayPopulated(entry.whyChooseUsCards)
-      ? (entry.whyChooseUsCards as { icon: string; label: string }[])
+      ? mapWhyChooseCards(entry.whyChooseUsCards)
       : localFallback?.whyChooseUsCards,
     deliveryEyebrow: isPopulated(entry.deliveryEyebrow) ? String(entry.deliveryEyebrow) : localFallback?.deliveryEyebrow,
     deliveryHeading: isPopulated(entry.deliveryHeading) ? String(entry.deliveryHeading) : localFallback?.deliveryHeading,
@@ -427,10 +533,10 @@ function mapService(entry: Record<string, unknown>, fallbackSlug?: string, local
       ? (entry.ecommerceServicesBlock as CmsService["ecommerceServicesBlock"])
       : localFallback?.ecommerceServicesBlock,
     customSoftwareServicesBlock: isObjectPopulated(entry.customSoftwareServicesBlock)
-      ? (entry.customSoftwareServicesBlock as CmsService["customSoftwareServicesBlock"])
+      ? mapCustomSoftwareBlock(entry.customSoftwareServicesBlock)
       : localFallback?.customSoftwareServicesBlock,
     coreCapabilitiesBlock: isObjectPopulated(entry.coreCapabilitiesBlock)
-      ? (entry.coreCapabilitiesBlock as CmsService["coreCapabilitiesBlock"])
+      ? mapCoreCapabilitiesBlock(entry.coreCapabilitiesBlock)
       : localFallback?.coreCapabilitiesBlock,
     uiuxEngagementsBlock: isObjectPopulated(entry.uiuxEngagementsBlock)
       ? (entry.uiuxEngagementsBlock as CmsService["uiuxEngagementsBlock"])
@@ -510,8 +616,11 @@ export async function getCmsService(
   const entry = unwrapList(res)[0];
   const local = fallback[slug];
   if (entry) {
+    // Custom Software: Strapi-only — never merge local leftovers over empty CMS fields.
+    // Other services still soft-merge local for partial CMS entries.
+    const mergeLocal = slug === "custom-software-development" ? undefined : local ? { slug, ...local } : undefined;
     return {
-      service: mapService(entry, slug, local ? { slug, ...local } : undefined),
+      service: mapService(entry, slug, mergeLocal),
       source: "strapi",
     };
   }

@@ -79,6 +79,7 @@ function buildSnapshot(
     payments: project.payments.map((p) => ({
       label: p.label,
       status: mapPaymentStatus(p.status),
+      amount: Number(p.amount) || 0,
     })),
     note: note.trim(),
   };
@@ -109,12 +110,16 @@ function normalizeIncomingSnapshot(
           const label = String(row.label || "").trim();
           if (!label) return null;
           const st = String(row.status || "pending").toLowerCase();
+          const amountRaw = Number(row.amount);
           return {
             label,
             status: (st === "paid" || st === "due" ? st : "pending") as
               | "paid"
               | "pending"
               | "due",
+            ...(Number.isFinite(amountRaw) && amountRaw >= 0
+              ? { amount: amountRaw }
+              : {}),
           };
         })
         .filter(Boolean) as ClientUpdateSnapshot["payments"]

@@ -267,6 +267,23 @@ export interface SectionsEngagementStrategy extends Struct.ComponentSchema {
   };
 }
 
+export interface SectionsHeroGraphicItem extends Struct.ComponentSchema {
+  collectionName: 'components_sections_hero_graphic_items';
+  info: {
+    description: 'One cell in the custom-software hero grid. Pick a Preset OR upload an Image (image wins). Reorder/delete in Admin to control the graphic.';
+    displayName: 'Hero Graphic Item';
+    icon: 'picture';
+  };
+  attributes: {
+    alt: Schema.Attribute.String;
+    image: Schema.Attribute.Media<'images'>;
+    label: Schema.Attribute.String;
+    preset: Schema.Attribute.Enumeration<
+      ['browser', 'gear', 'robot', 'laptop', 'document', 'monitor']
+    >;
+  };
+}
+
 export interface SectionsLocalSeoBlock extends Struct.ComponentSchema {
   collectionName: 'components_sections_local_seo_blocks';
   info: {
@@ -468,6 +485,7 @@ export interface SectionsValueCard extends Struct.ComponentSchema {
   };
   attributes: {
     icon: Schema.Attribute.String & Schema.Attribute.DefaultTo<'chart'>;
+    iconMedia: Schema.Attribute.Media<'images'>;
     label: Schema.Attribute.String;
   };
 }
@@ -516,6 +534,7 @@ export interface SharedNamedItem extends Struct.ComponentSchema {
   attributes: {
     description: Schema.Attribute.RichText;
     icon: Schema.Attribute.String;
+    iconMedia: Schema.Attribute.Media<'images'>;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
@@ -625,6 +644,7 @@ declare module '@strapi/strapi' {
       'sections.devops-grid-block': SectionsDevopsGridBlock;
       'sections.ecommerce-services-block': SectionsEcommerceServicesBlock;
       'sections.engagement-strategy': SectionsEngagementStrategy;
+      'sections.hero-graphic-item': SectionsHeroGraphicItem;
       'sections.local-seo-block': SectionsLocalSeoBlock;
       'sections.mobile-tab': SectionsMobileTab;
       'sections.mobile-tab-point': SectionsMobileTabPoint;

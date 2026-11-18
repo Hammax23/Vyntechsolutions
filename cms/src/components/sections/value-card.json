@@ -10,8 +10,15 @@
       "type": "string",
       "default": "chart"
     },
+    "iconMedia": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
     "label": {
       "type": "string"
     }
   }
 }
+

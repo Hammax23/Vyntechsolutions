@@ -5,6 +5,13 @@ import {
   type ServicePageSections,
 } from "@/data/servicePageSections";
 
+export type ServiceNamedItem = {
+  title: string;
+  description?: string;
+  icon?: string;
+  iconUrl?: string;
+};
+
 export type ServiceData = {
   title: string;
   subtitle: string;
@@ -14,11 +21,19 @@ export type ServiceData = {
   heroImage: string;
   heroVariant?: string;
   heroCtaLabel?: string;
+  heroBadgeLabel?: string;
+  heroImageMediaUrl?: string;
+  heroGraphicItems?: Array<{
+    preset?: string;
+    imageUrl?: string;
+    alt?: string;
+    label?: string;
+  }>;
   overview: string;
   overviewTagline?: string;
   overviewHeading?: string;
   featuresEyebrow?: string;
-  features: { title: string; description: string; icon: string }[];
+  features: ServiceNamedItem[];
   technologies: string[];
   process: { step: string; description: string }[];
   stats: { value: string; label: string }[];
@@ -28,7 +43,7 @@ export type ServiceData = {
   whyChooseUsIntro?: string;
   whyChooseUsSubHeading?: string;
   whyChooseUsSubText?: string;
-  whyChooseUsCards?: { icon: string; label: string }[];
+  whyChooseUsCards?: { icon: string; label: string; iconUrl?: string }[];
   // How We Deliver
   deliveryEyebrow?: string;
   deliveryHeading?: string;
@@ -107,11 +122,11 @@ export type ServiceData = {
     heading?: string;
     headingAccent?: string;
     description?: string;
-    items?: Array<{ title: string; description?: string; icon?: string }>;
+    items?: Array<ServiceNamedItem>;
   };
   coreCapabilitiesBlock?: {
     eyebrow?: string;
-    items?: Array<{ title: string; description?: string; icon?: string }>;
+    items?: Array<ServiceNamedItem>;
   };
   uiuxEngagementsBlock?: {
     eyebrow?: string;
@@ -3526,6 +3541,7 @@ function enrichServices(data: Record<string, ServiceData>): Record<string, Servi
       ...whyExtras,
       icon: service.icon || SERVICE_ICON_BY_SLUG[slug] || "code",
       heroVariant: service.heroVariant || HERO_VARIANT_BY_SLUG[slug] || "browser",
+      heroBadgeLabel: service.heroBadgeLabel || service.title,
       heroCtaLabel: service.heroCtaLabel || defaultServiceChrome.heroCtaLabel,
       featuresEyebrow: service.featuresEyebrow || defaultServiceChrome.featuresEyebrow,
       ctaHeading: service.ctaHeading || defaultServiceChrome.ctaHeading,

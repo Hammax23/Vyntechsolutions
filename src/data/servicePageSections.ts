@@ -79,11 +79,11 @@ export type ServicePageSections = {
     heading?: string;
     headingAccent?: string;
     description?: string;
-    items: { title: string; description: string; icon?: string }[];
+    items: { title: string; description: string; icon?: string; iconUrl?: string }[];
   };
   coreCapabilities?: {
     eyebrow?: string;
-    items: { title: string; description: string; icon?: string }[];
+    items: { title: string; description: string; icon?: string; iconUrl?: string }[];
   };
   techStack?: {
     heading?: string;

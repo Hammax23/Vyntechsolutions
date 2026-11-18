@@ -1,0 +1,34 @@
+{
+  "collectionName": "components_sections_hero_graphic_items",
+  "info": {
+    "displayName": "Hero Graphic Item",
+    "description": "One cell in the custom-software hero grid. Pick a Preset OR upload an Image (image wins). Reorder/delete in Admin to control the graphic.",
+    "icon": "picture"
+  },
+  "options": {},
+  "attributes": {
+    "preset": {
+      "type": "enumeration",
+      "enum": [
+        "browser",
+        "gear",
+        "robot",
+        "laptop",
+        "document",
+        "monitor"
+      ]
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "alt": {
+      "type": "string"
+    },
+    "label": {
+      "type": "string"
+    }
+  }
+}
