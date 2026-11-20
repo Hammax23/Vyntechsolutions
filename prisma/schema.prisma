@@ -336,6 +336,12 @@ model BillingInvoice {
   hstPercent              Float     @default(13)
   amountPaid              Float     @default(0)
   paymentMethod           String?
+  /// stripe | offline — set when status becomes paid
+  paymentSource           String?
+  /// Bank/Interac/cheque reference for offline payments
+  paymentReference        String?
+  paymentNote             String?
+  paymentRecordedBy       String?
   paymentTerms            String?
   notes                   String?
   status                  String    @default("draft") // draft | sent | paid | overdue | cancelled

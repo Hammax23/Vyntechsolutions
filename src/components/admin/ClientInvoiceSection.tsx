@@ -8,15 +8,17 @@ import type {
 } from "@/lib/admin/billing-invoice-types";
 import {
   BILLING_STATUSES,
+  BILLING_OFFLINE_PAYMENT_METHODS,
   calculateBillingTotals,
   formatCad,
   nextInvoiceNumberFromExisting,
   lineAmount,
+  type BillingOfflinePaymentMethod,
 } from "@/lib/admin/billing-invoice-types";
 import { createDefaultBillingInvoice } from "@/lib/admin/billing-invoice-defaults";
 import { getDocumentVerifyUrl } from "@/lib/admin/invoice-verify";
 
-type Props = { sidebarOpen: boolean };
+type Props = { sidebarOpen: boolean; isOwner?: boolean };
 
 const STATUS_COLORS: Record<BillingInvoiceStatus, string> = {
   draft: "bg-white/10 text-white/60",
@@ -65,7 +67,7 @@ function projectKeyForInvoice(inv: BillingInvoiceData): string {
   return "unlinked";
 }
 
-export default function ClientInvoiceSection({ sidebarOpen }: Props) {
+export default function ClientInvoiceSection({ sidebarOpen, isOwner = false }: Props) {
   const [invoices, setInvoices] = useState<BillingInvoiceData[]>([]);
   const [form, setForm] = useState<BillingInvoiceData>(createDefaultBillingInvoice());
   const [loading, setLoading] = useState(true);
@@ -91,21 +93,42 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
   const [events, setEvents] = useState<InvoiceEvent[]>([]);
   const [sendConfirm, setSendConfirm] = useState(false);
   const [showMoreActions, setShowMoreActions] = useState(false);
+  const [showOfflinePay, setShowOfflinePay] = useState(false);
+  const [offlineMethod, setOfflineMethod] = useState<BillingOfflinePaymentMethod>("E-Transfer");
+  const [offlineReference, setOfflineReference] = useState("");
+  const [offlinePaidAt, setOfflinePaidAt] = useState(() => new Date().toISOString().slice(0, 10));
+  const [offlineNote, setOfflineNote] = useState("");
+  const [offlineConfirm, setOfflineConfirm] = useState(false);
+  const [offlineSendReceipt, setOfflineSendReceipt] = useState(true);
 
   const nextStepHint = useMemo(() => {
     if (!form.id) return "1) Fill details + amount → Save";
     if (form.status === "draft") {
-      return "2) Send to client (auto creates Stripe pay link in the email)";
+      return isOwner
+        ? "2) Send to client (Stripe link) — or Record offline payment if already paid"
+        : "2) Send to client (auto creates Stripe pay link in the email)";
     }
     if (form.status === "sent" || form.status === "overdue") {
-      return "3) Waiting for client to pay via Stripe link — Paid updates automatically";
+      return isOwner
+        ? "3) Stripe pay link — or Record offline payment (bank / e-transfer)"
+        : "3) Waiting for client to pay via Stripe link — Paid updates automatically";
     }
-    if (form.status === "paid") return "Done — paid via Stripe pay link";
+    if (form.status === "paid") {
+      if (form.paymentSource === "offline") {
+        return `Done — paid offline (${form.paymentMethod || "manual"})`;
+      }
+      return "Done — paid via Stripe pay link";
+    }
     if (form.status === "cancelled") return "Cancelled — no further action";
     return "";
-  }, [form.id, form.status]);
+  }, [form.id, form.status, form.paymentSource, form.paymentMethod, isOwner]);
 
   const totals = useMemo(() => calculateBillingTotals(form), [form]);
+  const canRecordOffline =
+    isOwner &&
+    Boolean(form.id) &&
+    totals.total > 0 &&
+    (form.status === "draft" || form.status === "sent" || form.status === "overdue");
   const verifyUrl = useMemo(() => {
     if (!form.invoiceNumber) return "";
     const origin = typeof window !== "undefined" ? window.location.origin : undefined;
@@ -554,6 +577,10 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
       dropboxPath: "",
       dropboxUploadedAt: "",
       dropboxError: "",
+      paymentSource: "",
+      paymentReference: "",
+      paymentNote: "",
+      paymentRecordedBy: "",
     });
     setEvents([]);
     setSendConfirm(false);
@@ -562,6 +589,73 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
     setMessage(
       `Duplicated as draft ${nextInvoiceNumberFromExisting(nums)} — review and Save`
     );
+  };
+
+  const openOfflinePayModal = () => {
+    if (!canRecordOffline) return;
+    setOfflineMethod("E-Transfer");
+    setOfflineReference("");
+    setOfflinePaidAt(new Date().toISOString().slice(0, 10));
+    setOfflineNote("");
+    setOfflineConfirm(false);
+    setOfflineSendReceipt(Boolean(form.clientEmail?.trim()));
+    setShowOfflinePay(true);
+  };
+
+  const recordOfflinePayment = async () => {
+    if (!form.id || !canRecordOffline) return;
+    if (!offlineConfirm) {
+      setMessage("Confirm that funds were received");
+      return;
+    }
+    if (offlineReference.trim().length < 3) {
+      setMessage("Enter a payment reference (bank / Interac / cheque #)");
+      return;
+    }
+    setBusy(true);
+    setMessage("");
+    try {
+      const res = await fetch("/api/admin/billing-invoices/record-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: form.id,
+          paymentMethod: offlineMethod,
+          paymentReference: offlineReference.trim(),
+          paidAt: offlinePaidAt,
+          paymentNote: offlineNote.trim() || undefined,
+          amountPaid: totals.total,
+          confirmReceived: true,
+          sendReceipt: offlineSendReceipt,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Failed to record payment");
+      if (data.invoice) {
+        setForm(data.invoice);
+        setInvoices((prev) => {
+          const rest = prev.filter((i) => i.id !== data.invoice.id);
+          return [data.invoice, ...rest];
+        });
+      }
+      setShowOfflinePay(false);
+      const parts = [
+        data.alreadyPaid ? "Already paid" : `Marked Paid (${offlineMethod})`,
+        data.invoice?.dropboxPath
+          ? `Dropbox: ${data.invoice.dropboxPath}`
+          : data.invoice?.dropboxError
+            ? `Dropbox pending: ${data.invoice.dropboxError}`
+            : "Dropbox archive attempted",
+      ];
+      if (data.receiptSent) parts.push("Receipt emailed");
+      else if (data.receiptError) parts.push(`Receipt: ${data.receiptError}`);
+      setMessage(parts.join(" · "));
+      await load();
+    } catch (e) {
+      setMessage(e instanceof Error ? e.message : "Failed to record payment");
+    } finally {
+      setBusy(false);
+    }
   };
 
   const saveToDropbox = async () => {
@@ -1619,6 +1713,17 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
             >
               Duplicate
             </button>
+            {canRecordOffline ? (
+              <button
+                type="button"
+                onClick={openOfflinePayModal}
+                disabled={busy}
+                className="px-4 py-2 bg-amber-600/90 hover:bg-amber-600 text-white text-sm rounded-md font-medium disabled:opacity-50"
+                title="Bank transfer, e-transfer, cheque, or cash — same Paid + Dropbox as Stripe"
+              >
+                Record offline payment
+              </button>
+            ) : null}
 
             <div className="relative ml-auto">
               <button
@@ -1723,8 +1828,10 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
             </div>
           </div>
           <p className="text-[11px] text-white/40 pt-1">
-            Status is automatic: Save → Draft · Send to client → Sent (+ Stripe pay link in email) ·
-            Client pays link → Paid. You cannot mark Paid manually.
+            Dual rails: Save → Draft · Send → Sent (+ Stripe pay link) · Client pays Stripe → Paid.
+            {isOwner
+              ? " Owner can also Record offline payment (bank / e-transfer / cheque / cash) → same Paid + Dropbox archive."
+              : " Offline payment recording is Owner-only."}
           </p>
         </div>
 
@@ -1967,24 +2074,51 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
                 />
               </div>
               <div>
-                <label className={label}>Amount Paid (Stripe only)</label>
+                <label className={label}>Amount Paid</label>
                 <input
                   className={`${input} opacity-80`}
                   type="number"
                   value={form.amountPaid}
                   readOnly
-                  title="Filled automatically when the client pays via Stripe"
+                  title="Set when paid via Stripe or Record offline payment"
                 />
               </div>
               <div>
                 <label className={label}>Payment Method</label>
                 <input
                   className={`${input} opacity-80`}
-                  value={form.paymentMethod || (form.status === "paid" ? "Credit Card" : "—")}
+                  value={
+                    form.paymentMethod ||
+                    (form.status === "paid"
+                      ? form.paymentSource === "offline"
+                        ? "Offline"
+                        : "Credit Card"
+                      : "—")
+                  }
                   readOnly
-                  title="Set when the client pays via Stripe"
+                  title="Stripe or offline settlement"
                 />
               </div>
+              {form.status === "paid" && form.paymentReference ? (
+                <div className="md:col-span-2">
+                  <label className={label}>Payment Reference</label>
+                  <input
+                    className={`${input} opacity-80`}
+                    value={form.paymentReference}
+                    readOnly
+                  />
+                </div>
+              ) : null}
+              {form.status === "paid" && form.paymentSource ? (
+                <div>
+                  <label className={label}>Payment Source</label>
+                  <input
+                    className={`${input} opacity-80`}
+                    value={form.paymentSource === "offline" ? "Offline (manual)" : "Stripe"}
+                    readOnly
+                  />
+                </div>
+              ) : null}
             </div>
           </div>
 
@@ -2012,6 +2146,109 @@ export default function ClientInvoiceSection({ sidebarOpen }: Props) {
           </>
         ) : null}
       </div>
+
+      {showOfflinePay ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-[#0a0a1a] border border-white/10 rounded-2xl w-full max-w-lg p-6 shadow-2xl space-y-4">
+            <div>
+              <h3 className="text-lg font-bold text-white">Record offline payment</h3>
+              <p className="text-white/50 text-sm mt-1">
+                Bank transfer, e-transfer, cheque, or cash for <strong className="text-white/70">this invoice only</strong>
+                — not the whole project. Other invoices stay open. Marks this one Paid (same as Stripe)
+                and archives the PDF to Dropbox.
+              </p>
+            </div>
+            <div className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-sm text-white/70">
+              <div className="flex justify-between gap-2">
+                <span>{form.invoiceNumber}</span>
+                <span className="font-semibold text-white">{formatCad(totals.total)}</span>
+              </div>
+              <p className="text-xs text-white/40 mt-1">{form.clientName || "—"}</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className={label}>Payment method *</label>
+                <select
+                  className={input}
+                  value={offlineMethod}
+                  onChange={(e) =>
+                    setOfflineMethod(e.target.value as BillingOfflinePaymentMethod)
+                  }
+                >
+                  {BILLING_OFFLINE_PAYMENT_METHODS.map((m) => (
+                    <option key={m} value={m}>
+                      {m}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className={label}>Paid date *</label>
+                <input
+                  className={input}
+                  type="date"
+                  value={offlinePaidAt}
+                  onChange={(e) => setOfflinePaidAt(e.target.value)}
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label className={label}>Reference * (Interac / bank / cheque #)</label>
+                <input
+                  className={input}
+                  value={offlineReference}
+                  placeholder="e.g. Interac ID or bank confirmation"
+                  onChange={(e) => setOfflineReference(e.target.value)}
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label className={label}>Internal note (optional)</label>
+                <input
+                  className={input}
+                  value={offlineNote}
+                  placeholder="Optional note for audit"
+                  onChange={(e) => setOfflineNote(e.target.value)}
+                />
+              </div>
+            </div>
+            <label className="flex items-start gap-2 text-sm text-white/70 cursor-pointer">
+              <input
+                type="checkbox"
+                className="mt-1"
+                checked={offlineConfirm}
+                onChange={(e) => setOfflineConfirm(e.target.checked)}
+              />
+              <span>I confirm funds were received for the full invoice total.</span>
+            </label>
+            <label className="flex items-start gap-2 text-sm text-white/70 cursor-pointer">
+              <input
+                type="checkbox"
+                className="mt-1"
+                checked={offlineSendReceipt}
+                onChange={(e) => setOfflineSendReceipt(e.target.checked)}
+              />
+              <span>Email paid receipt + PDF to client{form.clientEmail ? ` (${form.clientEmail})` : ""}</span>
+            </label>
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowOfflinePay(false)}
+                disabled={busy}
+                className="px-4 py-2 text-sm rounded-md border border-white/15 text-white/70 hover:bg-white/5"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => void recordOfflinePayment()}
+                disabled={busy || !offlineConfirm || offlineReference.trim().length < 3}
+                className="px-4 py-2 text-sm rounded-md bg-amber-600 hover:bg-amber-500 text-white font-medium disabled:opacity-50"
+              >
+                {busy ? "Recording…" : "Confirm & mark Paid"}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

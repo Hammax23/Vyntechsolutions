@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error:
-            "Manual Record paid is disabled. Status becomes Paid only after the client pays via the Stripe pay link.",
+            "Use POST /api/admin/billing-invoices/record-payment (Owner only) for offline payments.",
         },
         { status: 403 }
       );

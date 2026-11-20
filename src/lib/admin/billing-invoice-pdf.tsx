@@ -265,7 +265,9 @@ export function BillingInvoicePdfDocument({
               <Text>{formatCad(totals.hst)}</Text>
             </View>
             <View style={s.totalFinal}>
-              <Text style={s.totalLabel}>Total Due</Text>
+              <Text style={s.totalLabel}>
+                {data.status === "paid" || totals.balance <= 0 ? "Total" : "Total Due"}
+              </Text>
               <Text style={s.totalValue}>{formatCad(totals.total)}</Text>
             </View>
             {data.amountPaid > 0 ? (
@@ -274,10 +276,18 @@ export function BillingInvoicePdfDocument({
                   <Text style={s.muted}>Amount Paid</Text>
                   <Text>{formatCad(data.amountPaid)}</Text>
                 </View>
-                <View style={s.totalRow}>
-                  <Text style={s.totalLabel}>Balance</Text>
-                  <Text style={s.totalValue}>{formatCad(totals.balance)}</Text>
-                </View>
+                {/* Only show Balance when something is still owed — not $0.00 on paid PDFs */}
+                {totals.balance > 0.009 ? (
+                  <View style={s.totalRow}>
+                    <Text style={s.totalLabel}>Balance</Text>
+                    <Text style={s.totalValue}>{formatCad(totals.balance)}</Text>
+                  </View>
+                ) : data.status === "paid" || data.amountPaid >= totals.total - 0.009 ? (
+                  <View style={s.totalRow}>
+                    <Text style={s.totalLabel}>Status</Text>
+                    <Text style={s.totalValue}>Paid in full</Text>
+                  </View>
+                ) : null}
               </>
             ) : null}
           </View>
@@ -287,7 +297,17 @@ export function BillingInvoicePdfDocument({
           {data.paymentMethod ? (
             <>
               <Text style={s.noteHead}>Payment Method</Text>
-              <Text style={s.noteText}>{data.paymentMethod}</Text>
+              <Text style={s.noteText}>
+                {data.paymentMethod}
+                {data.paymentSource === "offline" ? " (recorded offline)" : ""}
+                {data.paymentSource === "stripe" ? " (Stripe)" : ""}
+              </Text>
+            </>
+          ) : null}
+          {data.paymentReference ? (
+            <>
+              <Text style={s.noteHead}>Payment Reference</Text>
+              <Text style={s.noteText}>{data.paymentReference}</Text>
             </>
           ) : null}
           {data.paymentTerms ? (

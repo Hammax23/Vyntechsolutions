@@ -1,8 +1,14 @@
 import prisma from "@/lib/prisma";
 import { deriveBillingStatus } from "@/lib/admin/billing-invoice-status";
 import { logBillingEvent } from "@/lib/admin/billing-invoice-map";
-import { calculateBillingTotals, type BillingLineItem } from "@/lib/admin/billing-invoice-types";
+import {
+  BILLING_OFFLINE_PAYMENT_METHODS,
+  calculateBillingTotals,
+  type BillingLineItem,
+  type BillingOfflinePaymentMethod,
+} from "@/lib/admin/billing-invoice-types";
 import { uploadPaidInvoiceToDropbox } from "@/lib/admin/upload-paid-invoice-dropbox";
+import { clearBillingCheckoutLink } from "@/lib/admin/ensure-billing-checkout";
 
 export async function sweepOverdueBillingInvoices(): Promise<number> {
   const candidates = await prisma.billingInvoice.findMany({
@@ -37,13 +43,25 @@ export async function sweepOverdueBillingInvoices(): Promise<number> {
   return updated;
 }
 
+function isOfflineMethod(method: string): method is BillingOfflinePaymentMethod {
+  return (BILLING_OFFLINE_PAYMENT_METHODS as readonly string[]).includes(method);
+}
+
+export type MarkPaidSource = "stripe_webhook" | "admin_offline";
+
 export async function markBillingInvoicePaid(opts: {
   invoiceId: string;
   amountPaid?: number;
   paymentMethod?: string;
+  paymentReference?: string;
+  paymentNote?: string;
+  paymentRecordedBy?: string;
+  paidAt?: Date;
   stripeCheckoutSessionId?: string;
   stripePaymentIntentId?: string;
-  source: string;
+  source: MarkPaidSource;
+  /** Dropbox soft timeout — webhook short, offline admin longer */
+  dropboxTimeoutMs?: number;
 }) {
   const invoice = await prisma.billingInvoice.findUnique({ where: { id: opts.invoiceId } });
   if (!invoice || invoice.deletedAt) return null;
@@ -57,8 +75,16 @@ export async function markBillingInvoicePaid(opts: {
     return null;
   }
 
-  // Only Stripe (or trusted system callers) may mark paid — never manual admin
-  if (opts.source !== "stripe_webhook") {
+  // Already paid — idempotent (Stripe retry or double-click)
+  if (invoice.status === "paid") {
+    await logBillingEvent(prisma, invoice.id, "paid_ignored_already_paid", {
+      source: opts.source,
+      existingSource: invoice.paymentSource || null,
+    });
+    return invoice;
+  }
+
+  if (opts.source !== "stripe_webhook" && opts.source !== "admin_offline") {
     return null;
   }
 
@@ -69,6 +95,87 @@ export async function markBillingInvoicePaid(opts: {
     amountPaid: 0,
   });
 
+  if (opts.source === "admin_offline") {
+    const method = String(opts.paymentMethod || "").trim();
+    if (!isOfflineMethod(method)) {
+      throw new Error(
+        "Offline payment method must be E-Transfer, Bank Transfer, Cheque, or Cash"
+      );
+    }
+    const reference = String(opts.paymentReference || "").trim();
+    if (reference.length < 3) {
+      throw new Error("Payment reference is required (min 3 characters)");
+    }
+    const amountPaid =
+      opts.amountPaid != null ? Number(opts.amountPaid) : totals.total;
+    if (!Number.isFinite(amountPaid) || amountPaid <= 0) {
+      throw new Error("Amount paid must be greater than zero");
+    }
+    if (Math.abs(amountPaid - totals.total) > 0.01) {
+      throw new Error(
+        `Amount must equal invoice total (${totals.total.toFixed(2)} CAD). Partial payments are not supported.`
+      );
+    }
+    if (!opts.paymentRecordedBy?.trim()) {
+      throw new Error("paymentRecordedBy required for offline payment");
+    }
+
+    // Kill Stripe pay link so client cannot double-pay
+    if (invoice.checkoutUrl || invoice.stripeCheckoutSessionId) {
+      await clearBillingCheckoutLink({
+        invoiceId: invoice.id,
+        sessionId: invoice.stripeCheckoutSessionId,
+        reason: "offline_paid",
+      });
+    }
+
+    const paidAt = opts.paidAt && !Number.isNaN(opts.paidAt.getTime()) ? opts.paidAt : new Date();
+    const updated = await prisma.billingInvoice.update({
+      where: { id: invoice.id },
+      data: {
+        status: "paid",
+        amountPaid: Math.round(amountPaid * 100) / 100,
+        paidAt,
+        paymentMethod: method,
+        paymentSource: "offline",
+        paymentReference: reference,
+        paymentNote: opts.paymentNote?.trim() || null,
+        paymentRecordedBy: opts.paymentRecordedBy.trim(),
+        checkoutUrl: null,
+        lastSendError: null,
+      },
+    });
+
+    await logBillingEvent(prisma, invoice.id, "paid", {
+      source: "admin_offline",
+      amountPaid: updated.amountPaid,
+      paymentMethod: method,
+      paymentReference: reference,
+      recordedBy: opts.paymentRecordedBy.trim(),
+    });
+
+    if (invoice.projectPaymentId) {
+      await prisma.projectPayment.update({
+        where: { id: invoice.projectPaymentId },
+        data: { status: "paid", paidAt },
+      });
+    }
+
+    try {
+      await uploadPaidInvoiceToDropbox({
+        invoiceId: updated.id,
+        force: false,
+        timeoutMs: opts.dropboxTimeoutMs ?? 30_000,
+      });
+    } catch (e) {
+      console.error("dropbox archive after offline paid", e);
+    }
+
+    const withDropbox = await prisma.billingInvoice.findUnique({ where: { id: updated.id } });
+    return withDropbox || updated;
+  }
+
+  // —— Stripe webhook path ——
   const amountPaid = opts.amountPaid != null ? opts.amountPaid : totals.total;
   const updated = await prisma.billingInvoice.update({
     where: { id: invoice.id },
@@ -77,6 +184,7 @@ export async function markBillingInvoicePaid(opts: {
       amountPaid,
       paidAt: new Date(),
       paymentMethod: opts.paymentMethod || invoice.paymentMethod || "Credit Card",
+      paymentSource: "stripe",
       stripeCheckoutSessionId: opts.stripeCheckoutSessionId || invoice.stripeCheckoutSessionId,
       stripePaymentIntentId: opts.stripePaymentIntentId || invoice.stripePaymentIntentId,
       lastSendError: null,
@@ -95,18 +203,16 @@ export async function markBillingInvoicePaid(opts: {
     });
   }
 
-  // Archive paid PDF to Dropbox — never throw into Stripe webhook
   try {
     await uploadPaidInvoiceToDropbox({
       invoiceId: updated.id,
       force: false,
-      timeoutMs: 8_000,
+      timeoutMs: opts.dropboxTimeoutMs ?? 8_000,
     });
   } catch (e) {
     console.error("dropbox archive after paid", e);
   }
 
-  // Re-read so response includes dropbox fields when available
   const withDropbox = await prisma.billingInvoice.findUnique({ where: { id: updated.id } });
   return withDropbox || updated;
 }

@@ -22,6 +22,11 @@ export type BillingInvoiceData = {
   hstPercent: number;
   amountPaid: number;
   paymentMethod: string;
+  /** stripe | offline — set when paid */
+  paymentSource?: string;
+  paymentReference?: string;
+  paymentNote?: string;
+  paymentRecordedBy?: string;
   paymentTerms: string;
   notes: string;
   status: BillingInvoiceStatus;
@@ -68,6 +73,17 @@ export const BILLING_PAYMENT_METHODS = [
   "Cheque",
   "Cash",
 ] as const;
+
+/** Offline / manual settlement only (Credit Card stays Stripe). */
+export const BILLING_OFFLINE_PAYMENT_METHODS = [
+  "E-Transfer",
+  "Bank Transfer",
+  "Cheque",
+  "Cash",
+] as const;
+
+export type BillingOfflinePaymentMethod =
+  (typeof BILLING_OFFLINE_PAYMENT_METHODS)[number];
 
 export const DEFAULT_PAYMENT_TERMS =
   "Payment is due within 15 days of the invoice date. Late payments may incur a 1.5% monthly service charge.";

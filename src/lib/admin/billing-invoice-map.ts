@@ -20,6 +20,10 @@ export type BillingInvoiceRecord = {
   hstPercent: number;
   amountPaid: number;
   paymentMethod: string | null;
+  paymentSource?: string | null;
+  paymentReference?: string | null;
+  paymentNote?: string | null;
+  paymentRecordedBy?: string | null;
   paymentTerms: string | null;
   notes: string | null;
   status: string;
@@ -54,6 +58,10 @@ export function mapBillingInvoice(record: BillingInvoiceRecord): BillingInvoiceD
     hstPercent: record.hstPercent,
     amountPaid: record.amountPaid,
     paymentMethod: record.paymentMethod || "",
+    paymentSource: record.paymentSource || "",
+    paymentReference: record.paymentReference || "",
+    paymentNote: record.paymentNote || "",
+    paymentRecordedBy: record.paymentRecordedBy || "",
     paymentTerms: record.paymentTerms || "",
     notes: record.notes || "",
     status: (record.status as BillingInvoiceStatus) || "draft",

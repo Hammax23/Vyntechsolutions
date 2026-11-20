@@ -66,11 +66,14 @@ export function canAccessAdminApi(
     return true;
   }
 
-  // Client invoices
+  // Client invoices — VA can manage create/send; Owner-only for offline record-payment
   if (
     path === "/api/admin/billing-invoices" ||
     path.startsWith("/api/admin/billing-invoices/")
   ) {
+    if (path === "/api/admin/billing-invoices/record-payment") {
+      return false; // Owner only (middleware allows owner before this; VA denied)
+    }
     return true;
   }
 

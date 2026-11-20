@@ -1091,7 +1091,10 @@ export default function AdminPage() {
             <TeamProgressSection />
           )}
           {activeSection === "client_invoices" && canSection("client_invoices") && (
-            <ClientInvoiceSection sidebarOpen={sidebarOpen} />
+            <ClientInvoiceSection
+              sidebarOpen={sidebarOpen}
+              isOwner={adminUser?.role === "owner"}
+            />
           )}
           {activeSection === "invoices" && canSection("invoices") && (
             <InvoiceSection sidebarOpen={sidebarOpen} />

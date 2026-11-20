@@ -118,3 +118,102 @@ export function buildBillingInvoiceEmail(opts: {
 
   return { subject, html, text, verifyUrl };
 }
+
+/** Receipt after offline (or confirmed) payment — Paid PDF attached by caller. */
+export function buildBillingPaymentReceivedEmail(opts: {
+  invoice: BillingInvoiceData;
+  verifyOrigin?: string;
+}) {
+  const totals = calculateBillingTotals(opts.invoice);
+  const origin = opts.verifyOrigin || SITE_URL;
+  const verifyUrl = getDocumentVerifyUrl(opts.invoice.invoiceNumber, origin);
+  const logoSrc = `cid:${PRINT_LOGO_CID}`;
+  const method = opts.invoice.paymentMethod || "—";
+  const reference = opts.invoice.paymentReference || "";
+  const paidAt = opts.invoice.paidAt
+    ? opts.invoice.paidAt.slice(0, 10)
+    : new Date().toISOString().slice(0, 10);
+
+  const subject = `Payment received — Invoice ${opts.invoice.invoiceNumber}`;
+
+  const html = `<!DOCTYPE html>
+<html><body style="margin:0;padding:0;background:#f4f6f8;font-family:Segoe UI,Helvetica,Arial,sans-serif;color:#1F2937;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f6f8;padding:32px 16px;">
+    <tr><td align="center">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;border:1px solid #E2E8F0;">
+        <tr>
+          <td style="padding:24px 28px 12px 28px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td valign="middle">
+                  <table role="presentation" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td valign="middle" style="padding-right:12px;">
+                        <img src="${logoSrc}" alt="VynTech" width="48" height="48" style="display:block;width:48px;height:48px;object-fit:contain;border:0;" />
+                      </td>
+                      <td valign="middle">
+                        <p style="margin:0;font-size:16px;font-weight:700;color:${NAVY};">VynTech Solutions</p>
+                        <p style="margin:3px 0 0;font-size:11px;color:#64748B;">Payment confirmation</p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:0 28px 18px 28px;">
+            <div style="height:3px;background:${BLUE};line-height:3px;font-size:0;">&nbsp;</div>
+          </td>
+        </tr>
+        <tr><td style="padding:8px 28px 28px 28px;">
+          <p style="margin:0 0 12px;font-size:15px;color:#0f172a;">Hello ${escapeHtml(opts.invoice.clientName || "there")},</p>
+          <p style="margin:0 0 20px;font-size:14px;line-height:1.55;color:#334155;">
+            We have received your payment for invoice <strong>${escapeHtml(opts.invoice.invoiceNumber)}</strong>.
+            A paid copy is attached for your records.
+          </p>
+          <table role="presentation" width="100%" style="margin:0 0 20px;font-size:13px;color:#475569;border-collapse:collapse;">
+            <tr>
+              <td style="padding:8px 0;border-bottom:1px solid #E2E8F0;">Amount paid</td>
+              <td style="padding:8px 0;border-bottom:1px solid #E2E8F0;text-align:right;color:#0f172a;font-weight:700;">${formatCad(opts.invoice.amountPaid || totals.total)}</td>
+            </tr>
+            <tr>
+              <td style="padding:8px 0;border-bottom:1px solid #E2E8F0;">Payment method</td>
+              <td style="padding:8px 0;border-bottom:1px solid #E2E8F0;text-align:right;color:#0f172a;">${escapeHtml(method)}</td>
+            </tr>
+            ${
+              reference
+                ? `<tr>
+              <td style="padding:8px 0;border-bottom:1px solid #E2E8F0;">Reference</td>
+              <td style="padding:8px 0;border-bottom:1px solid #E2E8F0;text-align:right;color:#0f172a;">${escapeHtml(reference)}</td>
+            </tr>`
+                : ""
+            }
+            <tr>
+              <td style="padding:8px 0;">Paid on</td>
+              <td style="padding:8px 0;text-align:right;color:#0f172a;">${escapeHtml(paidAt)}</td>
+            </tr>
+          </table>
+          <p style="margin:16px 0 0;font-size:12px;color:#64748b;">
+            Verify this invoice: <a href="${escapeHtml(verifyUrl)}" style="color:${BLUE};">${escapeHtml(verifyUrl)}</a>
+          </p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>`;
+
+  const text = [
+    `Payment received — Invoice ${opts.invoice.invoiceNumber}`,
+    `Amount paid: ${formatCad(opts.invoice.amountPaid || totals.total)}`,
+    `Method: ${method}`,
+    reference ? `Reference: ${reference}` : "",
+    `Paid on: ${paidAt}`,
+    `Verify: ${verifyUrl}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  return { subject, html, text, verifyUrl };
+}
