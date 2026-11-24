@@ -464,3 +464,98 @@ model WorkflowAttachment {
   @@index([taskId])
   @@index([uploadedById])
 }
+
+// ─── VynRank SEO Desk (`/vynrank`) ───────────────────────────────────────────
+
+model VynRankOrg {
+  id        String         @id @default(cuid())
+  name      String
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  users     VynRankUser[]
+  projects  VynRankProject[]
+  packages  VynRankPackage[]
+}
+
+/// Roles: ceo | seo_team | client (exactly three)
+model VynRankUser {
+  id           String   @id @default(cuid())
+  orgId        String
+  org          VynRankOrg @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   // ceo | seo_team | client
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  assignedProjects VynRankProject[] @relation("ProjectAssignees")
+  ownedProjects    VynRankProject[] @relation("ProjectClient")
+  tasks            VynRankTask[]    @relation("TaskAssignee")
+
+  @@index([orgId, role])
+}
+
+model VynRankPackage {
+  id          String   @id @default(cuid())
+  orgId       String
+  org         VynRankOrg @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  name        String
+  priceCad    Float    @default(0)
+  description String?
+  features    Json     @default("[]")
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  projects    VynRankProject[]
+
+  @@index([orgId])
+}
+
+model VynRankProject {
+  id              String   @id @default(cuid())
+  orgId           String
+  org             VynRankOrg @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  name            String
+  clientName      String
+  clientUserId    String?
+  clientUser      VynRankUser? @relation("ProjectClient", fields: [clientUserId], references: [id], onDelete: SetNull)
+  packageId       String?
+  package         VynRankPackage? @relation(fields: [packageId], references: [id], onDelete: SetNull)
+  status          String   @default("onboarding") // onboarding | active | at_risk | paused | completed
+  health          String   @default("healthy") // healthy | attention | at_risk
+  phase           String   @default("onboarding") // lifecycle phase key
+  monthlyRevenue  Float    @default(0)
+  organicTraffic  Int      @default(0)
+  keywordsTop10   Int      @default(0)
+  organicLeads    Int      @default(0)
+  clientRating    Float?
+  goal            String?
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  assignees       VynRankUser[] @relation("ProjectAssignees")
+  tasks           VynRankTask[]
+
+  @@index([orgId, status])
+  @@index([health])
+  @@index([clientUserId])
+}
+
+model VynRankTask {
+  id           String   @id @default(cuid())
+  projectId    String
+  project      VynRankProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title        String
+  description  String?
+  status       String   @default("todo") // todo | in_progress | submitted | qa | done
+  priority     String   @default("medium") // low | medium | high
+  assigneeId   String?
+  assignee     VynRankUser? @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  dueDate      DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([projectId, status])
+  @@index([assigneeId, status])
+}

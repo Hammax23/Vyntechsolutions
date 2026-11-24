@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { DEFAULT_COOKIE_CHROME, mergeCopy } from "@/lib/ui-copy";
 import { cmsInlineToHtml } from "@/lib/richtext";
 
@@ -47,6 +48,11 @@ const IOSToggle = ({
 export default function CookieConsent() {
   const [isVisible, setIsVisible] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const pathname = usePathname();
+  const hideOnApp =
+    pathname?.startsWith("/admin") ||
+    pathname?.startsWith("/workflow") ||
+    pathname?.startsWith("/vynrank");
   const [showCustomize, setShowCustomize] = useState(false);
   const [cookieTitle, setCookieTitle] = useState("We value your privacy");
   const [cookieBody, setCookieBody] = useState(
@@ -136,7 +142,7 @@ export default function CookieConsent() {
     setPreferences(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  if (!isVisible) return null;
+  if (hideOnApp || !isVisible) return null;
 
   return (
     <>

@@ -3,6 +3,14 @@ import { verifyWorkflowSession, workflowCookieName } from "@/lib/workflow-sessio
 import { adminCookieName, verifyAdminSession } from "@/lib/admin-session";
 import { canAccessAdminApi } from "@/lib/admin-acl";
 import {
+  verifyVynRankSession,
+  vynrankCookieName,
+} from "@/lib/vynrank/session";
+import {
+  canAccessVynRankPath,
+  defaultPathForRole,
+} from "@/lib/vynrank/acl";
+import {
   fetchActiveUrlRedirects,
   findMatchingRedirect,
   resolveRedirectDestination,
@@ -52,6 +60,45 @@ export async function middleware(request: NextRequest) {
     }
     if (!canAccessAdminApi(session.role, request.method, pathname)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+  }
+
+  // /api/vynrank/auth is public
+  const vynApi = pathname.replace(/\/+$/, "") || pathname;
+  if (vynApi === "/api/vynrank/auth" || vynApi.startsWith("/api/vynrank/auth/")) {
+    return NextResponse.next();
+  }
+
+  if (pathname.startsWith("/api/vynrank")) {
+    const token = request.cookies.get(vynrankCookieName())?.value;
+    const session = await verifyVynRankSession(token);
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+  }
+
+  // Protect /vynrank pages (except login)
+  if (pathname.startsWith("/vynrank")) {
+    const isLogin = pathname === "/vynrank/login" || pathname.startsWith("/vynrank/login/");
+    const token = request.cookies.get(vynrankCookieName())?.value;
+    const session = await verifyVynRankSession(token);
+
+    if (isLogin) {
+      if (session) {
+        const dest = defaultPathForRole(session.role);
+        return NextResponse.redirect(new URL(dest, request.url));
+      }
+      return NextResponse.next();
+    }
+
+    if (!session) {
+      const login = new URL("/vynrank/login", request.url);
+      login.searchParams.set("next", pathname);
+      return NextResponse.redirect(login);
+    }
+
+    if (!canAccessVynRankPath(session.role, pathname)) {
+      return NextResponse.redirect(new URL(defaultPathForRole(session.role), request.url));
     }
   }
 

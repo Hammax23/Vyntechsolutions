@@ -48,6 +48,7 @@ export default function LetsTalkBusiness() {
   const hideWidgets =
     pathname?.startsWith("/admin") ||
     pathname?.startsWith("/workflow") ||
+    pathname?.startsWith("/vynrank") ||
     pathname?.startsWith("/quote") ||
     pathname?.startsWith("/verify");
 

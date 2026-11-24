@@ -26,6 +26,7 @@ export default function TimedCTAPopup() {
   const hideWidgets =
     pathname?.startsWith("/admin") ||
     pathname?.startsWith("/workflow") ||
+    pathname?.startsWith("/vynrank") ||
     pathname?.startsWith("/quote") ||
     pathname?.startsWith("/verify");
 

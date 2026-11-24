@@ -8,6 +8,7 @@ export default function ConditionalTawkChat() {
   const hideChat =
     pathname?.startsWith("/admin") ||
     pathname?.startsWith("/workflow") ||
+    pathname?.startsWith("/vynrank") ||
     pathname?.startsWith("/quote") ||
     pathname?.startsWith("/verify");
 

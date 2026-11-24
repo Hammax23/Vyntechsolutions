@@ -9,6 +9,7 @@
     "lint": "next lint",
     "postinstall": "prisma generate",
     "db:migrate": "prisma migrate deploy",
+    "db:seed:vynrank": "node scripts/seed-vynrank.mjs",
     "cms:develop": "npm run develop --prefix cms",
     "cms:build": "npm run build --prefix cms",
     "cms:start": "npm run start --prefix cms",
