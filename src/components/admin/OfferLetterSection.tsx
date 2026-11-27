@@ -262,7 +262,7 @@ export default function OfferLetterSection({ sidebarOpen }: Props) {
         )}
 
         {form.clientSelections?.submittedAt && (
-          <div className="px-3 py-3 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-sm text-emerald-300">
+          <div className="admin-alert admin-alert--ok">
             Client replied {new Date(form.clientSelections.submittedAt).toLocaleString("en-CA")}
             {form.clientSelections.clientNote ? ` — "${form.clientSelections.clientNote}"` : ""}
           </div>

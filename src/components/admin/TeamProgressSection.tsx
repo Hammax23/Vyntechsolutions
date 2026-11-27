@@ -780,7 +780,7 @@ export default function TeamProgressSection() {
                       </div>
                       <div className="flex flex-wrap items-center gap-1.5 shrink-0">
                         {proj.inProgress > 0 ? (
-                          <span className="text-[10px] px-1.5 py-0.5 rounded border border-sky-400/40 bg-sky-500/15 text-sky-200">
+                          <span className="text-[10px] px-1.5 py-0.5 rounded border border-sky-400 bg-sky-50 text-sky-900 font-semibold">
                             {proj.inProgress} in progress
                           </span>
                         ) : null}
@@ -790,7 +790,7 @@ export default function TeamProgressSection() {
                           </span>
                         ) : null}
                         {proj.blocked > 0 ? (
-                          <span className="text-[10px] px-1.5 py-0.5 rounded border border-amber-400/40 bg-amber-500/15 text-amber-200">
+                          <span className="text-[10px] px-1.5 py-0.5 rounded border border-amber-400 bg-amber-50 text-amber-900 font-semibold">
                             {proj.blocked} on hold
                           </span>
                         ) : null}
@@ -1050,7 +1050,7 @@ export default function TeamProgressSection() {
           {assigning ? "Assigning…" : "Assign task"}
         </button>
         {activeStaff.length === 0 ? (
-          <p className="text-amber-300/80 text-xs">Pehle niche se employee account banao.</p>
+          <p className="text-amber-900 text-xs font-medium">Pehle niche se employee account banao.</p>
         ) : null}
       </div>
 
@@ -1613,7 +1613,7 @@ export default function TeamProgressSection() {
                     <button
                       type="button"
                       onClick={() => toggleActive(s.id, !s.isActive)}
-                      className={`text-[10px] px-2 py-1 rounded ${s.isActive ? "bg-amber-500/20 text-amber-300" : "bg-emerald-500/20 text-emerald-300"}`}
+                      className={`text-[10px] px-2 py-1 rounded font-medium ${s.isActive ? "bg-amber-50 text-amber-900 border border-amber-400" : "bg-emerald-50 text-emerald-900 border border-emerald-400"}`}
                     >
                       {s.isActive ? "Deactivate" : "Activate"}
                     </button>
@@ -1675,7 +1675,7 @@ export default function TeamProgressSection() {
           className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-red-500/5 transition"
         >
           <div>
-            <p className="text-red-300 text-sm font-semibold">Danger zone, delete tasks</p>
+            <p className="text-red-800 text-sm font-semibold">Danger zone, delete tasks</p>
             <p className="text-white/35 text-xs mt-0.5">
               Separate from export. Collapsed by default to prevent accidental deletes.
             </p>

@@ -116,7 +116,7 @@ export default function ProjectManagerSection({
             transition={{ duration: motionDuration }}
             className="mb-3 overflow-hidden"
           >
-            <div className="px-3 py-2 rounded border border-white/15 bg-white/[0.04] text-white/80 text-sm">
+            <div className="pm-toast px-3 py-2 rounded border border-slate-300 bg-slate-50 text-slate-900 text-sm font-medium">
               {message}
             </div>
           </motion.div>
@@ -200,7 +200,7 @@ export default function ProjectManagerSection({
               onClick={() => setStuckOnly((v) => !v)}
               className={`px-2 py-1 rounded border text-[10px] font-medium ${
                 stuckOnly
-                  ? "border-amber-400/40 bg-amber-500/15 text-amber-100"
+                  ? "border-amber-500 bg-amber-50 text-amber-900"
                   : "border-white/15 text-white/50 hover:text-white/80"
               }`}
             >

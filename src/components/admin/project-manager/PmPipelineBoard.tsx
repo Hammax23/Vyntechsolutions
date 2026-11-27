@@ -127,7 +127,7 @@ export default function PmPipelineBoard({
                             {p.progress}%
                           </span>
                           {stuck && (
-                            <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-200 border border-amber-500/30">
+                            <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-900 border border-amber-400 font-semibold">
                               Stuck
                             </span>
                           )}

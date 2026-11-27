@@ -127,7 +127,7 @@ export function priorityStyle(priority: string) {
 }
 
 export function taskStatusStyle(status: string) {
-  if (status === "completed") return "bg-emerald-500/20 text-emerald-300";
-  if (status === "in_progress") return "bg-amber-500/20 text-amber-300";
-  return "bg-white/10 text-white/50";
+  if (status === "completed") return "bg-emerald-50 text-emerald-900 border border-emerald-400";
+  if (status === "in_progress") return "bg-amber-50 text-amber-900 border border-amber-400";
+  return "bg-slate-100 text-slate-600 border border-slate-300";
 }

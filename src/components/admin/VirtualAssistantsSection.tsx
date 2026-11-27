@@ -122,9 +122,9 @@ export default function VirtualAssistantsSection() {
         </div>
       ) : null}
       {tempPassword ? (
-        <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+        <div className="admin-alert admin-alert--warn">
           One-time password:{" "}
-          <code className="font-mono text-amber-50 select-all">{tempPassword}</code>
+          <code className="font-mono font-semibold text-amber-950 select-all">{tempPassword}</code>
           <button
             type="button"
             className="ml-3 text-xs underline"

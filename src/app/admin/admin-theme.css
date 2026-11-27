@@ -138,6 +138,153 @@
   color: #475569 !important;
 }
 
+/*
+ * Soft semantic colors were authored for dark UI (pale text on tinted glass).
+ * On light admin they wash out — remap text + soft backgrounds globally.
+ */
+[data-admin-theme="light"] .text-amber-50,
+[data-admin-theme="light"] .text-amber-100,
+[data-admin-theme="light"] .text-amber-100\/90,
+[data-admin-theme="light"] .text-amber-100\/70,
+[data-admin-theme="light"] .text-amber-200,
+[data-admin-theme="light"] .text-amber-200\/90,
+[data-admin-theme="light"] .text-amber-300,
+[data-admin-theme="light"] .text-amber-300\/90,
+[data-admin-theme="light"] .text-amber-300\/80 {
+  color: #92400e !important;
+}
+
+[data-admin-theme="light"] .text-sky-100,
+[data-admin-theme="light"] .text-sky-200,
+[data-admin-theme="light"] .text-sky-200\/90,
+[data-admin-theme="light"] .text-sky-300,
+[data-admin-theme="light"] .text-sky-300\/90 {
+  color: #075985 !important;
+}
+
+[data-admin-theme="light"] .text-emerald-100,
+[data-admin-theme="light"] .text-emerald-200,
+[data-admin-theme="light"] .text-emerald-300,
+[data-admin-theme="light"] .text-emerald-300\/90,
+[data-admin-theme="light"] .text-emerald-300\/80,
+[data-admin-theme="light"] .text-emerald-300\/70 {
+  color: #047857 !important;
+}
+
+[data-admin-theme="light"] .text-red-100,
+[data-admin-theme="light"] .text-red-200,
+[data-admin-theme="light"] .text-red-300,
+[data-admin-theme="light"] .text-red-300\/90,
+[data-admin-theme="light"] .text-red-300\/80,
+[data-admin-theme="light"] .text-red-300\/70 {
+  color: #b91c1c !important;
+}
+
+[data-admin-theme="light"] .bg-amber-500\/10,
+[data-admin-theme="light"] .bg-amber-500\/15,
+[data-admin-theme="light"] .bg-amber-500\/20 {
+  background-color: #fffbeb !important;
+}
+
+[data-admin-theme="light"] .bg-sky-500\/10,
+[data-admin-theme="light"] .bg-sky-500\/15,
+[data-admin-theme="light"] .bg-sky-500\/20,
+[data-admin-theme="light"] .bg-sky-400\/40 {
+  background-color: #f0f9ff !important;
+}
+
+[data-admin-theme="light"] .bg-emerald-500\/10,
+[data-admin-theme="light"] .bg-emerald-500\/15,
+[data-admin-theme="light"] .bg-emerald-500\/20 {
+  background-color: #ecfdf5 !important;
+}
+
+[data-admin-theme="light"] .bg-red-500\/10,
+[data-admin-theme="light"] .bg-red-500\/15,
+[data-admin-theme="light"] .bg-red-500\/20 {
+  background-color: #fef2f2 !important;
+}
+
+[data-admin-theme="light"] .border-amber-400\/30,
+[data-admin-theme="light"] .border-amber-400\/40,
+[data-admin-theme="light"] .border-amber-500\/25,
+[data-admin-theme="light"] .border-amber-500\/30 {
+  border-color: #f59e0b !important;
+}
+
+[data-admin-theme="light"] .border-sky-400\/40,
+[data-admin-theme="light"] .border-sky-500\/25,
+[data-admin-theme="light"] .border-sky-500\/30 {
+  border-color: #38bdf8 !important;
+}
+
+[data-admin-theme="light"] .border-emerald-500\/30 {
+  border-color: #34d399 !important;
+}
+
+[data-admin-theme="light"] .border-red-400\/50,
+[data-admin-theme="light"] .border-red-500\/30 {
+  border-color: #f87171 !important;
+}
+
+/* Shared alert banners — use these for new warnings */
+.admin-alert {
+  border-radius: 0.5rem;
+  border: 1px solid #cbd5e1;
+  padding: 0.75rem 0.875rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.admin-alert--warn {
+  background: #fffbeb;
+  border-color: #f59e0b;
+  color: #78350f;
+}
+
+.admin-alert--info {
+  background: #f0f9ff;
+  border-color: #38bdf8;
+  color: #0c4a6e;
+}
+
+.admin-alert--ok {
+  background: #ecfdf5;
+  border-color: #34d399;
+  color: #064e3b;
+}
+
+.admin-alert--danger {
+  background: #fef2f2;
+  border-color: #f87171;
+  color: #7f1d1d;
+}
+
+[data-admin-theme="light"] .pm-gate-banner {
+  background: #fffbeb !important;
+  border-color: #f59e0b !important;
+  color: #78350f !important;
+}
+
+[data-admin-theme="light"] .pm-gate-banner .font-semibold,
+[data-admin-theme="light"] .pm-gate-banner p {
+  color: inherit !important;
+}
+
+[data-admin-theme="light"] .pm-toast {
+  background: #f8fafc !important;
+  border-color: #94a3b8 !important;
+  color: #0f172a !important;
+}
+
+[data-admin-theme="light"] .pm-client-update__warn {
+  background: #fffbeb;
+  border: 1px solid #f59e0b;
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  color: #78350f !important;
+}
+
 /* Payment / status chips — always readable in light mode */
 .pm-status-chip {
   display: inline-flex;

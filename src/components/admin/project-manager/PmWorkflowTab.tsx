@@ -88,11 +88,14 @@ export default function PmWorkflowTab({ pm }: Props) {
       className="space-y-3"
     >
       {GATED_PHASES.has(currentPhase) && !hasPhaseGate(gates, currentPhase) && (
-        <div className="rounded border border-amber-400/30 bg-amber-500/10 px-3 py-2.5 text-xs text-amber-100/90">
-          <p className="font-semibold text-amber-100">Sign-off required before leaving this phase</p>
-          <p className="mt-1 text-amber-100/70">
+        <div className="pm-gate-banner rounded-lg border border-amber-300 bg-amber-50 px-3.5 py-3 text-sm text-amber-950">
+          <p className="font-semibold text-amber-950">
+            Sign-off required before leaving this phase
+          </p>
+          <p className="mt-1 text-amber-900/90 leading-relaxed">
             {(currentChecks.filter((c) => !c.done).length || 0)} checklist item(s)
-            incomplete · gate blocks soft advance until signed off (force still available).
+            incomplete · complete the checklist, then sign off below before advancing
+            (force advance still available if needed).
           </p>
         </div>
       )}
@@ -303,7 +306,9 @@ export default function PmWorkflowTab({ pm }: Props) {
                 ).toLocaleString()}
               </span>
             ) : (
-              <span className="text-[11px] text-white/45">Pending sign-off</span>
+              <span className="text-[11px] font-semibold text-amber-900 bg-amber-50 border border-amber-400 px-2 py-0.5 rounded">
+                Pending sign-off
+              </span>
             )}
           </div>
           {!hasPhaseGate(gates, currentPhase) ? (
