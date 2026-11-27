@@ -519,7 +519,11 @@ export default function WorkflowApp({
 }) {
   const preview = mode === "admin-preview";
   const attachmentBase = preview ? "/api/admin/workflow/attachments" : "/api/workflow/attachments";
-  const { isDark, toggle, ready: themeReady } = useWorkflowTheme();
+  const workflowTheme = useWorkflowTheme();
+  // Admin panel is light-only — never show dark theme inside admin preview.
+  const isDark = preview ? false : workflowTheme.isDark;
+  const toggle = workflowTheme.toggle;
+  const themeReady = preview ? true : workflowTheme.ready;
   const ui = workflowUi(isDark);
   const titleRef = useRef<HTMLInputElement>(null);
   const [date, setDate] = useState(todayKey());
@@ -1110,14 +1114,16 @@ export default function WorkflowApp({
               </span>
             )}
             <span className={`hidden md:inline text-xs ${ui.muted}`}>{user.email}</span>
-            <button
-              type="button"
-              onClick={toggle}
-              title={isDark ? "Switch to light theme" : "Switch to dark theme"}
-              className={`px-3 py-1.5 text-xs rounded-lg border transition ${ui.btnGhost}`}
-            >
-              {isDark ? "Light" : "Dark"}
-            </button>
+            {!preview ? (
+              <button
+                type="button"
+                onClick={toggle}
+                title={isDark ? "Switch to light theme" : "Switch to dark theme"}
+                className={`px-3 py-1.5 text-xs rounded-lg border transition ${ui.btnGhost}`}
+              >
+                {isDark ? "Light" : "Dark"}
+              </button>
+            ) : null}
             {preview ? (
               <button
                 type="button"

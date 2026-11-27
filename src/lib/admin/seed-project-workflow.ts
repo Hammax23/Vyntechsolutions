@@ -1,6 +1,5 @@
 import prisma from "@/lib/prisma";
 import {
-  buildMissingPhaseCheckCreates,
   buildPaymentCreates,
   buildPhaseCheckCreates,
   computeOverallProgress,
@@ -13,7 +12,20 @@ const projectInclude = {
   notes: true,
   activityLogs: { orderBy: { timestamp: "desc" as const } },
   phaseChecks: { orderBy: { sortOrder: "asc" as const } },
-  payments: { orderBy: { sortOrder: "asc" as const } },
+  payments: {
+    orderBy: { sortOrder: "asc" as const },
+    include: {
+      billingInvoice: {
+        select: {
+          id: true,
+          invoiceNumber: true,
+          status: true,
+          paidAt: true,
+          dueDate: true,
+        },
+      },
+    },
+  },
 };
 
 export { projectInclude };
@@ -66,6 +78,8 @@ export async function ensureProjectWorkflow(projectId: string, budget?: number) 
   // First-time workflow only: seed checklist + default payments together.
   // Never re-create payments when count hits 0 — that made deletes "come back"
   // after DELETE → ensureProjectWorkflow (empty list looked like "unseeded").
+  // Once any checklist exists, admins manage items themselves — do NOT
+  // re-seed "missing" phases (deleting all items in a phase must stick).
   if (existing._count.phaseChecks === 0) {
     await prisma.projectPhaseCheck.createMany({
       data: buildPhaseCheckCreates(projectId),
@@ -75,19 +89,6 @@ export async function ensureProjectWorkflow(projectId: string, budget?: number) 
       await prisma.projectPayment.createMany({
         data: buildPaymentCreates(projectId, amountBudget),
       });
-    }
-  } else {
-    const maxSort = existing.phaseChecks.reduce(
-      (m, row) => Math.max(m, row.sortOrder ?? 0),
-      0
-    );
-    const missing = buildMissingPhaseCheckCreates(
-      projectId,
-      existing.phaseChecks.map((c) => c.phase),
-      maxSort + 10
-    );
-    if (missing.length > 0) {
-      await prisma.projectPhaseCheck.createMany({ data: missing });
     }
   }
 
@@ -111,7 +112,7 @@ export async function seedNewProjectWorkflow(projectId: string, budget: number) 
     data: {
       projectId,
       action: "Workflow seeded (SDLC checklist + payment milestones)",
-      user: "Admin",
+      user: "System",
     },
   });
 }

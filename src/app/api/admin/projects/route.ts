@@ -13,6 +13,7 @@ import {
   syncProjectProgress,
 } from "@/lib/admin/seed-project-workflow";
 import { removeProjectLogo, saveProjectLogo } from "@/lib/admin/project-logo";
+import { actorNameFromRequest } from "@/lib/admin/actor";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -25,6 +26,18 @@ function parseServices(raw: unknown): string[] {
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
+}
+
+/** Date-only values (YYYY-MM-DD) → noon UTC so TZ shifts don't change the calendar day. */
+function parseDateOnly(value: unknown): Date | null {
+  if (value == null || value === "") return null;
+  const s = String(value).trim();
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s);
+  if (m) {
+    return new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3]), 12, 0, 0));
+  }
+  const d = new Date(s);
+  return Number.isNaN(d.getTime()) ? null : d;
 }
 
 async function readCreatePayload(request: NextRequest): Promise<{
@@ -79,6 +92,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   let savedLogo: string | null = null;
   try {
+    const actor = await actorNameFromRequest(request);
     const { fields: data, logoFile } = await readCreatePayload(request);
     const projectName = String(data.projectName || "").trim();
     const clientName = String(data.clientName || "").trim();
@@ -124,14 +138,14 @@ export async function POST(request: NextRequest) {
         progress: Number(data.progress) || 0,
         budget,
         spent: Number(data.spent) || 0,
-        startDate: data.startDate ? new Date(String(data.startDate)) : null,
-        deadline: data.deadline ? new Date(String(data.deadline)) : null,
+        startDate: parseDateOnly(data.startDate),
+        deadline: parseDateOnly(data.deadline),
         teamMembers,
         phaseGates: [],
         activityLogs: {
           create: {
             action: savedLogo ? "Project created with company logo" : "Project created",
-            user: "Admin",
+            user: actor,
           },
         },
       },
@@ -158,6 +172,7 @@ export async function POST(request: NextRequest) {
 export async function PATCH(request: NextRequest) {
   let savedLogo: string | null = null;
   try {
+    const actor = await actorNameFromRequest(request);
     const contentType = request.headers.get("content-type") || "";
     let data: Record<string, unknown>;
     let logoFile: File | null = null;
@@ -203,14 +218,10 @@ export async function PATCH(request: NextRequest) {
     }
 
     if (updateData.startDate !== undefined) {
-      updateData.startDate = updateData.startDate
-        ? new Date(String(updateData.startDate))
-        : null;
+      updateData.startDate = parseDateOnly(updateData.startDate);
     }
     if (updateData.deadline !== undefined) {
-      updateData.deadline = updateData.deadline
-        ? new Date(String(updateData.deadline))
-        : null;
+      updateData.deadline = parseDateOnly(updateData.deadline);
     }
     if (updateData.services !== undefined) {
       updateData.services = parseServices(updateData.services);
@@ -234,15 +245,39 @@ export async function PATCH(request: NextRequest) {
       }
     }
 
-    if (typeof updateData.budget === "number") {
-      // Keep payment amounts in sync when budget changes and payment still pending
-      const payments = await prisma.projectPayment.findMany({ where: { projectId: id } });
+    const requiredLabels: Record<string, string> = {
+      projectName: "Project name",
+      clientName: "Client name",
+      clientEmail: "Client email",
+      clientPhone: "Client phone",
+    };
+    for (const key of Object.keys(requiredLabels)) {
+      if (updateData[key] !== undefined && !String(updateData[key] || "").trim()) {
+        return NextResponse.json(
+          { error: `${requiredLabels[key]} is required` },
+          { status: 400 }
+        );
+      }
+    }
+
+    const budgetChanged =
+      typeof updateData.budget === "number" &&
+      updateData.budget !== existing.budget;
+
+    if (budgetChanged) {
+      // Only rewrite unpaid milestones when budget actually changes
+      const payments = await prisma.projectPayment.findMany({
+        where: { projectId: String(id) },
+      });
       for (const pay of payments) {
         if (pay.status !== "paid") {
           await prisma.projectPayment.update({
             where: { id: pay.id },
             data: {
-              amount: Math.round(((updateData.budget as number) * pay.percent) / 100 * 100) / 100,
+              amount:
+                Math.round(
+                  (((updateData.budget as number) * pay.percent) / 100) * 100
+                ) / 100,
             },
           });
         }
@@ -282,25 +317,47 @@ export async function PATCH(request: NextRequest) {
     if (updateData.status && updateData.status !== existing.status) {
       activityData.push({
         action: `Status changed to ${updateData.status}`,
-        user: "Admin",
+        user: actor,
       });
     }
     if (updateData.priority && updateData.priority !== existing.priority) {
       activityData.push({
         action: `Priority changed to ${updateData.priority}`,
-        user: "Admin",
+        user: actor,
       });
     }
     if (gatePayload?.phase) {
       activityData.push({
         action: `Phase signed off: ${gatePayload.phase}${gatePayload.note ? ` — ${gatePayload.note}` : ""}`,
-        user: "Admin",
+        user: actor,
       });
     }
     if (savedLogo) {
       activityData.push({
         action: "Company logo updated",
-        user: "Admin",
+        user: actor,
+      });
+    }
+    const detailsTouched = [
+      "projectName",
+      "clientName",
+      "clientEmail",
+      "clientPhone",
+      "companyName",
+      "description",
+      "services",
+      "budget",
+      "spent",
+      "startDate",
+      "deadline",
+    ].some((key) => updateData[key] !== undefined);
+    if (
+      detailsTouched &&
+      !activityData.some((a) => a.action.startsWith("Status") || a.action.startsWith("Priority"))
+    ) {
+      activityData.push({
+        action: "Project details updated",
+        user: actor,
       });
     }
 

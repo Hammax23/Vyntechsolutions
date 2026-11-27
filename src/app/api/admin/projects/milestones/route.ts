@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { actorNameFromRequest } from "@/lib/admin/actor";
 
 // POST create new milestone
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
+    const actor = await actorNameFromRequest(request);
 
     const milestone = await prisma.milestone.create({
       data: {
@@ -15,11 +17,10 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Add activity log
     await prisma.activityLog.create({
       data: {
         action: `Milestone "${milestone.title}" added`,
-        user: "Admin",
+        user: actor,
         projectId: data.projectId,
       },
     });
@@ -36,6 +37,7 @@ export async function PATCH(request: NextRequest) {
   try {
     const data = await request.json();
     const { id, ...updateData } = data;
+    const actor = await actorNameFromRequest(request);
 
     if (!id) {
       return NextResponse.json({ error: "Milestone ID is required" }, { status: 400 });
@@ -50,12 +52,11 @@ export async function PATCH(request: NextRequest) {
       data: updateData,
     });
 
-    // Add activity log
     if (typeof updateData.completed !== "undefined") {
       await prisma.activityLog.create({
         data: {
           action: `Milestone "${milestone.title}" ${updateData.completed ? "completed" : "unmarked"}`,
-          user: "Admin",
+          user: actor,
           projectId: milestone.projectId,
         },
       });
@@ -73,6 +74,7 @@ export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
+    const actor = await actorNameFromRequest(request);
 
     if (!id) {
       return NextResponse.json({ error: "Milestone ID is required" }, { status: 400 });
@@ -86,11 +88,10 @@ export async function DELETE(request: NextRequest) {
 
     await prisma.milestone.delete({ where: { id } });
 
-    // Add activity log
     await prisma.activityLog.create({
       data: {
         action: `Milestone "${milestone.title}" deleted`,
-        user: "Admin",
+        user: actor,
         projectId: milestone.projectId,
       },
     });

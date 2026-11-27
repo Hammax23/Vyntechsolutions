@@ -7,13 +7,20 @@ interface VynTechLogoProps {
   className?: string;
   onClick?: () => void;
   darkText?: boolean;
+  /** Hide wordmark — mark only (e.g. collapsed admin sidebar). */
+  iconOnly?: boolean;
 }
 
-export default function VynTechLogo({ className = "", onClick, darkText = false }: VynTechLogoProps) {
+export default function VynTechLogo({
+  className = "",
+  onClick,
+  darkText = false,
+  iconOnly = false,
+}: VynTechLogoProps) {
   return (
     <div
       onClick={onClick}
-      className={`flex items-center gap-1 sm:gap-3 lg:gap-3 group cursor-pointer ${className}`}
+      className={`flex items-center ${iconOnly ? "gap-0" : "gap-1 sm:gap-3 lg:gap-3"} group cursor-pointer ${className}`}
     >
       <div className="relative w-10 h-10 lg:w-11 lg:h-11 flex items-center justify-center shrink-0 -translate-y-0.5">
         <Image
@@ -26,12 +33,14 @@ export default function VynTechLogo({ className = "", onClick, darkText = false 
         />
       </div>
 
-      <span
-        className={`-translate-y-0.5 text-[1.4rem] lg:text-[1.85rem] tracking-[0.01em] leading-none font-light lowercase ${darkText ? "text-black" : "text-white"}`}
-        style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}
-      >
-        vyntech
-      </span>
+      {!iconOnly ? (
+        <span
+          className={`-translate-y-0.5 text-[1.4rem] lg:text-[1.85rem] tracking-[0.01em] leading-none font-light lowercase ${darkText ? "text-black" : "text-white"}`}
+          style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}
+        >
+          vyntech
+        </span>
+      ) : null}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { ensureProjectWorkflow, projectInclude } from "@/lib/admin/seed-project-workflow";
+import { actorNameFromRequest } from "@/lib/admin/actor";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +16,7 @@ async function projectWithPayments(projectId: string) {
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
+    const actor = await actorNameFromRequest(request);
     const projectId = String(data.projectId || "").trim();
     const label = String(data.label || "").trim();
     if (!projectId) {
@@ -33,7 +35,7 @@ export async function POST(request: NextRequest) {
       typeof data.percent === "number" && Number.isFinite(data.percent)
         ? Math.max(0, Math.min(100, data.percent))
         : 0;
-    let amount =
+    const amount =
       typeof data.amount === "number" && Number.isFinite(data.amount)
         ? Math.max(0, data.amount)
         : Math.round(((project.budget || 0) * percent) / 100 * 100) / 100;
@@ -55,13 +57,24 @@ export async function POST(request: NextRequest) {
         dueDate: data.dueDate ? new Date(data.dueDate) : null,
         sortOrder,
       },
+      include: {
+        billingInvoice: {
+          select: {
+            id: true,
+            invoiceNumber: true,
+            status: true,
+            paidAt: true,
+            dueDate: true,
+          },
+        },
+      },
     });
 
     await prisma.activityLog.create({
       data: {
         projectId,
         action: `Payment milestone added: ${payment.label} (${payment.percent}% · $${payment.amount})`,
-        user: "Admin",
+        user: actor,
       },
     });
 
@@ -76,12 +89,18 @@ export async function POST(request: NextRequest) {
 export async function PATCH(request: NextRequest) {
   try {
     const data = await request.json();
+    const actor = await actorNameFromRequest(request);
     const id = String(data.id || "");
     if (!id) {
       return NextResponse.json({ error: "Payment ID is required" }, { status: 400 });
     }
 
-    const existing = await prisma.projectPayment.findUnique({ where: { id } });
+    const existing = await prisma.projectPayment.findUnique({
+      where: { id },
+      include: {
+        billingInvoice: { select: { id: true, status: true, invoiceNumber: true } },
+      },
+    });
     if (!existing) {
       return NextResponse.json({ error: "Payment not found" }, { status: 404 });
     }
@@ -106,6 +125,19 @@ export async function PATCH(request: NextRequest) {
     }
     if (typeof data.notes === "string") update.notes = data.notes || null;
     if (typeof data.status === "string" && ["pending", "due", "paid"].includes(data.status)) {
+      // Block undo-paid when linked invoice is already paid
+      if (
+        existing.status === "paid" &&
+        data.status !== "paid" &&
+        existing.billingInvoice?.status === "paid"
+      ) {
+        return NextResponse.json(
+          {
+            error: `Cannot undo paid while invoice ${existing.billingInvoice.invoiceNumber} is Paid. Adjust the invoice first.`,
+          },
+          { status: 400 }
+        );
+      }
       update.status = data.status;
       if (data.status === "paid") {
         update.paidAt = data.paidAt ? new Date(data.paidAt) : new Date();
@@ -120,6 +152,17 @@ export async function PATCH(request: NextRequest) {
     const payment = await prisma.projectPayment.update({
       where: { id },
       data: update,
+      include: {
+        billingInvoice: {
+          select: {
+            id: true,
+            invoiceNumber: true,
+            status: true,
+            paidAt: true,
+            dueDate: true,
+          },
+        },
+      },
     });
 
     if (update.status === "paid" && existing.status !== "paid") {
@@ -127,7 +170,7 @@ export async function PATCH(request: NextRequest) {
         data: {
           projectId: existing.projectId,
           action: `Payment marked paid: ${payment.label} ($${payment.amount})`,
-          user: "Admin",
+          user: actor,
         },
       });
     } else if (update.label || update.percent != null || update.amount != null) {
@@ -135,7 +178,7 @@ export async function PATCH(request: NextRequest) {
         data: {
           projectId: existing.projectId,
           action: `Payment milestone updated: ${payment.label} (${payment.percent}% · $${payment.amount})`,
-          user: "Admin",
+          user: actor,
         },
       });
     }
@@ -152,6 +195,7 @@ export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
+    const actor = await actorNameFromRequest(request);
     if (!id) {
       return NextResponse.json({ error: "Payment ID is required" }, { status: 400 });
     }
@@ -166,7 +210,7 @@ export async function DELETE(request: NextRequest) {
       data: {
         projectId: existing.projectId,
         action: `Payment milestone removed: ${existing.label}`,
-        user: "Admin",
+        user: actor,
       },
     });
 

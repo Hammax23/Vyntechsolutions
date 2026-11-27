@@ -47,6 +47,40 @@ function isOfflineMethod(method: string): method is BillingOfflinePaymentMethod 
   return (BILLING_OFFLINE_PAYMENT_METHODS as readonly string[]).includes(method);
 }
 
+/** Sync linked ProjectPayment → paid; ActivityLog only when status actually changes. */
+async function ensureProjectPaymentPaidFromInvoice(opts: {
+  projectPaymentId: string;
+  projectId: string | null;
+  invoiceNumber: string;
+  paidAt: Date;
+  actor: string;
+  logActivity: boolean;
+}) {
+  const payment = await prisma.projectPayment.findUnique({
+    where: { id: opts.projectPaymentId },
+    select: { id: true, status: true, label: true },
+  });
+  if (!payment) return;
+  if (payment.status === "paid") return;
+
+  await prisma.projectPayment.update({
+    where: { id: payment.id },
+    data: { status: "paid", paidAt: opts.paidAt },
+  });
+
+  if (opts.logActivity && opts.projectId) {
+    await prisma.activityLog.create({
+      data: {
+        projectId: opts.projectId,
+        action: `Payment milestone marked paid via invoice ${opts.invoiceNumber}${
+          payment.label ? ` (${payment.label})` : ""
+        }`,
+        user: opts.actor || "System",
+      },
+    });
+  }
+}
+
 export type MarkPaidSource = "stripe_webhook" | "admin_offline";
 
 export async function markBillingInvoicePaid(opts: {
@@ -81,6 +115,20 @@ export async function markBillingInvoicePaid(opts: {
       source: opts.source,
       existingSource: invoice.paymentSource || null,
     });
+    // Repair: ensure linked ProjectPayment is paid if invoice already is
+    if (invoice.projectPaymentId) {
+      await ensureProjectPaymentPaidFromInvoice({
+        projectPaymentId: invoice.projectPaymentId,
+        projectId: invoice.projectId,
+        invoiceNumber: invoice.invoiceNumber,
+        paidAt: invoice.paidAt || new Date(),
+        actor:
+          opts.source === "stripe_webhook"
+            ? "Stripe"
+            : opts.paymentRecordedBy?.trim() || "System",
+        logActivity: true,
+      });
+    }
     return invoice;
   }
 
@@ -155,9 +203,13 @@ export async function markBillingInvoicePaid(opts: {
     });
 
     if (invoice.projectPaymentId) {
-      await prisma.projectPayment.update({
-        where: { id: invoice.projectPaymentId },
-        data: { status: "paid", paidAt },
+      await ensureProjectPaymentPaidFromInvoice({
+        projectPaymentId: invoice.projectPaymentId,
+        projectId: invoice.projectId,
+        invoiceNumber: invoice.invoiceNumber,
+        paidAt,
+        actor: opts.paymentRecordedBy.trim(),
+        logActivity: true,
       });
     }
 
@@ -177,12 +229,13 @@ export async function markBillingInvoicePaid(opts: {
 
   // —— Stripe webhook path ——
   const amountPaid = opts.amountPaid != null ? opts.amountPaid : totals.total;
+  const stripePaidAt = new Date();
   const updated = await prisma.billingInvoice.update({
     where: { id: invoice.id },
     data: {
       status: "paid",
       amountPaid,
-      paidAt: new Date(),
+      paidAt: stripePaidAt,
       paymentMethod: opts.paymentMethod || invoice.paymentMethod || "Credit Card",
       paymentSource: "stripe",
       stripeCheckoutSessionId: opts.stripeCheckoutSessionId || invoice.stripeCheckoutSessionId,
@@ -197,9 +250,13 @@ export async function markBillingInvoicePaid(opts: {
   });
 
   if (invoice.projectPaymentId) {
-    await prisma.projectPayment.update({
-      where: { id: invoice.projectPaymentId },
-      data: { status: "paid", paidAt: new Date() },
+    await ensureProjectPaymentPaidFromInvoice({
+      projectPaymentId: invoice.projectPaymentId,
+      projectId: invoice.projectId,
+      invoiceNumber: invoice.invoiceNumber,
+      paidAt: stripePaidAt,
+      actor: "Stripe",
+      logActivity: true,
     });
   }
 

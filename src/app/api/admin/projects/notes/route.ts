@@ -1,24 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { actorNameFromRequest } from "@/lib/admin/actor";
 
 // POST create new note
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
+    const actor = await actorNameFromRequest(request);
 
     const note = await prisma.note.create({
       data: {
         content: data.content,
-        author: data.author || "Admin",
+        author: data.author || actor,
         projectId: data.projectId,
       },
     });
 
-    // Add activity log
     await prisma.activityLog.create({
       data: {
         action: "New note added",
-        user: "Admin",
+        user: actor,
         projectId: data.projectId,
       },
     });
@@ -35,6 +36,7 @@ export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
+    const actor = await actorNameFromRequest(request);
 
     if (!id) {
       return NextResponse.json({ error: "Note ID is required" }, { status: 400 });
@@ -47,6 +49,14 @@ export async function DELETE(request: NextRequest) {
     }
 
     await prisma.note.delete({ where: { id } });
+
+    await prisma.activityLog.create({
+      data: {
+        action: "Note deleted",
+        user: actor,
+        projectId: note.projectId,
+      },
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {

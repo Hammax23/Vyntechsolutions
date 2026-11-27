@@ -37,6 +37,12 @@ export type ClientUpdateSnapshot = {
   checklist: ClientUpdateChecklistItem[];
   payments: ClientUpdatePaymentItem[];
   note: string;
+  /** Next unpaid milestone label (email enrichment) */
+  nextUnpaidPaymentLabel?: string;
+  nextUnpaidPaymentAmount?: number;
+  /** Whether current gated phase has been signed off */
+  phaseSignedOff?: boolean;
+  nextGateLabel?: string;
 };
 
 /** Email clients need absolute image URLs. */
@@ -208,7 +214,7 @@ export function buildClientUpdateHtml(snapshot: ClientUpdateSnapshot): string {
             <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e2e8f0;">
               <tr><td style="padding:14px 16px;">
                 <p style="margin:0 0 2px;font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#64748b;">Current phase</p>
-                <p style="margin:0 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:600;color:#0f172a;">${phase} · Phase ${snapshot.phaseIndex}/${snapshot.phaseTotal}</p>
+                <p style="margin:0 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:600;color:#0f172a;">${phase}</p>
                 <table width="100%" cellpadding="0" cellspacing="0" style="background:#e8edf3;height:6px;">
                   <tr>
                     <td style="width:${progress}%;background:#1e3a5f;height:6px;font-size:0;line-height:0;">&nbsp;</td>
@@ -216,6 +222,32 @@ export function buildClientUpdateHtml(snapshot: ClientUpdateSnapshot): string {
                   </tr>
                 </table>
                 <p style="margin:8px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#475569;">${progress}% complete · As of ${asOf}</p>
+                ${
+                  snapshot.phaseSignedOff != null ||
+                  snapshot.nextUnpaidPaymentLabel ||
+                  snapshot.nextGateLabel
+                    ? `<p style="margin:10px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#475569;line-height:1.45;">${[
+                        snapshot.phaseSignedOff != null
+                          ? snapshot.phaseSignedOff
+                            ? "Phase sign-off: complete"
+                            : "Phase sign-off: pending"
+                          : "",
+                        snapshot.nextGateLabel
+                          ? `Next gate: ${escapeHtml(snapshot.nextGateLabel)}`
+                          : "",
+                        snapshot.nextUnpaidPaymentLabel
+                          ? `Next unpaid: ${escapeHtml(snapshot.nextUnpaidPaymentLabel)}${
+                              snapshot.nextUnpaidPaymentAmount != null &&
+                              Number.isFinite(snapshot.nextUnpaidPaymentAmount)
+                                ? ` (${formatPaymentAmount(snapshot.nextUnpaidPaymentAmount)})`
+                                : ""
+                            }`
+                          : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}</p>`
+                    : ""
+                }
               </td></tr>
             </table>
           </td>

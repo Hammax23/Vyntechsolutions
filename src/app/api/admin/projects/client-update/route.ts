@@ -4,7 +4,13 @@ import {
   ensureProjectWorkflow,
   syncProjectProgress,
 } from "@/lib/admin/seed-project-workflow";
-import { phaseLabel } from "@/lib/admin/project-workflow";
+import {
+  GATED_PHASES,
+  hasPhaseGate,
+  parsePhaseGates,
+  phaseLabel,
+  type ProjectPhase,
+} from "@/lib/admin/project-workflow";
 import {
   absoluteAssetUrl,
   buildClientUpdateHtml,
@@ -22,6 +28,7 @@ import {
   MailError,
   sendMail,
 } from "@/lib/mail";
+import { actorNameFromRequest } from "@/lib/admin/actor";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -59,6 +66,14 @@ function buildSnapshot(
     .filter((c) => c.phase === phase)
     .map((c) => ({ label: c.label, done: c.done }));
 
+  const nextUnpaid = project.payments.find((p) => p.status !== "paid");
+  const gates = parsePhaseGates(project.phaseGates);
+  const isGated = GATED_PHASES.has(phase as ProjectPhase);
+  const phaseSignedOff = isGated ? hasPhaseGate(gates, phase) : undefined;
+  const nextGatePhase = [...GATED_PHASES].find(
+    (g) => !hasPhaseGate(gates, g) && g !== phase
+  );
+
   return {
     projectName: project.projectName,
     clientName: project.clientName,
@@ -82,6 +97,14 @@ function buildSnapshot(
       amount: Number(p.amount) || 0,
     })),
     note: note.trim(),
+    ...(nextUnpaid
+      ? {
+          nextUnpaidPaymentLabel: nextUnpaid.label,
+          nextUnpaidPaymentAmount: Number(nextUnpaid.amount) || 0,
+        }
+      : {}),
+    ...(phaseSignedOff != null ? { phaseSignedOff } : {}),
+    ...(nextGatePhase ? { nextGateLabel: phaseLabel(nextGatePhase) } : {}),
   };
 }
 
@@ -294,6 +317,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const actor = await actorNameFromRequest(request);
     const body = await request.json().catch(() => ({}));
     const projectId = String(body.projectId || "").trim();
     const idempotencyKey = String(body.idempotencyKey || "").trim();
@@ -414,7 +438,7 @@ export async function POST(request: NextRequest) {
             errorMessage: message,
             idempotencyKey,
             bccTo,
-            sentBy: "Admin",
+            sentBy: actor,
           },
         });
       }
@@ -423,7 +447,7 @@ export async function POST(request: NextRequest) {
         data: {
           projectId,
           action: `Client update failed to send (${kind})`,
-          user: "Admin",
+          user: actor,
         },
       });
 
@@ -461,7 +485,7 @@ export async function POST(request: NextRequest) {
           status: "sent",
           idempotencyKey,
           bccTo,
-          sentBy: "Admin",
+          sentBy: actor,
         },
       });
       logId = created.id;
@@ -472,7 +496,7 @@ export async function POST(request: NextRequest) {
         data: {
           projectId,
           action: `Client update emailed to ${to}`,
-          user: "Admin",
+          user: actor,
         },
       });
 
@@ -485,7 +509,7 @@ export async function POST(request: NextRequest) {
           data: {
             projectId,
             action: "Client email updated for updates",
-            user: "Admin",
+            user: actor,
           },
         });
       }
@@ -494,7 +518,7 @@ export async function POST(request: NextRequest) {
         data: {
           projectId,
           action: `Test client update sent to ${to}`,
-          user: "Admin",
+          user: actor,
         },
       });
     }

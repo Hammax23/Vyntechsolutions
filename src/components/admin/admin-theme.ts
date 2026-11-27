@@ -1,28 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-export type AdminTheme = "dark" | "light";
+import { useEffect } from "react";
 
 const KEY = "vyntech-admin-theme";
 
+/** Admin panel is light-only — clears any legacy dark preference. */
 export function useAdminTheme() {
-  const [theme, setTheme] = useState<AdminTheme>("dark");
-  const [ready, setReady] = useState(false);
-
   useEffect(() => {
-    const stored = localStorage.getItem(KEY);
-    if (stored === "light" || stored === "dark") setTheme(stored);
-    setReady(true);
+    try {
+      localStorage.setItem(KEY, "light");
+    } catch {
+      /* ignore */
+    }
   }, []);
-
-  const toggle = () => {
-    setTheme((prev) => {
-      const next = prev === "dark" ? "light" : "dark";
-      localStorage.setItem(KEY, next);
-      return next;
-    });
-  };
-
-  return { theme, toggle, ready, isDark: theme === "dark" };
 }

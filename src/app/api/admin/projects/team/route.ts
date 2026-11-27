@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { notSystemStaffWhere } from "@/lib/workflow-auth";
+import { actorNameFromRequest } from "@/lib/admin/actor";
 
 export const dynamic = "force-dynamic";
 
@@ -101,7 +102,7 @@ export async function PUT(request: NextRequest) {
         data: {
           projectId,
           action: `Team updated (${finalIds.length} members)`,
-          user: "Admin",
+          user: await actorNameFromRequest(request),
         },
       });
     });

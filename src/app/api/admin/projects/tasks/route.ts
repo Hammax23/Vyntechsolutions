@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { actorNameFromRequest } from "@/lib/admin/actor";
 
 // POST create new task
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
+    const actor = await actorNameFromRequest(request);
 
     const task = await prisma.task.create({
       data: {
@@ -21,7 +23,7 @@ export async function POST(request: NextRequest) {
     await prisma.activityLog.create({
       data: {
         action: `Task "${task.title}" added`,
-        user: "Admin",
+        user: actor,
         projectId: data.projectId,
       },
     });
@@ -40,6 +42,7 @@ export async function PATCH(request: NextRequest) {
   try {
     const data = await request.json();
     const { id, projectId, ...updateData } = data;
+    const actor = await actorNameFromRequest(request);
 
     if (!id) {
       return NextResponse.json({ error: "Task ID is required" }, { status: 400 });
@@ -58,7 +61,7 @@ export async function PATCH(request: NextRequest) {
       await prisma.activityLog.create({
         data: {
           action: `Task "${task.title}" status changed to ${updateData.status}`,
-          user: "Admin",
+          user: actor,
           projectId: task.projectId,
         },
       });
@@ -76,6 +79,7 @@ export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
+    const actor = await actorNameFromRequest(request);
 
     if (!id) {
       return NextResponse.json({ error: "Task ID is required" }, { status: 400 });
@@ -92,7 +96,7 @@ export async function DELETE(request: NextRequest) {
     await prisma.activityLog.create({
       data: {
         action: `Task "${task.title}" deleted`,
-        user: "Admin",
+        user: actor,
         projectId: task.projectId,
       },
     });

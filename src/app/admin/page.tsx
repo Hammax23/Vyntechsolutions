@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
 import VynTechLogo from "@/components/VynTechLogo";
 import { useAdminTheme } from "@/components/admin/admin-theme";
-import AdminThemeToggle from "@/components/admin/AdminThemeToggle";
 
 const OfferLetterSection = dynamic(() => import("@/components/admin/OfferLetterSection"), {
   ssr: false,
@@ -102,7 +101,7 @@ interface JobPosition {
 }
 
 export default function AdminPage() {
-  const { theme, toggle, isDark } = useAdminTheme();
+  useAdminTheme();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [adminUser, setAdminUser] = useState<AdminUserInfo | null>(null);
@@ -452,7 +451,7 @@ export default function AdminPage() {
 
   if (isLoading) {
     return (
-      <div data-admin-theme={theme} className="min-h-screen bg-[#030014] flex items-center justify-center">
+      <div data-admin-theme="light" className="min-h-screen bg-[#030014] flex items-center justify-center">
         <div className="relative">
           <div className="w-16 h-16 border-4 border-[#0055FF]/20 rounded-full"></div>
           <div className="absolute top-0 left-0 w-16 h-16 border-4 border-[#00B4FF] border-t-transparent rounded-full animate-spin"></div>
@@ -464,10 +463,7 @@ export default function AdminPage() {
   // Login Page
   if (!isAuthenticated) {
     return (
-      <div data-admin-theme={theme} className="min-h-screen bg-[#030014] flex items-center justify-center p-4 relative overflow-hidden">
-        <div className="absolute top-4 right-4 z-20">
-          <AdminThemeToggle isDark={isDark} onToggle={toggle} />
-        </div>
+      <div data-admin-theme="light" className="min-h-screen bg-[#030014] flex items-center justify-center p-4 relative overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-[#0055FF]/20 rounded-full blur-[150px] animate-pulse"></div>
           <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-[#00B4FF]/15 rounded-full blur-[150px] animate-pulse"></div>
@@ -475,7 +471,7 @@ export default function AdminPage() {
 
         <div className="w-full max-w-md relative z-10">
           <div className="flex flex-col items-center mb-6">
-            <VynTechLogo className="scale-110 cursor-default" darkText={!isDark} />
+            <VynTechLogo className="scale-110 cursor-default" darkText />
           </div>
 
           <div className="bg-[#0a0a1a]/80 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl p-8">
@@ -620,12 +616,16 @@ export default function AdminPage() {
 
   // Dashboard
   return (
-    <div data-admin-theme={theme} className="h-screen bg-[#030014] flex overflow-hidden">
+    <div data-admin-theme="light" className="h-screen bg-[#030014] flex overflow-hidden">
       {/* Sidebar */}
-      <aside className={`${sidebarOpen ? "w-64" : "w-20"} bg-[#0a0a1a]/80 backdrop-blur-xl border-r border-white/5 flex flex-col transition-all duration-300 fixed h-full z-40`}>
-        <div className="p-4 border-b border-white/5">
-          <div className="flex items-center">
-            <VynTechLogo className={`cursor-default ${sidebarOpen ? "scale-90 -ml-2" : "scale-75 -ml-4"}`} darkText={!isDark} />
+      <aside className={`${sidebarOpen ? "w-64" : "w-20"} bg-[#0a0a1a]/80 backdrop-blur-xl border-r border-white/5 flex flex-col transition-all duration-300 fixed h-full z-40 overflow-x-hidden`}>
+        <div className={`border-b border-white/5 overflow-hidden ${sidebarOpen ? "px-4 py-4" : "px-2 py-4"}`}>
+          <div className={`flex items-center min-w-0 ${sidebarOpen ? "justify-start" : "justify-center"}`}>
+            <VynTechLogo
+              className={`cursor-default shrink-0 ${sidebarOpen ? "scale-[0.82] origin-left" : "scale-90"}`}
+              darkText
+              iconOnly={!sidebarOpen}
+            />
           </div>
         </div>
 
@@ -712,7 +712,7 @@ export default function AdminPage() {
       </aside>
 
       {/* Main Content */}
-      <main className={`flex-1 min-h-0 flex flex-col bg-[#030014] ${sidebarOpen ? "ml-64" : "ml-20"} transition-all duration-300`}>
+      <main className={`flex-1 min-w-0 min-h-0 flex flex-col bg-[#030014] ${sidebarOpen ? "ml-64" : "ml-20"} transition-all duration-300`}>
         {/* Header */}
         <header className="sticky top-0 z-30 bg-[#030014]/90 backdrop-blur-xl border-b border-white/5 px-6 py-4">
           <div className="flex items-center justify-between">
@@ -758,7 +758,6 @@ export default function AdminPage() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <AdminThemeToggle isDark={isDark} onToggle={toggle} />
               <button onClick={activeSection === "quotes" ? fetchSubmissions : activeSection === "projects" ? () => setProjectsRefreshKey((k) => k + 1) : loadJobPositions} className="p-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition-all" title="Refresh">
               <svg className="w-4 h-4 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -768,7 +767,7 @@ export default function AdminPage() {
           </div>
         </header>
 
-        <div className="p-6 flex-1 overflow-y-auto">
+        <div className="p-4 sm:p-6 flex-1 min-w-0 overflow-y-auto overflow-x-hidden">
           {activeSection === "quotes" && canSection("quotes") && (
           <>
           {/* Stats */}
@@ -1012,6 +1011,14 @@ export default function AdminPage() {
               setSelectedSubmission(null);
               setSelectedPosition(null);
               setActiveSection("client_invoices");
+            }}
+            onOpenTeamProgress={(projectId) => {
+              try {
+                sessionStorage.setItem("vyntech-open-workflow-project", projectId);
+              } catch {
+                /* ignore */
+              }
+              goSection("workflow");
             }}
           />
           )}

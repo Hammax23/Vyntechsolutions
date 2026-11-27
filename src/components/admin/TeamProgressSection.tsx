@@ -5,6 +5,7 @@ import { heatmapTone, isWeekendKey, todayKey, formatDuration, formatFileSize, wo
 import { useLivePoll } from "@/hooks/useLivePoll";
 import WorkflowApp from "@/components/workflow/WorkflowApp";
 import { MAX_ATTACHMENT_BYTES, MAX_ATTACHMENTS_PER_TASK } from "@/lib/workflow-attachments-limits";
+import { WORKFLOW_PROJECT_STORAGE_KEY } from "@/components/admin/project-manager/types";
 
 type StaffRow = { id: string; name: string; email: string; color: string; role: string };
 type Score = { total: number; done: number; percent: number | null };
@@ -114,6 +115,7 @@ export default function TeamProgressSection() {
     todayByProject?: TodayByProject[];
   } | null>(null);
   const [expandedTodayProject, setExpandedTodayProject] = useState<string | null>(null);
+  const [focusProjectId, setFocusProjectId] = useState<string | null>(null);
   const [selected, setSelected] = useState<{ staffId: string; date: string; name: string } | null>(null);
   const [previewStaff, setPreviewStaff] = useState<StaffRow | null>(null);
   const [dayTasks, setDayTasks] = useState<Task[]>([]);
@@ -213,6 +215,20 @@ export default function TeamProgressSection() {
     setToast({ text, kind });
     toastTimer.current = setTimeout(() => setToast(null), kind === "error" ? 5500 : 3200);
   }, []);
+
+  useEffect(() => {
+    try {
+      const id = sessionStorage.getItem(WORKFLOW_PROJECT_STORAGE_KEY);
+      if (!id) return;
+      sessionStorage.removeItem(WORKFLOW_PROJECT_STORAGE_KEY);
+      setFocusProjectId(id);
+      setExpandedTodayProject(id);
+      setTaskForm((prev) => ({ ...prev, projectId: id }));
+      showToast("Filtered to project from Project Manager", "info");
+    } catch {
+      /* ignore */
+    }
+  }, [showToast]);
 
   useEffect(
     () => () => {
@@ -576,7 +592,9 @@ export default function TeamProgressSection() {
     [year, month, days]
   );
 
-  const todayByProject = overview?.todayByProject || [];
+  const todayByProject = (overview?.todayByProject || []).filter((proj) =>
+    focusProjectId ? proj.projectId === focusProjectId : true
+  );
   const teamToday = overview?.teamToday;
   const overviewTodayKey = overview?.todayKey || todayKey();
 
@@ -709,7 +727,17 @@ export default function TeamProgressSection() {
             <h3 className="text-white font-semibold text-sm">Today by project</h3>
             <p className="text-white/35 text-xs mt-0.5">
               {overviewTodayKey} · work across projects at a glance
+              {focusProjectId ? " · filtered from Project Manager" : ""}
             </p>
+            {focusProjectId ? (
+              <button
+                type="button"
+                onClick={() => setFocusProjectId(null)}
+                className="mt-1 text-[11px] text-[#7dd3fc] hover:underline"
+              >
+                Clear project filter
+              </button>
+            ) : null}
           </div>
           {teamToday ? (
             <div className="flex flex-wrap gap-2 text-[11px]">
