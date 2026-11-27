@@ -79,6 +79,14 @@ export async function GET(_request: Request, { params }: Params) {
           amountValue: totals.total,
           balance: formatBillingCad(totals.balance),
           balanceValue: totals.balance,
+          subtotal: formatBillingCad(totals.subtotal),
+          discountPercent: billing.discountPercent,
+          discount:
+            totals.discount > 0.009 && billing.discountPercent > 0
+              ? formatBillingCad(totals.discount)
+              : "",
+          hstPercent: billing.hstPercent,
+          hst: formatBillingCad(totals.hst),
           checkoutUrl: billing.checkoutUrl || "",
           lineItems: lineItems.map((i) => ({
             description: i.description,

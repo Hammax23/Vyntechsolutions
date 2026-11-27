@@ -1278,10 +1278,10 @@ export default function ClientInvoiceSection({ sidebarOpen, isOwner = false }: P
               <span>Subtotal</span>
               <span className="tabular-nums">{formatCad(totals.subtotal)}</span>
             </div>
-            {totals.discount > 0 && (
+            {totals.discount > 0.009 && (
               <div className="ci-sidebar-totals__line flex justify-between">
-                <span>Discount</span>
-                <span className="tabular-nums">-{formatCad(totals.discount)}</span>
+                <span>Discount ({Number(form.discountPercent) || 0}%)</span>
+                <span className="tabular-nums">−{formatCad(totals.discount)}</span>
               </div>
             )}
             <div className="ci-sidebar-totals__line flex justify-between">
@@ -2080,10 +2080,37 @@ export default function ClientInvoiceSection({ sidebarOpen, isOwner = false }: P
                   className={input}
                   type="number"
                   min={0}
+                  max={100}
                   step="0.01"
-                  value={form.discountPercent}
-                  onChange={(e) => set("discountPercent", Number(e.target.value))}
+                  inputMode="decimal"
+                  placeholder="0"
+                  value={
+                    form.discountPercent === 0 || form.discountPercent === null
+                      ? ""
+                      : form.discountPercent
+                  }
+                  onFocus={(e) => e.currentTarget.select()}
+                  onChange={(e) => {
+                    const raw = e.target.value.trim();
+                    if (raw === "") {
+                      set("discountPercent", 0);
+                      return;
+                    }
+                    const n = Number(raw);
+                    if (!Number.isFinite(n)) return;
+                    set("discountPercent", Math.min(100, Math.max(0, n)));
+                  }}
+                  title="Percent off subtotal — leave empty/0 to hide discount on PDF/email"
                 />
+                {totals.discount > 0.009 ? (
+                  <p className="text-[11px] text-slate-500 mt-1 tabular-nums">
+                    −{formatCad(totals.discount)} off subtotal
+                  </p>
+                ) : (
+                  <p className="text-[11px] text-slate-500 mt-1">
+                    Empty / 0% = no discount line on invoice / email
+                  </p>
+                )}
               </div>
               <div>
                 <label className={label}>HST %</label>
@@ -2092,9 +2119,54 @@ export default function ClientInvoiceSection({ sidebarOpen, isOwner = false }: P
                   type="number"
                   min={0}
                   step="0.01"
-                  value={form.hstPercent}
-                  onChange={(e) => set("hstPercent", Number(e.target.value))}
+                  inputMode="decimal"
+                  placeholder="0"
+                  value={
+                    form.hstPercent === 0 || form.hstPercent === null
+                      ? ""
+                      : form.hstPercent
+                  }
+                  onFocus={(e) => e.currentTarget.select()}
+                  onChange={(e) => {
+                    const raw = e.target.value.trim();
+                    if (raw === "") {
+                      set("hstPercent", 0);
+                      return;
+                    }
+                    const n = Number(raw);
+                    if (!Number.isFinite(n)) return;
+                    set("hstPercent", Math.min(100, Math.max(0, n)));
+                  }}
                 />
+                <p className="text-[11px] text-slate-500 mt-1 tabular-nums">
+                  {formatCad(totals.hst)} tax
+                </p>
+              </div>
+              <div className="col-span-2 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2.5 space-y-1.5 text-xs">
+                <div className="flex justify-between text-white/55">
+                  <span>Subtotal</span>
+                  <span className="tabular-nums text-white/80">
+                    {formatCad(totals.subtotal)}
+                  </span>
+                </div>
+                {totals.discount > 0.009 ? (
+                  <div className="flex justify-between text-white/55">
+                    <span>Discount ({Number(form.discountPercent) || 0}%)</span>
+                    <span className="tabular-nums text-white/80">
+                      −{formatCad(totals.discount)}
+                    </span>
+                  </div>
+                ) : null}
+                <div className="flex justify-between text-white/55">
+                  <span>HST ({Number(form.hstPercent) || 0}%)</span>
+                  <span className="tabular-nums text-white/80">
+                    {formatCad(totals.hst)}
+                  </span>
+                </div>
+                <div className="flex justify-between border-t border-white/10 pt-1.5 font-semibold text-white">
+                  <span>Total</span>
+                  <span className="tabular-nums">{formatCad(totals.total)}</span>
+                </div>
               </div>
               <div>
                 <label className={label}>Amount Paid</label>

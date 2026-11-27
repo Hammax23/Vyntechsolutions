@@ -36,8 +36,11 @@ function normalize(data: BillingInvoiceData) {
     clientAddress: data.clientAddress?.trim() || null,
     projectTitle: data.projectTitle?.trim() || null,
     lineItems,
-    discountPercent: Number(data.discountPercent) || 0,
-    hstPercent: Number(data.hstPercent) || 0,
+    discountPercent: Math.min(
+      100,
+      Math.max(0, Number(data.discountPercent) || 0)
+    ),
+    hstPercent: Math.min(100, Math.max(0, Number(data.hstPercent) || 0)),
     amountPaid: Number(data.amountPaid) || 0,
     paymentMethod: data.paymentMethod?.trim() || null,
     paymentTerms: data.paymentTerms?.trim() || null,

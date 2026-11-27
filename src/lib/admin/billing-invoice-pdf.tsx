@@ -40,15 +40,31 @@ const s = StyleSheet.create({
     opacity: 0.05,
     objectFit: "contain",
   },
-  bar: { height: 2.5, backgroundColor: BLUE, marginBottom: 14 },
+  bar: { height: 2.5, backgroundColor: BLUE, marginBottom: 22 },
   titleRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
+    marginTop: 6,
     marginBottom: 14,
   },
   title: { fontSize: 18, fontFamily: "Helvetica-Bold", color: NAVY, letterSpacing: 0.8 },
-  status: { fontSize: 8, color: BLUE, marginTop: 4, textTransform: "uppercase", letterSpacing: 0.5 },
+  status: {
+    fontSize: 10,
+    fontFamily: "Helvetica-Bold",
+    color: BLUE,
+    marginTop: 6,
+    textTransform: "uppercase",
+    letterSpacing: 0.6,
+  },
+  statusPaid: {
+    fontSize: 11,
+    fontFamily: "Helvetica-Bold",
+    color: NAVY,
+    marginTop: 6,
+    textTransform: "uppercase",
+    letterSpacing: 0.7,
+  },
   metaBox: {
     backgroundColor: SOFT,
     borderWidth: 1,
@@ -178,7 +194,7 @@ export function BillingInvoicePdfDocument({
         <View style={s.titleRow}>
           <View>
             <Text style={s.title}>INVOICE</Text>
-            <Text style={s.status}>
+            <Text style={data.status === "paid" ? s.statusPaid : s.status}>
               Status:{" "}
               {data.status === "sent"
                 ? "Sent"
@@ -254,7 +270,7 @@ export function BillingInvoicePdfDocument({
               <Text style={s.muted}>Subtotal</Text>
               <Text>{formatCad(totals.subtotal)}</Text>
             </View>
-            {totals.discount > 0 ? (
+            {totals.discount > 0.009 && Number(data.discountPercent) > 0 ? (
               <View style={s.totalRow}>
                 <Text style={s.muted}>Discount ({data.discountPercent}%)</Text>
                 <Text>-{formatCad(totals.discount)}</Text>

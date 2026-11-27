@@ -132,9 +132,11 @@ export function calculateBillingTotals(
   const subtotal = round2(
     (data.lineItems || []).reduce((sum, item) => sum + lineAmount(item), 0)
   );
-  const discount = round2(subtotal * ((Number(data.discountPercent) || 0) / 100));
+  const discountPct = Math.min(100, Math.max(0, Number(data.discountPercent) || 0));
+  const hstPct = Math.min(100, Math.max(0, Number(data.hstPercent) || 0));
+  const discount = round2(subtotal * (discountPct / 100));
   const taxable = round2(subtotal - discount);
-  const hst = round2(taxable * ((Number(data.hstPercent) || 0) / 100));
+  const hst = round2(taxable * (hstPct / 100));
   const total = round2(taxable + hst);
   const balance = round2(Math.max(0, total - (Number(data.amountPaid) || 0)));
   return { subtotal, discount, taxable, hst, total, balance };

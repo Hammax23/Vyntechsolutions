@@ -19,6 +19,45 @@ function escapeHtml(s: string) {
     .replace(/"/g, "&quot;");
 }
 
+/** Professional totals block — Discount row only when discount % applied. */
+function billingTotalsEmailRows(opts: {
+  invoice: BillingInvoiceData;
+  totals: ReturnType<typeof calculateBillingTotals>;
+  includeBalance?: boolean;
+}) {
+  const { invoice, totals } = opts;
+  const includeBalance = opts.includeBalance !== false;
+  const discountPct = Number(invoice.discountPercent) || 0;
+  const hstPct = Number(invoice.hstPercent) || 0;
+  const showDiscount = totals.discount > 0.009 && discountPct > 0;
+
+  const row = (label: string, value: string, last = false, strong = false) => `
+            <tr>
+              <td style="padding:8px 0;${last ? "" : "border-bottom:1px solid #E2E8F0;"}">${label}</td>
+              <td style="padding:8px 0;${last ? "" : "border-bottom:1px solid #E2E8F0;"}text-align:right;color:#0f172a;${strong ? "font-weight:700;" : ""}">${value}</td>
+            </tr>`;
+
+  return [
+    invoice.projectTitle
+      ? row("Project", escapeHtml(invoice.projectTitle))
+      : "",
+    row("Subtotal", formatCad(totals.subtotal)),
+    showDiscount
+      ? row(
+          `Discount (${discountPct}%)`,
+          `−${formatCad(totals.discount)}`
+        )
+      : "",
+    row(`HST (${hstPct}%)`, formatCad(totals.hst)),
+    row("Total", formatCad(totals.total), !includeBalance, true),
+    includeBalance
+      ? row("Balance due", formatCad(totals.balance), true, true)
+      : "",
+  ]
+    .filter(Boolean)
+    .join("");
+}
+
 export function buildBillingInvoiceEmail(opts: {
   invoice: BillingInvoiceData;
   payUrl?: string | null;
@@ -78,18 +117,7 @@ export function buildBillingInvoiceEmail(opts: {
             ${opts.invoice.dueDate ? ` (due <strong>${escapeHtml(due)}</strong>)` : ""}.
           </p>
           <table role="presentation" width="100%" style="margin:0 0 20px;font-size:13px;color:#475569;border-collapse:collapse;">
-            <tr>
-              <td style="padding:8px 0;border-bottom:1px solid #E2E8F0;">Project</td>
-              <td style="padding:8px 0;border-bottom:1px solid #E2E8F0;text-align:right;color:#0f172a;">${escapeHtml(opts.invoice.projectTitle || "—")}</td>
-            </tr>
-            <tr>
-              <td style="padding:8px 0;border-bottom:1px solid #E2E8F0;">Total</td>
-              <td style="padding:8px 0;border-bottom:1px solid #E2E8F0;text-align:right;color:#0f172a;">${formatCad(totals.total)}</td>
-            </tr>
-            <tr>
-              <td style="padding:8px 0;">Balance due</td>
-              <td style="padding:8px 0;text-align:right;font-weight:700;color:${NAVY};">${formatCad(totals.balance)}</td>
-            </tr>
+            ${billingTotalsEmailRows({ invoice: opts.invoice, totals, includeBalance: true })}
           </table>
           ${
             payUrl && totals.balance > 0
@@ -108,6 +136,12 @@ export function buildBillingInvoiceEmail(opts: {
   const text = [
     `Invoice ${opts.invoice.invoiceNumber} — VynTech Solutions`,
     opts.invoice.dueDate ? `Due: ${opts.invoice.dueDate}` : "",
+    opts.invoice.projectTitle ? `Project: ${opts.invoice.projectTitle}` : "",
+    `Subtotal: ${formatCad(totals.subtotal)}`,
+    totals.discount > 0.009
+      ? `Discount (${Number(opts.invoice.discountPercent) || 0}%): -${formatCad(totals.discount)}`
+      : "",
+    `HST (${Number(opts.invoice.hstPercent) || 0}%): ${formatCad(totals.hst)}`,
     `Total: ${formatCad(totals.total)}`,
     `Balance due: ${formatCad(totals.balance)}`,
     payUrl ? `Pay: ${payUrl}` : "",
@@ -174,6 +208,7 @@ export function buildBillingPaymentReceivedEmail(opts: {
             A paid copy is attached for your records.
           </p>
           <table role="presentation" width="100%" style="margin:0 0 20px;font-size:13px;color:#475569;border-collapse:collapse;">
+            ${billingTotalsEmailRows({ invoice: opts.invoice, totals, includeBalance: false })}
             <tr>
               <td style="padding:8px 0;border-bottom:1px solid #E2E8F0;">Amount paid</td>
               <td style="padding:8px 0;border-bottom:1px solid #E2E8F0;text-align:right;color:#0f172a;font-weight:700;">${formatCad(opts.invoice.amountPaid || totals.total)}</td>
@@ -206,6 +241,12 @@ export function buildBillingPaymentReceivedEmail(opts: {
 
   const text = [
     `Payment received — Invoice ${opts.invoice.invoiceNumber}`,
+    `Subtotal: ${formatCad(totals.subtotal)}`,
+    totals.discount > 0.009
+      ? `Discount (${Number(opts.invoice.discountPercent) || 0}%): -${formatCad(totals.discount)}`
+      : "",
+    `HST (${Number(opts.invoice.hstPercent) || 0}%): ${formatCad(totals.hst)}`,
+    `Total: ${formatCad(totals.total)}`,
     `Amount paid: ${formatCad(opts.invoice.amountPaid || totals.total)}`,
     `Method: ${method}`,
     reference ? `Reference: ${reference}` : "",

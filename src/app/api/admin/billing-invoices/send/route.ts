@@ -41,7 +41,12 @@ export async function POST(request: NextRequest) {
     // Auto-create Stripe pay link before email (client must pay via link → auto Paid)
     let payUrl = row.checkoutUrl || "";
     if (row.status !== "paid") {
-      const checkout = await ensureBillingCheckoutUrl({ invoiceId: id, origin });
+      // Always refresh pay link on send so discount / amount edits never leave a stale Stripe URL
+      const checkout = await ensureBillingCheckoutUrl({
+        invoiceId: id,
+        origin,
+        force: true,
+      });
       if (checkout.ok && checkout.checkoutUrl) {
         payUrl = checkout.checkoutUrl;
         row = (await prisma.billingInvoice.findUnique({ where: { id } })) || row;

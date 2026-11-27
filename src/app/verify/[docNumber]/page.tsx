@@ -32,6 +32,11 @@ type BillingDoc = {
   amount: string;
   balance: string;
   balanceValue?: number;
+  subtotal?: string;
+  discountPercent?: number;
+  discount?: string;
+  hstPercent?: number;
+  hst?: string;
   checkoutUrl?: string;
   lineItems?: Array<{
     description: string;
@@ -189,14 +194,34 @@ export default function VerifyDocumentPage({ params }: { params: { docNumber: st
                   </ul>
                 </div>
               ) : null}
-              <div className="grid grid-cols-2 gap-4 pt-1">
-                <div>
-                  <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Total</p>
-                  <p className="text-slate-900 font-bold text-lg">{billing.amount}</p>
+              <div className="rounded-xl border border-slate-100 px-3 py-3 space-y-1.5 text-sm">
+                {billing.subtotal ? (
+                  <div className="flex justify-between text-slate-600">
+                    <span>Subtotal</span>
+                    <span className="tabular-nums text-slate-900">{billing.subtotal}</span>
+                  </div>
+                ) : null}
+                {billing.discount ? (
+                  <div className="flex justify-between text-slate-600">
+                    <span>Discount ({billing.discountPercent || 0}%)</span>
+                    <span className="tabular-nums text-slate-900">−{billing.discount}</span>
+                  </div>
+                ) : null}
+                {billing.hst ? (
+                  <div className="flex justify-between text-slate-600">
+                    <span>HST ({billing.hstPercent || 0}%)</span>
+                    <span className="tabular-nums text-slate-900">{billing.hst}</span>
+                  </div>
+                ) : null}
+                <div className="flex justify-between border-t border-slate-100 pt-1.5 font-semibold text-slate-900">
+                  <span>Total</span>
+                  <span className="tabular-nums text-lg">{billing.amount}</span>
                 </div>
-                <div>
-                  <p className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Balance due</p>
-                  <p className="text-slate-900 font-bold text-lg">{billing.balance}</p>
+                <div className="flex justify-between text-slate-600">
+                  <span>Balance due</span>
+                  <span className="tabular-nums font-semibold text-slate-900">
+                    {billing.balance}
+                  </span>
                 </div>
               </div>
               {billing.checkoutUrl && (billing.balanceValue == null || billing.balanceValue > 0) && billing.status !== "paid" ? (
