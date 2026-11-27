@@ -14,8 +14,9 @@ import {
 } from "@/lib/mail";
 import { SITE_URL } from "@/lib/company";
 import {
-  BILLING_OFFLINE_PAYMENT_METHODS,
+  BILLING_OFFLINE_PAYMENT_METHODS_ACCEPTED,
   calculateBillingTotals,
+  isAcceptedOfflinePaymentMethod,
   type BillingLineItem,
 } from "@/lib/admin/billing-invoice-types";
 
@@ -32,7 +33,7 @@ async function requireOwner(request: NextRequest) {
 }
 
 /**
- * Owner-only: record bank / e-transfer / cheque / cash payment.
+ * Owner-only: record E-Transfer / Wire / Cheque / Cash (legacy Bank Transfer accepted).
  * Same Paid outcome as Stripe (Dropbox archive, project payment, audit).
  */
 export async function POST(request: NextRequest) {
@@ -61,10 +62,10 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    if (!(BILLING_OFFLINE_PAYMENT_METHODS as readonly string[]).includes(paymentMethod)) {
+    if (!isAcceptedOfflinePaymentMethod(paymentMethod)) {
       return NextResponse.json(
         {
-          error: `paymentMethod must be one of: ${BILLING_OFFLINE_PAYMENT_METHODS.join(", ")}`,
+          error: `paymentMethod must be one of: ${BILLING_OFFLINE_PAYMENT_METHODS_ACCEPTED.join(", ")}`,
         },
         { status: 400 }
       );

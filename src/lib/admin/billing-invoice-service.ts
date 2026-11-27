@@ -2,10 +2,9 @@ import prisma from "@/lib/prisma";
 import { deriveBillingStatus } from "@/lib/admin/billing-invoice-status";
 import { logBillingEvent } from "@/lib/admin/billing-invoice-map";
 import {
-  BILLING_OFFLINE_PAYMENT_METHODS,
   calculateBillingTotals,
+  isAcceptedOfflinePaymentMethod,
   type BillingLineItem,
-  type BillingOfflinePaymentMethod,
 } from "@/lib/admin/billing-invoice-types";
 import { uploadPaidInvoiceToDropbox } from "@/lib/admin/upload-paid-invoice-dropbox";
 import { clearBillingCheckoutLink } from "@/lib/admin/ensure-billing-checkout";
@@ -41,10 +40,6 @@ export async function sweepOverdueBillingInvoices(): Promise<number> {
     }
   }
   return updated;
-}
-
-function isOfflineMethod(method: string): method is BillingOfflinePaymentMethod {
-  return (BILLING_OFFLINE_PAYMENT_METHODS as readonly string[]).includes(method);
 }
 
 /** Sync linked ProjectPayment → paid; ActivityLog only when status actually changes. */
@@ -145,9 +140,9 @@ export async function markBillingInvoicePaid(opts: {
 
   if (opts.source === "admin_offline") {
     const method = String(opts.paymentMethod || "").trim();
-    if (!isOfflineMethod(method)) {
+    if (!isAcceptedOfflinePaymentMethod(method)) {
       throw new Error(
-        "Offline payment method must be E-Transfer, Bank Transfer, Cheque, or Cash"
+        "Offline payment method must be E-Transfer, Wire Transfer, Cheque, or Cash"
       );
     }
     const reference = String(opts.paymentReference || "").trim();

@@ -13,6 +13,7 @@ import {
   formatCad,
   nextInvoiceNumberFromExisting,
   lineAmount,
+  offlineReferencePlaceholder,
   type BillingOfflinePaymentMethod,
 } from "@/lib/admin/billing-invoice-types";
 import { createDefaultBillingInvoice } from "@/lib/admin/billing-invoice-defaults";
@@ -102,16 +103,18 @@ export default function ClientInvoiceSection({ sidebarOpen, isOwner = false }: P
   const [offlineSendReceipt, setOfflineSendReceipt] = useState(true);
 
   const nextStepHint = useMemo(() => {
-    if (!form.id) return "1) Fill details + amount → Save";
+    if (!form.id) {
+      return "Fill details + amount → Save draft first, then choose a payment path.";
+    }
     if (form.status === "draft") {
       return isOwner
-        ? "2) Send to client (Stripe link) — or Record offline payment if already paid"
-        : "2) Send to client (auto creates Stripe pay link in the email)";
+        ? "Path A — Send to client (Stripe) · Path B — Record offline (E-Transfer / Wire / Cheque / Cash). Offline works on Draft — Send not required."
+        : "Send to client (email includes Stripe pay link). Offline recording is Owner-only.";
     }
     if (form.status === "sent" || form.status === "overdue") {
       return isOwner
-        ? "3) Stripe pay link — or Record offline payment (bank / e-transfer)"
-        : "3) Waiting for client to pay via Stripe link — Paid updates automatically";
+        ? "Waiting on Stripe, or Record offline (E-Transfer / Wire / Cheque / Cash) if already paid."
+        : "Waiting for client to pay via Stripe — Paid updates automatically.";
     }
     if (form.status === "paid") {
       if (form.paymentSource === "offline") {
@@ -1718,11 +1721,28 @@ export default function ClientInvoiceSection({ sidebarOpen, isOwner = false }: P
                 type="button"
                 onClick={openOfflinePayModal}
                 disabled={busy}
-                className="px-4 py-2 bg-amber-600/90 hover:bg-amber-600 text-white text-sm rounded-md font-medium disabled:opacity-50"
-                title="Bank transfer, e-transfer, cheque, or cash — same Paid + Dropbox as Stripe"
+                className="ci-offline-btn px-4 py-2 bg-slate-900 hover:bg-black text-white text-sm rounded-md font-semibold border border-slate-900 disabled:opacity-50"
+                title="E-Transfer, Wire Transfer, Cheque, or Cash — marks Paid without Stripe"
               >
                 Record offline payment
               </button>
+            ) : null}
+            {!canRecordOffline &&
+            form.id &&
+            (form.status === "draft" ||
+              form.status === "sent" ||
+              form.status === "overdue") &&
+            (!isOwner || totals.total <= 0) ? (
+              <span className="text-[11px] text-slate-600 self-center">
+                {!isOwner
+                  ? "Offline payment: Owner only"
+                  : "Add line items (total > 0) before recording offline payment"}
+              </span>
+            ) : null}
+            {!form.id ? (
+              <span className="text-[11px] text-slate-600 self-center">
+                Save draft first — then Send (Stripe) or Record offline payment
+              </span>
             ) : null}
 
             <div className="relative ml-auto">
@@ -1827,12 +1847,15 @@ export default function ClientInvoiceSection({ sidebarOpen, isOwner = false }: P
               <input className={input} type="date" value={form.dueDate} onChange={(e) => set("dueDate", e.target.value)} />
             </div>
           </div>
-          <p className="text-[11px] text-white/40 pt-1">
-            Dual rails: Save → Draft · Send → Sent (+ Stripe pay link) · Client pays Stripe → Paid.
-            {isOwner
-              ? " Owner can also Record offline payment (bank / e-transfer / cheque / cash) → same Paid + Dropbox archive."
-              : " Offline payment recording is Owner-only."}
-          </p>
+          <ul className="ci-pay-paths text-[11px] text-slate-600 pt-2 space-y-0.5 list-none">
+            <li>Save → Draft</li>
+            <li>Send → email + Stripe pay link → Paid</li>
+            <li>
+              {isOwner
+                ? "Or Owner: Record offline (E-Transfer / Wire / Cheque / Cash) on Draft, Sent, or Overdue → Paid"
+                : "Offline payment recording is Owner-only"}
+            </li>
+          </ul>
         </div>
 
         <div className={card}>
@@ -2148,92 +2171,136 @@ export default function ClientInvoiceSection({ sidebarOpen, isOwner = false }: P
       </div>
 
       {showOfflinePay ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-[#0a0a1a] border border-white/10 rounded-2xl w-full max-w-lg p-6 shadow-2xl space-y-4">
+        <div
+          className="ci-offline-overlay fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-5"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="ci-offline-title"
+        >
+          <button
+            type="button"
+            className="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px]"
+            aria-label="Dismiss"
+            disabled={busy}
+            onClick={() => setShowOfflinePay(false)}
+          />
+          <div className="ci-offline-modal relative z-10 w-full sm:max-w-lg rounded-t-xl sm:rounded-xl border border-slate-200 bg-white shadow-2xl p-5 sm:p-6 space-y-4">
             <div>
-              <h3 className="text-lg font-bold text-white">Record offline payment</h3>
-              <p className="text-white/50 text-sm mt-1">
-                Bank transfer, e-transfer, cheque, or cash for <strong className="text-white/70">this invoice only</strong>
-                — not the whole project. Other invoices stay open. Marks this one Paid (same as Stripe)
-                and archives the PDF to Dropbox.
+              <h3
+                id="ci-offline-title"
+                className="text-base sm:text-lg font-semibold text-slate-900"
+              >
+                Record offline payment
+              </h3>
+              <p className="text-slate-600 text-sm mt-1.5 leading-relaxed">
+                Works on{" "}
+                <strong className="font-semibold text-slate-800">
+                  Draft, Sent, or Overdue
+                </strong>
+                . Methods: E-Transfer, Wire Transfer, Cheque, Cash — for{" "}
+                <strong className="font-semibold text-slate-800">this invoice only</strong>.
+                Marks Paid (same archive path as Stripe). Send is not required if funds
+                already received.
               </p>
             </div>
-            <div className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 text-sm text-white/70">
-              <div className="flex justify-between gap-2">
-                <span>{form.invoiceNumber}</span>
-                <span className="font-semibold text-white">{formatCad(totals.total)}</span>
+
+            <div className="rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-3 text-sm">
+              <div className="flex justify-between gap-2 items-baseline">
+                <span className="text-slate-700 font-medium">{form.invoiceNumber}</span>
+                <span className="font-semibold text-slate-900 tabular-nums">
+                  {formatCad(totals.total)}
+                </span>
               </div>
-              <p className="text-xs text-white/40 mt-1">{form.clientName || "—"}</p>
+              <p className="text-xs text-slate-500 mt-1">{form.clientName || "—"}</p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className={label}>Payment method *</label>
-                <select
-                  className={input}
-                  value={offlineMethod}
-                  onChange={(e) =>
-                    setOfflineMethod(e.target.value as BillingOfflinePaymentMethod)
-                  }
-                >
-                  {BILLING_OFFLINE_PAYMENT_METHODS.map((m) => (
-                    <option key={m} value={m}>
+
+            <div>
+              <p className="text-xs font-medium text-slate-600 mb-2">Payment method *</p>
+              <div className="grid grid-cols-2 gap-2">
+                {BILLING_OFFLINE_PAYMENT_METHODS.map((m) => {
+                  const active = offlineMethod === m;
+                  return (
+                    <button
+                      key={m}
+                      type="button"
+                      onClick={() => setOfflineMethod(m)}
+                      className={`ci-offline-method px-3 py-2.5 rounded-lg border text-sm font-medium transition-colors ${
+                        active
+                          ? "ci-offline-method--on bg-slate-900 border-slate-900 text-white"
+                          : "bg-white border-slate-300 text-slate-700 hover:border-slate-500 hover:bg-slate-50"
+                      }`}
+                    >
                       {m}
-                    </option>
-                  ))}
-                </select>
+                    </button>
+                  );
+                })}
               </div>
-              <div>
-                <label className={label}>Paid date *</label>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="sm:col-span-2 sm:max-w-[50%]">
+                <label className="block text-xs font-medium text-slate-600 mb-1.5">
+                  Paid date *
+                </label>
                 <input
-                  className={input}
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900"
                   type="date"
                   value={offlinePaidAt}
                   onChange={(e) => setOfflinePaidAt(e.target.value)}
                 />
               </div>
               <div className="sm:col-span-2">
-                <label className={label}>Reference * (Interac / bank / cheque #)</label>
+                <label className="block text-xs font-medium text-slate-600 mb-1.5">
+                  Reference *
+                </label>
                 <input
-                  className={input}
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900"
                   value={offlineReference}
-                  placeholder="e.g. Interac ID or bank confirmation"
+                  placeholder={offlineReferencePlaceholder(offlineMethod)}
                   onChange={(e) => setOfflineReference(e.target.value)}
                 />
               </div>
               <div className="sm:col-span-2">
-                <label className={label}>Internal note (optional)</label>
+                <label className="block text-xs font-medium text-slate-600 mb-1.5">
+                  Internal note (optional)
+                </label>
                 <input
-                  className={input}
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900"
                   value={offlineNote}
                   placeholder="Optional note for audit"
                   onChange={(e) => setOfflineNote(e.target.value)}
                 />
               </div>
             </div>
-            <label className="flex items-start gap-2 text-sm text-white/70 cursor-pointer">
+
+            <label className="flex items-start gap-2.5 text-sm text-slate-700 cursor-pointer">
               <input
                 type="checkbox"
-                className="mt-1"
+                className="mt-1 accent-slate-900"
                 checked={offlineConfirm}
                 onChange={(e) => setOfflineConfirm(e.target.checked)}
               />
               <span>I confirm funds were received for the full invoice total.</span>
             </label>
-            <label className="flex items-start gap-2 text-sm text-white/70 cursor-pointer">
+            <label className="flex items-start gap-2.5 text-sm text-slate-700 cursor-pointer">
               <input
                 type="checkbox"
-                className="mt-1"
+                className="mt-1 accent-slate-900"
                 checked={offlineSendReceipt}
                 onChange={(e) => setOfflineSendReceipt(e.target.checked)}
               />
-              <span>Email paid receipt + PDF to client{form.clientEmail ? ` (${form.clientEmail})` : ""}</span>
+              <span>
+                Email paid receipt + PDF to client
+                {form.clientEmail ? ` (${form.clientEmail})` : ""}
+              </span>
             </label>
-            <div className="flex justify-end gap-2 pt-2">
+
+            <div className="flex flex-col-reverse sm:flex-row gap-2.5 pt-1">
               <button
                 type="button"
                 onClick={() => setShowOfflinePay(false)}
                 disabled={busy}
-                className="px-4 py-2 text-sm rounded-md border border-white/15 text-white/70 hover:bg-white/5"
+                className="flex-1 px-3 py-2.5 text-sm rounded-lg border border-slate-300 bg-white text-slate-700 font-medium hover:bg-slate-50 disabled:opacity-50"
               >
                 Cancel
               </button>
@@ -2241,7 +2308,7 @@ export default function ClientInvoiceSection({ sidebarOpen, isOwner = false }: P
                 type="button"
                 onClick={() => void recordOfflinePayment()}
                 disabled={busy || !offlineConfirm || offlineReference.trim().length < 3}
-                className="px-4 py-2 text-sm rounded-md bg-amber-600 hover:bg-amber-500 text-white font-medium disabled:opacity-50"
+                className="ci-offline-confirm flex-1 px-3 py-2.5 text-sm rounded-lg border border-slate-900 bg-slate-900 text-white font-semibold hover:bg-black disabled:opacity-50"
               >
                 {busy ? "Recording…" : "Confirm & mark Paid"}
               </button>

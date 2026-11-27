@@ -1247,3 +1247,51 @@
 [data-admin-theme="light"] .admin-client-invoices .ci-paid-project > div:first-child {
   background: #f8fafc !important;
 }
+
+/* Client Invoice — offline payment (black & white, high contrast) */
+.ci-offline-btn {
+  color: #ffffff !important;
+}
+
+[data-admin-theme="light"] .ci-offline-btn {
+  background-color: #0f172a !important;
+  border-color: #0f172a !important;
+  color: #ffffff !important;
+}
+
+[data-admin-theme="light"] .ci-offline-btn:hover {
+  background-color: #000000 !important;
+}
+
+[data-admin-theme="light"] .ci-pay-paths {
+  color: #475569 !important;
+}
+
+.ci-offline-modal {
+  color-scheme: light;
+}
+
+[data-admin-theme="light"] .ci-offline-modal {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+[data-admin-theme="light"] .ci-offline-modal input,
+[data-admin-theme="light"] .ci-offline-modal select {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-admin-theme="light"] .ci-offline-modal .ci-offline-method--on,
+[data-admin-theme="light"] .ci-offline-modal .ci-offline-confirm {
+  background-color: #0f172a !important;
+  border-color: #0f172a !important;
+  color: #ffffff !important;
+}
+
+[data-admin-theme="light"] .ci-offline-modal .ci-offline-confirm:hover {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}

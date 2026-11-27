@@ -69,21 +69,55 @@ export const BILLING_STATUSES: { value: BillingInvoiceStatus; label: string }[] 
 export const BILLING_PAYMENT_METHODS = [
   "Credit Card",
   "E-Transfer",
+  "Wire Transfer",
   "Bank Transfer",
   "Cheque",
   "Cash",
 ] as const;
 
-/** Offline / manual settlement only (Credit Card stays Stripe). */
+/** Offline methods shown in the Record offline payment UI. */
 export const BILLING_OFFLINE_PAYMENT_METHODS = [
   "E-Transfer",
-  "Bank Transfer",
+  "Wire Transfer",
   "Cheque",
   "Cash",
+] as const;
+
+/** Accepted by API — includes legacy "Bank Transfer" on older paid rows. */
+export const BILLING_OFFLINE_PAYMENT_METHODS_ACCEPTED = [
+  ...BILLING_OFFLINE_PAYMENT_METHODS,
+  "Bank Transfer",
 ] as const;
 
 export type BillingOfflinePaymentMethod =
   (typeof BILLING_OFFLINE_PAYMENT_METHODS)[number];
+
+export type BillingOfflinePaymentMethodAccepted =
+  (typeof BILLING_OFFLINE_PAYMENT_METHODS_ACCEPTED)[number];
+
+export function isAcceptedOfflinePaymentMethod(
+  method: string
+): method is BillingOfflinePaymentMethodAccepted {
+  return (BILLING_OFFLINE_PAYMENT_METHODS_ACCEPTED as readonly string[]).includes(
+    method
+  );
+}
+
+export function offlineReferencePlaceholder(method: string): string {
+  switch (method) {
+    case "E-Transfer":
+      return "e.g. Interac confirmation / reference ID";
+    case "Wire Transfer":
+    case "Bank Transfer":
+      return "e.g. wire / bank confirmation number";
+    case "Cheque":
+      return "e.g. cheque number";
+    case "Cash":
+      return 'e.g. cash receipt # or "Cash received"';
+    default:
+      return "Payment reference (min 3 characters)";
+  }
+}
 
 export const DEFAULT_PAYMENT_TERMS =
   "Payment is due within 15 days of the invoice date. Late payments may incur a 1.5% monthly service charge.";
